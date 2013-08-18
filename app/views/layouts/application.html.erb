@@ -1,14 +1,482 @@
-<!DOCTYPE html>
-<html>
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
 <head>
-  <title>Salsa</title>
-  <%= stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true %>
-  <%= javascript_include_tag "application", "data-turbolinks-track" => true %>
-  <%= csrf_meta_tags %>
+<meta charset="utf-8">
+
+<title>Syllabus Builder</title>
+<meta name="description" content="">
+
+<meta name="viewport" content="width=device-width">
+<link rel="stylesheet" href="/css/style.css">
+
+<script src="/js/libs/modernizr.js"></script>
 </head>
 <body>
+  <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+<header class="masthead">
+    <nav>
+        <ul>
+            <li><a href="#save">Save</a></li>
+            <li><a href="#example" class="example">Example</a></li>
+            <li><a href="#preview" class="preview">Preview</a></li>
+            <li><a href="#clipboard">Clipboard</a></li>
+        </ul>
+    </nav>
+</header>
 
-<%= yield %>
+<div id="wrapper">
+    <nav id="tabs">
+        <ul>
+            <li class="information"><a href="#information">Information</a></li>
+            <li class="objectives"><a href="#objectives">Outcomes</a></li>
+            <li class="resources"><a href="#resources">Resources</a></li>
+            <li class="activities"><a href="#activities">Activities</a></li>
+            <li class="policies"><a href="#policies">Policies</a></li>
+            <li class="grades"><a href="#grades">Grades</a></li>
+        </ul>
+    </nav>
+
+    <form id="controlPanel">
+        <aside class="information" data-target="#information .content">
+            <section data-target="header">
+                <header>
+                    Title
+                </header>
+                <fieldset data-method="toggleContent" data-element="h1" data-text='["Course Name", "Course Number | Term/Year","Title Text"]' data-max="3" data-min="1" data-target="hgroup">
+                    <legend>text</legend>
+                    <label for="informationTitleAdd">Add title</label>
+                    <input type="button" name="informationTitleAdd" id="informationTitleAdd" value="+">
+                    <label for="informationTitleRemove">Remove title</label>
+                    <input type="button" name="informationTitleAdd" id="informationTitleRemove" value="-">
+                </fieldset>
+            </section>
+
+            <section data-target=".section1">
+                <header>
+                    Information
+                </header>
+                <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
+                    <legend>spacing</legend>
+                    <label for="informationContentSpacingAdd">Add spacing</label>
+                    <input type="button" name="informationContentSpacingAdd" id="informationContentSpacingAdd" value="+">
+                    <label for="informationContentSpacingRemove">Remove spacing</label>
+                    <input type="button" name="informationContentSpacingRemove" id="informationContentSpacingRemove" value="-">
+                </fieldset>
+                <fieldset data-method="toggleContent" data-element=".contact" data-max="4" data-min="1" data-target=".contacts">
+                    <legend>contacts</legend>
+                    <label for="informationContactAdd">Add contact</label>
+                    <input type="button" name="informationContactAdd" id="informationContactAdd" value="+">
+                    <label for="informationContactRemove">Remove contact</label>
+                    <input type="button" name="informationContactRemove" id="informationContactRemove" value="-">
+                </fieldset>
+            </section>
+
+            <section data-target=".section2" class="ui-state-default">
+                <header data-method="toggleContent">
+                    <input type="button" value="Section 2">
+                </header>
+                <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
+                    <legend>spacing</legend>
+                    <label for="informationContactExtraSpacingAdd">Add spacing</label>
+                    <input type="button" name="informationContactExtraSpacingAdd" id="informationContactExtraSpacingAdd" value="+">
+                    <label for="informationContactExtraSpacingRemove">Remove spacing</label>
+                    <input type="button" name="informationContactExtraSpacingRemove" id="informationContactExtraSpacingRemove" value="-">
+                </fieldset>
+            </section>
+
+            <section data-target=".section3" class="ui-state-active">
+                <header data-method="toggleContent">
+                    <input type="button" value="Description">
+                </header>
+                <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
+                    <legend>spacing</legend>
+                    <label for="informationDescriptionAdd">Add spacing</label>
+                    <input type="button" name="informationDescriptionAdd" id="informationDescriptionAdd" value="+">
+                    <label for="informationDescriptionRemove">Remove spacing</label>
+                    <input type="button" name="informationDescriptionRemove" id="informationDescriptionRemove" value="-">
+                </fieldset>
+            </section>
+
+            <section data-target=".section4" class="ui-state-default">
+                <header data-method="toggleContent">
+                    <input type="button" value="Section 4">
+                </header>
+                <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
+                    <legend>spacing</legend>
+                    <label for="informationDescriptionExtraAdd">Add spacing</label>
+                    <input type="button" name="informationDescriptionExtraAdd" id="informationDescriptionExtraAdd" value="+">
+                    <label for="informationDescriptionRemove">Remove spacing</label>
+                    <input type="button" name="informationDescriptionExtraRemove" id="informationDescriptionExtraRemove" value="-">
+                </fieldset>
+            </section>
+
+            <section data-target=".section5" class="ui-state-default">
+                <header data-method="toggleContent">
+                    <input type="button" value="Section 5">
+                </header>
+                <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
+                    <legend>spacing</legend>
+                    <label for="informationDescriptionExtraAdd">Add spacing</label>
+                    <input type="button" name="informationDescriptionExtraAdd" id="informationDescriptionExtraAdd" value="+">
+                    <label for="informationDescriptionRemove">Remove spacing</label>
+                    <input type="button" name="informationDescriptionExtraRemove" id="informationDescriptionExtraRemove" value="-">
+                </fieldset>
+            </section>
+        </aside>
+
+        <aside class="objectives" data-target="#objectives .content">
+            <section data-target=".section1">
+                <header data-method="toggleContent" class="ui-state-active">
+                   <input type="button" value="Outcomes">
+                </header>
+                <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
+                    <legend>spacing</legend>
+                    <label for="objectivesContentSpacingAdd">Add spacing</label>
+                    <input type="button" name="objectivesContentSpacingAdd" id="objectivesContentSpacingAdd" value="+">
+                    <label for="objectivesContentSpacingRemove">Remove spacing</label>
+                    <input type="button" name="objectivesContentSpacingRemove" id="objectivesContentSpacingRemove" value="-">
+                </fieldset>
+                <fieldset data-method="toggleContent" data-target=".objectives" data-element="li" data-text="Objective text here">
+                    <legend>text</legend>
+                    <label for="objectivesObjectiveAdd">Add objective</label>
+                    <input type="button" name="objectivesObjectiveAdd" id="objectivesObjectiveAdd" value="+">
+                    <label for="objectivesObjectiveRemove">Remove objective</label>
+                    <input type="button" name="objectivesObjectiveRemove" id="objectivesObjectiveRemove" value="-">
+                </fieldset>
+            </section>
+            <!-- Bloom's tool BREAKS after the user enters the text editor. -->
+            <section data-target=".section1" class="ui-state-active">
+                <header>
+                    <a href="#" class="toggler">Bloom's Revised</a>
+                </header>
+                <dl data-method="taxonomy" data-target=".objectives">
+                    <dt>Remember</dt>
+                        <dd>Choose</dd>
+                        <dd>Define</dd>
+                        <dd>Describe</dd>
+                        <dd>Identify</dd>
+                        <dd>Label</dd>
+                        <dd>List</dd>
+                        <dd>Locate</dd>
+                        <dd>Match</dd>
+                        <dd>Memorize</dd>
+                        <dd>Name</dd>
+                        <dd>Omit</dd>
+                        <dd>Recite</dd>
+                        <dd>Recognize</dd>
+                        <dd>Select</dd>
+                        <dd>State</dd>
+                    <dt>Understand</dt>
+                        <dd>Classify</dd>
+                        <dd>Defend</dd>
+                        <dd>Demonstrate</dd>
+                        <dd>Distinguish</dd>
+                        <dd>Explain</dd>
+                        <dd>Express</dd>
+                        <dd>Extend</dd>
+                        <dd>Give example</dd>
+                        <dd>Illustrate</dd>
+                        <dd>Indicate</dd>
+                        <dd>Infer</dd>
+                        <dd>Interpret</dd>
+                        <dd>Judge</dd>
+                        <dd>Paraphrase</dd>
+                        <dd>Represent</dd>
+                        <dd>Restate</dd>
+                        <dd>Rewrite</dd>
+                    <dt>Apply</dt>
+                        <dd>Act</dd>
+                        <dd>Articulate</dd>
+                        <dd>Assess</dd>
+                        <dd>Change</dd>
+                        <dd>Chart</dd>
+                        <dd>Compute</dd>
+                        <dd>Construct</dd>
+                        <dd>Contribute</dd>
+                        <dd>Control</dd>
+                        <dd>Determine</dd>
+                        <dd>Develop</dd>
+                        <dd>Discover</dd>
+                        <dd>Draw</dd>
+                        <dd>Establish</dd>
+                        <dd>Extend</dd>
+                        <dd>Imitate</dd>
+                        <dd>Implement</dd>
+                        <dd>Include</dd>
+                        <dd>Participate</dd>
+                        <dd>Predict</dd>
+                        <dd>Prepare</dd>
+                        <dd>Produce</dd>
+                        <dd>Provide</dd>
+                        <dd>Show</dd>
+                    <dt>Analyze</dt>
+                        <dd>Break down</dd>
+                        <dd>Characterize</dd>
+                        <dd>Classify</dd>
+                        <dd>Compare</dd>
+                        <dd>Contrast</dd>
+                        <dd>Correlate</dd>
+                        <dd>Deduce</dd>
+                        <dd>Diagram</dd>
+                        <dd>Differentiate</dd>
+                        <dd>Discriminate</dd>
+                        <dd>Distinguish</dd>
+                        <dd>Examine</dd>
+                        <dd>Limit</dd>
+                        <dd>Outline</dd>
+                        <dd>Prioritize</dd>
+                        <dd>Research</dd>
+                        <dd>Relate</dd>
+                        <dd>Subdivide</dd>
+                    <dt>Evaluate</dt>
+                        <dd>Appraise</dd>
+                        <dd>Argue</dd>
+                        <dd>Criticize</dd>
+                        <dd>Critique</dd>
+                        <dd>Debate</dd>
+                        <dd>Estimate</dd>
+                        <dd>Evaluate</dd>
+                        <dd>Justify</dd>
+                        <dd>Prioritize</dd>
+                        <dd>Rate</dd>
+                        <dd>Value</dd>
+                        <dd>Weigh</dd>
+                    <dt>Create</dt>
+                        <dd>Combine</dd>
+                        <dd>Compose</dd>
+                        <dd>Construct</dd>
+                        <dd>Create</dd>
+                        <dd>Design</dd>
+                        <dd>Devise</dd>
+                        <dd>Forecast</dd>
+                        <dd>Formulate</dd>
+                        <dd>Hypothesize</dd>
+                        <dd>Invent</dd>
+                        <dd>Make</dd>
+                        <dd>Originate</dd>
+                        <dd>Plan</dd>
+                        <dd>Produce</dd>
+                        <dd>Propose</dd>
+                        <dd>Role play</dd>
+                </dl>
+            </section>
+
+            <section data-target=".section2" class="ui-state-default">
+                <header data-method="toggleContent">
+                    <input type="button" value="Section 2">
+                </header>
+                <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
+                    <legend>spacing</legend>
+                    <label for="informationDescriptionExtraAdd">Add spacing</label>
+                    <input type="button" name="informationDescriptionExtraAdd" id="informationDescriptionExtraAdd" value="+">
+                    <label for="informationDescriptionRemove">Remove spacing</label>
+                    <input type="button" name="informationDescriptionExtraRemove" id="informationDescriptionExtraRemove" value="-">
+                </fieldset>
+            </section>
+        </aside>
+
+        <aside class="resources" data-target="#resources .content">
+
+            <section data-target=".section1">
+                <header>
+                    Resources
+                </header>
+                <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
+                    <legend>spacing</legend>
+                    <label for="resourcesContentSpacingAdd">Add spacing</label>
+                    <input type="button" name="resourcesContentSpacingAdd" id="resourcesContentSpacingAdd" value="+">
+                    <label for="resourcesContentSpacingRemove">Remove spacing</label>
+                    <input type="button" name="resourcesContentSpacingRemove" id="resourcesContentSpacingRemove" value="-">
+                </fieldset>
+                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details">
+                    <legend>headings</legend>
+                    <label for="resourceAdd">Add resource</label>
+                    <input type="button" name="resourceAdd" id="resourceAdd" value="+">
+                    <label for="resourceRemove">Remove resource</label>
+                    <input type="button" name="resourceRemove" id="resourceRemove" value="-">
+                </fieldset>
+            </section>
+
+            <section data-target=".section2" class="ui-state-default">
+                <header data-method="toggleContent">
+                    <input type="button" value="Section 2">
+                </header>
+                <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
+                    <legend>spacing</legend>
+                    <label for="resourceSection2SpacingAdd">Add spacing</label>
+                    <input type="button" name="resourceSection2SpacingAdd" id="resourceSection2SpacingAdd" value="+">
+                    <label for="resourceSection2SpacingRemove">Remove spacing</label>
+                    <input type="button" name="resourceSection2SpacingRemove" id="resourceSection2SpacingRemove" value="-">
+                </fieldset>
+            </section>
+        </aside>
+
+        <aside class="activities" data-target="#activities .content">
+            <section data-target=".section1">
+                <header>
+                    Activities
+                </header>
+                <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
+                    <legend>spacing</legend>
+                    <label for="activityContentSpacingAdd">Add spacing</label>
+                    <input type="button" name="activityContentSpacingAdd" id="activityContentSpacingAdd" value="+">
+                    <label for="activityContentSpacingRemove">Remove spacing</label>
+                    <input type="button" name="activityContentSpacingRemove" id="activityContentSpacingRemove" value="-">
+                </fieldset>
+                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details">
+                    <legend>headings</legend>
+                    <label for="activityAdd">Add activity</label>
+                    <input type="button" name="activityAdd" id="activityAdd" value="+">
+                    <label for="activityRemove">Remove activity</label>
+                    <input type="button" name="activityRemove" id="activityRemove" value="-">
+                </fieldset>
+            </section>
+
+            <section data-target=".section2" class="ui-state-default">
+                <header data-method="toggleContent">
+                    <input type="button" value="Section 2">
+                </header>
+                <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
+                    <legend>spacing</legend>
+                    <label for="activitySection2SpacingAdd">Add spacing</label>
+                    <input type="button" name="activitySection2SpacingAdd" id="activitySection2SpacingAdd" value="+">
+                    <label for="activitySection2SpacingRemove">Remove spacing</label>
+                    <input type="button" name="activitySection2SpacingRemove" id="activitySection2SpacingRemove" value="-">
+                </fieldset>
+            </section>
+        </aside>
+
+        <aside class="policies" data-target="#policies .content">
+            <section data-target=".section1">
+                <header>
+                    Policies
+                </header>
+                <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
+                    <legend>spacing</legend>
+                    <label for="policiesContentSpacingAdd">Add spacing</label>
+                    <input type="button" name="policiesContentSpacingAdd" id="policiesContentSpacingRemove" value="+">
+                    <label for="policiesContentSpacingRemove">Remove spacing</label>
+                    <input type="button" name="policiesContentSpacingRemove" id="policiesContentSpacingRemove" value="-">
+                </fieldset>
+                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details">
+                    <legend>headings</legend>
+                    <label for="policyAdd">Add activity</label>
+                    <input type="button" name="policyAdd" id="policyAdd" value="+">
+                    <label for="policyRemove">Remove activity</label>
+                    <input type="button" name="policyRemove" id="policyRemove" value="-">
+                </fieldset>
+            </section>
+
+            <section data-target=".section2" class="ui-state-default">
+                <header data-method="toggleContent">
+                    <input type="button" value="Section 2">
+                </header>
+                <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
+                    <legend>spacing</legend>
+                    <label for="policySection2SpacingAdd">Add spacing</label>
+                    <input type="button" name="policySection2SpacingAdd" id="policySection2SpacingAdd" value="+">
+                    <label for="policySection2SpacingRemove">Remove spacing</label>
+                    <input type="button" name="policySection2SpacingRemove" id="policySection2SpacingRemove" value="-">
+                </fieldset>
+            </section>
+
+            <section data-target=".section3" class="ui-state-default">
+                <header data-method="toggleContent">
+                    <input type="button" value="Section 3">
+                </header>
+                <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
+                    <legend>spacing</legend>
+                    <label for="policySection3SpacingAdd">Add spacing</label>
+                    <input type="button" name="policySection3SpacingAdd" id="policySection3SpacingAdd" value="+">
+                    <label for="policySection3SpacingRemove">Remove spacing</label>
+                    <input type="button" name="policySection3SpacingRemove" id="policySection3SpacingRemove" value="-">
+                </fieldset>
+            </section>
+        </aside>
+
+        <aside class="grades" data-target="#grades .content">
+            <section data-target=".section1">
+                <header>
+                    Grades
+                </header>
+                <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
+                    <legend>spacing</legend>
+                    <label for="policiesContentSpacingAdd">Add spacing</label>
+                    <input type="button" name="policiesContentSpacingAdd" id="policiesContentSpacingRemove" value="+">
+                    <label for="policiesContentSpacingRemove">Remove spacing</label>
+                    <input type="button" name="policiesContentSpacingRemove" id="policiesContentSpacingRemove" value="-">
+                </fieldset>
+                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details">
+                    <legend>components</legend>
+                    <label for="policyAdd">Add component</label>
+                    <input type="button" name="policyAdd" id="policyAdd" value="+">
+                    <label for="policyRemove">Remove component</label>
+                    <input type="button" name="policyRemove" id="policyRemove" value="-">
+                </fieldset>
+            </section>
+             <section data-target=".section2">
+                <header data-method="toggleContent">
+                    <input type="button" value="Scale">
+                </header>
+                <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
+                    <legend>spacing</legend>
+                    <label for="policySection3SpacingAdd">Add spacing</label>
+                    <input type="button" name="policySection3SpacingAdd" id="policySection3SpacingAdd" value="+">
+                    <label for="policySection3SpacingRemove">Remove spacing</label>
+                    <input type="button" name="policySection3SpacingRemove" id="policySection3SpacingRemove" value="-">
+                </fieldset>
+            </section>
+        </aside>
+    </form>
+
+    <div role="main" id="container">
+        <div id="page">
+<div id="page-data">
+    <%= yield %>
+</div>
+
+</div>
+
+<div id="templates">
+    <div class="description">
+        <h3 class="editable">Heading</h3>
+        <div class="editableHtml">
+            Text
+        </div>
+    </div>
+</div><!-- #wrapper -->
+
+<footer>
+    <nav>
+        <ul>
+            <li><a href="http://usu.edu">Utah State University</a></li>
+            <li><a href="http://cidi.usu.edu">CIDI</a></li>
+        </ul>
+    </nav>
+    <a class="home" href="/">Syllabus Builder</a>
+</footer>
+
+<div id="preview_control"><a href="#close">close | x</a></div>
+<div id="preview"></div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/jquery-ui.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.2.min.js"><\/script>')</script>
+<script>window.jQuery.fn.dialog || document.write('<script src="js/libs/jquery-ui-1.8.21.min.js"><\/script>')</script>
+<script type="text/javascript">
+$(document).ready(function() {
+    $("#table1").tableDnD({
+        onDragClass: "myDragClass",
+    });
+});
+</script>
+<script src="/js/libs/tiny_mce/jquery.tinymce.js"></script>
+<script src="/js/plugins.js"></script>
+<script src="/js/script.js"></script>
+<script src="/js/jquery.tablednd.0.7.min.js"></script>
 
 </body>
 </html>
