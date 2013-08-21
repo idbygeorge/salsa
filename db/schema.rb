@@ -14,6 +14,9 @@
 ActiveRecord::Schema.define(version: 20130816214114) do
 
   create_table "syllabuses", force: true do |t|
+    t.string   "name"
+    t.string   "edit_id"
+    t.string   "view_id"
     t.text     "payload"
     t.datetime "created_at"
     t.datetime "updated_at"
