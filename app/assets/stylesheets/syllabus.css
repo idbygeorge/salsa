@@ -1,0 +1,69 @@
+html, body { height: 100%; min-height: 420px; position: relative; }
+
+.masthead, footer, #preview_control { background: url('../img/topbar.png') repeat-x; overflow: hidden; }
+    .masthead li { float: left; }
+    footer li, #preview_control a { float: right; }
+
+    .masthead a, footer a, #preview_control a, .masthead a:visited, footer a:visited, #preview_control a:visited, #preview_control .previewLabel { display: block; padding: 5px 20px; color: #fff; text-decoration: none; }
+    .masthead a:hover, footer a:hover, #preview_control a:hover, .masthead a:focus, footer a:focus, #preview_control a:focus { background: #046; color: #eee; }
+    
+    a.home { float: left; }
+    
+    .masthead { top: 0; }
+    footer { bottom: 0; }
+    .masthead, footer { color: #fff; position: fixed; left: 0; right: 0; z-index: 999; }
+
+#wrapper { height: 100%; width: 912px; position: relative; overflow: hidden; min-height: 400px; float: left; }
+    #tabs { float: left; margin-top: 140px; width: 108px; margin-left: 10px; }
+        #tabs li { text-align: center; text-transform: lowercase; line-height: 1.4; }
+            #tabs li a { display: block; padding: 4px 4px 4px 8px; background: #EBEBEB; color: black; text-decoration: none; border: solid 3px #EBEBEB; }
+
+            #tabs li a:hover, #tabs li.selected a { background: #fff; border-color: #aaa; }
+
+            #tabs li.information a:hover, #tabs li.information.selected a, .information #container, .information #controlPanel { border-color: #C0C0C0; }
+            #tabs li.objectives a:hover, #tabs li.objectives.selected a, .objectives #container, .objectives #controlPanel, .objectives #topBar { border-color: #7FC5EC; }
+            #tabs li.resources a:hover, #tabs li.resources.selected a, .resources #container, .resources #controlPanel { border-color: #F0E22E; }
+            #tabs li.activities a:hover, #tabs li.activities.selected a, .activities #container, .activities #controlPanel { border-color: #A1CC3A; }
+            #tabs li.policies a:hover, #tabs li.policies.selected a, .policies #container, .policies #controlPanel { border-color: #BEBEE0; }
+            #tabs li.grades a:hover, #tabs li.grades.selected a, .grades #container, .grades #controlPanel { border-color: #D4DAC8; }
+
+    #controlPanel { float: right; width: 145px; margin-top: 35px; max-height: 490px; overflow: hidden; border; font-size: 12px; }
+        #controlPanel header { }
+            #controlPanel header input, #controlPanel header a { width: 100%; background: transparent; border: 0 none; color: #fff; font-weight: bold; text-decoration: none; }
+            
+        #controlPanel .ui-state-default header { opacity: .4; }
+        #controlPanel .ui-state-active header { opacity: 1; }
+        #controlPanel .ui-state-default fieldset { display: none; }
+        #controlPanel .ui-state-active fieldset { display: block; }
+        #controlPanel section { padding: 5px; overflow: hidden; }
+        #controlPanel header { background: url('../img/topbar.png') repeat-x 35px; color: #fff; padding: 0 5px; line-height: 1.8; font-weight: bold; white-space: nowrap; text-align: center; }
+        #controlPanel fieldset, #controlPanel dl { border: 0 none; padding: 3px 3px 3px 5px; background: #eee; margin: 0; }
+            #controlPanel dt { background: #fff; line-height: 1.9; margin-bottom: 3px; text-align: center; cursor: pointer; }
+            #controlPanel dt.ui-state-active { font-weight: bold; background: #7FC5EC; }
+            #controlPanel dd { display: none; text-align: center; }
+        #controlPanel legend { background: #fff; margin-right: 4px; text-indent: 5px; float: left; width: 70px; line-height: 1.9; }
+        #controlPanel fieldset label { position: absolute; left: -999999px; }
+        #controlPanel fieldset input { width: 2em; height: 2em; float: left; margin-left: 2px; line-height: 1; padding-left: 0; padding-right: 0; text-align: center; }
+
+    #controlPanel, #container, #topBar { border: solid 2px #aaa; border-radius: 10px; }
+
+    #container, #topBar { position: absolute; top: 35px; bottom: 35px; left: 116px; overflow: auto; background: #fff; width: 640px; }
+        #page { padding: 15px; }
+            .content { min-height: 1.4em; }
+                .editing input, .editing textarea { width: 100%; }
+
+
+#templates { display: none; }
+
+#preview { width: 8.5in; margin: .5in auto; display: none; }
+    #preview_control { display: none; }
+    #preview section { background: #fff; margin-bottom: .5in; border: solid 1px #eee; padding: .5in; /*min-height: 11in;*/ }
+    
+#topBar { z-index: 99999999; background: #fff; bottom: auto; }
+    #topBar h2 { text-align: center; margin: 5px 0 0; font-size: 10pt; }
+    #topBar ul { list-style: none; margin: 0; padding: 4px 15px 8px; overflow: hidden; }
+        #topBar li { float: left; text-align: center; margin: 3px; width: 19%; }
+            #topBar li a { background: #fff; color: #000; line-height: 1.6; text-decoration: none; display: block; }
+            .objectives #topBar li a { background: #7FC5EC; }
+#components tr.myDragClass td { font-weight: bold; background-color: #ffe4b5; }
+
