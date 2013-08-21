@@ -1,0 +1,15 @@
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.8.21/jquery-ui.min.js"></script>
+<script>window.jQuery || document.write('<script src="js/libs/jquery-1.7.2.min.js"><\/script>')</script>
+<script>window.jQuery.fn.dialog || document.write('<script src="js/libs/jquery-ui-1.8.21.min.js"><\/script>')</script>
+<script type="text/javascript">
+$(document).ready(function() {
+    $("#table1").tableDnD({
+        onDragClass: "myDragClass",
+    });
+});
+</script>
+<%= javascript_include_tag 'libs/tiny_mce/jquery.tinymce' %>
+<%= javascript_include_tag 'plugins' %>
+<%= javascript_include_tag 'script' %>
+<%= javascript_include_tag 'jquery.tablednd.0.7.min.js' %>
