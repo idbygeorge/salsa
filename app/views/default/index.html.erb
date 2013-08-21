@@ -1,4 +1,14 @@
-<div style="background-image: <%= image_tag 'welcomeBG.png' %> ">
-<h2>Welcome to <i>Salsa</i>!</h1>
+
+body
+{
+background-image:url(<%= image_tag 'welcomeBG.png' %>);
+width: 800px;
+height: 600px;
+box-align: center;
+}
+<body>
+<div>
+<h2>Welcome to <i>Salsa</i>!</h2>
 <p><%= link_to 'Create styled & accessible learning service agreements for your courses.', new_syllabus_path %></p>
 </div>
+</body>
