@@ -1,0 +1,44 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+<meta charset="utf-8">
+
+<title>Syllabus Builder</title>
+<meta name="description" content="">
+
+<meta name="viewport" content="width=device-width">
+<%= stylesheet_link_tag 'style' %>
+<%= stylesheet_link_tag 'general_enclosed_foundicons' %>
+
+<%= javascript_include_tag 'libs/modernizr.js' %>
+</head>
+<body>
+  <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome </a> to experience this site.</p><![endif]-->
+
+<%= render :partial => 'layouts/global/toolbar' %>
+
+<div id="wrapper">
+
+    <%= render :partial => 'layouts/global/section_nav' %>
+
+    <%= render :partial => 'layouts/global/control_panel' %>
+
+    <div role="main" id="container">
+        <div id="page">
+            <div id="page-data">
+                <%= yield %>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<%= render :partial => 'layouts/global/footer' %>
+
+<%= render :partial => 'layouts/global/js' %>
+
+</body>
+</html>
