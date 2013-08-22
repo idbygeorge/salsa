@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Welcome to Salsa!</title>
+<title>Untitled Document</title>
 <style type="text/css">
 .watermark {
-	background-image: url(<%=image_path "welcomeBG2.png"%>);
+	background-image: url(../../assets/images/welcomeBG2.png);
 	background-color: #fff;
-	text-align: center;
+	text-align: left;
 	vertical-align: middle;
 	height: 768px;
 	width: 1024px;
@@ -15,12 +15,13 @@
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 1em;
 	color: #666;
-	white-space: nowrap;
 	border: thin solid #a1cc3a;
+	line-height: 1.5em;
+	letter-spacing: .2em;
 }
 .topBarLogo {
 	background-color: #a1cc3a;
-	background-image: url(<%=image_path "topnavLogo.png"%>);
+	background-image: url(../../assets/images/topnavLogo.png);
 	background-repeat: no-repeat;
 	height: 75px;
 	width: 100%;
@@ -31,21 +32,25 @@ body {
 }
 .title {
 	text-align: left;
-	padding-top: 8em;
-	padding-right: 0em;
-	padding-bottom: 0em;
-	padding-left: 5em;
+	margin-top: 8em;
+	margin-right: 5em;
+	margin-bottom: 2em;
+	margin-left: 5em;
+	
 }
 </style>
 </head>
 <body>
 <div class="watermark">
-<div class="topBarLogo">
-<div class="title">
-<h2>Welcome to Salsa!</h2>
-<p><%= link_to 'Click here to get started.', new_syllabus_path %></p>
-</div>
-</div>
+    <div class="topBarLogo"></div>
+    	
+  <div class="title"> 
+  		<h2>Welcome to Salsa!</h2>
+                <p>Salsa is an open-source web application developed at Utah State University.</p>
+                <p>Use Salsa to make you own <u>S</u>tyled & <u>A</u>ccessible <u>L</u>earning <u>S</u>ervice <u>A</u>greements: SALSAs.</p>
+                <p><%= link_to 'Click here to get started.', new_syllabus_path %></p>
+    </div>
+    </div>
 </div>
 </body>
 </html>
