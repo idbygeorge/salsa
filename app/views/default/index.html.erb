@@ -1,6 +1,51 @@
-<div>
-<%= image_tag 'welcomeBG.png' %>
-<h2>Welcome to <i>Salsa</i>!</h2>
-<p><%= link_to 'Create styled & accessible learning service agreements for your courses.', new_syllabus_path %></p>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<title>Welcome to Salsa!</title>
+<style type="text/css">
+.watermark {
+	background-image: url(../../assets/images/welcomeBG2.png);
+	background-color: #fff;
+	text-align: center;
+	vertical-align: middle;
+	height: 768px;
+	width: 1024px;
+	background-repeat: no-repeat;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 1em;
+	color: #666;
+	white-space: nowrap;
+	border: thin solid #a1cc3a;
+}
+.topBarLogo {
+	background-color: #a1cc3a;
+	background-image: url(../../assets/images/topnavLogo.png);
+	background-repeat: no-repeat;
+	height: 75px;
+	width: 100%;
+}
+body {
+	color: #C0C0C0;
+	background-color: #efefef;
+}
+.title {
+	text-align: left;
+	padding-top: 8em;
+	padding-right: 0em;
+	padding-bottom: 0em;
+	padding-left: 5em;
+}
+</style>
+</head>
+<body>
+<div class="watermark">
+<div class="topBarLogo">
+<div class="title">
+<h2>Welcome to Salsa!</h2>
+<p><%= link_to 'Click here to get started.', new_syllabus_path %></p>
+</div>
+</div>
 </div>
 </body>
+</html>
