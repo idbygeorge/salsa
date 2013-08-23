@@ -2,7 +2,7 @@
     <nav id="toolbar">
         <ul>
             <li>
-               <span><i class="foundicon-smiley"></i><%= link_to "Save", syllabus_path(@syllabus.edit_id), :authenticity_token => form_authenticity_token(), :method => :put, :remote => true, :id => 'tb_save' %></span>
+               <%= link_to "Save", syllabus_path(@syllabus.edit_id), :authenticity_token => form_authenticity_token(), :method => :put, :remote => true, :id => 'tb_save' %><i class="foundicon-smiley"></i>
             </li>
             <li><a href="#preview" class="preview"><i class="foundicon-checkmark"></i>Preview</a></li>
             <li><a href="#" id='tb_share'><i class="foundicon-right-arrow"></i>Share</a></li>
