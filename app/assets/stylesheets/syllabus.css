@@ -83,6 +83,7 @@ table.components {color:#000;width:70%;border-width: 1px;border-color: #c0c0c0;b
 table.components tbody.center {text-align:center;}
 table.components th {color:#fff;background-color:#696969;;border-width: 1px;border-style: solid;border-color: #c0c0c0;text-align:center;}
 table.components tr.total {font-weight:bold;}
+table.components tr.even { background: #e8e8e8;}
 table.components td {border-width: 1px;padding: 8px;border-style: solid;border-color: #c0c0c0;}
 table.components td.left {text-align:left;}
 table.components td.right {text-align:right;}
