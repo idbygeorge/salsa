@@ -3,7 +3,7 @@
 */
 
 function showPreview(){
-    var preview = $("#container #page").children().clone().show();
+    var preview = $("#page-data").children().clone().show();
     $(".content", preview).hide();
     $(".example", preview).show();
     
@@ -123,24 +123,17 @@ function showPreview(){
             return false;
         });
         
-        $(".masthead a.example").on("click", function(){
-            showPreview();
-            
+        $("#tb_example").on("click", function(){
+            var preview = $("#example").children().clone().show();
+            $(".content", preview).hide();
+            $("#preview").html(preview).show().addClass("overlay");
+            $("#preview_control").show().append($("<div class='previewLabel'/>").text($(this).text()));
+            $(".masthead, #wrapper, footer").hide();
             return false;
         });
         
         $(".masthead a.preview").on("click", function(){
-            var preview = $("#page-data").children().clone().show();
-            $(".content", preview).show();
-            $(".example", preview).hide();
-            
-            $(".editable, .editableHtml", preview).removeClass("editable editableHtml").removeAttr("tabindex");
-            
-            $("#preview").html(preview).show().addClass("overlay");
-            $("#preview_control").show().append($("<div class='previewLabel'/>").text($(this).text()));
-
-            $(".masthead, #wrapper, footer").hide();
-            
+            showPreview();
             return false;
         });
 

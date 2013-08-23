@@ -22,25 +22,29 @@
 <body id="edit_syllabus">
   <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome </a> to experience this site.</p><![endif]-->
 
-<%= render :partial => 'layouts/global/toolbar' %>
+<div id="editor_view">
+    <%= render :partial => 'layouts/global/toolbar' %>
 
-<div id="wrapper">
+    <div id="wrapper">
 
-    <%= render :partial => 'layouts/global/section_nav' %>
+        <%= render :partial => 'layouts/global/section_nav' %>
 
-    <%= render :partial => 'layouts/global/control_panel' %>
+        <%= render :partial => 'layouts/global/control_panel' %>
 
-    <div role="main" id="container">
-        <div id="page">
-            <div id="page-data" data-view-id="<%= @syllabus.view_id %>">
-                <%= yield %>
+        <div role="main" id="container">
+            <div id="page" class="editor_controls">
+                <div id="page-data" data-view-id="<%= @syllabus.view_id %>">
+                    <%= yield %>
+                </div>
             </div>
         </div>
+
     </div>
 
+    <%= render :partial => 'layouts/global/footer' %>
 </div>
 
-<%= render :partial => 'layouts/global/footer' %>
+<%= render :partial => 'layouts/global/example' %>
 
 <%= render :partial => 'layouts/global/js' %>
 
