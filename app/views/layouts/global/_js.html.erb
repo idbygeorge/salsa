@@ -13,6 +13,13 @@ $(document).ready(function() {
         onDragClass: "myDragClass",
     });
 });
+<!--Script for calculating Total Points-->
+    var sum = 0;
+    $("form > input[name='price[]']").each(function() {
+        $this = $(this);
+        sum += parseInt($this.attr("value"));
+    });
+    $("form > input[name='total']").attr("value", sum);
 </script>
 <%= javascript_include_tag '/assets/libs/tiny_mce/jquery.tinymce' %>
 <%= javascript_include_tag '/assets/plugins' %>
