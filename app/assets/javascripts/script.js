@@ -282,7 +282,7 @@ $(document).ready(function() {
         $.blockUI({ message: '<h1><img src="/assets/busy.gif" /> Saving. Just a moment...</h1>' }); 
     });
     $('#tb_share').click(function() { 
-        $.blockUI({ message: $('#share_prompt'), css: { width: '500px', height: '110px' }  }); 
+        $.blockUI({ message: $('#share_prompt'), css: { width: '550px', height: '110px' }  }); 
     });
     $('#prompt_close').click(function(){$.unblockUI();});
     $('#prompt_visit').click(function(){window.open($('#view_url').text(), '_blank');});
