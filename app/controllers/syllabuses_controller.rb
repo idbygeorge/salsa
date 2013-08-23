@@ -2,7 +2,7 @@ class SyllabusesController < ApplicationController
 
 	layout 'view'
 
-	before_filter :lookup_syllabus, :only => [:view, :edit]
+	before_filter :lookup_syllabus, :only => [:edit, :update]
 
   def index
   	redirect_to :new
@@ -20,6 +20,17 @@ class SyllabusesController < ApplicationController
   def edit
   	render :layout => 'edit', :template => '/syllabuses/content'
  	end
+
+  def update
+    respond_to do |format|
+      msg = { :status => "ok", :message => "Success!", :html => "<b>...</b>" }
+      format.json  { 
+        @syllabus.payload = request.raw_post
+        @syllabus.save!
+        render :json => msg 
+      }
+    end
+  end
 
  	protected
 
