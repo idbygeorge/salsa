@@ -2,10 +2,23 @@
  * Utah State University - 2012
 */
 
+function showPreview(){
+    var preview = $("#container #page").children().clone().show();
+    $(".content", preview).hide();
+    $(".example", preview).show();
+    
+    $(".editable, .editableHtml", preview).removeClass("editable editableHtml").removeAttr("tabindex");
+    
+    $("#preview").html(preview).show().addClass("overlay");
+    $("#preview_control").show().append($("<div class='previewLabel'/>").text($(this).text()));
+
+    $(".masthead, #wrapper, footer").hide();
+}
+
 (function($) {
     $(function(){
         $("body").append($("<label>Edit Section Heading</label>").addClass("visuallyhidden"));
-        $("#container section,#controlPanel aside").hide();
+        $("#controlPanel aside").hide();
         
         $("#tabs a").on("click", function(){
             var listItem = $(this).closest("li");
@@ -23,8 +36,8 @@
             
             $("#topBar").remove();
             $("#container").removeAttr("style");
-        }).first().click();
-        
+        });
+
         $("#controlPanel").on("click", ".toggler", function(){
             $(this).closest("section").toggleClass("ui-state-active ui-state-default");
             $(this).closest("header").next().toggle().find("dt.ui-state-active").removeClass("ui-state-active");
@@ -111,22 +124,13 @@
         });
         
         $(".masthead a.example").on("click", function(){
-            var preview = $("#container #page").children().clone().show();
-            $(".content", preview).hide();
-            $(".example", preview).show();
-            
-            $(".editable, .editableHtml", preview).removeClass("editable editableHtml").removeAttr("tabindex");
-            
-            $("#preview").html(preview).show().addClass("overlay");
-            $("#preview_control").show().append($("<div class='previewLabel'/>").text($(this).text()));
-
-            $(".masthead, #wrapper, footer").hide();
+            showPreview();
             
             return false;
         });
         
         $(".masthead a.preview").on("click", function(){
-            var preview = $("#container #page").children().clone().show();
+            var preview = $("#page-data").children().clone().show();
             $(".content", preview).show();
             $(".example", preview).hide();
             
@@ -146,6 +150,8 @@
             $("#preview_control .previewLabel").remove();
             return false;
         });
+        if ($("#edit_syllabus")) $("#tabs a").first().click();
+
     });
     
     var getTarget = function(source) {
@@ -274,5 +280,10 @@ $('#tb_save').on('ajax:success', function(event, xhr, settings) {
 $(document).ready(function() { 
     $('#tb_save').click(function() { 
         $.blockUI({ message: '<h1><img src="/assets/busy.gif" /> Saving. Just a moment...</h1>' }); 
-    }); 
+    });
+    $('#tb_share').click(function() { 
+        $.blockUI({ message: $('#share_prompt'), css: { width: '500px', height: '110px' }  }); 
+    });
+    $('#prompt_close').click(function(){$.unblockUI();});
+    $('#prompt_visit').click(function(){window.open($('#view_url').text(), '_blank');});
 }); 

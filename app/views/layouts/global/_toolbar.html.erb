@@ -1,16 +1,24 @@
 <header class="masthead">
-    <nav>
+    <nav id="toolbar">
         <ul>
             <li>
                <%= link_to "Save", syllabus_path(@syllabus.edit_id), :authenticity_token => form_authenticity_token(), :method => :put, :remote => true, :id => 'tb_save' %>
             </li>
-            <li><a href="#example" class="example"><i class="foundicon-star" style="font-size:.85em;text-decoration:none;padding-right:.5em;"></i>Example</a></li>
-            <li><a href="#preview" class="preview"><i class="foundicon-checkmark" style="font-size:.85em;text-decoration:none;padding-right:.5em;"></i>Preview</a></li>
-            <li float="right"><a href="./help.html"><i class="foundicon-heart" style="font-size:.85em;text-decoration:none;padding-right:.5em;"></i>Help</a></li>
+            <li><a href="#example" id="example"><i class="foundicon-star"></i>Example</a></li>
+            <li><a href="#preview" class="preview"><i class="foundicon-checkmark"></i>Preview</a></li>
+            <li><a href="/help.html"><i class="foundicon-heart"></i>Help</a></li>
+            <li><a href="#" id='tb_share'><i class="foundicon-right-arrow"></i>Share</a></li>
         </ul>
     </nav>
 </header>
 
 <div id="preview_control"><a href="#close">close | x</a></div>
 <div id="preview"></div>
+
+<div id="share_prompt" style="display:none; cursor: default"> 
+    <h1>Share this syllabus at:</h1> 
+    <p><%= link_to @view_url, @view_url, :target => '_blank', :id => "view_url" %></p>
+    <input type="button" id="prompt_close" value="Close" /> 
+    <input type="button" id="prompt_visit" value="Go There Now" /> 
+</div> 
 

@@ -14,6 +14,13 @@ class SyllabusesController < ApplicationController
  	end
 
   def show
+    @syllabus = Syllabus.find_by_view_id(params[:id])
+    unless @syllabus
+      syllabus = Syllabus.find_by_edit_id(params[:id])
+      raise ActionController::RoutingError.new('Not Found') unless syllabus   
+      redirect_to edit_syllabus_path(:id => syllabus.edit_id)
+      return
+    end
   	render :layout => 'view', :template => '/syllabuses/content'
   end
 
@@ -38,6 +45,7 @@ class SyllabusesController < ApplicationController
   	@syllabus = Syllabus.find_by_edit_id(params[:id])
   	raise ActionController::RoutingError.new('Not Found') unless @syllabus 
   	@content = @syllabus.payload
+    @view_url = "#{APP_CONFIG['domain']}/syllabuses/#{@syllabus.view_id}"
   end
 
 end

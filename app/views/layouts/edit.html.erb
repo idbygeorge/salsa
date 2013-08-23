@@ -19,7 +19,7 @@
 <%= javascript_include_tag 'jquery.blockUI.js' %>
 <%= csrf_meta_tag %>
 </head>
-<body>
+<body id="edit_syllabus">
   <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome </a> to experience this site.</p><![endif]-->
 
 <%= render :partial => 'layouts/global/toolbar' %>
@@ -32,7 +32,7 @@
 
     <div role="main" id="container">
         <div id="page">
-            <div id="page-data">
+            <div id="page-data" data-view-id="<%= @syllabus.view_id %>">
                 <%= yield %>
             </div>
         </div>
