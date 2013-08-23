@@ -1,0 +1,5 @@
+development:
+  domain: 'http://localhost:3000'
+
+production:
+  domain: 'http://salsa-syllabus.herokuapp.com'
