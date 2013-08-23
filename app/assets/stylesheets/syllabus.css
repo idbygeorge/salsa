@@ -85,6 +85,7 @@ table.components tr.total {font-weight:bold;}
 table.components td {border-width: 1px;padding: 8px;border-style: solid;border-color: #c0c0c0;}
 table.components td.left {text-align:left;}
 table.components td.right {text-align:right;}
+table.components td.center {text-align:center;}
 table.components tr.myDragClass td {color:#666;background-color: #ffe4b5; }
 
 
