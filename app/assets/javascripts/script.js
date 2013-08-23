@@ -267,3 +267,12 @@
 $('#tb_save').on('ajax:beforeSend', function(event, xhr, settings) {
   settings.data = $('#page-data').html();
 });
+$('#tb_save').on('ajax:success', function(event, xhr, settings) {
+    setTimeout(function(){$.unblockUI();}, 1000); 
+});
+
+$(document).ready(function() { 
+    $('#tb_save').click(function() { 
+        $.blockUI({ message: '<h1><img src="/assets/busy.gif" /> Saving. Just a moment...</h1>' }); 
+    }); 
+}); 
