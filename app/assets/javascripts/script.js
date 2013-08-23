@@ -56,11 +56,11 @@
             $(this).html($("<textarea/>").attr("id", "contentTextControl").val(text)).find("input,textarea");
             
             $("textarea", this).tinymce({
-                script_url : 'js/libs/tiny_mce/tiny_mce.js',
+                script_url : '/assets/libs/tiny_mce/tiny_mce.js',
                 theme : "simple",
                 plugins : "autoresize,autolink",
                 width: '100%',
-                content_css : "css/content.css",
+                content_css : "/assets/content.css",
                 setup : function(ed) {
                     ed.onInit.add(function(ed, evt) {
                         var dom = tinymce.dom;
@@ -262,3 +262,8 @@
         }
     };
 })(jQuery);
+
+
+$('#tb_save').on('ajax:beforeSend', function(event, xhr, settings) {
+  settings.data = $('#page-data').html();
+});

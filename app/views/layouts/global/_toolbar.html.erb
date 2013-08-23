@@ -1,7 +1,9 @@
 <header class="masthead">
     <nav>
         <ul>
-            <li><a href="#save">Save</a></li>
+            <li>
+               <%= link_to "Save", syllabus_path(@syllabus.edit_id), :authenticity_token => form_authenticity_token(), :method => :put, :remote => true, :id => 'tb_save' %>
+            </li>
             <li><a href="#example" class="example"><i class="foundicon-star" style="font-size:.85em;text-decoration:none;padding-right:.5em;"></i>Example</a></li>
             <li><a href="#preview" class="preview"><i class="foundicon-checkmark" style="font-size:.85em;text-decoration:none;padding-right:.5em;"></i>Preview</a></li>
             <li float="right"><a href="./help.html"><i class="foundicon-heart" style="font-size:.85em;text-decoration:none;padding-right:.5em;"></i>Help</a></li>

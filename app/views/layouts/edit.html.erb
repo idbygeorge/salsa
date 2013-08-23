@@ -13,7 +13,10 @@
 <%= stylesheet_link_tag 'style' %>
 <%= stylesheet_link_tag 'general_enclosed_foundicons' %>
 
-<%= javascript_include_tag 'libs/modernizr.js' %>
+<%= javascript_include_tag '/assets/libs/modernizr.js' %>
+<%= javascript_include_tag 'jquery.min.js' %>
+<%= javascript_include_tag 'jquery_ujs.js' %>
+<%= csrf_meta_tag %>
 </head>
 <body>
   <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome </a> to experience this site.</p><![endif]-->
