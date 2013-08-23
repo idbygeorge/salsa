@@ -30,3 +30,4 @@ ul.none { list-style: none; padding-left: 0; margin: 0 0 12px; }
     #preview section div { page-break-inside: avoid; }
     #preview_control { display: none !important; }
 }
+a#view_url{font-size:11px;}
