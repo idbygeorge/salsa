@@ -21,6 +21,7 @@ class SyllabusesController < ApplicationController
       redirect_to edit_syllabus_path(:id => syllabus.edit_id)
       return
     end
+    @content = @syllabus.payload
   	render :layout => 'view', :template => '/syllabuses/content'
   end
 
