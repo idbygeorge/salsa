@@ -113,11 +113,11 @@ GEM
     turbolinks (1.3.0)
       coffee-rails
     tzinfo (0.3.37)
+    uber-s3 (0.2.4)
+      mime-types (~> 1.17)
     uglifier (2.1.2)
       execjs (>= 0.3.0)
       multi_json (~> 1.0, >= 1.0.2)
-    wicked_pdf (0.9.6)
-      rails
 
 PLATFORMS
   ruby
@@ -134,5 +134,5 @@ DEPENDENCIES
   sdoc
   sqlite3
   turbolinks
+  uber-s3
   uglifier (>= 1.3.0)
-  wicked_pdf

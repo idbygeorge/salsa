@@ -1,5 +1,15 @@
 development:
   domain: 'http://localhost:3000'
+  pdf_generator_webhook: 'https://worker-aws-us-east-1.iron.io:443/2/projects/5217d1d38fe6380005000015/tasks/webhook?code_name=pdf_generator&oauth=Zztb-nslUMyUyWTEIN5YEwbZQbc'
+  aws_access_key_id: 'AKIAJU7EQFFFTEKB3EOQ'
+  aws_secret_access_key: '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'
+  aws_bucket: 'edu.usu.salsa'
+  aws_region: 'us-west-2'  
 
 production:
   domain: 'http://salsa-syllabus.herokuapp.com'
+  pdf_generator_webhook: 'https://worker-aws-us-east-1.iron.io:443/2/projects/5217d1d38fe6380005000015/tasks/webhook?code_name=pdf_generator&oauth=Zztb-nslUMyUyWTEIN5YEwbZQbc'
+  aws_access_key_id: 'AKIAJU7EQFFFTEKB3EOQ'
+  aws_secret_access_key: '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'
+  aws_bucket: 'edu.usu.salsa'
+  aws_region: 'us-west-2'

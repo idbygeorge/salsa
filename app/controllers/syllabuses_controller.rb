@@ -44,6 +44,8 @@ class SyllabusesController < ApplicationController
       format.json  { 
         @syllabus.payload = request.raw_post
         @syllabus.save!
+        view_url = syllabus_url(@syllabus.view_id, :only_path => false)
+        self.do_http(APP_CONFIG['pdf_generator_webhook'], {'url' => view_url})
         render :json => msg 
       }
     end
@@ -55,7 +57,8 @@ class SyllabusesController < ApplicationController
   	@syllabus = Syllabus.find_by_edit_id(params[:id])
   	raise ActionController::RoutingError.new('Not Found') unless @syllabus 
   	@content = @syllabus.payload
-    @view_url = "#{APP_CONFIG['domain']}/syllabuses/#{@syllabus.view_id}.pdf"
+    @view_url = "https://s3-#{APP_CONFIG['aws_region']}.amazonaws.com/#{APP_CONFIG['aws_bucket']}/syllabuses/#{@syllabus.view_id}.pdf"
+    #@view_url = "#{APP_CONFIG['domain']}/syllabuses/#{@syllabus.view_id}.pdf"
   end
 
 end

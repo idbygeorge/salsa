@@ -1,0 +1,18 @@
+runtime 'ruby'
+
+name 'pdf_generator'
+
+gem 'wicked_pdf'
+gem 'yajl-ruby'
+gem 'uuidtools'
+gem 'faraday'
+gem 'uber-s3'
+gem 'addressable'
+gem 'actionmailer'
+gem 'rails_config'
+
+file '../../config/config.yml'
+
+remote
+
+exec 'generate_pdf.rb'
