@@ -15,11 +15,11 @@ $(document).ready(function() {
 });
 <!--Script for calculating Total Points-->
     var sum = 0;
-    $("form > input[name='price[]']").each(function() {
+    $("form > input[name='points[]']").each(function() {
         $this = $(this);
         sum += parseInt($this.attr("value"));
     });
-    $("form > input[name='total']").attr("value", sum);
+    $("form > input[name='totalPoints']").attr("value", sum);
 </script>
 <%= javascript_include_tag '/assets/libs/tiny_mce/jquery.tinymce' %>
 <%= javascript_include_tag '/assets/plugins' %>
