@@ -2,43 +2,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Syllabus Builder</title>
-<style type="text/css">
-.watermark {
-	background-image: url(<%=image_path "welcomeBG2.png"%>);
-	background-color: #fff;
-	text-align: left;
-	vertical-align: middle;
-	height: 768px;
-	width: 1024px;
-	background-repeat: no-repeat;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 1em;
-	color: #666;
-	border: thin solid #a1cc3a;
-	line-height: 1.5em;
-	letter-spacing: .2em;
-}
-.topBarLogo {
-	background-color: #a1cc3a;
-	background-image: url(<%=image_path "topnavLogo.png"%>);
-	background-repeat: no-repeat;
-	height: 75px;
-	width: 100%;
-}
-body {
-	color: #C0C0C0;
-	background-color: #efefef;
-}
-.title {
-	text-align: left;
-	margin-top: 5em;
-	margin-right: 5em;
-	margin-bottom: 2em;
-	margin-left: 5em;
-	
-}
-</style>
+<title>Salsa: styled & accessible learning services agreements</title>
+<%= stylesheet_link_tag "start", media: "all" %>
 </head>
 <body>
 <div class="watermark">
@@ -46,7 +11,7 @@ body {
     	
   <div class="title"> 
   		<h2>Welcome to Salsa!</h2>
-                <p>Salsa is an open-source web application developed at <a href="http://www.usu.edu" target="blank">Utah State University</a>.</p>
+                <p>Salsa is an open-source web application developed at <a href="http://cidi.usu.edu" target="blank">Utah State University</a>.</p>
                 <p>Use Salsa to make <u>S</u>tyled & <u>A</u>ccessible <u>L</u>earning <u>S</u>ervice <u>A</u>greements: SALSAs.</p>
                 <p><%= link_to 'Click here to get started.', new_syllabus_path %></p>
     </div>

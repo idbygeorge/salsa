@@ -380,81 +380,71 @@
         <div class="section1">
             <h2 class="editable">Grades</h2>
             <div class="editableHtml">
-                Your grade will be based on the following components:<br /><br />
+                <p>&nbsp;</p>
+                <p>Your grade will be based on the following:</p>
             </div>
             <!-- Components table. By default, three component rows are shown with values of "Component" & "Points". Users can delete all but ONE ROW, and may add a maximum of 15. When a row is deleted, the points are subtracted from the TOTAL POINTS, and the values of the row are reset to "Component" & "0".-->
             <div>
                 <table id="table1" class="components" border="1">
                     <thead>
-                        <tr><th>Components</th><th>Points</th></tr>
+                        <tr><th class="editable">Components</th><th>Points</th></tr>
                     </thead>
                     <tfoot>
-                        <tr class="total"><td>Total Points</td><td class="right">0</td></tr>
+                    <tr>&nbsp;</tr>
+                    </tfoot>
+                    <tfoot>
+                        
                     </tfoot>
                     <tbody>
-                        <tr id="1"><td class="editable">Component 1</td><td class="editable">0</td><td><%= image_tag 'updown2.gif' %></td></tr>
-                        <tr id="2"><td class="editable">Component 2</td ><td class="editable">0</td><td><%= image_tag 'updown2.gif' %></td></tr>
-                        <tr id="3"><td class="editable">Component 3</td><td class="editable">0</td><td><%= image_tag 'updown2.gif' %></td></tr>
-                        <tr id="4"><td class="editable">Component 4</td><td class="editable">0</td><td><%= image_tag 'updown2.gif' %></td></tr>
-                        <tr id="5"><td class="editable">Component 5</td><td class="editable">0</td><td><%= image_tag 'updown2.gif' %></td></tr>
-                            <!-- Connect components button to show/hide table rows
-                        <tr id="6"><td class="editable">Component 6</td><td class="editable">0</td></tr>
-                        <tr id="7"><td class="editable">Component 7</td><td class="editable">>0</td></tr>
-                        <tr id="8"><td class="editable">Component 8</td><td class="editable">>0</td></tr>
-                        <tr id="9"><td class="editable">Component 9</td><td class="editable">>0</td></tr>
-                        <tr id="10"><td class="editable">Component 10</td><td class="editable">>0</td></tr>
-                        -->
+                        <tr id="1"><td class="editable">Component 1</td><td class="editable right">0</td></tr>
+                        <tr id="2"><td class="editable">Component 2</td ><td class="editable right">0</td></tr>
+                        <!-- Code Component Add/Remove buttons in .section1 of Grades control panel-->
+                        <tr class="total"><td>Total Points</td><td class="right">0</td></tr>
+   
                     </tbody>
                 </table>
             </div>
         </div><!-- .section1 -->
         
-        <div class="section2 hide"
-            <h2 class="editable">Extra Credit</h2>
+        <div class="section2 hide">
             <div class="editableHtml">
-                You will have the opportunity to earn Extra Credit:<br /><br />
+                <p>&nbsp;</p>
+                <p>You will have the opportunity to earn Extra Credit:</p>
             </div>
             <!-- Components table. By default, three component rows are shown with values of "Component" & "Points". Users can delete all but ONE ROW, and may add a maximum of 15. When a row is deleted, the points are subtracted from the TOTAL POINTS, and the values of the row are reset to "Component" & "0".--> 
             <div>
                 <table id="table1" class="components" border="1">
                     <thead>
-                        <tr><th>Activities</th><th>Points</th></tr>
+                        <tr><th class="editable">Activities</th><th>Points</th></tr>
                     </thead>
-                    <tfoot>
-                        <tr class="total"><td>Total Extra Credit Points</td><td class="right">0</td></tr>
+                     <tfoot>
+                    <tr>&nbsp;</tr>
                     </tfoot>
                     <tbody>
-                        <tr id="1"><td class="editable">EC Activity 1</td><td class="editable">0</td><td><%= image_tag 'updown2.gif' %></td></tr>
-                            <!-- Connect components button to show/hide table rows
-                        <tr id="2"><td class="editable">Component 2</td ><td class="editable">0</td><td><%= image_tag 'updown2.gif' %></td></tr>
-                        <tr id="3"><td class="editable">Component 3</td><td class="editable">0</td><td><%= image_tag 'updown2.gif' %></td></tr>
-                        <tr id="4"><td class="editable">Component 4</td><td class="editable">0</td><td><%= image_tag 'updown2.gif' %></td></tr>
-                        <tr id="5"><td class="editable">Component 5</td><td class="editable">0</td><td><%= image_tag 'updown2.gif' %></td></tr>  
-                        <tr id="6"><td class="editable">Component 6</td><td class="editable">0</td></tr>
-                        <tr id="7"><td class="editable">Component 7</td><td class="editable">>0</td></tr>
-                        <tr id="8"><td class="editable">Component 8</td><td class="editable">>0</td></tr>
-                        <tr id="9"><td class="editable">Component 9</td><td class="editable">>0</td></tr>
-                        <tr id="10"><td class="editable">Component 10</td><td class="editable">>0</td></tr>
-                        -->
+                        <tr id="1"><td class="editable">EC Activity 1</td><td class="editable right">0</td></tr>
+                        <tr id="2"><td class="editable">EC Activity 2</td ><td class="editable right">0</td></tr>
+                        <!-- Code Component Add/Remove buttons in .section2 of Grades control panel-->
+                        <tr class="total"><td>Total Extra Credit Points</td><td class="right">0</td></tr>
                     </tbody>
                 </table>
             </div>                                                                                          
         </div><!-- .section2 -->
         <div class="section3 hide">
             <div class="editableHtml">
-                <br />Your grade will be calculated with this scale:<br /><br />
+                <p>&nbsp;</p>
+                <p>Your grade will be calculated with this scale:</p>
             </div>
             <div>
             <!-- Grading scale table. The UPPER point range is always calculated by subtracting one point from the LOWER point range of the row above. Users can change the LOWER perctange value, which will recalculate the UPPER percentage value for the next row by subtracting 1, and then recalculate the points. Users can delete grade sublevels [example: C- ] and the percentage values for the fields above and below will recalculate; the points scale will then recalculate. Users can add a "D-", set the percentage value, and the percentage values for "D" and "F" will recalcultate; the points scale will then recalculate.-->
             <!-- The Grades scale needs to be visible in PREVIEW even if the user has hidden it while editing.-->
-            <table id="table2" class="scale" border="1">
+            <table id="table2" class="components" border="1">
                 <thead>
                     <tr><th>Grade</th><th>Percentage</th><th>Points</th></tr>
                 </thead>
                 <tfoot>
-                    <tr><th>&nbsp;</th><th>&nbsp;</th><th>&nbsp;</th></tr>
+                    <tr>&nbsp;</tr>
                 </tfoot>
-                <tbody>
+                  <tbody class="center">
                     <tr><td>A</td><td>93 - 100</td><td>0 - 0</td></tr>
                     <tr class="even"><td>A-</td><td>90 - 92</td><td>0 - 0</td></tr>
                     <tr><td>B+</td><td>87 - 89</td><td>0 - 0</td></tr>

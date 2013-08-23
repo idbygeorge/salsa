@@ -1,0 +1,36 @@
+/**Styling for Start page**/
+
+.watermark {
+    background-image: url(<%=image_path "welcomeBG2.png"%>);
+    background-color: #fff;
+    text-align: left;
+    vertical-align: middle;
+    height: 768px;
+    width: 1024px;
+    background-repeat: no-repeat;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1em;
+    color: #666;
+    border: thin solid #a1cc3a;
+    line-height: 1.5em;
+    letter-spacing: .15em;
+}
+.topBarLogo {
+    background-color: #a1cc3a;
+    background-image: url(<%=image_path "topnavLogo.png"%>);
+    background-repeat: no-repeat;
+    height: 75px;
+    width: 100%;
+}
+body {
+    color: #C0C0C0;
+    background-color: #efefef;
+}
+.title {
+    text-align: left;
+    margin-top: 5em;
+    margin-right: 5em;
+    margin-bottom: 2em;
+    margin-left: 5em;
+
+}
