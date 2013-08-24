@@ -2,7 +2,6 @@ runtime 'ruby'
 
 name 'pdf_generator'
 
-gem 'wicked_pdf'
 gem 'yajl-ruby'
 gem 'uuidtools'
 gem 'faraday'
@@ -12,6 +11,7 @@ gem 'actionmailer'
 gem 'rails_config'
 
 file '../../config/config.yml'
+file '/usr/local/Cellar/wkhtmltopdf/0.9.9/bin/wkhtmltopdf'
 
 remote
 

@@ -4,7 +4,6 @@ require 'yaml'
 require 'uber-s3'
 require 'open-uri'
 require 'shellwords'
-require 'debugger'
 
 class PdfGenerator
 
@@ -22,7 +21,7 @@ class PdfGenerator
 
     name_w_path = "syllabuses/#{view_id}.pdf"
 
-    tmp_file = '/tmp/' + (0...32).map{65.+(rand(25)).chr}.join + '.pdf'
+    tmp_file = Dir.pwd + '/' + (0...32).map{65.+(rand(25)).chr}.join + '.pdf'
     generate(url, tmp_file)
 
     puts "Storing file to s3: #{name_w_path}"
@@ -34,7 +33,11 @@ class PdfGenerator
   end
 
   def generate(url, tmp_file)
-    puts `/usr/local/bin/wkhtmltopdf --page-size Letter --margin-top 0.75in --margin-right 0.75in --margin-bottom 0.75in --margin-left 0.75in --encoding UTF-8 -q #{url} #{tmp_file}`
+    puts "Generating pdf from url: #{url} -> #{tmp_file}"
+    cmdline = "wkhtmltopdf --page-size Letter --margin-top 0.75in --margin-right 0.75in --margin-bottom 0.75in --margin-left 0.75in --encoding UTF-8 -q #{url} #{tmp_file}"
+    puts "#{cmdline}"
+    # puts `wkhtmltopdf --page-size Letter --margin-top 0.75in --margin-right 0.75in --margin-bottom 0.75in --margin-left 0.75in --encoding UTF-8 -q #{url} #{tmp_file}`
+    puts `#{cmdline}`
   end
 
   def download_file(url)
@@ -49,7 +52,7 @@ class PdfGenerator
 
   def s3_connect
     # Also parse the config we uploaded with this worker for our Hipchat stuff
-    config = YAML.load_file('../../config/config.yml')
+    config = YAML.load_file('config.yml')
     bucket_name = config['aws_bucket']
     region = config['aws_region']
 
