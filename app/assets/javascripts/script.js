@@ -23,7 +23,7 @@ function liteOff(x){
 }
 
 (function($) {
-    $(function(){
+    $(function(){ 
         $("body").append($("<label>Edit Section Heading</label>").addClass("visuallyhidden"));
         $("#controlPanel aside").hide();
         
@@ -67,48 +67,42 @@ function liteOff(x){
         $("#page").on("click keypress", ".editable", function(){
             var text = $(this).toggleClass("editable editing").text();
             
-            $(this).html($("<input/>").attr("id", "headerTextControl").val(text)).find("input,textarea").focus();
+            $(this).html($("<input/>").attr("id", "headerTextControl").val(text)).find("input").focus();
         });
         
-        $("section").on("click keypress", ".editableHtml", function(){
+        $("section").on("click", ".editableHtml", function(){
             var text = $(this).toggleClass("editableHtml editingHtml").html();
             
             $(this).html($("<textarea/>").attr("id", "contentTextControl").val(text)).find("input,textarea");
             
-            $("textarea", this).tinymce({
-                script_url : '/assets/libs/tiny_mce/tiny_mce.js',
-                theme : "simple",
+            $('#contentTextControl', this).tinymce({
+                toolbar: "bold italic underline | undo redo | bullist numlist",
+                statusbar: false,
+                menubar : false,
                 plugins : "autoresize,autolink",
-                width: '100%',
-                content_css : "/assets/content.css",
+                content_css : "/stylesheets/content.css",
+                width: '300',
+                height: '400',
+                auto_focus: 'contentTextControl',
                 setup : function(ed) {
-                    ed.onInit.add(function(ed, evt) {
-                        var dom = tinymce.dom;
-                        var doc = ed.getWin();
-                        
-                        ed.focus();
-                    
-                        dom.Event.add(doc, 'blur', function(e) {
-                            // Do something when the editor window is blured.
-                            ed.remove();
-                            
-                            $(".editingHtml textarea").blur();
-                        });
+                    ed.on('blur', function(e){
+                        ed.remove();
+                        $(".editingHtml textarea").blur();
                     });
                 }
             });
         });
         
-        $("section").on("blur", ".editing input, .editing textarea", function(){
+        $("section").on("blur", ".editing input", function(){
             var text = $(this).val();
             
             var elm = $(this).closest(".editing").html(text).toggleClass("editable editing");
         });
         
         $("section").on("blur", ".editingHtml textarea", function(){
-            var html = $(this).val();
+             var html = $(this).val();
             
-            $(this).closest(".editingHtml").html(html).toggleClass("editableHtml editingHtml");
+             $(this).closest(".editingHtml").html(html).toggleClass("editableHtml editingHtml");
             
         });
                 

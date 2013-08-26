@@ -33,6 +33,7 @@ gem 'turbolinks'
 gem 'jbuilder', '~> 1.2'
 
 gem 'uber-s3'
+gem 'tinymce-rails'
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
