@@ -11,7 +11,8 @@ gem 'actionmailer'
 gem 'rails_config'
 
 file '../../config/config.yml'
-file '/usr/local/Cellar/wkhtmltopdf/0.9.9/bin/wkhtmltopdf'
+#file '/usr/local/Cellar/wkhtmltopdf/0.9.9/bin/wkhtmltopdf'
+build 'curl http://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-0.9.9-static-amd64.tar.bz2 -o p.tar.bz2 && tar xf p.tar.bz2 && rm p.tar.bz2'
 
 remote
 
