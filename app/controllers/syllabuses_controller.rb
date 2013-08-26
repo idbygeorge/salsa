@@ -46,7 +46,7 @@ class SyllabusesController < ApplicationController
         @syllabus.payload = request.raw_post
         @syllabus.save!
         view_url = syllabus_url(@syllabus.view_id, :only_path => false)
-        self.do_http(APP_CONFIG['pdf_generator_webhook'], {'url' => view_url})
+        # self.do_http(APP_CONFIG['pdf_generator_webhook'], {'url' => view_url})
         render :json => msg 
       }
     end
