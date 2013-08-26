@@ -15,6 +15,13 @@ function showPreview(){
     $(".masthead, #wrapper, footer").hide();
 }
 
+function liteOn(x){
+    x.style.backgroundColor="#c0c0c0";
+}
+function liteOff(x){
+    x.style.backgroundColor="#fff";
+}
+
 (function($) {
     $(function(){
         $("body").append($("<label>Edit Section Heading</label>").addClass("visuallyhidden"));
