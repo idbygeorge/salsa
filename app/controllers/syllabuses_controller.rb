@@ -39,6 +39,7 @@ class SyllabusesController < ApplicationController
  	end
 
   def update
+    generate_syllabus_pdf(@syllabus.view_id)
     respond_to do |format|
       msg = { :status => "ok", :message => "Success!", :html => "<b>...</b>" }
       format.json  { 
@@ -59,6 +60,13 @@ class SyllabusesController < ApplicationController
   	@content = @syllabus.payload
     @view_url = "https://s3-#{APP_CONFIG['aws_region']}.amazonaws.com/#{APP_CONFIG['aws_bucket']}/syllabuses/#{@syllabus.view_id}.pdf"
     #@view_url = "#{APP_CONFIG['domain']}/syllabuses/#{@syllabus.view_id}.pdf"
+  end
+
+  def generate_syllabus_pdf(syllabus_view_id)
+    syllabus_url = "#{APP_CONFIG['domain']}/syllabuses/#{syllabus_view_id}"
+    uri = URI.parse(APP_CONFIG['pdf_generator_webhook'])
+    response = Net::HTTP.post_form(uri, {"url" => syllabus_url})
+    http.request(request)  
   end
 
 end
