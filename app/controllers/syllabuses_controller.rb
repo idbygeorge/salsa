@@ -39,7 +39,7 @@ class SyllabusesController < ApplicationController
  	end
 
   def update
-    generate_syllabus_pdf(@syllabus.view_id) if Rails.env.production?
+    # generate_syllabus_pdf(@syllabus.view_id) if Rails.env.production?
     respond_to do |format|
       msg = { :status => "ok", :message => "Success!", :html => "<b>...</b>" }
       format.json  { 
