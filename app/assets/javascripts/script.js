@@ -146,7 +146,36 @@ function liteOff(x){
         });
         if ($("#edit_syllabus")) $("#tabs a").first().click();
 
-    });
+        $('#tb_save').on('ajax:beforeSend', function(event, xhr, settings) {
+          settings.data = $('#page-data').html();
+        });
+        $('#tb_save').on('ajax:success', function(event, xhr, settings) {
+            setTimeout(function(){$.unblockUI();}, 1000); 
+        });
+
+        $('#tb_save').click(function() { 
+            $.blockUI({ message: '<h1><img src="/assets/busy.gif" /> Saving. Just a moment...</h1>' }); 
+        });
+        $('#tb_share').click(function() { 
+            $.blockUI({ message: $('#share_prompt'), css: { width: '550px', height: '110px' }  }); 
+        });
+        $('#prompt_close').click(function(){$.unblockUI();});
+        $('#prompt_visit').click(function(){window.open($('#view_url').text(), '_blank');});
+
+        $("#table1").tableDnD({
+            onDragClass: "myDragClass",
+        });
+         $("#table2").tableDnD({
+            onDragClass: "myDragClass",
+        });
+         $("#table3").tableDnD({
+            onDragClass: "myDragClass",
+        });
+         $("#table4").tableDnD({
+            onDragClass: "myDragClass",
+        });
+
+        });
     
     var getTarget = function(source) {
         var targetSelector = "";
@@ -263,21 +292,3 @@ function liteOff(x){
     };
 })(jQuery);
 
-
-$('#tb_save').on('ajax:beforeSend', function(event, xhr, settings) {
-  settings.data = $('#page-data').html();
-});
-$('#tb_save').on('ajax:success', function(event, xhr, settings) {
-    setTimeout(function(){$.unblockUI();}, 1000); 
-});
-
-$(document).ready(function() { 
-    $('#tb_save').click(function() { 
-        $.blockUI({ message: '<h1><img src="/assets/busy.gif" /> Saving. Just a moment...</h1>' }); 
-    });
-    $('#tb_share').click(function() { 
-        $.blockUI({ message: $('#share_prompt'), css: { width: '550px', height: '110px' }  }); 
-    });
-    $('#prompt_close').click(function(){$.unblockUI();});
-    $('#prompt_visit').click(function(){window.open($('#view_url').text(), '_blank');});
-}); 
