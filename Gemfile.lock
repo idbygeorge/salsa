@@ -120,6 +120,8 @@ GEM
     uglifier (2.1.2)
       execjs (>= 0.3.0)
       multi_json (~> 1.0, >= 1.0.2)
+    wicked_pdf (0.9.6)
+      rails
 
 PLATFORMS
   ruby
@@ -139,3 +141,4 @@ DEPENDENCIES
   turbolinks
   uber-s3
   uglifier (>= 1.3.0)
+  wicked_pdf

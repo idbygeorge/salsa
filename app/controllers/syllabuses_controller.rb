@@ -30,8 +30,8 @@ class SyllabusesController < ApplicationController
       }
       format.pdf{
         html = render_to_string :layout => 'view', :template => '/syllabuses/content.html.erb'
-        pdf = WickedPdf.new.pdf_from_string(html.force_encoding("UTF-8"))
-        render :text => pdf, :layout => false
+        content = Rails.env.development? ? WickedPdf.new.pdf_from_string(html.force_encoding("UTF-8")) : html
+        render :text => content, :layout => false
       }
     end
   end
@@ -59,8 +59,12 @@ class SyllabusesController < ApplicationController
   	@syllabus = Syllabus.find_by_edit_id(params[:id])
   	raise ActionController::RoutingError.new('Not Found') unless @syllabus 
   	@content = @syllabus.payload
-    @view_url = "https://s3-#{APP_CONFIG['aws_region']}.amazonaws.com/#{APP_CONFIG['aws_bucket']}/syllabuses/#{@syllabus.view_id}.pdf"
-    #@view_url = "#{APP_CONFIG['domain']}/syllabuses/#{@syllabus.view_id}.pdf"
+    if Rails.env.production?
+      @view_pdf_url = "https://s3-#{APP_CONFIG['aws_region']}.amazonaws.com/#{APP_CONFIG['aws_bucket']}/syllabuses/#{@syllabus.view_id}.pdf"
+    else
+      @view_pdf_url = "#{APP_CONFIG['domain']}/syllabuses/#{@syllabus.view_id}.pdf"
+    end
+    @view_url = "#{APP_CONFIG['domain']}/syllabuses/#{@syllabus.view_id}"
   end
 
   def generate_syllabus_pdf(syllabus_view_id)

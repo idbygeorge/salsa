@@ -9,9 +9,8 @@
 <meta name="description" content="">
 
 <meta name="viewport" content="width=device-width">
-<%= wicked_pdf_stylesheet_link_tag "style" -%>
-<%= stylesheet_link_tag 'style' %>
-<%= stylesheet_link_tag 'general_enclosed_foundicons' %>
+<%= wicked_pdf_stylesheet_link_tag "application" if Rails.env.development? -%>
+<%= stylesheet_link_tag 'application' %>
 
 </head>
 <body id="view_syllabus">

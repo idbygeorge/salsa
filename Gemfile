@@ -34,6 +34,7 @@ gem 'jbuilder', '~> 1.2'
 
 gem 'uber-s3'
 gem 'tinymce-rails'
+gem 'wicked_pdf', group: :development
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
