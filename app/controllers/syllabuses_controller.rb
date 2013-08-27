@@ -39,14 +39,13 @@ class SyllabusesController < ApplicationController
  	end
 
   def update
-    # generate_syllabus_pdf(@syllabus.view_id) if Rails.env.production?
+    generate_syllabus_pdf(@syllabus.view_id) if Rails.env.production?
     respond_to do |format|
       msg = { :status => "ok", :message => "Success!", :html => "<b>...</b>" }
       format.json  { 
         @syllabus.payload = request.raw_post
         @syllabus.save!
         view_url = syllabus_url(@syllabus.view_id, :only_path => false)
-        # self.do_http(APP_CONFIG['pdf_generator_webhook'], {'url' => view_url})
         render :json => msg 
       }
     end
