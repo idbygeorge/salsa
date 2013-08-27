@@ -159,23 +159,24 @@ function liteOff(x){
         $('#tb_share').click(function() { 
             $.blockUI({ message: $('#share_prompt'), css: { width: '550px', height: '110px' }  }); 
         });
+
         $('#prompt_close').click(function(){$.unblockUI();});
         $('#prompt_visit').click(function(){window.open($('#view_url').text(), '_blank');});
 
         $("#table1").tableDnD({
             onDragClass: "myDragClass",
         });
-         $("#table2").tableDnD({
+        $("#table2").tableDnD({
             onDragClass: "myDragClass",
         });
-         $("#table3").tableDnD({
+        $("#table3").tableDnD({
             onDragClass: "myDragClass",
         });
-         $("#table4").tableDnD({
+        $("#table4").tableDnD({
             onDragClass: "myDragClass",
         });
 
-        });
+    });
     
     var getTarget = function(source) {
         var targetSelector = "";

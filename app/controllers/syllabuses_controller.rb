@@ -1,3 +1,5 @@
+require 'net/http'
+
 class SyllabusesController < ApplicationController
 
 	layout 'view'
