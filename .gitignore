@@ -15,5 +15,6 @@
 /log/*.log
 /tmp
 salsa_development
+salsa_production
 salsa_test
 /**/.DS_Store
