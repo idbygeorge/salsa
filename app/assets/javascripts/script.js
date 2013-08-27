@@ -154,10 +154,10 @@ function liteOff(x){
         });
 
         $('#tb_save').click(function() { 
-            $.blockUI({ message: '<h1><img src="/assets/busy.gif" /> Saving. Just a moment...</h1>' }); 
+            $.blockUI({ message: '<br/><h1><img src="/assets/busy.gif" /> Saving. Just a moment...</h1>', css: { height: '60px'}  } ); 
         });
         $('#tb_share').click(function() { 
-            $.blockUI({ message: $('#share_prompt'), css: { width: '550px', height: '110px' }  }); 
+            $.blockUI({ message: $('#share_prompt'), css: { width: '550px', height: '150px' }  }); 
         });
 
         $('#prompt_close').click(function(){$.unblockUI();});
