@@ -15,8 +15,23 @@ function showPreview(){
     $(".masthead, #wrapper, footer").hide();
 }
 
-function liteOn(x){
-    x.style.backgroundColor="#c0c0c0";
+function liteOnI(x){
+    x.style.backgroundColor="#ccc";
+}
+function liteOnO(x){
+    x.style.backgroundColor="#d6f0ff";
+}
+function liteOnR(x){
+    x.style.backgroundColor="#eff67d";
+}
+function liteOnA(x){
+    x.style.backgroundColor="#e0ff95";
+}
+function liteOnP(x){
+    x.style.backgroundColor="#d8d8ff";
+}
+function liteOnG(x){
+    x.style.backgroundColor="#f8ffea";
 }
 function liteOff(x){
     x.style.backgroundColor="#fff";
