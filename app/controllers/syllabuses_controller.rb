@@ -67,7 +67,6 @@ class SyllabusesController < ApplicationController
     syllabus_url = "#{APP_CONFIG['domain']}/syllabuses/#{syllabus_view_id}"
     uri = URI.parse(APP_CONFIG['pdf_generator_webhook'])
     response = Net::HTTP.post_form(uri, {"url" => syllabus_url})
-    http.request(request)  
   end
 
 end
