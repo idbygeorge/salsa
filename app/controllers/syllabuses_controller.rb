@@ -55,22 +55,29 @@ class SyllabusesController < ApplicationController
 
  	protected
 
+  def view_pdf_url
+    if Rails.env.production?
+      "https://s3-#{APP_CONFIG['aws_region']}.amazonaws.com/#{APP_CONFIG['aws_bucket']}/syllabuses/#{@syllabus.view_id}.pdf"
+    else
+      "#{APP_CONFIG['domain']}/syllabuses/#{@syllabus.view_id}.pdf"
+    end
+  end
+  
+  def view_url
+    "#{APP_CONFIG['domain']}/syllabuses/#{@syllabus.view_id}"
+  end
+
  	def lookup_syllabus
   	@syllabus = Syllabus.find_by_edit_id(params[:id])
   	raise ActionController::RoutingError.new('Not Found') unless @syllabus 
+    @view_pdf_url = view_pdf_url
   	@content = @syllabus.payload
-    if Rails.env.production?
-      @view_pdf_url = "https://s3-#{APP_CONFIG['aws_region']}.amazonaws.com/#{APP_CONFIG['aws_bucket']}/syllabuses/#{@syllabus.view_id}.pdf"
-    else
-      @view_pdf_url = "#{APP_CONFIG['domain']}/syllabuses/#{@syllabus.view_id}.pdf"
-    end
-    @view_url = "#{APP_CONFIG['domain']}/syllabuses/#{@syllabus.view_id}"
+    @view_url = view_url
   end
 
   def generate_syllabus_pdf(syllabus_view_id)
-    syllabus_url = "#{APP_CONFIG['domain']}/syllabuses/#{syllabus_view_id}"
     uri = URI.parse(APP_CONFIG['pdf_generator_webhook'])
-    response = Net::HTTP.post_form(uri, {"url" => syllabus_url})
+    response = Net::HTTP.post_form(uri, {"url" => view_url})
   end
 
 end
