@@ -433,7 +433,7 @@
         </aside>
 
     <aside class="grades" data-target="#grades .content">
-      <section data-target=".section1" onmouseover="liteOnG(section1G)" onmouseout="liteOff(section1G)">
+       <section data-target="#section1G" onmouseover="liteOnG(section1G)" onmouseout="liteOff(section1G)">
         <header>
         Grades
         </header>
@@ -444,47 +444,48 @@
             <label for="gradesContentSpacingRemove">Remove spacing</label>
             <input type="button" name="gradesContentSpacingRemove" id="gradesContentSpacingRemove" value="-">
         </fieldset>
-        <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="1" data-target=".details">
+            <fieldset data-method="toggleContent" data-template="#grade_component_row_template" data-element=".description" data-max="20" data-min="1" data-target="#grade_components">
             <legend>components</legend>
             <label for="gradesAdd">Add component</label>
             <input type="button" name="gradesAdd" id="gradesAdd" value="+">
             <label for="gradesRemove">Remove component</label>
             <input type="button" name="gradesRemove" id="gradesRemove" value="-">
         </fieldset>
-       </section>
+        </section>
 
-       <section data-target=".section2" class="ui-state-default" onmouseover="liteOnG(section2G)" onmouseout="liteOff(section2G)">
-                <header data-method="toggleContent">
-                    <input type="button" value="Extra Credit">
-                </header>
-                <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
-                    <legend>spacing</legend>
-                    <label for="gradesSection2SpacingAdd">Add spacing</label>
-                    <input type="button" name="gradesSection2SpacingAdd" id="gradesSection2SpacingAdd" value="+">
-                    <label for="gradesSection2SpacingRemove">Remove spacing</label>
-                    <input type="button" name="gradesSection2SpacingRemove" id="gradesSection2SpacingRemove" value="-">
-                </fieldset>
-                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="1" data-target=".details">
-                    <legend>components</legend>
-                    <label for="gradesAdd">Add component</label>
-                    <input type="button" name="gradesAdd" id="gradesAdd" value="+">
-                    <label for="gradesRemove">Remove component</label>
-                    <input type="button" name="gradesRemove" id="gradesRemove" value="-">
-                </fieldset>
-            </section>
+        <section data-target=".section2" class="ui-state-default" onmouseover="liteOnG(section2G)" onmouseout="liteOff(section2G)">
+            <header data-method="toggleContent">
+                <input type="button" value="Extra Credit">
+            </header>
+            <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
+                <legend>spacing</legend>
+                <label for="gradesSection2SpacingAdd">Add spacing</label>
+                <input type="button" name="gradesSection2SpacingAdd" id="gradesSection2SpacingAdd" value="+">
+                <label for="gradesSection2SpacingRemove">Remove spacing</label>
+                <input type="button" name="gradesSection2SpacingRemove" id="gradesSection2SpacingRemove" value="-">
+            </fieldset>
+            <fieldset data-method="toggleContent" data-template="#grade_component_row_template" data-element=".description" data-max="20" data-min="1" data-target="#grade_components">
+                <legend>components</legend>
+                <label for="gradesAdd">Add component</label>
+                <input type="button" name="gradesAdd" id="gradesAdd" value="+">
+                <label for="gradesRemove">Remove component</label>
+                <input type="button" name="gradesRemove" id="gradesRemove" value="-">
+            </fieldset>
+        </section>
 
         <section data-target=".section3" class="ui-state-default" onmouseover="liteOnG(section3G)" onmouseout="liteOff(section3G)">
-                <header data-method="toggleContent">
-                    <input type="button" value="Scale">
-                </header>
-                <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
-                    <legend>spacing</legend>
-                    <label for="gradesSection3SpacingAdd">Add spacing</label>
-                    <input type="button" name="gradesSection3SpacingAdd" id="gradesSection3SpacingAdd" value="+">
-                    <label for="gradesSection3SpacingRemove">Remove spacing</label>
-                    <input type="button" name="gradesSection3SpacingRemove" id="gradesSection3SpacingRemove" value="-">
-                </fieldset>
-            </section>
+            <header data-method="toggleContent">
+                <input type="button" value="Scale">
+            </header>
+            <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
+                <legend>spacing</legend>
+                <label for="gradesSection3SpacingAdd">Add spacing</label>
+                <input type="button" name="gradesSection3SpacingAdd" id="gradesSection3SpacingAdd" value="+">
+                <label for="gradesSection3SpacingRemove">Remove spacing</label>
+                <input type="button" name="gradesSection3SpacingRemove" id="gradesSection3SpacingRemove" value="-">
+            </fieldset>
+        </section>
+
         </aside>
     </form>
 
@@ -495,6 +496,9 @@
                 Text
             </div>
         </div>
+        <table id="grade_component_row_template">
+            <tr><td class="editable">Component</td><td class="editable right">0</td></tr>
+        </table>
     </div>
 
 

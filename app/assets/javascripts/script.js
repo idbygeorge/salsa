@@ -82,7 +82,14 @@ function liteOff(x){
         $("#page").on("click keypress", ".editable", function(){
             var text = $(this).toggleClass("editable editing").text();
             
-            $(this).html($("<input/>").attr("id", "headerTextControl").val(text)).find("input").focus();
+            var editor = $(this).html($("<input/>").attr("id", "headerTextControl").val(text)).find("input");
+            editor.keydown(function(e){
+                var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+                if (key == 13){
+                    editor.blur();
+                }
+            });
+            editor.focus();
         });
         
         $("section").on("click", ".editableHtml", function(){
@@ -110,15 +117,16 @@ function liteOff(x){
         
         $("section").on("blur", ".editing input", function(){
             var text = $(this).val();
-            
-            var elm = $(this).closest(".editing").html(text).toggleClass("editable editing");
+            var element = $(this).closest(".editing")
+            element.html(text).toggleClass("editable editing");
+             if (element.is('td')) {
+                controlMethods.updateGradeScales();
+             }
         });
         
         $("section").on("blur", ".editingHtml textarea", function(){
              var html = $(this).val();
-            
              $(this).closest(".editingHtml").html(html).toggleClass("editableHtml editingHtml");
-            
         });
                 
         $("#controlPanel").on("click", "input,dt", function() {
@@ -178,7 +186,7 @@ function liteOff(x){
         $('#prompt_close').click(function(){$.unblockUI();});
         $('#prompt_visit').click(function(){window.open($('#view_url').text(), '_blank');});
 
-        $("#table1").tableDnD({
+        $("#grade_components").tableDnD({
             onDragClass: "myDragClass",
         });
         $("#table2").tableDnD({
@@ -240,6 +248,7 @@ function liteOff(x){
                     
                     if(args.template && $(args.template, "#templates").length) {
                         newElement = $(args.template, "#templates").clone();
+                        newElement.removeAttr('id');
                     } else {
                         if(args.text instanceof Array) {
                             newText = args.text[existingElements.length];
@@ -248,10 +257,18 @@ function liteOff(x){
                         }
                         newElement = $("<"+args.element+"/>").html(newText).addClass("editable")
                     }
-                    
-                    args.target.append(newElement);
+                    if ($(args.target).is('table')) {
+                        $('tbody > tr:last', args.target).before($("tbody tr:last", newElement));
+                        controlMethods.updateGradeScales();
+                    } else {
+                        args.target.append(newElement);
+                    }
                 }
             } else if(args.action === "-") {
+                if ($(args.target).is('table') && $('tr', args.target).length > 5) {
+                    $('tbody > tr', args.target).eq(-2).remove();
+                    controlMethods.updateGradeScales();
+                }
                 if(args.min === undefined || visibleElements.length > args.min) {
                     args.target.find(args.element+":visible").last().hide();
                 }
@@ -304,6 +321,18 @@ function liteOff(x){
             
             args.source.siblings(".ui-state-active").removeClass("ui-state-active");
             args.source.addClass("ui-state-active");
+        },
+        updateGradeScales: function(){
+            var total = 0;
+            var rows = $('#grade_components > tbody > tr');
+            rows.each(function(index, row){
+                var points = parseInt($($('td',row)[1]).text());
+                if (index == rows.length - 1) {
+                    $($('td',row)[1]).text(total);
+                } else {
+                    total += points;
+                }
+            });
         }
     };
 })(jQuery);
