@@ -271,7 +271,6 @@ function liteOff(x){
                     }
                     if ($(args.target).is('table')) {
                         $('tbody > tr:last', args.target).before($("tbody tr:last", newElement));
-                        controlMethods.updateGradeScales();
                     } else {
                         args.target.append(newElement);
                     }
@@ -279,7 +278,8 @@ function liteOff(x){
             } else if(args.action === "-") {
                 if ($(args.target).is('table') && $('tr', args.target).length > 5) {
                     $('tbody > tr', args.target).eq(-2).remove();
-                    controlMethods.updateGradeScales();
+                    controlMethods.updateTableSum(args.target);
+                    controlMethods.updateGradeScale();
                 }
                 if(args.min === undefined || visibleElements.length > args.min) {
                     args.target.find(args.element+":visible").last().hide();
@@ -385,6 +385,8 @@ function liteOff(x){
             }
         },
         updateGradeScale: function(grade_scale) {
+            if (!grade_scale)
+                grade_scale = $('#grade_scale');
             var total_points = parseInt($('#grade_components > tbody > tr:last > td:last').text());
             if (total_points < 100) return;
             var rows = $('tbody > tr', grade_scale);
