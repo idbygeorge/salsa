@@ -2,19 +2,6 @@
  * Utah State University - 2012
 */
 
-function showPreview(){
-    var preview = $("#page-data").children().clone().show();
-    $(".content", preview).hide();
-    $(".example", preview).show();
-    
-    $(".editable, .editableHtml", preview).removeClass("editable editableHtml").removeAttr("tabindex");
-    
-    $("#preview").html(preview).show().addClass("overlay");
-    $("#preview_control").show().append($("<div class='previewLabel'/>").text($(this).text()));
-
-    $(".masthead, #wrapper, footer").hide();
-}
-
 function liteOnI(x){
     x.style.backgroundColor="#ccc";
 }
@@ -35,6 +22,11 @@ function liteOnG(x){
 }
 function liteOff(x){
     x.style.backgroundColor="#fff";
+}
+function makeNumericTextbox(editor){
+    editor.keyup(function(e){
+        editor.val(editor.val().replace(/\D/g, ''));
+    });
 }
 
 (function($) {
@@ -85,19 +77,19 @@ function liteOff(x){
             var editor = $(this).html($("<input/>").attr("id", "headerTextControl").val(text)).find("input");
             if ($('#grade_components').has(editor).length > 0) {
                 editor.attr('maxlength',6);
+                makeNumericTextbox(editor);
             }else if ($('#extra_credit').has(editor).length > 0) {
                 editor.attr('maxlength',6);
+                makeNumericTextbox(editor);
             }else if ($('#grade_scale').has(editor).length > 0) {
                 editor.attr('maxlength',2);
+                makeNumericTextbox(editor);
             }
             editor.keydown(function(e){
                 var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
                 if (key == 13){
                     editor.blur();
                 }
-            });
-            editor.keyup(function(e){
-                editor.val(editor.val().replace(/\D/g, ''));
             });
             editor.focus();
         });
@@ -128,9 +120,13 @@ function liteOff(x){
         $("section").on("blur", ".editing input", function(){
             var text = $(this).val();
             var element = $(this).closest(".editing")
-            element.html(text).toggleClass("editable editing");
-             if ($('#grades').has(element)) {
-                controlMethods.updateGradesPage(element);
+            if (text == "" && element.data('can-delete') == true)
+                element.remove();
+            else {
+                element.html(text).toggleClass("editable editing");
+                 if ($('#grades').has(element)) {
+                    controlMethods.updateGradesPage(element);
+                 }
              }
         });
         
@@ -165,9 +161,33 @@ function liteOff(x){
             $(".masthead, #wrapper, footer").hide();
             return false;
         });
-        
-        $(".masthead a.preview").on("click", function(){
-            showPreview();
+
+        $("#tb_help").on("click", function(){
+            var preview = $("#help_page").children().clone().show();
+            $(".content", preview).hide();
+            $("#preview").html(preview).show().addClass("overlay");
+            $("#preview_control").show().append($("<div class='previewLabel'/>").text($(this).text()));
+            $(".masthead, #wrapper, footer").hide();
+            return false;
+        });
+
+        $("#content_help_link").on("click", function(){
+            var active_page = $('section.active').attr('id')
+            var preview = $("#help_"+active_page).children().clone().show();
+            $(".content", preview).remove();
+            $(".masthead, #wrapper, footer").hide();
+            $("#preview").html(preview).show().addClass("overlay");
+            $("#preview_control").show().append($("<div class='previewLabel'/>").text('Help'));
+            return false;
+        });
+
+        $("#content_example_link").on("click", function(){
+            var active_page = $('section.active').attr('id')
+            var preview = $("#example_"+active_page).children().clone().show();
+            $(".content", preview).remove();
+            $(".masthead, #wrapper, footer").hide();
+            $("#preview").html(preview).show().addClass("overlay");
+            $("#preview_control").show().append($("<div class='previewLabel'/>").text('Example'));
             return false;
         });
 
