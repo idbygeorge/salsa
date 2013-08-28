@@ -23,6 +23,11 @@ function liteOnG(x){
 function liteOff(x){
     x.style.backgroundColor="#fff";
 }
+function makeNumericTextbox(editor){
+    editor.keyup(function(e){
+        editor.val(editor.val().replace(/\D/g, ''));
+    });
+}
 
 (function($) {
     $(function(){ 
@@ -72,19 +77,19 @@ function liteOff(x){
             var editor = $(this).html($("<input/>").attr("id", "headerTextControl").val(text)).find("input");
             if ($('#grade_components').has(editor).length > 0) {
                 editor.attr('maxlength',6);
+                makeNumericTextbox(editor);
             }else if ($('#extra_credit').has(editor).length > 0) {
                 editor.attr('maxlength',6);
+                makeNumericTextbox(editor);
             }else if ($('#grade_scale').has(editor).length > 0) {
                 editor.attr('maxlength',2);
+                makeNumericTextbox(editor);
             }
             editor.keydown(function(e){
                 var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
                 if (key == 13){
                     editor.blur();
                 }
-            });
-            editor.keyup(function(e){
-                editor.val(editor.val().replace(/\D/g, ''));
             });
             editor.focus();
         });
@@ -115,9 +120,13 @@ function liteOff(x){
         $("section").on("blur", ".editing input", function(){
             var text = $(this).val();
             var element = $(this).closest(".editing")
-            element.html(text).toggleClass("editable editing");
-             if ($('#grades').has(element)) {
-                controlMethods.updateGradesPage(element);
+            if (text == "" && element.data('can-delete') == true)
+                element.remove();
+            else {
+                element.html(text).toggleClass("editable editing");
+                 if ($('#grades').has(element)) {
+                    controlMethods.updateGradesPage(element);
+                 }
              }
         });
         
