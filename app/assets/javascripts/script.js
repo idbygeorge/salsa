@@ -119,8 +119,8 @@ function liteOff(x){
             var text = $(this).val();
             var element = $(this).closest(".editing")
             element.html(text).toggleClass("editable editing");
-             if (element.is('td')) {
-                controlMethods.updateGradeScales();
+             if ($('#grades').has(element)) {
+                controlMethods.updateGradesPage(element);
              }
         });
         
@@ -322,9 +322,19 @@ function liteOff(x){
             args.source.siblings(".ui-state-active").removeClass("ui-state-active");
             args.source.addClass("ui-state-active");
         },
-        updateGradeScales: function(){
-            this.updateTableSum($('#grade_components'));
-            this.updateTableSum($('#extra_credit'));
+        updateGradesPage: function(element){
+            var extra_credit = $('#extra_credit');
+            if (extra_credit.has(element).length > 0) {
+                this.updateTableSum($('#extra_credit'));
+                return;
+            }
+            var grade_component = $('#grade_components');
+            if (grade_component.has(element).length > 0)
+                this.updateTableSum(grade_component);
+            var grade_scale = $('#grade_scale');
+            if (grade_scale.has(element).length > 0)
+                this.validateGradeScale(grade_scale, element);
+            this.updateGradeScale(grade_scale);
         },
         updateTableSum: function(table){
             var total = 0;
@@ -338,6 +348,42 @@ function liteOff(x){
                 } else {
                     total += points;
                 }
+            });
+        },
+        validateGradeScale: function(grade_scale, element) {
+            var new_value = parseInt(element.text());
+            var cell = $(element).parent();
+            var parts = $(cell).text().split('-');
+
+            // if the element is a lower bound, ensure the next grade's upper bound is one lower
+            if (new_value == parseInt(parts[0])) {
+                var next_grade = $('td', cell.parent().next())[1];
+                parts = $(next_grade).text().split('-');
+                if (parts.length > 0)
+                    $(next_grade).html('<span class="editable">' + parts[0] + '</span>-<span class="editable">' + (new_value-1) + '</span>');
+
+            // if the element is an upper bound, ensure the previous grade's lower bound is one higher
+            } else {
+                var prev_grade = $('td', cell.parent().prev())[1];
+                parts = $(prev_grade).text().split('-');
+                if (parts.length > 0)
+                    $(prev_grade).html('<span class="editable">' + (new_value+1) + '</span>-<span class="editable">' + parts[1] + '</span>');
+            }
+        },
+        updateGradeScale: function(grade_scale) {
+            var total_points = parseInt($('#grade_components > tbody > tr:last > td:last').text());
+            if (total_points < 100) return;
+            var rows = $('tbody > tr', grade_scale);
+            var upper_points = total_points;
+            rows.each(function(index, row){
+                var cells = $('td', row);
+                var parts = $(cells[1]).text().split("-");
+                var percent_delta = parseInt(parts[1]) - parseInt(parts[0]);
+                var points_delta = Math.round(percent_delta*total_points/100);
+                lower_points = upper_points - points_delta
+                if (isNaN(lower_points)) lower_points = '';
+                $(cells[2]).text(lower_points + " - " + upper_points);
+                upper_points = lower_points - 1;
             });
         }
     };

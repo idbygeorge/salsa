@@ -436,7 +436,7 @@
             <div>
             <!-- Grading scale table. The UPPER point range is always calculated by subtracting one point from the LOWER point range of the row above. Users can change the LOWER perctange value, which will recalculate the UPPER percentage value for the next row by subtracting 1, and then recalculate the points. Users can delete grade sublevels [example: C- ] and the percentage values for the fields above and below will recalculate; the points scale will then recalculate. Users can add a "D-", set the percentage value, and the percentage values for "D" and "F" will recalcultate; the points scale will then recalculate.-->
             <!-- The Grades scale needs to be visible in PREVIEW even if the user has hidden it while editing.-->
-            <table id="tableScale" class="components" border="1">
+            <table id="grade_scale" class="components" border="1">
                 <thead>
                     <tr><th>Grade</th><th>Percentage</th><th>Points</th></tr>
                 </thead>
@@ -444,17 +444,17 @@
                     <tr>&nbsp;</tr>
                 </tfoot>
                   <tbody class="center">
-                    <tr><td>A</td><td>93 - 100</td><td>0 - 0</td></tr>
-                    <tr class="even"><td>A-</td><td>90 - 92</td><td>0 - 0</td></tr>
-                    <tr><td>B+</td><td>87 - 89</td><td>0 - 0</td></tr>
-                    <tr class="even"><td>B</td><td>83 - 86</td><td>0 - 0</td></tr>
-                    <tr><td>B-</td><td>80 - 82</td><td>0 - 0</td></tr>
-                    <tr class="even"><td>C+</td><td>77 - 79</td><td>0 - 0</td></tr>
-                    <tr><td>C</td><td>73 - 76</td><td>0 - 0</td></tr>
-                    <tr class="even"><td>C-</td><td>70 - 72</td><td>0 - 0</td></tr>
-                    <tr><td>D+</td><td>67 - 69</td><td>0 - 0</td></tr>
-                    <tr class="even"><td>D</td><td>60 - 66</td><td>0 - 0</td></tr>
-                    <tr><td>F</td><td>59 - below</td><td>0 - 0</td></tr>
+                    <tr><td>A</td><td><span class="editable">93</span>-<span class="editable">100</span></td><td>0 - 0</td></tr>
+                    <tr class="even"><td>A-</td><td><span class="editable">90</span>-<span class="editable">92</span></td><td>0 - 0</td></tr>
+                    <tr><td>B+</td><td><span class="editable">87</span>-<span class="editable">89</span></td><td>0 - 0</td></tr>
+                    <tr class="even"><td>B</td><td><span class="editable">83</span>-<span class="editable">86</td><td>0 - 0</td></tr>
+                    <tr><td>B-</td><td><span class="editable">80</span>-<span class="editable">82</span></td><td>0 - 0</td></tr>
+                    <tr class="even"><td>C+</td><td><span class="editable">77</span>-<span class="editable">79</span></td><td>0 - 0</td></tr>
+                    <tr><td>C</td><td><span class="editable">73</span>-<span class="editable">76</span></td><td>0 - 0</td></tr>
+                    <tr class="even"><td>C-</td><td><span class="editable">70</span>-<span class="editable">72</span></td><td>0 - 0</td></tr>
+                    <tr><td>D+</td><td><span class="editable">67</span>-<span class="editable">69</span></td><td>0 - 0</td></tr>
+                    <tr class="even"><td>D</td><td><span class="editable">60</span>-<span class="editable">66</span></td><td>0 - 0</td></tr>
+                    <tr><td>F</td><td>below -<span class="editable">59</span></td><td>0 - 0</td></tr>
                 </tbody>
             </table>
             </div>
