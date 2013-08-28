@@ -323,12 +323,18 @@ function liteOff(x){
             args.source.addClass("ui-state-active");
         },
         updateGradeScales: function(){
+            this.updateTableSum($('#grade_components'));
+            this.updateTableSum($('#extra_credit'));
+        },
+        updateTableSum: function(table){
             var total = 0;
-            var rows = $('#grade_components > tbody > tr');
+            var rows = $('tbody > tr', table);
             rows.each(function(index, row){
-                var points = parseInt($($('td',row)[1]).text());
+                var points_cell = $($('td',row).last());
+                var editing = $('input',points_cell).length > 0;
+                var points = parseInt(editing ? $('input',points_cell).val() : points_cell.text());
                 if (index == rows.length - 1) {
-                    $($('td',row)[1]).text(total);
+                    points_cell.text(total);
                 } else {
                     total += points;
                 }
