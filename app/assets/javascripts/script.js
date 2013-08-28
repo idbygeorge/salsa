@@ -95,9 +95,12 @@ function makeNumericTextbox(editor){
         });
         
         $("section").on("click", ".editableHtml", function(){
-            var text = $(this).toggleClass("editableHtml editingHtml").html();
+            var element = $(this);
+            var text = element.toggleClass("editableHtml editingHtml").html();
             
-            $(this).html($("<textarea/>").attr("id", "contentTextControl").val(text)).find("input,textarea");
+            element.html($("<textarea/>").attr("id", "contentTextControl").val(text)).find("textarea");
+            element.append($("<div id='old_html'>" + text + '</div>'));
+            
             
             $('#contentTextControl', this).tinymce({
                 toolbar: "bold italic underline | undo redo | bullist numlist",
@@ -116,6 +119,15 @@ function makeNumericTextbox(editor){
                 }
             });
         });
+
+        $("section").on("blur", ".editingHtml textarea", function(){
+            var html = $(this).val();
+            if (html.length == 0)
+                html = $('#old_html').html();
+            var element = $(this).closest(".editingHtml");
+            element.html(html);
+            element.toggleClass("editableHtml editingHtml");
+        });
         
         $("section").on("blur", ".editing input", function(){
             var text = $(this).val();
@@ -130,10 +142,6 @@ function makeNumericTextbox(editor){
              }
         });
         
-        $("section").on("blur", ".editingHtml textarea", function(){
-             var html = $(this).val();
-             $(this).closest(".editingHtml").html(html).toggleClass("editableHtml editingHtml");
-        });
                 
         $("#controlPanel").on("click", "input,dt", function() {
             var result = "";
