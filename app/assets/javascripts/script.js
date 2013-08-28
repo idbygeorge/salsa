@@ -88,7 +88,7 @@ function liteOff(x){
             }else if ($('#extra_credit').has(editor).length > 0) {
                 editor.attr('maxlength',6);
             }else if ($('#grade_scale').has(editor).length > 0) {
-                editor.attr('maxlength',3);
+                editor.attr('maxlength',2);
             }
             editor.keydown(function(e){
                 var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
@@ -146,7 +146,7 @@ function liteOff(x){
 
             control.source = $(this);
             if(!control.original_target) {
-                $(control.source).closest("[data-target]").data("[original_target]", control.target);
+                $(control.source).closest("[data-target]").data("original_target", control.target);
             }
             control.target = getTarget(this);
             control.action = $(this).val();
@@ -212,25 +212,27 @@ function liteOff(x){
     });
     
     var getTarget = function(source) {
-        var targetSelector = "";
         var target = $(source).closest("[data-target]").data("target");
         
         // if the target is a string, it is a selector, if it is an object, it is already set to the right element(s)
         if(typeof(target) !== "string" && target.length) { 
             if(!target.closest("body").length) {
-                target = $(source).closest("[data-target]").data("[original_target]");
+                target = $(source).closest("[data-target]").data("original_target");
             } else {
                 return $(target);
             }
         }
         
+        var targetSelector = "";
         $(source).parents("[data-target]").each(function(){
-            targetSelector = $(this).data("target") + " " + targetSelector;
+            var selector = $(this).data("target");
+            if (typeof(selector) == "string")
+                targetSelector = selector + " " + targetSelector;
         });
         
         return $(targetSelector); 
     };
-    
+        
     var controlMethods = {
         toggleContent: function(args) {
             var existingElements = args.target.find(args.element);
@@ -376,8 +378,10 @@ function liteOff(x){
             } else {
                 var prev_grade = $('td', cell.parent().prev())[1];
                 parts = $(prev_grade).text().split('-');
-                if (parts.length > 0)
-                    $(prev_grade).html('<span class="editable">' + (new_value+1) + '</span>-<span class="editable">' + parts[1] + '</span>');
+                if (parts.length > 0) {
+                    var upper_bound = (parts[1] == ' 100') ? parts[1] : ('<span class="editable">' + parts[1] + '</span>');
+                    $(prev_grade).html('<span class="editable">' + (new_value+1) + '</span>-' + upper_bound);
+                }
             }
         },
         updateGradeScale: function(grade_scale) {
