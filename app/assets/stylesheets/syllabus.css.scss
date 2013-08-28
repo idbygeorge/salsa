@@ -96,4 +96,16 @@ table.components td.left {text-align:left;}
 table.components td.right {text-align:right;}
 table.components tr.myDragClass td {color:#666;background-color: #ffe4b5; }
 
+#grades{
+    input{
+        width:30px;
+        text-align:center;
+    }
+}
+#grade_scale{
+    span.editable{
+        padding:0 10px;
+    }
+}
+
 
