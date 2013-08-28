@@ -379,29 +379,33 @@
         </div>
         <div id="section1G" class="section1">
             <h2 class="editable">Grades</h2>
-            <div class="editableHtml">
-                <p>&nbsp;</p>
-                <p>Your grade will be based on the following:</p>
-            </div>
-            <!-- Components table. By default, three component rows are shown with values of "Component" & "Points". Users can delete all but ONE ROW, and may add a maximum of 15. When a row is deleted, the points are subtracted from the TOTAL POINTS, and the values of the row are reset to "Component" & "0".-->
-            <div>
-                <table id="grade_components" class="components" border="1">
-                    <thead>
-                        <tr><th class="editable">Components</th><th>Points</th></tr>
-                    </thead>
-                    <tfoot>
-                    <tr>&nbsp;</tr>
-                    </tfoot>
-                    <tfoot>
-                        
-                    </tfoot>
-                    <tbody>
-                            <tr id="1.1"><td class="editable">Component</td><td class="editable right">0</td></tr>
-                            <tr id="1.2"><td class="editable">Component</td><td class="editable right">0</td></tr>
-                            <!-- Code Component Add/Remove buttons in .section1 of Grades control panel-->
-                            <tr class="total nodrag"><td>Total Points</td><td class="right">0</td></tr>
-                    </tbody>
-                </table>
+            <div class="details">
+                <div class="description">
+                    <div class="editableHtml">
+                        <p>&nbsp;</p>
+                        <p>Your grade will be based on the following:</p>
+                    </div>
+                    <!-- Components table. By default, three component rows are shown with values of "Component" & "Points". Users can delete all but ONE ROW, and may add a maximum of 15. When a row is deleted, the points are subtracted from the TOTAL POINTS, and the values of the row are reset to "Component" & "0".-->
+                    <div>
+                        <table id="grade_components" class="components" border="1">
+                            <thead>
+                                <tr><th class="editable">Items</th><th>Points</th></tr>
+                            </thead>
+                            <tfoot>
+                            <tr>&nbsp;</tr>
+                            </tfoot>
+                            <tfoot>
+                                
+                            </tfoot>
+                            <tbody>
+                                    <tr id="1.1"><td class="editable">Item</td><td class="editable right">0</td></tr>
+                                    <tr id="1.2"><td class="editable">Item</td><td class="editable right">0</td></tr>
+                                    <!-- Code Component Add/Remove buttons in .section1 of Grades control panel-->
+                                    <tr class="total nodrag"><td>Total Points</td><td class="right">0</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div><!-- .section1 -->
         
@@ -410,53 +414,57 @@
                 <p>&nbsp;</p>
                 <p>You will have the opportunity to earn Extra Credit:</p>
             </div>
-            <!-- Components table. By default, three component rows are shown with values of "Component" & "Points". Users can delete all but ONE ROW, and may add a maximum of 15. When a row is deleted, the points are subtracted from the TOTAL POINTS, and the values of the row are reset to "Component" & "0".--> 
-            <div>
-                <table id="extra_credit" class="components" border="1">
-                    <thead>
-                        <tr><th class="editable">Activities</th><th>Points</th></tr>
-                    </thead>
-                     <tfoot>
-                    <tr>&nbsp;</tr>
-                    </tfoot>
-                    <tbody>
-                        <tr id="2.1"><td class="editable">Extra Credit Activity</td><td class="editable right">0</td></tr>
-                        <tr id="2.2"><td class="editable">Extra Credit Activity</td ><td class="editable right">0</td></tr>
-                        <!-- Code Component Add/Remove buttons in .section2 of Grades control panel-->
-                        <tr class="total nodrag"><td>Total Extra Credit Points</td><td class="right">0</td></tr>
-                    </tbody>
-                </table>
-            </div>                                                                                          
+            <div class="details">
+                <div class="description">
+                    <div>
+                        <table id="extra_credit" class="components" border="1">
+                            <thead>
+                                <tr><th class="editable">Items</th><th>Points</th></tr>
+                            </thead>
+                             <tfoot>
+                            <tr>&nbsp;</tr>
+                            </tfoot>
+                            <tbody>
+                                <tr id="2.1"><td class="editable">Item</td><td class="editable right">0</td></tr>
+                                <tr id="2.2"><td class="editable">Item</td ><td class="editable right">0</td></tr>
+                                <tr class="total nodrag"><td>Total Extra Credit Points</td><td class="right">0</td></tr>
+                            </tbody>
+                        </table>
+                    </div> 
+                </div>
+            </div>                                                                                         
         </div><!-- .section2 -->
         <div id="section3G" class="section3 hide">
             <div class="editableHtml">
                 <p>&nbsp;</p>
                 <p>Your grade will be calculated with this scale:</p>
             </div>
-            <div>
-            <!-- Grading scale table. The UPPER point range is always calculated by subtracting one point from the LOWER point range of the row above. Users can change the LOWER perctange value, which will recalculate the UPPER percentage value for the next row by subtracting 1, and then recalculate the points. Users can delete grade sublevels [example: C- ] and the percentage values for the fields above and below will recalculate; the points scale will then recalculate. Users can add a "D-", set the percentage value, and the percentage values for "D" and "F" will recalcultate; the points scale will then recalculate.-->
-            <!-- The Grades scale needs to be visible in PREVIEW even if the user has hidden it while editing.-->
-            <table id="grade_scale" class="components" border="1">
-                <thead>
-                    <tr><th>Grade</th><th>Percentage</th><th>Points</th></tr>
-                </thead>
-                <tfoot>
-                    <tr>&nbsp;</tr>
-                </tfoot>
-                  <tbody class="center">
-                    <tr><td>A</td><td><span class="editable">93</span>- 100</td><td>0 - 0</td></tr>
-                    <tr class="even"><td>A-</td><td><span class="editable">90</span>-<span class="editable">92</span></td><td>0 - 0</td></tr>
-                    <tr><td>B+</td><td><span class="editable">87</span>-<span class="editable">89</span></td><td>0 - 0</td></tr>
-                    <tr class="even"><td>B</td><td><span class="editable">83</span>-<span class="editable">86</td><td>0 - 0</td></tr>
-                    <tr><td>B-</td><td><span class="editable">80</span>-<span class="editable">82</span></td><td>0 - 0</td></tr>
-                    <tr class="even"><td>C+</td><td><span class="editable">77</span>-<span class="editable">79</span></td><td>0 - 0</td></tr>
-                    <tr><td>C</td><td><span class="editable">73</span>-<span class="editable">76</span></td><td>0 - 0</td></tr>
-                    <tr class="even"><td>C-</td><td><span class="editable">70</span>-<span class="editable">72</span></td><td>0 - 0</td></tr>
-                    <tr><td>D+</td><td><span class="editable">67</span>-<span class="editable">69</span></td><td>0 - 0</td></tr>
-                    <tr class="even"><td>D</td><td><span class="editable">60</span>-<span class="editable">66</span></td><td>0 - 0</td></tr>
-                    <tr><td>F</td><td>below -<span class="editable">59</span></td><td>0 - 0</td></tr>
-                </tbody>
-            </table>
+            <div class="details">
+                <div class="description">
+                    <div>
+                        <table id="grade_scale" class="components" border="1">
+                                <thead>
+                                    <tr><th>Grade</th><th>Percentage</th><th>Points</th></tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>&nbsp;</tr>
+                                </tfoot>
+                                  <tbody class="center">
+                                    <tr><td>A</td><td><span class="editable">93</span>- 100</td><td>0 - 0</td></tr>
+                                    <tr class="even"><td>A-</td><td><span class="editable">90</span>-<span class="editable">92</span></td><td>0 - 0</td></tr>
+                                    <tr><td>B+</td><td><span class="editable">87</span>-<span class="editable">89</span></td><td>0 - 0</td></tr>
+                                    <tr class="even"><td>B</td><td><span class="editable">83</span>-<span class="editable">86</td><td>0 - 0</td></tr>
+                                    <tr><td>B-</td><td><span class="editable">80</span>-<span class="editable">82</span></td><td>0 - 0</td></tr>
+                                    <tr class="even"><td>C+</td><td><span class="editable">77</span>-<span class="editable">79</span></td><td>0 - 0</td></tr>
+                                    <tr><td>C</td><td><span class="editable">73</span>-<span class="editable">76</span></td><td>0 - 0</td></tr>
+                                    <tr class="even"><td>C-</td><td><span class="editable">70</span>-<span class="editable">72</span></td><td>0 - 0</td></tr>
+                                    <tr><td>D+</td><td><span class="editable">67</span>-<span class="editable">69</span></td><td>0 - 0</td></tr>
+                                    <tr class="even"><td>D</td><td><span class="editable">60</span>-<span class="editable">66</span></td><td>0 - 0</td></tr>
+                                    <tr><td>F</td><td>below -<span class="editable">59</span></td><td>0 - 0</td></tr>
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div><!-- .section3 -->
     </div><!-- .content -->
