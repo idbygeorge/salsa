@@ -2,19 +2,6 @@
  * Utah State University - 2012
 */
 
-function showPreview(){
-    var preview = $("#page-data").children().clone().show();
-    $(".content", preview).hide();
-    $(".example", preview).show();
-    
-    $(".editable, .editableHtml", preview).removeClass("editable editableHtml").removeAttr("tabindex");
-    
-    $("#preview").html(preview).show().addClass("overlay");
-    $("#preview_control").show().append($("<div class='previewLabel'/>").text($(this).text()));
-
-    $(".masthead, #wrapper, footer").hide();
-}
-
 function liteOnI(x){
     x.style.backgroundColor="#ccc";
 }
@@ -165,9 +152,33 @@ function liteOff(x){
             $(".masthead, #wrapper, footer").hide();
             return false;
         });
-        
-        $(".masthead a.preview").on("click", function(){
-            showPreview();
+
+        $("#tb_help").on("click", function(){
+            var preview = $("#help_page").children().clone().show();
+            $(".content", preview).hide();
+            $("#preview").html(preview).show().addClass("overlay");
+            $("#preview_control").show().append($("<div class='previewLabel'/>").text($(this).text()));
+            $(".masthead, #wrapper, footer").hide();
+            return false;
+        });
+
+        $("#content_help_link").on("click", function(){
+            var active_page = $('section.active').attr('id')
+            var preview = $("#help_"+active_page).children().clone().show();
+            $(".content", preview).remove();
+            $(".masthead, #wrapper, footer").hide();
+            $("#preview").html(preview).show().addClass("overlay");
+            $("#preview_control").show().append($("<div class='previewLabel'/>").text('Help'));
+            return false;
+        });
+
+        $("#content_example_link").on("click", function(){
+            var active_page = $('section.active').attr('id')
+            var preview = $("#example_"+active_page).children().clone().show();
+            $(".content", preview).remove();
+            $(".masthead, #wrapper, footer").hide();
+            $("#preview").html(preview).show().addClass("overlay");
+            $("#preview_control").show().append($("<div class='previewLabel'/>").text('Example'));
             return false;
         });
 

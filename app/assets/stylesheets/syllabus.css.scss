@@ -66,7 +66,7 @@ html, body { height: 100%; min-height: 420px; position: relative; }
 #templates { display: none; }
 
 #preview { width: 8.5in; margin: .5in auto; display: none; }
-    #preview_control { display: none; }
+    #preview_control { display: none; position:fixed; width:100%; top:0;}
     #preview section { background: #fff; margin-bottom: .5in; border: solid 1px #eee; padding: .5in; /*min-height: 11in;*/ }
     
 #topBar { z-index: 99999999; background: #fff; bottom: auto; }
@@ -78,7 +78,7 @@ html, body { height: 100%; min-height: 420px; position: relative; }
 #components tr.myDragClass td { font-weight: bold; background-color: #ffe4b5; }
 
 #editor_view{height:100%;}
-.content_toolbar {float:right;}
+.content_toolbar {position:relative;top:50px;left:580px;}
 .content_toolbar a {color:#c0c0c0; font-size: 1em; text-decoration: none;}
 .informationIcon a {color:#c0c0c0; font-size: 1em; text-decoration: none;}
 .objectivesIcon a {color:#7fc5ec; font-size: 1em; text-decoration: none;}

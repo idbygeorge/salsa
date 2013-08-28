@@ -106,7 +106,12 @@ td { vertical-align: top; }
 .mce-container div{
   padding-left:0 !important; 
 }
-#view_syllabus {
-  section {
+#help {
+  h1{
+    border-bottom:1px dashed #c0c0c0;width:100%;
+    margin:20px 0;
+  }
+  .help_section{
+    margin-bottom:30px;
   }
 }
