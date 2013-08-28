@@ -4,7 +4,7 @@
             <li>
                <%= link_to "Save", syllabus_path(@syllabus.edit_id), :authenticity_token => form_authenticity_token(), :method => :put, :remote => true, :id => 'tb_save' %>
             </li>
-            <li><a href="#preview" class="preview"><i class="foundicon-checkmark"></i>Preview</a></li>
+            <li><%= link_to '<i class="foundicon-checkmark"></i>Preview'.html_safe, @view_url, :target => '_blank', :id => "view_url" %></li>
             <li><a href="#" id='tb_share'><i class="foundicon-right-arrow"></i>Share</a></li>
             <li><a href="#" id='tb_email'><i class="foundicon-inbox"></i>Email</a></li>
         </ul>
