@@ -225,9 +225,8 @@ function liteOff(x){
         
         var targetSelector = "";
         $(source).parents("[data-target]").each(function(){
-            var selector = $(this).data("target");
-            if (typeof(selector) == "string")
-                targetSelector = selector + " " + targetSelector;
+            var selector = $(this).attr("data-target");
+            targetSelector = selector + " " + targetSelector;
         });
         
         return $(targetSelector); 
@@ -267,7 +266,9 @@ function liteOff(x){
                         } else {
                             newText = args.text;
                         }
-                        newElement = $("<"+args.element+"/>").html(newText).addClass("editable")
+                        newElement = $("<"+args.element+"/>").html(newText);
+                        if (!args.source.is('dt'))
+                            newElement.addClass("editable");
                     }
                     if ($(args.target).is('table')) {
                         $('tbody > tr:last', args.target).before($("tbody tr:last", newElement));
@@ -282,7 +283,7 @@ function liteOff(x){
                     controlMethods.updateGradeScale();
                 }
                 if(args.min === undefined || visibleElements.length > args.min) {
-                    args.target.find(args.element+":visible").last().hide();
+                    args.target.find(args.element+":visible").last().remove();
                 }
             } else {
                 args.target.toggle();
