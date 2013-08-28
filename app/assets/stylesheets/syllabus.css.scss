@@ -96,13 +96,23 @@ table.components td.left {text-align:left;}
 table.components td.right {text-align:right;}
 table.components tr.myDragClass td {color:#666;background-color: #ffe4b5; }
 
-#grades{
+#grade_components{
+    input{
+        width:60px;
+        text-align:right;
+    }
+}
+#extra_credit{
+    input{
+        width:60px;
+        text-align:right;
+    }
+}
+#grade_scale{
     input{
         width:30px;
         text-align:center;
     }
-}
-#grade_scale{
     span.editable{
         padding:0 10px;
     }
