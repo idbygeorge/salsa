@@ -298,12 +298,12 @@ function liteOff(x){
         });
         $('#tb_save').on('ajax:beforeSend', function(event, xhr, settings) {
             if (publishing) {
-                $('#saving_msg').text('Generating PDF. Just a moment....');
+                $('#saving_msg').text('Generating your SALSA in PDF....');
             } else {
-                $('#saving_msg').text('Saving Syllabus. Just a moment...');
+                $('#saving_msg').text('Just a moment...');
             }
             settings.data = $('#page-data').html();
-            $("#save_prompt").dialog('option', 'title', (publishing ? 'Publishing Syllabus' : 'Save Syllabus'));
+            $("#save_prompt").dialog('option', 'title', (publishing ? 'Publishing your SALSA' : 'Saving your SALSA'));
             $("#save_prompt").dialog("open");
         });
         $('#tb_save').on('ajax:success', function(event, xhr, settings) {
@@ -338,7 +338,7 @@ function liteOff(x){
         });
 
         // publish
-        $("#share_prompt").dialog({ modal:true, width:500, title:'Your syllabus has been published!', autoOpen:false });
+        $("#share_prompt").dialog({ modal:true, width:500, title:'Your SALSA has been published.', autoOpen:false });
         $('#tb_share').click(function() { 
             publishing = true;
             $('#tb_save').first().click();

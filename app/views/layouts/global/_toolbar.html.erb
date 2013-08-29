@@ -18,10 +18,10 @@
 <div id="preview"></div>
 
 <div id="share_prompt" style="display:none; cursor: default"> 
-    <h1>You can share this syllabus at:</h1> 
-    <p><%= link_to @view_pdf_url, @view_pdf_url, :target => '_blank', :id => "view_url" %>
-    <br/>or<br/>
-    <%= link_to @view_url, @view_url, :target => '_blank', :id => "view_url" %></p>
+    <p><i>&iexcl;Share your SALSA online!</i></p>
+    <p>PDF link:&nbsp;<%= link_to @view_pdf_url, @view_pdf_url, :target => '_blank', :id => "view_url" %></p>
+    <p>or</p>
+    <p>HTML link:&nbsp;<%= link_to @view_url, @view_url, :target => '_blank', :id => "view_url" %></p>
 </div> 
 
 <div id="save_prompt" style="display:none; cursor: default"> 
