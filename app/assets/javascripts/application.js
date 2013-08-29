@@ -12,8 +12,8 @@
 //
 //= require jquery
 //= require jquery_ujs
+//= require jquery.ui.dialog
 //= require tinymce-jquery
 //= require modernizr
 //= require jquery.tablednd.0.7.min
-//= require jquery.blockUI.js
 //= require script

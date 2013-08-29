@@ -115,3 +115,6 @@ td { vertical-align: top; }
     margin-bottom:30px;
   }
 }
+.no-close .ui-dialog-titlebar-close {display: none }
+.ui-widget-overlay { opacity: .60;filter:Alpha(Opacity=60); }
+

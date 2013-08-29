@@ -281,24 +281,30 @@ function liteOff(x){
         });
 
         // save
+        $("#save_prompt").dialog({
+            modal:true, 
+            title:'Save Syllabus', 
+            height:110,
+            autoOpen:false, 
+            closeOnEscape: false,
+            dialogClass: 'no-close'
+        });
         $('#tb_save').on('ajax:beforeSend', function(event, xhr, settings) {
-          settings.data = $('#page-data').html();
+            settings.data = $('#page-data').html();
+            $("#save_prompt").dialog("open");
         });
         $('#tb_save').on('ajax:success', function(event, xhr, settings) {
-            setTimeout(function(){$.unblockUI();}, 1000); 
-        });
-        $('#tb_save').click(function() { 
-            $.blockUI({ message: '<br/><h1><img src="/assets/busy.gif" /> Saving. Just a moment...</h1>', css: { height: '60px'}  } ); 
+            setTimeout(function(){$("#save_prompt").dialog("close")},1000);
         });
 
         // share
+        $("#share_prompt").dialog({ modal:true, width:500, title:'Publish Syllabus', autoOpen:false });
         $('#tb_share').click(function() { 
-            $.blockUI({ message: $('#share_prompt'), css: { width: '550px', height: '150px' }  }); 
+            $("#share_prompt").dialog("open");
+            $(".ui-widget-overlay").on("click", function (){
+              $("div:ui-dialog:visible").dialog("close");
+            });
         });
-
-        // preview view
-        //$('#prompt_close').click(function(){$.unblockUI();});
-        // $('#prompt_visit').click(function(){window.open($('#view_url').text(), '_blank');});
 
         // table drag and drop
         $("#grade_components,#extra_credit").tableDnD({ onDragClass: "myDragClass",});
