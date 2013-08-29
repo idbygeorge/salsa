@@ -2,35 +2,21 @@
  * Utah State University - 2012
 */
 
-function liteOnI(x){
-    x.style.backgroundColor="#ccc";
-}
-function liteOnO(x){
-    x.style.backgroundColor="#d6f0ff";
-}
-function liteOnR(x){
-    x.style.backgroundColor="#eff67d";
-}
-function liteOnA(x){
-    x.style.backgroundColor="#e0ff95";
-}
-function liteOnP(x){
-    x.style.backgroundColor="#d8d8ff";
-}
-function liteOnG(x){
-    x.style.backgroundColor="#f8ffea";
+function liteOn(x,color){
+    x.style.backgroundColor=color;
 }
 function liteOff(x){
     x.style.backgroundColor="#fff";
 }
-function makeNumericTextbox(editor){
-    editor.keyup(function(e){
-        editor.val(editor.val().replace(/\D/g, ''));
-    });
-}
-
 (function($) {
     $(function(){ 
+
+        var makeNumericTextbox = function(editor){
+            editor.keyup(function(e){
+                editor.val(editor.val().replace(/\D/g, ''));
+            });
+        };
+
         $("body").append($("<label>Edit Section Heading</label>").addClass("visuallyhidden"));
         $("#controlPanel aside").hide();
         
