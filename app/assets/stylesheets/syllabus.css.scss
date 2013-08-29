@@ -18,7 +18,7 @@ html, body { height: 100%; min-height: 420px; position: relative; }
     .masthead, footer { color: #fff; position: fixed; left: 0; right: 0; z-index: 999; }
     #toolbar i {font-size:.85em;text-decoration:none;padding-right:.5em;}
     #share_prompt{padding-top:10px;}
-    #edit_syllabus #objectives, #edit_syllabus #resources, #edit_syllabus #activities, #edit_syllabus #policies, #edit_syllabus #grades{display:none;}
+    #edit_syllabus #outcomes, #edit_syllabus #resources, #edit_syllabus #activities, #edit_syllabus #policies, #edit_syllabus #grades{display:none;}
     #view_syllabus #preview {display:block;}
     #view_syllabus i{display:none;}
 
@@ -30,7 +30,7 @@ html, body { height: 100%; min-height: 420px; position: relative; }
             #tabs li a:hover, #tabs li.selected a { background: #fff; border-color: #aaa; }
 
             #tabs li.information a:hover, #tabs li.information.selected a, .information #container, .information #controlPanel { border-color: #C0C0C0; }
-            #tabs li.objectives a:hover, #tabs li.objectives.selected a, .objectives #container, .objectives #controlPanel, .objectives #topBar { border-color: #7FC5EC; }
+            #tabs li.outcomes a:hover, #tabs li.outcomes.selected a, .outcomes #container, .outcomes #controlPanel, .outcomes #topBar { border-color: #7FC5EC; }
             #tabs li.resources a:hover, #tabs li.resources.selected a, .resources #container, .resources #controlPanel { border-color: #F0E22E; }
             #tabs li.activities a:hover, #tabs li.activities.selected a, .activities #container, .activities #controlPanel { border-color: #A1CC3A; }
             #tabs li.policies a:hover, #tabs li.policies.selected a, .policies #container, .policies #controlPanel { border-color: #BEBEE0; }
@@ -74,14 +74,14 @@ html, body { height: 100%; min-height: 420px; position: relative; }
     #topBar ul { list-style: none; margin: 0; padding: 4px 15px 8px; overflow: hidden; }
         #topBar li { float: left; text-align: center; margin: 3px; width: 19%; }
             #topBar li a { background: #fff; color: #000; line-height: 1.6; text-decoration: none; display: block; }
-            .objectives #topBar li a { background: #7FC5EC; }
+            .outcomes #topBar li a { background: #7FC5EC; }
 #components tr.myDragClass td { font-weight: bold; background-color: #ffe4b5; }
 
 #editor_view{height:100%;}
 .content_toolbar {position:relative;top:50px;left:580px;}
 .content_toolbar a {color:#c0c0c0; font-size: 1em; text-decoration: none;}
 .informationIcon a {color:#c0c0c0; font-size: 1em; text-decoration: none;}
-.objectivesIcon a {color:#7fc5ec; font-size: 1em; text-decoration: none;}
+.outcomesIcon a {color:#7fc5ec; font-size: 1em; text-decoration: none;}
 .resourcesIcon a {color:#f0e22e; font-size: 1em; text-decoration: none;}
 .activitiesIcon a {color:#a1cc3a; font-size: 1em; text-decoration: none;}
 .policiesIcon a {color:#bebee0; font-size: 1em; text-decoration: none;}

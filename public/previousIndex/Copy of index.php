@@ -31,7 +31,7 @@
     <nav id="tabs">
         <ul>
             <li class="information"><a href="#information">Information</a></li>
-            <li class="objectives"><a href="#objectives">Objectives</a></li>
+            <li class="outcomes"><a href="#outcomes">Outcomes</a></li>
             <li class="resources"><a href="#resources">Resources</a></li>
             <li class="activities"><a href="#activities">Activities</a></li>
             <li class="policies"><a href="#policies">Policies</a></li>
@@ -114,24 +114,24 @@
             </section>
         </aside>
         
-        <aside class="objectives" data-target="#objectives .content">
+        <aside class="outcomes" data-target="#outcomes .content">
             <section data-target=".section1">
                 <header data-method="toggleContent" class="ui-state-active">
-                   <input type="button" value="Objectives">
+                   <input type="button" value="Outcomes">
                 </header>
                 <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
                     <legend>spacing</legend>
-                    <label for="objectivesContentSpacingAdd">Add spacing</label>
-                    <input type="button" name="objectivesContentSpacingAdd" id="objectivesContentSpacingAdd" value="+">
-                    <label for="objectivesContentSpacingRemove">Remove spacing</label>
-                    <input type="button" name="objectivesContentSpacingRemove" id="objectivesContentSpacingRemove" value="-">
+                    <label for="outcomesContentSpacingAdd">Add spacing</label>
+                    <input type="button" name="outcomesContentSpacingAdd" id="outcomesContentSpacingAdd" value="+">
+                    <label for="outcomesContentSpacingRemove">Remove spacing</label>
+                    <input type="button" name="outcomesContentSpacingRemove" id="outcomesContentSpacingRemove" value="-">
                 </fieldset>
-                <fieldset data-method="toggleContent" data-target=".objectives" data-element="li" data-text="Objective text here">
-                    <legend>objectives</legend>
-                    <label for="objectivesObjectiveAdd">Add objective</label>
-                    <input type="button" name="objectivesObjectiveAdd" id="objectivesObjectiveAdd" value="+">
-                    <label for="objectivesObjectiveRemove">Remove objective</label>
-                    <input type="button" name="objectivesObjectiveRemove" id="objectivesObjectiveRemove" value="-">
+                <fieldset data-method="toggleContent" data-target=".outcomes" data-element="li" data-text="Outcome text here">
+                    <legend>outcomes</legend>
+                    <label for="outcomesOutcomeAdd">Add outcome</label>
+                    <input type="button" name="outcomesOutcomeAdd" id="outcomesOutcomeAdd" value="+">
+                    <label for="outcomesOutcomeRemove">Remove outcome</label>
+                    <input type="button" name="outcomesOutcomeRemove" id="outcomesOutcomeRemove" value="-">
                 </fieldset>
             </section>
             
@@ -139,7 +139,7 @@
                 <header>
                     <a href="#" class="toggler">Bloom's Revised</a>
                 </header>
-                <dl data-method="taxonomy" data-target=".objectives">
+                <dl data-method="taxonomy" data-target=".outcomes">
                     <dt>Remember</dt>
                         <dd>Choose</dd>
                         <dd>Define</dd>
@@ -526,23 +526,23 @@ Please take the time to review this syllabus thoroughly. It has all the informat
                     <div class="section3">
                         <h2>Course Description</h2>
                         <div>
-                            This accelerated online course will provide students with opportunities to learn the components of a syllabus for online higher education courses. Students will explore their instructional strengths and weaknesses as indicated by an inventory of their personal beliefs, knowledge and practices. Students will create a syllabus that identifies their instructional objectives, resources and activities, and integrates a learning contract and a communication strategy. To conclude the course, each student will conduct an evaluation of another student's syllabus.
+                            This accelerated online course will provide students with opportunities to learn the components of a syllabus for online higher education courses. Students will explore their instructional strengths and weaknesses as indicated by an inventory of their personal beliefs, knowledge and practices. Students will create a syllabus that identifies their instructional outcomes, resources and activities, and integrates a learning contract and a communication strategy. To conclude the course, each student will conduct an evaluation of another student's syllabus.
                         </div>
                     </div><!-- .section3 -->               
                  </div><!-- .example -->
             </section><!-- #information -->
                         
-            <section id="objectives">
+            <section id="outcomes">
                 <div class="content">
                     <div class="section1">
-                        <h2 class="editable">Course Objectives</h2>
+                        <h2 class="editable">Course Outcomes</h2>
                         <div class="editableHtml">
                             Upon completion of this course you will be able to:
                         </div>
                         <!-- bullets should be visible in this list -->
                         <div class="editableHtml">
-                            <ul class="objectives">
-                                <li>Objective text here</li>
+                            <ul class="outcomes">
+                                <li>Outcome text here</li>
                             </ul>
                         </div>
                     </div><!-- .section1 -->
@@ -557,7 +557,7 @@ Please take the time to review this syllabus thoroughly. It has all the informat
                 
                 <div class="example">
                     <div class="section1">
-                        <h2>Course Objectives</h2>
+                        <h2>Course Outcomes</h2>
                         <div>
                             Upon completion of this course you will be able to:
                         </div>
@@ -568,12 +568,12 @@ Please take the time to review this syllabus thoroughly. It has all the informat
                                 <li>Conduct a Personal Resources Inventory</li>
                                 <li>Develop a course communication strategy</li>
                                 <li>Identify strategies for learner success</li>
-                                <li>Construct a syllabus that demonstrates the proceeding objectives</li>
+                                <li>Construct a syllabus that demonstrates the proceeding outcomes</li>
                             </ul>
                         </div>
                     </div><!-- .section1 -->
                 </div><!-- .example -->                     
-            </section><!-- #objectives -->
+            </section><!-- #outcomes -->
             
 
             <section id="resources">

@@ -32,7 +32,7 @@
     <nav id="tabs">
         <ul>
             <li class="information"><a href="#information">Information</a></li>
-            <li class="objectives"><a href="#objectives">Outcomes</a></li>
+            <li class="outcomes"><a href="#outcomes">Outcomes</a></li>
             <li class="resources"><a href="#resources">Resources</a></li>
             <li class="activities"><a href="#activities">Activities</a></li>
             <li class="policies"><a href="#policies">Policies</a></li>
@@ -149,24 +149,24 @@
             </section>
         </aside>
 
-        <aside class="objectives" data-target="#objectives .content">
+        <aside class="outcomes" data-target="#outcomes .content">
             <section data-target=".section1">
                 <header data-method="toggleContent" class="ui-state-active">
                    <input type="button" value="Outcomes">
                 </header>
                 <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
                     <legend>spacing</legend>
-                    <label for="objectivesContentSpacingAdd">Add spacing</label>
-                    <input type="button" name="objectivesContentSpacingAdd" id="objectivesContentSpacingAdd" value="+">
-                    <label for="objectivesContentSpacingRemove">Remove spacing</label>
-                    <input type="button" name="objectivesContentSpacingRemove" id="objectivesContentSpacingRemove" value="-">
+                    <label for="outcomesContentSpacingAdd">Add spacing</label>
+                    <input type="button" name="outcomesContentSpacingAdd" id="outcomesContentSpacingAdd" value="+">
+                    <label for="outcomesContentSpacingRemove">Remove spacing</label>
+                    <input type="button" name="outcomesContentSpacingRemove" id="outcomesContentSpacingRemove" value="-">
                 </fieldset>
-                <fieldset data-method="toggleContent" data-target=".objectives" data-element="li" data-text="Objective text here">
+                <fieldset data-method="toggleContent" data-target=".outcomes" data-element="li" data-text="Outcome text here">
                     <legend>text</legend>
-                    <label for="objectivesObjectiveAdd">Add objective</label>
-                    <input type="button" name="objectivesObjectiveAdd" id="objectivesObjectiveAdd" value="+">
-                    <label for="objectivesObjectiveRemove">Remove objective</label>
-                    <input type="button" name="objectivesObjectiveRemove" id="objectivesObjectiveRemove" value="-">
+                    <label for="outcomesOutcomeAdd">Add outcome</label>
+                    <input type="button" name="outcomesOutcomeAdd" id="outcomesOutcomeAdd" value="+">
+                    <label for="outcomesOutcomeRemove">Remove outcome</label>
+                    <input type="button" name="outcomesOutcomeRemove" id="outcomesOutcomeRemove" value="-">
                 </fieldset>
             </section>
             <!-- Bloom's tool BREAKS after the user enters the text editor. -->
@@ -174,7 +174,7 @@
                 <header>
                     <a href="#" class="toggler">Bloom's Revised</a>
                 </header>
-                <dl data-method="taxonomy" data-target=".objectives">
+                <dl data-method="taxonomy" data-target=".outcomes">
                     <dt>Remember</dt>
                         <dd>Choose</dd>
                         <dd>Define</dd>
@@ -292,17 +292,17 @@
                 </header>
                 <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
                     <legend>spacing</legend>
-                    <label for="objectivesContactExtraSpacingAdd">Add spacing</label>
-                    <input type="button" name="objectivesContactExtraSpacingAdd" id="objectivesContactExtraSpacingAdd" value="+">
-                    <label for="objectivesContactExtraSpacingRemove">Remove spacing</label>
-                    <input type="button" name="objectivesContactExtraSpacingRemove" id="objectivesContactExtraSpacingRemove" value="-">
+                    <label for="outcomesContactExtraSpacingAdd">Add spacing</label>
+                    <input type="button" name="outcomesContactExtraSpacingAdd" id="outcomesContactExtraSpacingAdd" value="+">
+                    <label for="outcomesContactExtraSpacingRemove">Remove spacing</label>
+                    <input type="button" name="outcomesContactExtraSpacingRemove" id="outcomesContactExtraSpacingRemove" value="-">
                 </fieldset>
                 <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="1" data-target=".details">
                     <legend>headings</legend>
-                    <label for="objectivesAdd">Add activity</label>
-                    <input type="button" name="objectivesAdd" id="objectivesAdd" value="+">
+                    <label for="outcomesAdd">Add activity</label>
+                    <input type="button" name="outcomesAdd" id="outcomesAdd" value="+">
                     <label for="policyRemove">Remove activity</label>
-                    <input type="button" name="objectivesRemove" id="objectivesRemove" value="-">
+                    <input type="button" name="outcomesRemove" id="outcomesRemove" value="-">
                 </fieldset>
             </section>
         </aside>
@@ -702,13 +702,13 @@ Please take the time to review this syllabus thoroughly. It has all the informat
                     <div class="section3">
                         <h2>Course Description</h2>
                         <div>
-                            This accelerated online course will provide students with opportunities to learn the components of a syllabus for online higher education courses. Students will explore their instructional strengths and weaknesses as indicated by an inventory of their personal beliefs, knowledge and practices. Students will create a syllabus that identifies their instructional objectives, resources and activities, and integrates a learning contract and a communication strategy. To conclude the course, each student will conduct an evaluation of another student's syllabus.
+                            This accelerated online course will provide students with opportunities to learn the components of a syllabus for online higher education courses. Students will explore their instructional strengths and weaknesses as indicated by an inventory of their personal beliefs, knowledge and practices. Students will create a syllabus that identifies their instructional outcomes, resources and activities, and integrates a learning contract and a communication strategy. To conclude the course, each student will conduct an evaluation of another student's syllabus.
                         </div>
                     </div><!-- .section3 -->
                  </div><!-- .example -->
             </section><!-- #information -->
 
-            <section id="objectives">
+            <section id="outcomes">
                 <div class="content">
                     <!-- Move to syllabus.css -->
                     <style type="text/css">
@@ -728,7 +728,7 @@ Please take the time to review this syllabus thoroughly. It has all the informat
                         </div>
                         <!-- bullets should be visible in this list -->
                         <div class="editableHtml">
-                            <ul class="objectives">
+                            <ul class="outcomes">
                                 <li>Outcome text here</li>
                             </ul>
                         </div>
@@ -760,7 +760,7 @@ Please take the time to review this syllabus thoroughly. It has all the informat
                                 <li>Conduct a Personal Resources Inventory</li>
                                 <li>Develop a course communication strategy</li>
                                 <li>Identify strategies for learner success</li>
-                                <li>Construct a syllabus that demonstrates the proceeding objectives</li>
+                                <li>Construct a syllabus that demonstrates the proceeding outcomes</li>
                             </ul>
                         </div>
                     </div><!-- .section1 -->
@@ -777,7 +777,7 @@ Please take the time to review this syllabus thoroughly. It has all the informat
                         </div>                                                                                                
                     </div><!-- .section2-->  
                 </div><!-- .example -->
-            </section><!-- #objectives -->
+            </section><!-- #outcomes -->
 
 
             <section id="resources">
