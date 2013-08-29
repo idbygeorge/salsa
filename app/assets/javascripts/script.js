@@ -24,6 +24,7 @@ function liteOff(x){
             
             // content
             $("section.active").removeClass("active");
+            $(section).removeClass('hide');
             $(section).addClass("active");
 
             // control panel
