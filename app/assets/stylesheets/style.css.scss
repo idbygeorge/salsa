@@ -106,13 +106,15 @@ td { vertical-align: top; }
 .mce-container div{
   padding-left:0 !important; 
 }
-#help {
+.help_content {
   h1{
     border-bottom:1px dashed #c0c0c0;width:100%;
     margin:20px 0;
   }
+}
+#help {
   .help_section{
-    margin-bottom:30px;
+    margin-bottom:40px;
   }
 }
 .no-close .ui-dialog-titlebar-close {display: none }
