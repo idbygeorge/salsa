@@ -18,13 +18,13 @@
 <div id="preview"></div>
 
 <div id="share_prompt" style="display:none; cursor: default"> 
-    <h1>Share this syllabus at:</h1> 
+    <h1>You can share this syllabus at:</h1> 
     <p><%= link_to @view_pdf_url, @view_pdf_url, :target => '_blank', :id => "view_url" %>
     <br/>or<br/>
     <%= link_to @view_url, @view_url, :target => '_blank', :id => "view_url" %></p>
 </div> 
 
 <div id="save_prompt" style="display:none; cursor: default"> 
-    <p><br/><%= image_tag 'busy.gif' %> Saving Syllabus. Just a moment...</p>
+    <p><br/><%= image_tag 'busy.gif' %> <span id="saving_msg">Saving Syllabus. Just a moment...</span></p>
 </div> 
 

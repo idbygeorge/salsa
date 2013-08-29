@@ -281,29 +281,42 @@ function liteOff(x){
         });
 
         // save
+        var publishing = false;
         $("#save_prompt").dialog({
             modal:true, 
-            title:'Save Syllabus', 
             height:110,
             autoOpen:false, 
             closeOnEscape: false,
             dialogClass: 'no-close'
         });
         $('#tb_save').on('ajax:beforeSend', function(event, xhr, settings) {
+            if (publishing) {
+                $('#saving_msg').text('Generating PDF. Just a moment....');
+            } else {
+                $('#saving_msg').text('Saving Syllabus. Just a moment...');
+            }
             settings.data = $('#page-data').html();
+            $("#save_prompt").dialog('option', 'title', (publishing ? 'Publishing Syllabus' : 'Save Syllabus'));
             $("#save_prompt").dialog("open");
         });
         $('#tb_save').on('ajax:success', function(event, xhr, settings) {
-            setTimeout(function(){$("#save_prompt").dialog("close")},1000);
+            setTimeout(function(){
+                $("#save_prompt").dialog("close")
+                if (publishing) {
+                    $("#share_prompt").dialog("open");
+                    $(".ui-widget-overlay").on("click", function (){
+                      $("div:ui-dialog:visible").dialog("close");
+                    });
+                    publishing = false;
+                }
+            },(publishing ? 15000 : 1000));
         });
 
-        // share
-        $("#share_prompt").dialog({ modal:true, width:500, title:'Publish Syllabus', autoOpen:false });
+        // publish
+        $("#share_prompt").dialog({ modal:true, width:500, title:'Your syllabus has been published!', autoOpen:false });
         $('#tb_share').click(function() { 
-            $("#share_prompt").dialog("open");
-            $(".ui-widget-overlay").on("click", function (){
-              $("div:ui-dialog:visible").dialog("close");
-            });
+            publishing = true;
+            $('#tb_save').first().click();
         });
 
         // table drag and drop
