@@ -18,7 +18,12 @@ html, body { height: 100%; min-height: 420px; position: relative; }
     .masthead, footer { color: #fff; position: fixed; left: 0; right: 0; z-index: 999; }
     #toolbar i {font-size:.85em;text-decoration:none;padding-right:.5em;}
     #share_prompt{padding-top:10px;}
-    #edit_syllabus #outcomes, #edit_syllabus #resources, #edit_syllabus #activities, #edit_syllabus #policies, #edit_syllabus #grades{display:none;}
+    #edit_syllabus{
+        #page{
+            section{display:none;}
+            section.active{display:block;}
+        }
+    }
     #view_syllabus #preview {display:block;}
     #view_syllabus i{display:none;}
 

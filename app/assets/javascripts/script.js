@@ -16,13 +16,19 @@ function liteOff(x){
             var listItem = $(this).closest("li");
             var list = listItem.closest("ul");
             
+            // section selector
             list.find(".selected").removeClass("selected");
             $(this).closest("li").addClass("selected");
             
             var section = $(this).attr("href");
             
-            $("section.active, aside.active").removeClass("active").hide();
-            $(section + ", #controlPanel " + section.replace('#', '.')).addClass("active").show();
+            // content
+            $("section.active").removeClass("active");
+            $(section).addClass("active");
+
+            // control panel
+            $("aside.active").removeClass("active").hide();
+            $("#controlPanel " + section.replace('#', '.')).addClass("active").show();
             
             $("body").attr("class", section.replace('#', ''));
             
@@ -382,7 +388,7 @@ function liteOff(x){
                     args.target.find(args.element+":visible").last().remove();
                 }
             } else {
-                args.target.toggle();
+                args.target.toggleClass('hide');
                 args.source.closest("section").toggleClass("ui-state-active ui-state-default");
             }
             
