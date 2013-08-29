@@ -24,7 +24,7 @@
                     <label for="informationContentSpacingRemove">Remove spacing</label>
                     <input type="button" name="informationContentSpacingRemove" id="informationContentSpacingRemove" value="-">
                 </fieldset>
-                <fieldset data-method="toggleContent" data-element=".contact" data-max="4" data-min="1" data-target=".contacts">
+                <fieldset data-method="toggleContent" data-element=".contact" data-max="4" data-min="1" data-template="#contact_template" data-target='.contacts'>
                     <legend>contacts</legend>
                     <label for="informationContactAdd">Add contact</label>
                     <input type="button" name="informationContactAdd" id="informationContactAdd" value="+">
@@ -502,6 +502,19 @@
         <table id="extra_credit_row_template">
             <tr><td class="editable">Item</td><td class="editable right">0</td></tr>
         </table>
+        <div class="contact" id="contact_template">
+            <h3 class="editable">Contact Title</h3>
+                <div class="editableHtml">
+                    <ul class="none">
+                        <li>name</li>
+                        <li>email</li>
+                        <li>phone</li>
+                        <li>other1</li>
+                        <li>other2</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 
 
