@@ -319,6 +319,12 @@ function liteOff(x){
             },(publishing ? 15000 : 1000));
         });
 
+        // preview
+        $('#tb_preview').click(function() { 
+            $('#tb_save').first().click();
+            return true;
+        });
+
         // publish
         $("#share_prompt").dialog({ modal:true, width:500, title:'Your syllabus has been published!', autoOpen:false });
         $('#tb_share').click(function() { 
