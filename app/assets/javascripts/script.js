@@ -321,7 +321,19 @@ function liteOff(x){
 
         // preview
         $('#tb_preview').click(function() { 
-            $('#tb_save').first().click();
+            var url = $('#tb_save').attr('href');
+            var content = $('#page-data').html();
+            $.ajax({
+                type:'PUT',
+                url:url,
+                data:content,
+                async:false,
+                beforeSend: function(xhr, settings) {
+                    xhr.setRequestHeader("Accept", "application/json");
+                    var token = $('#tb_save').attr('authenticity_token');
+                    xhr.setRequestHeader('X-CSRF-Token',token );
+                }
+            });
             return true;
         });
 
