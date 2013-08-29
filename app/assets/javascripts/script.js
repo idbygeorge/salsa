@@ -165,8 +165,8 @@ function liteOff(x){
         };
         
         // make stuff editable        
-        $("section :header,#templates :header").addClass("editable").attr("tabindex", 0);
-        $("section article .text,#templates .text").addClass("editableHtml").attr("tabindex", 0);
+        $("section :header,#templates :header").addClass("editable");
+        $("section article .text,#templates .text").addClass("editableHtml");
         
         // edit an html block
         $("section").on("click", ".editableHtml", function(){
