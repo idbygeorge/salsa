@@ -298,9 +298,9 @@ function liteOff(x){
         });
         $('#tb_save').on('ajax:beforeSend', function(event, xhr, settings) {
             if (publishing) {
-                $('#saving_msg').text('Generating your SALSA in PDF....');
+                $('#saving_msg').text('Fresh-made SALSA on the way....');
             } else {
-                $('#saving_msg').text('Just a moment...');
+                $('#saving_msg').text('One moment please....');
             }
             settings.data = $('#page-data').html();
             $("#save_prompt").dialog('option', 'title', (publishing ? 'Publishing your SALSA' : 'Saving your SALSA'));
