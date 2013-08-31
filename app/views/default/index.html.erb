@@ -11,7 +11,8 @@
   		<h2><i>&iexcl;Welcome to Salsa!</i></h2>
                 <p>Salsa is an open-source web application developed at <a href="http://cidi.usu.edu" target="blank">Utah State University</a>.</p>
                 <p>Use Salsa to make <u>S</u>tyled & <u>A</u>ccessible <u>L</u>earning <u>S</u>ervice <u>A</u>greements: SALSAs.</p>
-                <p><%= link_to 'Click here to get started.', new_syllabus_path %></p>
+                <p><%= link_to sanitize('&iexcl;Click here to create <i>your</i> SALSA!'), new_syllabus_path %></p>
+                <p class="small">Salsa will generate a <b>unique and random URL</b> for you. <b>Publish</b> your SALSA as an online PDF. <b>Share</b> your SALSA, hosted on <a href="http://aws.amazon.com" target="_blank">AWS</a>. <b>Bookmark</b> your SALSA with the "My SALSA" button. Use the Bookmark to return and <b>edit</b> your SALSA. <u>No email address or personal information required.</u> :)</p>
     </div>
     </div>
 </div>
