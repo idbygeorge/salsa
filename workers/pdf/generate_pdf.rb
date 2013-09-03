@@ -1,4 +1,4 @@
-#!/usr/bin/env ruby
+cd pdf#!/usr/bin/env ruby
 require 'cgi'
 require 'yaml'
 require 'uber-s3'
@@ -35,7 +35,7 @@ class PdfGenerator
 
   def generate(url, tmp_file)
     puts "Generating pdf from url: #{url} -> #{tmp_file}"
-    cmdline = "wkhtmltopdf-amd64 --page-size Letter --margin-top 0in --margin-right 0in --margin-bottom 0in --margin-left 0in --encoding UTF-8 -q #{url} #{tmp_file}"
+    cmdline = "wkhtmltopdf-amd64 --page-size Letter --margin-top .5in --margin-right 0in --margin-bottom .5in --margin-left 0in --encoding UTF-8 -q #{url} #{tmp_file}"
     puts "#{cmdline}"
     # puts `wkhtmltopdf --page-size Letter --margin-top 0in --margin-right 0in --margin-bottom 0in --margin-left 0in --encoding UTF-8 -q #{url} #{tmp_file}`
     puts `#{cmdline}`
