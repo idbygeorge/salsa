@@ -1,6 +1,6 @@
     <form id="controlPanel">
         <aside class="information" data-target="#information .content">
-            <section data-target="header" onmouseover="liteOn(title1I,'#ccc')" onmouseout="liteOff(title1I)">
+            <section data-target="header" onmouseover="liteOn(title1I,'#e5e5e5')" onmouseout="liteOff(title1I)">
                 <header>
                     Course
                 </header>
@@ -13,7 +13,7 @@
                 </fieldset>
             </section>
 
-            <section data-target=".section1" onmouseover="liteOn(section1I,'#ccc')" onmouseout="liteOff(section1I)">
+            <section data-target=".section1" onmouseover="liteOn(section1I,'#e5e5e5')" onmouseout="liteOff(section1I)">
                 <header>
                     Contacts
                 </header>
@@ -33,7 +33,7 @@
                 </fieldset>
             </section>
 
-            <section data-target=".section2" class="ui-state-default" onmouseover="liteOn(section2I,'#ccc')" onmouseout="liteOff(section2I)">
+            <section data-target=".section2" class="ui-state-default" onmouseover="liteOn(section2I,'#e5e5e5')" onmouseout="liteOff(section2I)">
                 <header data-method="toggleContent">
                     <input type="button" value="Section 2">
                 </header>
@@ -53,7 +53,7 @@
                 </fieldset>
             </section>
 
-            <section data-target=".section3" class="ui-state-active" onmouseover="liteOn(section3I,'#ccc')" onmouseout="liteOff(section3I)">
+            <section data-target=".section3" class="ui-state-active" onmouseover="liteOn(section3I,'#e5e5e5')" onmouseout="liteOff(section3I)">
                 <header data-method="toggleContent">
                     <input type="button" value="Description">
                 </header>
@@ -66,7 +66,7 @@
                 </fieldset>
             </section>
 
-            <section data-target=".section4" class="ui-state-default" onmouseover="liteOn(section4I,'#ccc')" onmouseout="liteOff(section4I)">
+            <section data-target=".section4" class="ui-state-default" onmouseover="liteOn(section4I,'#e5e5e5')" onmouseout="liteOff(section4I)">
                 <header data-method="toggleContent">
                     <input type="button" value="Section 4">
                 </header>
@@ -86,7 +86,7 @@
                 </fieldset>
             </section>
 
-            <section data-target=".section5" class="ui-state-default" onmouseover="liteOn(section5I,'#ccc')" onmouseout="liteOff(section5I)">
+            <section data-target=".section5" class="ui-state-default" onmouseover="liteOn(section5I,'#e5e5e5')" onmouseout="liteOff(section5I)">
                 <header data-method="toggleContent">
                     <input type="button" value="Section 5">
                 </header>
@@ -108,31 +108,11 @@
         </aside>
 
         <aside class="outcomes" data-target="#outcomes .content">
-            <section data-target=".section1" onmouseover="liteOn(section1O,'#d6f0ff')" onmouseout="liteOff(section1O)">
-                <header>
-                   Outcomes
-                </header>
-                <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
-                    <legend>spacing</legend>
-                    <label for="outcomesContentSpacingAdd">Add spacing</label>
-                    <input type="button" name="outcomesContentSpacingAdd" id="outcomesContentSpacingAdd" value="+">
-                    <label for="outcomesContentSpacingRemove">Remove spacing</label>
-                    <input type="button" name="outcomesContentSpacingRemove" id="outcomesContentSpacingRemove" value="-">
-                </fieldset>
-                <fieldset data-method="toggleContent" data-target=".outcomes_list" data-element="li" data-text="Outcome text here" data-min="1">
-                    <legend>text</legend>
-                    <label for="outcomesOutcomeAdd">Add outcome</label>
-                    <input type="button" name="outcomesOutcomeAdd" id="outcomesOutcomeAdd" value="+">
-                    <label for="outcomesOutcomeRemove">Remove outcome</label>
-                    <input type="button" name="outcomesOutcomeRemove" id="outcomesOutcomeRemove" value="-">
-                </fieldset>
-            </section>
-            <!-- Bloom's tool BREAKS after the user enters the text editor. -->
             <section data-target=".section1">
                 <header>
                     <a href="#" class="toggler">Bloom's Revised</a>
                 </header>
-                <dl data-method="taxonomy" data-target=".outcomes_list">
+                <dl data-method="taxonomy" data-target=".outcomes_list" class="hide">
                     <dt>Remember</dt>
                         <dd>Choose</dd>
                         <dd>Define</dd>
@@ -242,6 +222,26 @@
                         <dd>Propose</dd>
                         <dd>Role play</dd>
                 </dl>
+            </section>
+
+            <section data-target=".section1" onmouseover="liteOn(section1O,'#d6f0ff')" onmouseout="liteOff(section1O)">
+                <header>
+                   Outcomes
+                </header>
+                <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
+                    <legend>spacing</legend>
+                    <label for="outcomesContentSpacingAdd">Add spacing</label>
+                    <input type="button" name="outcomesContentSpacingAdd" id="outcomesContentSpacingAdd" value="+">
+                    <label for="outcomesContentSpacingRemove">Remove spacing</label>
+                    <input type="button" name="outcomesContentSpacingRemove" id="outcomesContentSpacingRemove" value="-">
+                </fieldset>
+                <fieldset data-method="toggleContent" data-target=".outcomes_list" data-element="li" data-text="Outcome text here" data-min="1">
+                    <legend>text</legend>
+                    <label for="outcomesOutcomeAdd">Add outcome</label>
+                    <input type="button" name="outcomesOutcomeAdd" id="outcomesOutcomeAdd" value="+">
+                    <label for="outcomesOutcomeRemove">Remove outcome</label>
+                    <input type="button" name="outcomesOutcomeRemove" id="outcomesOutcomeRemove" value="-">
+                </fieldset>
             </section>
 
             <section data-target=".section2" class="ui-state-default" onmouseover="liteOn(section2O,'#d6f0ff')" onmouseout="liteOff(section2O)">
