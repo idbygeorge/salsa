@@ -35,9 +35,9 @@ class PdfGenerator
 
   def generate(url, tmp_file)
     puts "Generating pdf from url: #{url} -> #{tmp_file}"
-    cmdline = "wkhtmltopdf-amd64 --page-size Letter --margin-top 0.75in --margin-right 0.75in --margin-bottom 0.75in --margin-left 0.75in --encoding UTF-8 -q #{url} #{tmp_file}"
+    cmdline = "wkhtmltopdf-amd64 --page-size Letter --margin-top 0.25in --margin-right 0.25in --margin-bottom 0.25in --margin-left 0.25in --encoding UTF-8 -q #{url} #{tmp_file}"
     puts "#{cmdline}"
-    # puts `wkhtmltopdf --page-size Letter --margin-top 0.75in --margin-right 0.75in --margin-bottom 0.75in --margin-left 0.75in --encoding UTF-8 -q #{url} #{tmp_file}`
+    # puts `wkhtmltopdf --page-size Letter --margin-top 0.25in --margin-right 0.25in --margin-bottom 0.25in --margin-left 0.25in --encoding UTF-8 -q #{url} #{tmp_file}`
     puts `#{cmdline}`
   end
 
