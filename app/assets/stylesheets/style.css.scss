@@ -108,12 +108,38 @@ td { vertical-align: top; }
 }
 .help_content {
   h1{
-    border-bottom:1px dashed #c0c0c0;width:100%;
+    border-bottom:1px solid #666;width:100%;
     margin:20px 0;
   }
+  h1.i {
+       color:#c0c0c0; 
+       border-bottom:1px solid #c0c0c0;width:100%;
+  }
+  h1.o {
+       color:#7fc5ec;
+       border-bottom:1px solid #7fc5ec;width:100%; 
+  }
+   h1.r {
+        color:#f0e22e;
+        border-bottom:1px solid #f0e22e;width:100%; 
+  }
+   h1.a {
+        color:#a1cc3a;
+        border-bottom:1px solid #a1cc3a;width:100%;
+  }
+   h1.p {
+        color:#bebee0; ;
+        border-bottom:1px solid #bebee0;width:100%;
+  }
+   h1.g {
+        color:#d4dac8;
+        border-bottom:1px solid #d4dac8;width:100%;
+  }
 }
+
 #help {
   .help_section{
+    padding: 0 25px;
     margin-bottom:40px;
   }
 }
