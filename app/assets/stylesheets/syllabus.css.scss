@@ -26,6 +26,7 @@ html, body { height: 100%; min-height: 420px; position: relative; }
     }
     #view_syllabus #preview {display:block;}
     #view_syllabus i{display:none;}
+    nav {max-width: 930px;}
 
 #wrapper { height: 100%; width: 916px; position: relative; overflow: hidden; min-height: 400px; float: left; }
     #tabs { float: left; margin-top: 140px; width: 108px; margin-left: 10px; }
