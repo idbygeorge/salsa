@@ -183,10 +183,10 @@ function liteOff(x){
             var text = $(this).toggleClass("editable editing").text();
             
             var editor = $(this).html($("<input/>").attr("id", "headerTextControl").val(text)).find("input");
-            if ($('#grade_components').has(editor).length > 0) {
+            if ($('#grade_components .right').has(editor).length > 0) {
                 editor.attr('maxlength',6);
                 makeNumericTextbox(editor);
-            }else if ($('#extra_credit').has(editor).length > 0) {
+            }else if ($('#extra_credit .right').has(editor).length > 0) {
                 editor.attr('maxlength',6);
                 makeNumericTextbox(editor);
             }else if ($('#grade_scale').has(editor).length > 0) {
