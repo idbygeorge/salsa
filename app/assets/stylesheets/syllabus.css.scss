@@ -49,7 +49,7 @@ html, body { height: 100%; min-height: 420px; position: relative; }
         #controlPanel .ui-state-active header { opacity: 1; }
         #controlPanel .ui-state-default fieldset { display: none; }
         #controlPanel .ui-state-active fieldset { display: block; }
-        #controlPanel section { padding: 5px; overflow: hidden; }
+        #controlPanel section { padding: 5px; overflow: hidden; background: #fff;}
         #controlPanel header { background: url('../img/gradient.png') repeat-x 35px; color: #fff; padding: 0 5px; line-height: 1.8; font-weight: bold; white-space: nowrap; text-align: center; }
         #controlPanel fieldset, #controlPanel dl { border: 0 none; padding: 3px 3px 3px 5px; background: #eee; margin: 0; }
             #controlPanel dt { background: #fff; line-height: 1.9; margin-bottom: 3px; text-align: center; cursor: pointer; }
