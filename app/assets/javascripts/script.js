@@ -107,20 +107,6 @@ function liteOff(x){
             updateGradeScale(grade_scale);
         };
 
-        var updateTableSum = function(table){
-            var total = 0;
-            var rows = $('tbody > tr', table);
-            rows.each(function(index, row){
-                var points_cell = $($('td',row).last());
-                var editing = $('input',points_cell).length > 0;
-                var points = parseInt(editing ? $('input',points_cell).val() : points_cell.text());
-                if (index == rows.length - 1) {
-                    points_cell.text(total);
-                } else {
-                    total += points;
-                }
-            });
-        };
 
         var validateGradeScale = function(grade_scale, element) {
             var new_value = parseInt(element.text());
@@ -145,24 +131,6 @@ function liteOff(x){
             }
         };
 
-        var updateGradeScale = function(grade_scale) {
-            if (!grade_scale)
-                grade_scale = $('#grade_scale');
-            var total_points = parseInt($('#grade_components > tbody > tr:last > td:last').text());
-            if (total_points < 100) return;
-            var rows = $('tbody > tr', grade_scale);
-            var upper_points = total_points;
-            rows.each(function(index, row){
-                var cells = $('td', row);
-                var parts = $(cells[1]).text().split("-");
-                var percent_delta = parseInt(parts[1]) - parseInt(parts[0]);
-                var points_delta = Math.round(percent_delta*total_points/100);
-                lower_points = upper_points - points_delta
-                if (isNaN(lower_points)) lower_points = '';
-                $(cells[2]).text(lower_points + " - " + upper_points);
-                upper_points = lower_points - 1;
-            });
-        };
         
         // make stuff editable        
         $("section :header,#templates :header").addClass("editable").attr({ tabIndex: 0 });
@@ -353,6 +321,40 @@ function liteOff(x){
         $("body").append($("<label>Edit Section Heading</label>").addClass("visuallyhidden")); // huh?
     });
 
+    var updateGradeScale = function(grade_scale) {
+        if (!grade_scale)
+            grade_scale = $('#grade_scale');
+        var total_points = parseInt($('#grade_components > tbody > tr:last > td:last').text());
+        if (total_points < 100) return;
+        var rows = $('tbody > tr', grade_scale);
+        var upper_points = total_points;
+        rows.each(function(index, row){
+            var cells = $('td', row);
+            var parts = $(cells[1]).text().split("-");
+            var percent_delta = parseInt(parts[1]) - parseInt(parts[0]);
+            var points_delta = Math.round(percent_delta*total_points/100);
+            lower_points = upper_points - points_delta
+            if (isNaN(lower_points)) lower_points = '';
+            $(cells[2]).text(lower_points + " - " + upper_points);
+            upper_points = lower_points - 1;
+        });
+    };
+
+    var updateTableSum = function(table){
+        var total = 0;
+        var rows = $('tbody > tr', table);
+        rows.each(function(index, row){
+            var points_cell = $($('td',row).last());
+            var editing = $('input',points_cell).length > 0;
+            var points = parseInt(editing ? $('input',points_cell).val() : points_cell.text());
+            if (index == rows.length - 1) {
+                points_cell.text(total);
+            } else {
+                total += points;
+            }
+        });
+    };
+        
     var controlMethods = {
         toggleContent: function(args) {
             var existingElements = args.target.find(args.element);
