@@ -4,7 +4,7 @@ html, body { height: 100%; min-height: 420px; position: relative; }
     display:none;
 }
 
-.masthead, footer, #preview_control { background: url('../img/topbar.png') repeat-x; overflow: hidden; }
+.masthead, footer, #preview_control { background: #334f5e; overflow: hidden; }
     .masthead li { float: left; }
     footer li, #preview_control a { float: right; }
 
