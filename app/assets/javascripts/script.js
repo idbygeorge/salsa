@@ -266,7 +266,7 @@ function liteOff(x){
         });
         $('#tb_save').on('ajax:beforeSend', function(event, xhr, settings) {
             if (publishing) {
-                $('#saving_msg').text('A freshly-made SALSA on the way....');
+                $('#saving_msg').text('Your SALSA is on the way....');
             } else {
                 $('#saving_msg').text('One moment please....');
             }
