@@ -288,21 +288,46 @@ function liteOff(x){
         });
 
         // preview
-        $('#tb_preview').click(function() { 
-            var url = $('#tb_save').attr('href');
-            var content = $('#page-data').html();
-            $.ajax({
-                type:'PUT',
-                url:url,
-                data:content,
-                async:false,
-                beforeSend: function(xhr, settings) {
-                    xhr.setRequestHeader("Accept", "application/json");
-                    var token = $('#tb_save').attr('authenticity_token');
-                    xhr.setRequestHeader('X-CSRF-Token',token );
-                }
-            });
-            return true;
+        $('#tb_preview').click(function() {
+            if($('.previewDialog').length) {
+                $('.previewDialog').dialog('close');
+            } else {
+
+                var url = $('#tb_save').attr('href');
+                var content = $('#page-data').html();
+                $.ajax({
+                    type:'PUT',
+                    url:url,
+                    data:content,
+                    async:false,
+                    beforeSend: function(xhr, settings) {
+                        xhr.setRequestHeader("Accept", "application/json");
+                        var token = $('#tb_save').attr('authenticity_token');
+                        xhr.setRequestHeader('X-CSRF-Token',token );
+                    }
+                });
+
+                var previewDiv = $("<div/>").addClass('previewDialog').css({ backgroundColor: "#F5F5F5" }).html('preview goes here...');
+
+                previewDiv.load($(this).attr('href') + " #preview", function(data){
+                    console.log("load...", this, arguments);
+                    $("#preview", this).css({ paddingTop: '.5in' }).show();
+
+                    $(".editable", this).removeAttr("tabindex");
+
+                    $(this).dialog({
+                        modal:true,
+                        width:'10.75in',
+                        title:'Preview',
+                        maxHeight: $(window).innerHeight() - 150,
+                        close: function() {
+                            $(this).dialog("destroy");
+                        }
+                    });
+                });
+            }
+
+            return false;
         });
 
         // publish
