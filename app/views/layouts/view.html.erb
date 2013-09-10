@@ -11,15 +11,7 @@
 <meta name="viewport" content="width=device-width">
 <%= wicked_pdf_stylesheet_link_tag "application" if Rails.env.development? -%>
 <%= stylesheet_link_tag 'application' %>
-<script type="text/javascript">
-window.onload=function(){
-	var hasPageBreak = !document.getElementById('page_break').parentNode.classList.contains('hide');
 
-	if(hasPageBreak) {
-		grades.style.pageBreakBefore="always";
-	}
-};
-</script>
 </head>
 <body id="view_syllabus">
   <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome </a> to experience this site.</p><![endif]-->
