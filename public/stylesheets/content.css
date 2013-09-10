@@ -23,11 +23,10 @@ h3 { font-size: 10pt; font-style:italic; }
 ul.none { list-style: none; padding-left: 0; margin: 0 0 12px; }
 
 @media print {
-    #preview { width: auto; }
+    #preview { width: auto; padding: 0; }
     #preview section { min-height: 0; border: 0 none; margin: 0; padding: 0; }
     #preview section#policies { page-break-after:always; }
     #preview section:last-child { page-break-after: auto; }
-    #preview section div { page-break-inside: avoid; }
     #preview_control { display: none !important; }
 }
 a#view_url{font-size:11px;}
