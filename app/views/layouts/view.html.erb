@@ -13,7 +13,11 @@
 <%= stylesheet_link_tag 'application' %>
 <script type="text/javascript">
 window.onload=function(){
-	grades.style.pageBreakBefore="always";
+	var hasPageBreak = !document.getElementById('page_break').parentNode.classList.contains('hide');
+
+	if(hasPageBreak) {
+		grades.style.pageBreakBefore="always";
+	}
 };
 </script>
 </head>
