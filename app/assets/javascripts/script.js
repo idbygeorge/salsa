@@ -118,17 +118,8 @@ function liteOff(x){
                 var next_grade = $('td', cell.parent().next())[1];
                 parts = $(next_grade).text().split('-');
                 if (parts.length > 0)
-                    $(next_grade).html('<span class="editable">' + parts[0] + '</span>-<span class="editable">' + (new_value-1) + '</span>');
-
-            // if the element is an upper bound, ensure the previous grade's lower bound is one higher
-            } else {
-                var prev_grade = $('td', cell.parent().prev())[1];
-                parts = $(prev_grade).text().split('-');
-                if (parts.length > 0) {
-                    var upper_bound = (parts[1] == ' 100') ? parts[1] : ('<span class="editable">' + parts[1] + '</span>');
-                    $(prev_grade).html('<span class="editable">' + (new_value+1) + '</span>-' + upper_bound);
-                }
-            }
+                    $(next_grade).html('<span class="editable">' + parts[0] + '</span>-  &nbsp;' + (new_value-1));
+            } 
         };
 
         
@@ -222,12 +213,16 @@ function liteOff(x){
         };
 
         var previewPage = function(selector, preview_label){
-            var preview = $(selector).children().clone().show();
-            $(".content", preview).remove();
-            $(".masthead, #wrapper, footer").hide();
-            $("#preview").html(preview).show().addClass("overlay");
-            $("#preview_control").show().append($("<div class='previewLabel'/>").text(preview_label));
-            return false;
+            $(selector).dialog({
+                width: 900,
+                modal: true,
+                title: preview_label,
+                maxHeight: $(window).innerHeight() - 150,
+                close: function() {
+                    $(this).dialog("destroy");
+                }
+            });
+            $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-state-default").focus();
         };
 
         $("#preview_control a").on("click", function(){
@@ -247,12 +242,19 @@ function liteOff(x){
         });
 
         // help
-        $("#tb_help").on("click", function(){
+        $("#tb_help").on("click", function (e){
+            e.preventDefault();
             return previewPage("#help_page",'Help');
         });
 
         $("#content_help_link").on("click", function(){
             return previewSection('help','Help');
+        });
+
+        // My SALSA
+        $("#tb_link").on("click", function (e){
+            e.preventDefault();
+            return previewPage("#mySalsa",'Bookmark Your Editable SALSA');
         });
 
         // save
@@ -324,6 +326,7 @@ function liteOff(x){
                             $(this).dialog("destroy");
                         }
                     });
+                    $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-state-default").focus();
                 });
             }
 
