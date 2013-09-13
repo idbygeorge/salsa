@@ -98,6 +98,18 @@ td { vertical-align: top; }
   @page { margin: 0.5cm; }
   p, h2, h3 { orphans: 3; widows: 3; }
   h2, h3 { page-break-after: avoid; }
+
+  .masthead, #tabs, #controlPanel, #container, #templates, #preview, .content_toolbar, footer {
+    display: none;
+  }
+
+  .ui-dialog { display: none !important; }
+
+  /*
+  .dialog-preview {
+    #preivew { display: block; }
+  }
+  */
 }
 
 .mce-container {

@@ -128,7 +128,7 @@ function liteOff(x){
         $("section article .text,#templates .text").addClass("editableHtml");
         
         // edit an html block
-        $("section").on("click", ".editableHtml", function(){
+        $("body").on("click", "section .editableHtml", function(){
             var element = $(this);
             var text = element.toggleClass("editableHtml editingHtml").html();
             
@@ -292,8 +292,8 @@ function liteOff(x){
 
         // preview
         $('#tb_preview').click(function() {
-            if($('.previewDialog').length) {
-                $('.previewDialog').dialog('close');
+            if($('.dialog-preview').length) {
+                $('#previewWrapper').dialog('close');
             } else {
 
                 var url = $('#tb_save').attr('href');
@@ -310,6 +310,37 @@ function liteOff(x){
                     }
                 });
 
+                var previewHTML = $("#container #page").children().html();
+                var preview = $('#preview').html(previewHTML);
+
+                var previewWrapper = $('#previewWrapper').clone().css({ backgroundColor: "#F5F5F5" });
+
+                $("#preview", previewWrapper).show();
+
+                $('body').addClass('dialog-preview');
+
+                $(".content", previewWrapper).show();
+                $(".example", previewWrapper).hide();
+                
+                $(".editable, .editableHtml", previewWrapper).removeClass("editable editableHtml").removeAttr("tabindex");
+
+                previewWrapper.dialog({
+                    modal:true,
+                    width:'10.75in',
+                    title:'Preview',
+                    maxHeight: $(window).innerHeight() - 150,
+                    close: function() {
+                        $('body').removeClass('dialog-preview');
+                        $('#preview').html('').hide();
+                        $(this).dialog("destroy");
+                    }
+                });
+
+                $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-state-default").focus();
+ 
+        //this is the one that Heroku is using--9_13_13
+
+        /*
                 var previewDiv = $("<div/>").addClass('previewDialog').css({ backgroundColor: "#F5F5F5" }).html('preview goes here...');
 
                 previewDiv.load($(this).attr('href') + " #preview", function(data){
@@ -329,6 +360,8 @@ function liteOff(x){
                     });
                     $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-state-default").focus();
                 });
+
+*/
             }
 
             return false;

@@ -1,0 +1,98 @@
+.masthead, footer, #preview_control { background: #334f5e; overflow: hidden; }
+    .masthead li { float: left; }
+    footer li, #preview_control a { float: right; }
+
+    .masthead a, footer a, #preview_control a, .masthead a:visited, footer a:visited, #preview_control a:visited, #preview_control .previewLabel { display: block; padding: 5px 20px; color: #fff; text-decoration: none; }
+    .masthead a:hover, footer a:hover, #preview_control a:hover, .masthead a:focus, footer a:focus, #preview_control a:focus { background: #5c727e; color: #eee; }
+    
+    a.home { float: left; }
+    
+    .masthead { top: 0; }
+    footer { bottom: 0; }
+    .masthead, footer { color: #fff; position: fixed; left: 0; right: 0; z-index: 999; }
+    #toolbar i {font-size:.85em;text-decoration:none;padding-right:.5em;}
+    #share_prompt{padding-top:10px;}
+    #edit_syllabus{
+        #page{
+            section{display:none;}
+            section.active{display:block;}
+        }
+    }
+    #view_syllabus #preview {display:block;}
+    #view_syllabus i{display:none;}
+    nav {max-width: 930px;}
+
+#wrapper { height: 100%; width: 916px; position: relative; overflow: hidden; min-height: 400px; float: left; }
+    #tabs { float: left; margin-top: 140px; width: 108px; margin-left: 10px; }
+        #tabs li { text-align: center; text-transform: lowercase; line-height: 1.4; }
+            #tabs li a { display: block; padding: 4px 4px 4px 8px; background: #EBEBEB; color: black; text-decoration: none; border: solid 3px #EBEBEB; }
+
+            #tabs li a:hover, #tabs li.selected a { background: #fff; border-color: #aaa; }
+
+            #tabs li.information a:hover, #tabs li.information.selected a, .information #container, .information #controlPanel { border-color: #C0C0C0; }
+            #tabs li.outcomes a:hover, #tabs li.outcomes.selected a, .outcomes #container, .outcomes #controlPanel, .outcomes #topBar { border-color: #7FC5EC; }
+            #tabs li.resources a:hover, #tabs li.resources.selected a, .resources #container, .resources #controlPanel { border-color: #F0E22E; }
+            #tabs li.activities a:hover, #tabs li.activities.selected a, .activities #container, .activities #controlPanel { border-color: #A1CC3A; }
+            #tabs li.policies a:hover, #tabs li.policies.selected a, .policies #container, .policies #controlPanel { border-color: #BEBEE0; }
+            #tabs li.grades a:hover, #tabs li.grades.selected a, .grades #container, .grades #controlPanel { border-color: #D4DAC8; }
+
+    #controlPanel { float: right; width: 148px; margin-top: 35px; max-height: 490px; overflow: hidden; font-size: 12px; }
+        #controlPanel header { }
+            #controlPanel header input, #controlPanel header a { width: 100%; background: transparent; border: 0 none; color: #fff; font-weight: bold; text-decoration: none; }
+            
+        #controlPanel .ui-state-default header { opacity: .4; }
+        #controlPanel .ui-state-active header { opacity: 1; }
+        #controlPanel .ui-state-default fieldset { display: none; }
+        #controlPanel .ui-state-active fieldset { display: block; }
+        #controlPanel section { padding: 5px; overflow: hidden; background: #fff;}
+        #controlPanel header { background: url('../img/gradient.png') repeat-x 35px; color: #fff; padding: 0 5px; line-height: 1.8; font-weight: bold; white-space: nowrap; text-align: center; }
+        #controlPanel fieldset, #controlPanel dl { border: 0 none; padding: 3px 3px 3px 5px; background: #eee; margin: 0; }
+            #controlPanel dt { background: #fff; line-height: 1.9; margin-bottom: 3px; text-align: center; cursor: pointer; }
+            #controlPanel dt.ui-state-active { font-weight: bold; background: #7FC5EC; }
+            #controlPanel dd { display: none; text-align: center; }
+        #controlPanel legend { background: #fff; margin-right: 4px; text-indent: 5px; float: left; width: 70px; line-height: 1.9; }
+        #controlPanel fieldset label { position: absolute; left: -999999px; }
+        #controlPanel fieldset input { width: 2em; height: 2em; float: left; margin-left: 2px; line-height: 1; padding-left: 0; padding-right: 0; text-align: center; }
+
+    #controlPanel, #container, #topBar { border: solid 2px #aaa; border-radius: 10px; }
+
+    #container, #topBar { position: absolute; top: 35px; bottom: 35px; left: 116px; overflow: auto; background: #fff; width: 640px; }
+        #page { padding: 15px; }
+            .content { min-height: 1.4em; }
+                .editing input, .editing textarea { width: 100% !important; text-align: left !important; }
+                .right.editing input, #grade_scale .editing input { width: 30px !important; text-align: right !important;}
+                .editingNum input, .editingNum textarea { width: 50%; text-align: right; }
+
+
+#templates { display: none; }
+
+#preview { width: 8.5in; margin: 0 auto; display: none; padding: 0 .5in .5in 0; background: #fff; min-height: 11in;}
+    #preview_control { display: none; position:fixed; width:100%; top:0;}
+    #preview section { border: solid 1px #fff;  padding-left: .25in; /*min-height: 11in;*/ }
+    
+#topBar { z-index: 99999999; background: #fff; bottom: auto; }
+    #topBar h2 { text-align: center; margin: 5px 0 0; font-size: 10pt; }
+    #topBar ul { list-style: none; margin: 0; padding: 4px 15px 8px; overflow: hidden; }
+        #topBar li { float: left; text-align: center; margin: 3px; width: 19%; }
+            #topBar li a { background: #fff; color: #000; line-height: 1.6; text-decoration: none; display: block; }
+            .outcomes #topBar li a { background: #7FC5EC; }
+#components tr.myDragClass td { font-weight: bold; background-color: #ffe4b5; }
+
+#editor_view{height:100%;}
+.content_toolbar {position:relative;top:50px;left:580px;width: 178px;}
+.content_toolbar a {color:#5c727e; font-size: 1em; text-decoration: none;}
+.informationIcon a {color:#c0c0c0; font-size: 1em; text-decoration: none;}
+.outcomesIcon a {color:#7fc5ec; font-size: 1em; text-decoration: none;}
+.resourcesIcon a {color:#f0e22e; font-size: 1em; text-decoration: none;}
+.activitiesIcon a {color:#a1cc3a; font-size: 1em; text-decoration: none;}
+.policiesIcon a {color:#bebee0; font-size: 1em; text-decoration: none;}
+.gradesIcon a {color:#d4dac8; font-size: 1em; text-decoration: none;}
+table.components {color:#000;width:70%;border-width: 1px;border-color: #c0c0c0;border-collapse: collapse;}
+table.components tbody.center {text-align:center;}
+table.components th {color:#fff;background-color:#696969;;border-width: 1px;border-style: solid;border-color: #c0c0c0;text-align:center;}
+table.components tr.total {font-weight:bold;}
+table.components tr.even { background: #e8e8e8;}
+table.components td {border-width: 1px;padding: 8px;border-style: solid;border-color: #c0c0c0;}
+table.components td.left {text-align:left;}
+table.components td.right {text-align:right;}
+table.components tr.myDragClass td {color:#666;background-color: #ffe4b5; }
