@@ -254,6 +254,7 @@ function liteOff(x){
         // My SALSA
         $("#tb_link").on("click", function (e){
             e.preventDefault();
+            $("#custom-url").html(document.URL);
             return previewPage("#mySalsa",'Bookmark Your Editable SALSA');
         });
 
