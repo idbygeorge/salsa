@@ -234,10 +234,12 @@ function liteOff(x){
 
         // example
         $("#tb_example").on("click", function(){
+            $(".editable, .editableHtml", previewPage).removeClass("editable editableHtml").removeAttr("tabindex");
             return previewPage('#example','Example');
         });
 
         $("#content_example_link").on("click", function(){
+            $(".editable, .editableHtml", previewSection).removeClass("editable editableHtml").removeAttr("tabindex");
             return previewSection('example','Example');
         });
 
@@ -316,8 +318,10 @@ function liteOff(x){
                 var previewWrapper = $('#previewWrapper').clone().css({ backgroundColor: "#F5F5F5" });
 
                 $("#preview", previewWrapper).show();
-
+                $("#spacer", previewWrapper).show();
                 $('body').addClass('dialog-preview');
+
+
 
                 $(".content", previewWrapper).show();
                 $(".example", previewWrapper).hide();
