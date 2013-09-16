@@ -395,7 +395,7 @@ function liteOff(x){
             var parts = $(cells[1]).text().split("-");
             var percent_delta = parseInt(parts[1]) - parseInt(parts[0]);
             var points_delta = Math.round(percent_delta*total_points/100);
-            lower_points = upper_points - points_delta
+            lower_points = Math.round((total_points * parseInt(parts[0]))/100);
             if (isNaN(lower_points)) lower_points = '';
             $(cells[2]).text(lower_points + " - " + upper_points);
             upper_points = lower_points - 1;
