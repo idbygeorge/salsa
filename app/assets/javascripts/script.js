@@ -373,6 +373,7 @@ function liteOff(x){
 
         // publish
         $("#share_prompt").dialog({ modal:true, width:500, title:'Your SALSA has been published.', autoOpen:false });
+        $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-state-default").focus();
         $('#tb_share').click(function() { 
             publishing = true;
             $('#tb_save').first().click();
