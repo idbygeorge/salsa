@@ -165,6 +165,7 @@ function liteOff(x){
         
         var makeNumericTextbox = function(editor){
             editor.keyup(function(e){
+                if ($.inArray(e.which, [37, 38, 39, 40]) != -1) return false;
                 editor.val(editor.val().replace(/\D/g, ''));
             });
         };
@@ -197,7 +198,7 @@ function liteOff(x){
         });
         
         $("section").on("blur", ".editing input", function(){
-            if($(this).val() == ''){
+            if($(this).val() == '' && $(this).parent().hasClass('right') == true){
                 $(this).val('0');
             }
             var text = $(this).val();
