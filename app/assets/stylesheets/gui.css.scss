@@ -69,7 +69,7 @@
     #preview_control { display: none; position:fixed; width:100%; top:0;}
     #preview section { border: solid 1px #fff;  padding-left: .25in; /*min-height: 11in;*/ }
     
-#topBar { z-index: 99999999; background: #fff; bottom: auto; }
+#topBar { z-index: 999; background: #fff; bottom: auto; }
     #topBar h2 { text-align: center; margin: 5px 0 0; font-size: 10pt; }
     #topBar ul { list-style: none; margin: 0; padding: 4px 15px 8px; overflow: hidden; }
         #topBar li { float: left; text-align: center; margin: 3px; width: 19%; }
