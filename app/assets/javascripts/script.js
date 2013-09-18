@@ -174,6 +174,9 @@ function liteOff(x){
             var text = $(this).toggleClass("editable editing").text();
             
             var editor = $(this).html($("<input/>").attr("id", "headerTextControl").val(text)).find("input");
+            if(editor.val() == '0'){
+                editor.val('');
+            }
             if ($('#grade_components .right').has(editor).length > 0) {
                 editor.attr('maxlength',6);
                 makeNumericTextbox(editor);
@@ -194,6 +197,9 @@ function liteOff(x){
         });
         
         $("section").on("blur", ".editing input", function(){
+            if($(this).val() == ''){
+                $(this).val('0');
+            }
             var text = $(this).val();
             var element = $(this).closest(".editing")
             if (text == "" && element.data('can-delete') == true)
