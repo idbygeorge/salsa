@@ -11,6 +11,21 @@ function liteOff(x){
 (function($) {
     $(function(){ 
 
+        // Check for existing sections and toggle their tab
+        var tabs = ["information", "outcomes", "resources", "activities", "policies", "grades"]
+        $.each(tabs, function (i){
+            var j=2;
+            for(var j=2; j<5; j++){
+                if(!$("#"+tabs[i]).find(".section"+j).hasClass("hide")){
+                    $("aside."+tabs[i]).find("[data-target='.section"+j+"']").removeClass("ui-state-default").addClass("ui-state-active");
+                }
+            }
+        });
+        // for some reason page break is opposite
+        if($("#section5P").hasClass("hide")){
+            $("aside.policies").find("[data-target='.section5']").removeClass("ui-state-active").addClass("ui-state-default");
+        }
+
         // left sidebar section selector
         $("#tabs a").on("click", function(){
             var listItem = $(this).closest("li");
