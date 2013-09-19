@@ -53,7 +53,7 @@ class PdfGenerator
 
   def s3_connect
     # Also parse the config we uploaded with this worker for our Hipchat stuff
-    config = YAML.load_file('config.yml')['production']
+    config = YAML.load_file('config.yml')['staging']
     bucket_name = config['aws_bucket']
     region = config['aws_region']
 
