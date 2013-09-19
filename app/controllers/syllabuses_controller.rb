@@ -41,7 +41,7 @@ class SyllabusesController < ApplicationController
  	end
 
   def update
-    generate_syllabus_pdf(@syllabus.view_id) if Rails.env.staging?
+    generate_syllabus_pdf(@syllabus.view_id) if Rails.env.production?
     respond_to do |format|
       msg = { :status => "ok", :message => "Success!", :html => "<b>...</b>" }
       format.json  { 
@@ -56,7 +56,7 @@ class SyllabusesController < ApplicationController
  	protected
 
   def view_pdf_url
-    if Rails.env.staging?
+    if Rails.env.production?
       "https://s3-#{APP_CONFIG['aws_region']}.amazonaws.com/#{APP_CONFIG['aws_bucket']}/syllabuses/#{@syllabus.view_id}.pdf"
     else
       "#{APP_CONFIG['domain']}/syllabuses/#{@syllabus.view_id}.pdf"
