@@ -16,4 +16,5 @@ build 'curl http://wkhtmltopdf.googlecode.com/files/wkhtmltopdf-0.9.9-static-amd
 
 remote
 
-exec 'generate_pdf.rb'
+exec 'generate_pdf_staging.rb'
+	

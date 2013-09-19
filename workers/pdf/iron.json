@@ -1,6 +1,7 @@
 {
-  "production":{
-    "token":"Zztb-nslUMyUyWTEIN5YEwbZQbc",
-    "project_id":"5217d1d38fe6380005000015"
+ "staging":{
+  	"token":"CLWWzEl4fBD-cbEc2SVtelqPDXY",
+  	"project_id":"523b5c2914f9b1000d000002"
   }
 }
+ 
