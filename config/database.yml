@@ -51,11 +51,10 @@ test:
   username: salsa
   password:
 
-production:
+staging:
   adapter: postgresql
   encoding: unicode
-  database: salsa_production
+  database: salsa_staging
   pool: 5
   username: salsa
   password:
-
