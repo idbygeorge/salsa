@@ -51,7 +51,7 @@ test:
   username: salsa
   password:
 
-staging:
+production:
   adapter: postgresql
   encoding: unicode
   database: salsa_staging
