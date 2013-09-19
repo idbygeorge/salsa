@@ -1,6 +1,6 @@
 runtime 'ruby'
 
-name 'pdf_generator'
+name 'pdf_generator_staging'
 
 gem 'yajl-ruby'
 gem 'uuidtools'
