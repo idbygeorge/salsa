@@ -1,8 +1,4 @@
 {
- "staging":{
-  	"token":"CLWWzEl4fBD-cbEc2SVtelqPDXY",
-  	"project_id":"523b5c2914f9b1000d000002"
-  }
   "production":{
   	"token":"CLWWzEl4fBD-cbEc2SVtelqPDXY",
   	"project_id":"523b5c2914f9b1000d000002"
