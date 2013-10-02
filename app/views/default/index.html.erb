@@ -1,28 +1,184 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-<title>Salsa: styled & accessible learning services agreements</title>
-<%= stylesheet_link_tag "start", media: "all" %>
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-  ga('create', 'UA-44309909-1', 'usu.edu');
-  ga('send', 'pageview');
-</script>
-</head>
-<body>
-<div class="watermark">	
-  <div class="title"> 
-  		<h1><i>&iexcl;Welcome to Salsa!</i></h1>
-                <p>Salsa is an open-source web application developed at <a href="http://cidi.usu.edu" target="blank">Utah State University</a>.</p>
-                <p>Use Salsa to make <b>S</b>tyled & <b>A</b>ccessible <b>L</b>earning <b>S</b>ervice <b>A</b>greements: SALSAs.</p>
-                <p><%= link_to sanitize('Create <b>your</b> SALSA--no sign up or email required'), new_syllabus_path %></p>
-                <p class="small">Salsa will generate a unique and random URL for you. Publish your SALSA as an online PDF. Bookmark your SALSA with the "My SALSA" button. Use the Bookmark to return and edit your SALSA.</p>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+    <!-- Uncomment to make IE8 render like IE7 -->
+    <!-- <meta http-equiv="X-UA-Compatible" content="IE=7" /> -->
+
+    <!-- Set the viewport width to device width for mobile -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Salsa: styled & accessible learning service agreements</title>
+    <%= stylesheet_link_tag "start", media: "all" %>
+    <%= stylesheet_link_tag "application" %>
+    <%= csrf_meta_tags %>
+    <link rel="app/assets/stylesheets" type="text/css" href="foundation_and_overrides.css">
+    <script>
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+      ga('create', 'UA-44309909-1', 'usu.edu');
+      ga('send', 'pageview');
+    </script>
+  </head>
+
+  <body>
+<!-- Navigation -->
+ 
+  <nav class="top-bar">
+    <ul class="title-area">
+      <!-- Title Area -->
+      <li class="name">
+        <h1>
+          <a href="#">
+            Salsa
+          </a>
+        </h1>
+      <!-- menu  
+      </li>
+      <li class="toggle-topbar menu-icon"><a href="#"><span>menu</span></a></li>
+      end menu -->
+    </ul>
+ 
+    <!--top-bar links
+
+    <section class="top-bar-section">
+ 
+      <ul class="right">
+        <li class="divider"></li>
+        <li class="has-dropdown">
+          <a href="#">Main Item 1</a>
+          <ul class="dropdown">
+            <li><label>Section Name</label></li>
+            <li class="has-dropdown">
+              <a href="#" class="">Has Dropdown, Level 1</a>
+              <ul class="dropdown">
+                <li><a href="#">Dropdown Options</a></li>
+                <li><a href="#">Dropdown Options</a></li>
+                <li><a href="#">Level 2</a></li>
+                <li><a href="#">Subdropdown Option</a></li>
+                <li><a href="#">Subdropdown Option</a></li>
+                <li><a href="#">Subdropdown Option</a></li>
+              </ul>
+            </li>
+            <li><a href="#">Dropdown Option</a></li>
+            <li><a href="#">Dropdown Option</a></li>
+            <li class="divider"></li>
+            <li><label>Section Name</label></li>
+            <li><a href="#">Dropdown Option</a></li>
+            <li><a href="#">Dropdown Option</a></li>
+            <li><a href="#">Dropdown Option</a></li>
+            <li class="divider"></li>
+            <li><a href="#">See all &rarr;</a></li>
+          </ul>
+        </li>
+        <li class="divider"></li>
+        <li><a href="#">Main Item 2</a></li>
+        <li class="divider"></li>
+          <li>
+            <a href="#">Contact</a>
+          </li>
+      </ul>
+    </section>
+
+    end top-bar links -->
+
+  </nav>
+ 
+  <!-- End Top Bar -->
+ 
+  <!-- Content -->
+
+  <div class="content row">
+    <div class="large-12 columns">
+
+  <!-- logo & button -->
+  
+          <div class="row">
+              <div class="large-7 push-5 columns">
+                <div class="top">
+                  <%= link_to sanitize('<h1>Create YOUR Salsa</h1><i>no email or signup required</i>'), new_syllabus_path, class: "medium button" %>
+                 </div>
+             
+                <div class="slogan hide-for-small">
+                 <h1>styled & accessible learning service agreements</h1>
+                </div> 
+
+              </div>
+              <div class="large-5 pull-7 columns hide-for-small">
+              <%= image_tag "logo.png" %>
+              </div>              
+          </div>
+ 
+    <!-- End logo & button -->
+
+    <!-- What -->
+            <div class="large-8 small-12 columns">
+              <h4>What is Salsa?</h4><hr>
+                  <p>Salsa is an open-source web application being developed at <a href="http://www.usu.edu" target="_blank">Utah State University</a>. The project team is located at the <a href="http://cidi.usu.edu" target="_blank">Center for Innovative Design & Instruction</a>.</p>
+                   <p>Use Salsa to make <strong>S</strong>tyled & <strong>A</strong>ccessible <strong>L</strong>earning <strong>S</strong>ervice <strong>A</strong>greements: <strong>SALSAs</strong>.</p>
+              <h4>How does Salsa work?</h4><hr>     
+                   <p>Salsa generates a unique and random hyperlink for you. Bookmark or copy your hyperlink with the "My SALSA" button. Use the hyperlink to return and edit your SALSA. Publish your SALSA to generate a <strong>new</strong> hyperlink to a "read-only" copy of your Salsa in PDF or HTML format.<i> No email address or signup is required</i>.</p>
+            </div>
+
+    <!-- End What -->
+ 
+    <!-- News -->
+          <div class="row">
+
+            <div class="large-4 small-12 columns">
+ 
+              <h4>News</h4><hr>
+                <div class="panel">
+                  <h5>Salsa 1.0</h5>
+   
+                  <h6 class="subheader">
+                    Stay tuned for more information on the official launch of Salsa!
+                  </h6><hr>
+                  <h5>GitHub</h5>
+                     <h6 class="subheader">
+                        Visit Salsa at <a href="http://github.com/idbygeorge/salsa" target="_blank">GitHub</a>.
+                  </h6>
+                </div> 
+            </div>
+
+        </div>
+ 
+      <!-- End News -->
+
+      <!-- Footer -->
+ 
+      <footer class="row">
+        <div class="large-12 columns"><hr>
+            <div class="row">
+ 
+              <div class="large-6 columns hide-for-small">
+                  <p>&nbsp;</p>
+              </div>
+ 
+              <div class="large-6 small-8 columns">
+                  <ul class="inline-list right">
+                    <li><a href="http://cidi.usu.edu" target="_blank">CIDI</a></li>
+                    <li><a href="http://www.usu.edu" target="_blank">USU</a></li>
+                  </ul>
+              </div>
+ 
+            </div>
+        </div>
+      </footer>
+ 
+    <!-- End Footer -->
+  
+      </div>
     </div>
-    </div>
-</div>
-</body>
+ 
+    <!-- End Content -->
+
+  <%= javascript_include_tag "application" %>
+ 
+  </body>
 </html>
+
+
