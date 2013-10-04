@@ -54,7 +54,7 @@ test:
 production:
   adapter: postgresql
   encoding: unicode
-  database: salsa_staging
+  database: salsa_usu
   pool: 5
   username: salsa
   password:
