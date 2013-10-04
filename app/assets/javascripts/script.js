@@ -256,13 +256,13 @@ function liteOff(x){
 
         // example
         $("#tb_example").on("click", function(){
-            $(".editable, .editableHtml", previewPage).removeClass("editable editableHtml").removeAttr("tabindex");
             return previewPage('#example','Example');
+            $(".editable, .editableHtml", previewPage).removeClass("editable editableHtml").removeAttr("tabindex");
         });
 
         $("#content_example_link").on("click", function(){
-            $(".editable, .editableHtml", previewSection).removeClass("editable editableHtml").removeAttr("tabindex");
             return previewSection('example','Example');
+            $(".editable, .editableHtml", previewSection).removeClass("editable editableHtml").removeAttr("tabindex");
         });
 
         // help
