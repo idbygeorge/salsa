@@ -45,9 +45,10 @@
         #controlPanel .ui-state-active fieldset { display: block; }
         #controlPanel section { padding: 5px; overflow: hidden; background: #fff;}
         #controlPanel header { background: url('../img/gradient.png') repeat-x 35px; color: #fff; padding: 0 5px; line-height: 1.8; font-weight: bold; white-space: nowrap; text-align: center; }
+        #controlPanel header.tool { background: #334f5e; }
         #controlPanel fieldset, #controlPanel dl { border: 0 none; padding: 3px 3px 3px 5px; background: #eee; margin: 0; }
             #controlPanel dt { background: #fff; line-height: 1.9; margin-bottom: 3px; text-align: center; cursor: pointer; }
-            #controlPanel dt.ui-state-active { font-weight: bold; background: #7FC5EC; }
+            #controlPanel dt.ui-state-active { font-weight: bold; background: #334f5e; opacity: .6; color: #fff; }
             #controlPanel dd { display: none; text-align: center; }
         #controlPanel legend { background: #fff; margin-right: 4px; text-indent: 5px; float: left; width: 70px; line-height: 1.9; }
         #controlPanel fieldset label { position: absolute; left: -999999px; }
@@ -70,7 +71,8 @@
     #preview section { border: solid 1px #fff;  padding-left: .25in; /*min-height: 11in;*/ }
     
 #topBar { z-index: 999; background: #fff; bottom: auto; }
-    #topBar h2 { text-align: center; margin: 5px 0 0; font-size: 10pt; }
+    #topBar h2 { text-align: center; margin: 5px 18px 0px; font-size: 10pt; color: #fff; background: #334f5e; opacity: .6; }
+
     #topBar ul { list-style: none; margin: 0; padding: 4px 15px 8px; overflow: hidden; }
         #topBar li { float: left; text-align: center; margin: 3px; width: 19%; }
             #topBar li a { background: #fff; color: #000; line-height: 1.6; text-decoration: none; display: block; }
