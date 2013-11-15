@@ -1,0 +1,15 @@
+development:
+  domain: 'http://localhost:3000'
+  pdf_generator_webhook: 'AMAZON WEBHOOK URL'
+  aws_access_key_id: 'AMAZON ACCESS KEY ID'
+  aws_secret_access_key: 'AMAZON SECRET ACCESS KEY'
+  aws_bucket: 'AMAZON BUCKET'
+  aws_region: 'AMAZON REGION'
+
+production:
+  domain: 'http://example.com'
+  pdf_generator_webhook: 'AMAZON WEBHOOK URL'
+  aws_access_key_id: 'AMAZON ACCESS KEY ID'
+  aws_secret_access_key: 'AMAZON SECRET ACCESS KEY'
+  aws_bucket: 'AMAZON BUCKET'
+  aws_region: 'AMAZON REGION'

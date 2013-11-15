@@ -600,7 +600,7 @@
             <label for="gradesContentSpacingRemove">Remove spacing</label>
             <input type="button" name="gradesContentSpacingRemove" id="gradesContentSpacingRemove" value="-">
         </fieldset>
-            <fieldset data-method="toggleContent" data-template="#grade_component_row_template" data-element=".description" data-max="20" data-min="1" data-target="#grade_components">
+            <fieldset data-method="toggleContent" data-template="#grade_component_row_template tr:last" data-element="tbody tr" data-max="20" data-min="2" data-target="#grade_components" data-callback="updateGradeScale">
             <legend>items</legend>
             <label for="gradesAdd">Add item</label>
             <input type="button" name="gradesAdd" id="gradesAdd" value="+">
@@ -620,12 +620,12 @@
                 <label for="gradesSection2SpacingRemove">Remove spacing</label>
                 <input type="button" name="gradesSection2SpacingRemove" id="gradesSection2SpacingRemove" value="-">
             </fieldset>
-            <fieldset data-method="toggleContent" data-template="#extra_credit_row_template" data-element=".description" data-max="20" data-min="1" data-target="#extra_credit">
+            <fieldset data-method="toggleContent" data-template="#extra_credit_row_template tr:last" data-element="tbody tr" data-max="20" data-min="1" data-target="#extra_credit" data-callback="updateTableSum">
                 <legend>items</legend>
-                <label for="gradesAdd">Add item</label>
-                <input type="button" name="gradesAdd" id="gradesAdd" value="+">
-                <label for="gradesRemove">Remove item</label>
-                <input type="button" name="gradesRemove" id="gradesRemove" value="-">
+                <label for="extraCreditAdd">Add item</label>
+                <input type="button" name="extraCreditAdd" id="extraCreditAdd" value="+">
+                <label for="extraCreditRemove">Remove item</label>
+                <input type="button" name="extraCreditRemove" id="extraCreditRemove" value="-">
             </fieldset>
         </section>
 

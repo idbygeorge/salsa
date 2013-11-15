@@ -11,6 +11,6 @@
  *= require jquery.ui.dialog
  *= require syllabus
  *= require style
- *= require general_enclosed_foundicons
+ *= require foundation-icons
  *= require tablednd
  */

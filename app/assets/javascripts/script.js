@@ -42,6 +42,9 @@ function liteOff(x){
             $(section).removeClass('hide');
             $(section).addClass("active");
 
+            // set the view state messages
+            syncViewState(section, $(this).text());
+
             // control panel
             $("aside.active").removeClass("active").hide();
             $("#controlPanel " + section.replace('#', '.')).addClass("active").show();
@@ -108,33 +111,65 @@ function liteOff(x){
 
         // grades
         var updateGradesPage = function(element){
-            var extra_credit = $('#extra_credit');
-            if (extra_credit.has(element).length > 0) {
-                updateTableSum($('#extra_credit'));
-                return;
-            }
-            var grade_component = $('#grade_components');
-            if (grade_component.has(element).length > 0)
-                updateTableSum(grade_component);
+            var args = {
+                target: $('#grade_components')
+            };
+
             var grade_scale = $('#grade_scale');
-            if (grade_scale.has(element).length > 0)
+
+            if(grade_scale.has(element).length) {
                 validateGradeScale(grade_scale, element);
-            updateGradeScale(grade_scale);
+            }
+
+            callbacks.updateGradeScale(args);
+
+            return;
         };
 
 
-        var validateGradeScale = function(grade_scale, element) {
-            var new_value = parseInt(element.text());
-            var cell = $(element).parent();
-            var parts = $(cell).text().split('-');
+        var validateGradeScale = function(grade_scale, minRangeElement) {
+            var otherElements = $(minRangeElement).closest("tr").nextAll("tr").find("span.minRange");
+            var minRangeElements = $.merge(minRangeElement, otherElements);
 
-            // if the element is a lower bound, ensure the next grade's upper bound is one lower
-            if (new_value == parseInt(parts[0])) {
-                var next_grade = $('td', cell.parent().next())[1];
-                parts = $(next_grade).text().split('-');
-                if (parts.length > 0)
-                    $(next_grade).html('<span class="editable">' + parts[0] + '</span>-  &nbsp;' + (new_value-1));
-            } 
+            $(minRangeElements).each(function(i, element){
+                console.log("looping", i, element);
+
+                var new_value = parseInt($(element).text());
+                var cell = $(element).closest("td");
+                var parts = $(cell).find('span');
+                var existingRange = {
+                    min: parseInt(parts.eq(0).text()),
+                    max: parseInt(parts.eq(1).text())
+                };
+
+                // don't allow a percentage that would invalidate a higher grade range
+                new_value = Math.min(new_value, existingRange.max-1);
+
+                if(!new_value) {
+                    console.log("not valid...", i, element, new_value);
+                }
+                $(element).text(new_value);
+
+                var next_grade = $('td', cell.closest("tr").next())[1];
+                parts = $(next_grade).find('span');
+                
+                var nextRange = {
+                    min: parseInt(parts.eq(0).text()),
+                    max: parseInt(parts.eq(1).text())
+                };
+
+                if (parts.length > 0) {
+                    var new_minRange = Math.min(parseInt(nextRange.min), new_value-2);
+
+                    console.log("is this a number?", new_minRange, i, element);
+
+                    $(next_grade).find('span.minRange').text(new_minRange).siblings('span').text(new_value-1);
+                }
+
+            });
+
+            // cascade down
+
         };
 
         
@@ -247,6 +282,31 @@ function liteOff(x){
             $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-state-default").focus();
         };
 
+        var syncViewState = function(viewSelector, viewName) {
+            // make sure the view disable link's icon matches the state of the section
+            if($(viewSelector).hasClass("disabled")) {
+                $("#content_disable_link span").removeClass("fi-minus-circle").addClass("fi-eye");
+
+                // add the message to re-enable this view
+                enableViewMessage(viewName);
+            } else {
+                $("#content_disable_link span").removeClass("fi-eye").addClass("fi-minus-circle");
+
+                // remove the message to re-enable this view
+                $(".enableViewMessage").remove();
+            }
+        }
+
+        var enableViewMessage = function(view_name) {
+            var messageElement = $("<div class='message'></div>").text("The " + view_name + " view has been disabled.");
+            var enableButton = $("<button class='enable_view'></button>").text("Enable the " + view_name + " view").on("click", function(){
+                $("#content_disable_link").trigger('click');
+            });
+            var viewMessageElement = $("<div class='enableViewMessage'></div>").append(messageElement).append(enableButton);
+
+            $("#container").append(viewMessageElement);
+        }
+
         $("#preview_control a").on("click", function(){
             $("#preview,#preview_control").hide();
             $(".masthead, #wrapper, footer").show();
@@ -273,6 +333,17 @@ function liteOff(x){
 
         $("#content_help_link").on("click", function(){
             return previewSection('help','Help');
+        });
+
+        // disable view
+        $("#content_disable_link").on("click", function(){
+             var active_page = $('section.active');
+             var active_link = $("#tabs .selected a");
+
+             active_page.toggleClass("disabled");
+             $("span", this).toggleClass("fi-minus-circle fi-eye");
+
+             syncViewState(active_page, active_link.text());
         });
 
         // My SALSA
@@ -407,43 +478,92 @@ function liteOff(x){
 
         // load the information section by default
         $("#controlPanel aside").hide();
-        if ($("#edit_syllabus")) $("#tabs a").first().click(); 
+        if ($("#edit_syllabus")) {
+            $("#tabs a").first().click();
+        }
+
         $("body").append($("<label>Edit Section Heading</label>").addClass("visuallyhidden")); // huh?
     });
 
-    var updateGradeScale = function(grade_scale) {
-        if (!grade_scale)
+    var updateGradeScale = function(grade_scale, total_points) {
+        console.log(grade_scale);
+        if (!grade_scale) {
             grade_scale = $('#grade_scale');
-        var total_points = parseInt($('#grade_components > tbody > tr:last > td:last').text());
-        if (total_points < 100) return;
+        }
+        
+        if (total_points < 100) {
+            console.log("grey out grade table and show message to user (non-intrusive)");
+
+            return false;
+        };
+
         var rows = $('tbody > tr', grade_scale);
         var upper_points = total_points;
+
         rows.each(function(index, row){
             var cells = $('td', row);
             var parts = $(cells[1]).text().split("-");
             var percent_delta = parseInt(parts[1]) - parseInt(parts[0]);
             var points_delta = Math.round(percent_delta*total_points/100);
+
             lower_points = Math.round((total_points * parseInt(parts[0]))/100);
-            if (isNaN(lower_points)) lower_points = '';
+
+            if (isNaN(lower_points)) {
+                lower_points = '';
+            }
+
             $(cells[2]).text(lower_points + " - " + upper_points);
+
             upper_points = lower_points - 1;
         });
+
+        return true;
     };
 
-    var updateTableSum = function(table){
-        var total = 0;
-        var rows = $('tbody > tr', table);
-        rows.each(function(index, row){
-            var points_cell = $($('td',row).last());
-            var editing = $('input',points_cell).length > 0;
-            var points = parseInt(editing ? $('input',points_cell).val() : points_cell.text());
-            if (index == rows.length - 1) {
-                points_cell.text(total);
-            } else {
-                total += points;
-            }
-        });
-    };
+    // var updateTableSum = function(table){
+    //     var total = 0;
+    //     var rows = $('tbody > tr', table);
+    //     rows.each(function(index, row){
+    //         var points_cell = $($('td',row).last());
+    //         var editing = $('input',points_cell).length > 0;
+    //         var points = parseInt(editing ? $('input',points_cell).val() : points_cell.text());
+    //         if (index == rows.length - 1) {
+    //             points_cell.text(total);
+    //         } else {
+    //             total += points;
+    //         }
+    //     });
+    // };
+
+    var callbacks = {
+        updateTableSum: function(args) {
+            var dataCells = $("tbody td:last-child", args.target);
+            var sum = 0;
+            var value;
+
+            dataCells.each(function(){
+                if($(this).has('input').length) {
+                    value = parseInt($('input', this).val());
+                } else {
+                    value = parseInt($(this).text());
+                }
+
+                if(value) {
+                    sum += value;
+                }
+            });
+
+            $("tfoot td:last-child", args.target).text(sum);
+
+            return sum;
+        },
+
+        updateGradeScale: function(args) {
+            var total_points = callbacks.updateTableSum(args);
+
+            updateGradeScale($('#grade_scale'), total_points);
+        }
+    }
         
     var controlMethods = {
         toggleContent: function(args) {
@@ -484,23 +604,32 @@ function liteOff(x){
                             newElement.addClass("editable");
                     }
                     if ($(args.target).is('table')) {
-                        $('tbody > tr:last', args.target).before($("tbody tr:last", newElement));
+                        $('tbody', args.target).append(newElement);
                     } else {
                         args.target.append(newElement);
                     }
                 }
             } else if(args.action === "-") {
-                if ($(args.target).is('table') && $('tr', args.target).length > 5) {
-                    $('tbody > tr', args.target).eq(-2).remove();
-                    updateTableSum(args.target);
-                    updateGradeScale();
-                }
                 if(args.min === undefined || visibleElements.length > args.min) {
                     args.target.find(args.element+":visible").last().remove();
                 }
             } else {
                 args.target.toggleClass('hide');
                 args.source.closest("section").toggleClass("ui-state-active ui-state-default");
+            }
+
+            // a callback was defined for this control
+            if(args.callback) {
+                // create a local alias to the callback method
+                var callbackFunction = callbacks[args.callback];
+
+                // if the callback method exists and is a function, execute it
+                if(callbackFunction) {
+                    // pass along the controlMethod's arguments to the callback
+                    callbackFunction(args);
+                } else {
+                    console.log('callback not found', args.callback, callbackFunction);
+                }
             }
             
             return true;

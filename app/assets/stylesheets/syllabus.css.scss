@@ -4,8 +4,12 @@ html, body { height: 100%; min-height: 420px; position: relative; }
 
 #page_break { page-break-after: always; }
 
-#example, #mySalsa{
+#example, #mySalsa {
     display:none;
+}
+
+section.disabled {
+    display: none !important;
 }
 
 #preview { width: 8.5in; margin: 0 auto; display: none; padding: 0 .5in .5in 0; background: #fff; min-height: 11in;}

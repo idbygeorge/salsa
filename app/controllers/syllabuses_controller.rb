@@ -76,7 +76,7 @@ class SyllabusesController < ApplicationController
   end
 
   def generate_syllabus_pdf(syllabus_view_id)
-    uri = URI.parse(APP_CONFIG['pdf_generator_staging_webhook'])
+    uri = URI.parse(APP_CONFIG['pdf_generator_webhook'])
     response = Net::HTTP.post_form(uri, {"url" => view_url})
   end
 

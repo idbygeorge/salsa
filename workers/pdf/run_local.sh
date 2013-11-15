@@ -1,1 +1,1 @@
-iron_worker run pdf_generator_staging.worker --payload-file payload.txt
+iron_worker run pdf_generator.worker --payload-file payload.txt

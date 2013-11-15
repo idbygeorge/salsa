@@ -18,3 +18,8 @@ salsa_development
 salsa_production
 salsa_test
 /**/.DS_Store
+
+# Ignore instance configuration files
+/workers/pdf/iron.json
+/config/config.yml
+/config/database.yml
