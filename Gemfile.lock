@@ -28,7 +28,6 @@ GEM
     arel (4.0.0)
     atomic (1.1.13)
     builder (3.1.4)
-    chunky_png (1.2.9)
     capistrano (3.1.0)
       i18n
       rake (>= 10.0.0)
@@ -39,6 +38,7 @@ GEM
     capistrano-rails (1.1.1)
       capistrano (~> 3.1)
       capistrano-bundler (~> 1.1)
+    chunky_png (1.2.9)
     coffee-rails (4.0.0)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0.beta, < 5.0)
@@ -74,6 +74,7 @@ GEM
       jquery-rails
       railties (>= 3.1.0)
     json (1.8.0)
+    kgio (2.8.1)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
@@ -106,6 +107,7 @@ GEM
       activesupport (= 4.0.0)
       rake (>= 0.8.7)
       thor (>= 0.18.1, < 2.0)
+    raindrops (0.12.0)
     rake (10.1.0)
     rdoc (3.12.2)
       json (~> 1.4)
@@ -151,6 +153,10 @@ GEM
     uglifier (2.1.2)
       execjs (>= 0.3.0)
       multi_json (~> 1.0, >= 1.0.2)
+    unicorn (4.8.0)
+      kgio (~> 2.6)
+      rack
+      raindrops (~> 0.7)
     wicked_pdf (0.9.6)
       rails
     zurb-foundation (4.3.2)
@@ -179,5 +185,6 @@ DEPENDENCIES
   turbolinks
   uber-s3
   uglifier (>= 1.3.0)
+  unicorn
   wicked_pdf
   zurb-foundation
