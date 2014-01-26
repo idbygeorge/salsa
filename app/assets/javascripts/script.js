@@ -88,7 +88,12 @@ function liteOff(x){
         });
         
         $("body").on("click", "#topBar a", function(){
+            if($("#controlPanel .active dl").data('target').find('li:first').text() == 'Outcome text here') {
+                $("#controlPanel .active dl").data('target').find('li:first').remove();
+            }
+
             $("#controlPanel .active dl").data({ element: "li", text: $(this).text() }).find(".ui-state-active").click();
+
             return false;
         });
 
@@ -283,6 +288,9 @@ function liteOff(x){
         };
 
         var syncViewState = function(viewSelector, viewName) {
+            // remove the message to re-enable this view
+            $(".enableViewMessage").remove();
+
             // make sure the view disable link's icon matches the state of the section
             if($(viewSelector).hasClass("disabled")) {
                 $("#content_disable_link span").removeClass("fi-minus-circle").addClass("fi-eye");
@@ -291,9 +299,6 @@ function liteOff(x){
                 enableViewMessage(viewName);
             } else {
                 $("#content_disable_link span").removeClass("fi-eye").addClass("fi-minus-circle");
-
-                // remove the message to re-enable this view
-                $(".enableViewMessage").remove();
             }
         }
 

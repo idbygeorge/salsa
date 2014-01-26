@@ -251,7 +251,7 @@
                     <label for="outcomesContentSpacingRemove">Remove spacing</label>
                     <input type="button" name="outcomesContentSpacingRemove" id="outcomesContentSpacingRemove" value="-">
                 </fieldset>
-                <fieldset data-method="toggleContent" data-target=".outcomes_list" data-element="li" data-text="Outcome text here" data-min="1">
+                <fieldset data-method="toggleContent" data-target=".outcomes_list" data-template="#outcomes_list_template li:first" data-element="li" data-min="1">
                     <legend>text</legend>
                     <label for="outcomesOutcomeAdd">Add outcome</label>
                     <input type="button" name="outcomesOutcomeAdd" id="outcomesOutcomeAdd" value="+">
@@ -658,6 +658,9 @@
         <table id="extra_credit_row_template">
             <tr><td class="editable">Item</td><td class="editable right">0</td></tr>
         </table>
+        <ul id="outcomes_list_template" class="outcomes_list">
+            <li>Outcome text here</li>
+        </ul>
         <div class="contact" id="contact_template">
             <h3 class="editable" data-can-delete="true">Contact Title</h3>
             <div class="editableHtml">

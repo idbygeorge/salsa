@@ -51,33 +51,7 @@ table.components tr.myDragClass td {color:#666;background-color: #ffe4b5; }
 #old_html{
     display:none;
 }
-/* Modal Dialog Styles */
-.ui-dialog {
-    z-index: 1000;
-}
-.ui-dialog-titlebar {
-    background: #456b7f;
-    border-radius: 0;
-    border: 0px;
-    color: #fff;
-    font-weight: normal;
-}
-.ui-dialog-titlebar-close {
-    background: none;
-    border-radius: 0;
-    font-weight: normal;
-    color: #fff;
-    width: 70px !important;
-    border: none;
-}
-.ui-dialog-titlebar-close:hover, .ui-dialog-titlebar-close:active, .ui-dialog-titlebar-close:focus {
-    background: none;
-    border:none;
-    color: #fff;
-}
-.ui-icon-closethick {
-    background: none;
-}
+
 
 #custom-url {
     padding: 5px;
