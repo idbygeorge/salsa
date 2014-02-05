@@ -9,7 +9,7 @@ function liteOff(x){
     x.style.backgroundColor="#fff";
 }
 (function($) {
-    $(function(){ 
+    $(function(){
 
         // Check for existing sections and toggle their tab
         var tabs = ["information", "outcomes", "resources", "activities", "policies", "grades"]
@@ -30,13 +30,13 @@ function liteOff(x){
         $("#tabs a").on("click", function(){
             var listItem = $(this).closest("li");
             var list = listItem.closest("ul");
-            
+
             // section selector
             list.find(".selected").removeClass("selected");
             $(this).closest("li").addClass("selected");
-            
+
             var section = $(this).attr("href");
-            
+
             // content
             $("section.active").removeClass("active");
             $(section).removeClass('hide');
@@ -48,9 +48,9 @@ function liteOff(x){
             // control panel
             $("aside.active").removeClass("active").hide();
             $("#controlPanel " + section.replace('#', '.')).addClass("active").show();
-            
+
             $("body").attr("class", section.replace('#', ''));
-            
+
             $("#topBar").remove();
             $("#container").removeAttr("style");
         });
@@ -58,35 +58,35 @@ function liteOff(x){
         // control panel
         var getTarget = function(source) {
             var target = $(source).closest("[data-target]").data("target");
-            
+
             // if the target is a string, it is a selector, if it is an object, it is already set to the right element(s)
-            if(typeof(target) !== "string" && target.length) { 
+            if(typeof(target) !== "string" && target.length) {
                 if(!target.closest("body").length) {
                     target = $(source).closest("[data-target]").data("original_target");
                 } else {
                     return $(target);
                 }
             }
-            
+
             var targetSelector = "";
             $(source).parents("[data-target]").each(function(){
                 var selector = $(this).attr("data-target");
                 targetSelector = selector + " " + targetSelector;
             });
-            
-            return $(targetSelector); 
+
+            return $(targetSelector);
         };
-        
+
         $("#controlPanel").on("click", ".toggler", function(){
             $(this).closest("section").toggleClass("ui-state-active ui-state-default");
             $(this).closest("header").next().toggle().find("dt.ui-state-active").removeClass("ui-state-active");
-            
+
             $("#topBar").remove();
             $("#container").removeAttr("style");
-            
+
             return false;
         });
-        
+
         $("body").on("click", "#topBar a", function(){
             if($("#controlPanel .active dl").data('target').find('li:first').text() == 'Outcome text here') {
                 $("#controlPanel .active dl").data('target').find('li:first').remove();
@@ -110,7 +110,7 @@ function liteOff(x){
             control.action = $(this).val();
 
             result = controlMethods[control.method](control);
-            
+
             return false;
         });
 
@@ -157,7 +157,7 @@ function liteOff(x){
 
                 var next_grade = $('td', cell.closest("tr").next())[1];
                 parts = $(next_grade).find('span');
-                
+
                 var nextRange = {
                     min: parseInt(parts.eq(0).text()),
                     max: parseInt(parts.eq(1).text())
@@ -177,20 +177,20 @@ function liteOff(x){
 
         };
 
-        
-        // make stuff editable        
+
+        // make stuff editable
         $("section :header,#templates :header").addClass("editable").attr({ tabIndex: 0 });
         $("section article .text,#templates .text").addClass("editableHtml");
-        
+
         // edit an html block
         $("body").on("click", "section .editableHtml", function(){
             var element = $(this);
             var text = element.toggleClass("editableHtml editingHtml").html();
-            
+
             element.html($("<textarea/>").attr("id", "contentTextControl").val(text)).find("textarea");
             element.append($("<div id='old_html'>" + text + '</div>'));
-            
-            
+
+
             $('#contentTextControl', this).tinymce({
                 toolbar: "bold italic underline | undo redo | bullist numlist",
                 statusbar: false,
@@ -217,7 +217,7 @@ function liteOff(x){
             element.html(html);
             element.toggleClass("editableHtml editingHtml");
         });
-        
+
         var makeNumericTextbox = function(editor){
             editor.keyup(function(e){
                 if ($.inArray(e.which, [37, 38, 39, 40]) != -1) return false;
@@ -228,7 +228,7 @@ function liteOff(x){
         // edit a simple value (no html)
         $("#page").on("click keypress", ".editable", function(){
             var text = $(this).toggleClass("editable editing").text();
-            
+
             var editor = $(this).html($("<input/>").attr("id", "headerTextControl").val(text)).find("input");
             if(editor.val() == '0'){
                 editor.val('');
@@ -251,7 +251,7 @@ function liteOff(x){
             });
             editor.focus();
         });
-        
+
         $("section").on("blur", ".editing input", function(){
             if($(this).val() == '' && $(this).parent().hasClass('right') == true){
                 $(this).val('0');
@@ -267,7 +267,7 @@ function liteOff(x){
                  }
              }
         });
-        
+
         // preview control
         var previewSection = function(content_type, preview_label){
             var active_page = $('section.active').attr('id');
@@ -362,9 +362,9 @@ function liteOff(x){
         // save
         var publishing = false;
         $("#save_prompt").dialog({
-            modal:true, 
+            modal:true,
             height:110,
-            autoOpen:false, 
+            autoOpen:false,
             closeOnEscape: false,
             dialogClass: 'no-close'
         });
@@ -424,7 +424,7 @@ function liteOff(x){
 
                 $(".content", previewWrapper).show();
                 $(".example", previewWrapper).hide();
-                
+
                 $(".editable, .editableHtml", previewWrapper).removeClass("editable editableHtml").removeAttr("tabindex");
 
                 previewWrapper.dialog({
@@ -440,7 +440,7 @@ function liteOff(x){
                 });
 
                 $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-state-default").focus();
- 
+
         //this is the one that Heroku is using--9_13_13
 
         /*
@@ -473,7 +473,7 @@ function liteOff(x){
         // publish
         $("#share_prompt").dialog({ modal:true, width:500, title:'Your SALSA has been published.', autoOpen:false });
         $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-state-default").focus();
-        $('#tb_share').click(function() { 
+        $('#tb_share').click(function() {
             publishing = true;
             $('#tb_save').first().click();
         });
@@ -495,7 +495,7 @@ function liteOff(x){
         if (!grade_scale) {
             grade_scale = $('#grade_scale');
         }
-        
+
         if (total_points < 100) {
             console.log("grey out grade table and show message to user (non-intrusive)");
 
@@ -569,32 +569,32 @@ function liteOff(x){
             updateGradeScale($('#grade_scale'), total_points);
         }
     }
-        
+
     var controlMethods = {
         toggleContent: function(args) {
             var existingElements = args.target.find(args.element);
             var visibleElements = existingElements.filter(":visible");
             var newText;
-            
+
             if(args.action === "+") {
 
                 if((args.max === undefined || visibleElements.length < args.max) && existingElements.length > visibleElements.length) {
                     var activateElement = args.target.find(args.element+":hidden").first();
-                    
+
                     if(activateElement.text() === '') {
                         if(args.text instanceof Array) {
                             newText = args.text[activateElement.index()];
                         } else {
                             newText = args.text;
                         }
-                        
+
                         activateElement.html(newText);
                     }
 
                     activateElement.show();
                 } else if(args.max === undefined || existingElements.length < args.max) {
                     var newElement;
-                    
+
                     if(args.template && $(args.template, "#templates").length) {
                         newElement = $(args.template, "#templates").clone();
                         newElement.removeAttr('id');
@@ -636,14 +636,14 @@ function liteOff(x){
                     console.log('callback not found', args.callback, callbackFunction);
                 }
             }
-            
+
             return true;
         },
         scaleCss: function(args) {
             var originalMargin = args.target.css(args.property);
 
             args.target.css(args.property, args.action + "=" + args.step);
-            
+
             var newValue = parseFloat(args.target.css(args.property));
 
             if(newValue > args.max * parseFloat(args.step) || newValue < args.min * parseFloat(args.step)) {
@@ -653,7 +653,7 @@ function liteOff(x){
         toggleTemplate: function(args) {
             var existingElements = args.target.children();
             var visibleElements;
-            
+
             if(args.action === '+') {
                 args.target.append($("#templates #" + args.template).clone());
             } else if (args.action === '-') {
@@ -665,23 +665,23 @@ function liteOff(x){
                 var newArgs = $.extend({}, args);
                 newArgs.action = "+";
                 controlMethods.toggleContent(newArgs);
-                
+
                 args.text = undefined;
                 args.element = undefined;
             }
-            
+
             var topBar = $("<div id='topBar'><ul class='inner'/></div>");
             topBar.prepend($("<h2/>").text(args.source.text()));
             args.source.nextUntil("dt").each(function(){
                 var newItem = $("<li><a href='#'/></li>");
                 $("a", newItem).text($(this).text());
-                
+
                 newItem.appendTo($(".inner", topBar));
             })
-            
+
             $("#topBar").remove();
             $("#container").before($(topBar)).css({ top: (parseInt(topBar.css("top"), 10) + parseInt(topBar.outerHeight(), 10) + 5) + "px" });
-            
+
             args.source.siblings(".ui-state-active").removeClass("ui-state-active");
             args.source.addClass("ui-state-active");
         }

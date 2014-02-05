@@ -28,6 +28,9 @@ GEM
     arel (4.0.0)
     atomic (1.1.13)
     builder (3.1.4)
+    canvas-api (0.7)
+      json
+      multipart-post
     capistrano (3.1.0)
       i18n
       rake (>= 10.0.0)
@@ -81,6 +84,7 @@ GEM
     mime-types (1.24)
     minitest (4.7.5)
     multi_json (1.7.9)
+    multipart-post (2.0.0)
     net-scp (1.1.2)
       net-ssh (>= 2.6.5)
     net-ssh (2.7.0)
@@ -166,6 +170,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  canvas-api
   capistrano
   capistrano-bundler
   capistrano-rails

@@ -38,6 +38,8 @@ gem 'uber-s3'
 gem 'tinymce-rails'
 gem 'wicked_pdf', group: :development
 
+gem 'canvas-api'
+
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false

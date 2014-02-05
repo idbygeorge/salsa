@@ -7,6 +7,8 @@
             <li><%= link_to '<i class="foundicon-checkmark"></i>Preview'.html_safe, @view_url, :target => '_blank', :id => "tb_preview" %></li>
             <li><a href="#" id='tb_share'><i class="foundicon-right-arrow"></i>Publish</a></li>
             <li><a href="#" id='tb_link'><i class="foundicon-plus"></i>My SALSA</a></li>
+       <li><%= link_to "Login to Canvas", oauth2_login_path(syllabus_id: @syllabus.edit_id), :authenticity_token => form_authenticity_token(), :id => 'tb_login_canvas' %></li>
+       <li><%= link_to "Save to Canvas", canvas_list_courses_path(id: @syllabus.edit_id), :authenticity_token => form_authenticity_token(), :remote => true, :id => 'tb_save_canvas' %></li>
         </ul>
         <ul style="float:right">
         	<li><a href="#example" id="tb_example"><i class="foundicon-star"></i>Example</a></li>
@@ -19,17 +21,20 @@
     <div id="preview"></div>
 </div>
 
-<div id="share_prompt" style="display:none; cursor: default"> 
+<div id="share_prompt" style="display:none; cursor: default">
     <p><i>&iexcl;Share your SALSA online!</i></p>
     <p>PDF link:</p>
     <p><%= link_to @view_pdf_url, @view_pdf_url, :target => '_blank', :id => "view_url" %></p>
     <p>HTML link:</p>
     <p><%= link_to @view_url, @view_url, :target => '_blank', :id => "view_url" %></p>
-</div> 
+</div>
 
-<div id="save_prompt" style="display:none; cursor: default"> 
+<div id="save_prompt" style="display:none; cursor: default">
     <p><br/><%= image_tag 'busy.gif' %> <span id="saving_msg">Saving SALSA. Just a moment...</span></p>
 </div>
+
+<div id="choose_course_prompt" style="display:none; cursor: default"></div>
+
 <div id="mySalsa">
     <p>The URL displayed in your browser is a unique, randomly-generated link to your <strong>editable</strong> SALSA:</p>
     <p id="custom-url"></p>

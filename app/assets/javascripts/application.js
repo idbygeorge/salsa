@@ -17,4 +17,5 @@
 //= require modernizr
 //= require jquery.tablednd.0.7.min
 //= require script
+//= require canvas
 

@@ -19,7 +19,7 @@ class SyllabusesController < ApplicationController
     @syllabus = Syllabus.find_by_view_id(params[:id])
     unless @syllabus
       syllabus = Syllabus.find_by_edit_id(params[:id])
-      raise ActionController::RoutingError.new('Not Found') unless syllabus   
+      raise ActionController::RoutingError.new('Not Found') unless syllabus
       redirect_to edit_syllabus_path(:id => syllabus.edit_id)
       return
     end
@@ -42,13 +42,15 @@ class SyllabusesController < ApplicationController
 
   def update
     generate_syllabus_pdf(@syllabus.view_id) if Rails.env.production?
+    canvas_course_id = params[:canvas_course_id]
+    update_course_syllabus(canvas_course_id, request.raw_post) if params[:canvas] && canvas_course_id
     respond_to do |format|
       msg = { :status => "ok", :message => "Success!", :html => "<b>...</b>" }
-      format.json  { 
+      format.json  {
         @syllabus.payload = request.raw_post
         @syllabus.save!
         view_url = syllabus_url(@syllabus.view_id, :only_path => false)
-        render :json => msg 
+        render :json => msg
       }
     end
   end
@@ -62,14 +64,14 @@ class SyllabusesController < ApplicationController
       "#{APP_CONFIG['domain']}/syllabuses/#{@syllabus.view_id}.pdf"
     end
   end
-  
+
   def view_url
     "#{APP_CONFIG['domain']}/syllabuses/#{@syllabus.view_id}"
   end
 
  	def lookup_syllabus
   	@syllabus = Syllabus.find_by_edit_id(params[:id])
-  	raise ActionController::RoutingError.new('Not Found') unless @syllabus 
+  	raise ActionController::RoutingError.new('Not Found') unless @syllabus
     @view_pdf_url = view_pdf_url
   	@content = @syllabus.payload
     @view_url = view_url
@@ -80,4 +82,15 @@ class SyllabusesController < ApplicationController
     response = Net::HTTP.post_form(uri, {"url" => view_url})
   end
 
+  def update_course_syllabus course_id, html
+    canvas_client.put("/api/v1/courses/#{course_id}", { course: { syllabus_body: html } })
+  end
+
+  def canvas_access_token
+    session[:canvas_access_token]["access_token"]
+  end
+
+  def canvas_client
+    Canvas::API.new(:host => APP_CONFIG['canvas_api_endpoint'], :token => canvas_access_token)
+  end
 end
