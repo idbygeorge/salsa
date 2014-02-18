@@ -17,12 +17,24 @@ class SyllabusesController < ApplicationController
 
   def show
     @syllabus = Syllabus.find_by_view_id(params[:id])
+
     unless @syllabus
       syllabus = Syllabus.find_by_edit_id(params[:id])
+
+      unless syllabus
+        syllabus_template = Syllabus.find_by_template_id(params[:id])
+        if syllabus_template
+          syllabus = syllabus_template.dup
+          syllabus.reset_ids
+          syllabus.save!
+        end
+      end
+
       raise ActionController::RoutingError.new('Not Found') unless syllabus
       redirect_to edit_syllabus_path(:id => syllabus.edit_id)
       return
     end
+
     @content = @syllabus.payload
     respond_to do |format|
       format.html {
@@ -69,12 +81,18 @@ class SyllabusesController < ApplicationController
     "#{APP_CONFIG['domain']}/syllabuses/#{@syllabus.view_id}"
   end
 
+  def template_url
+    "#{APP_CONFIG['domain']}/syllabuses/#{@syllabus.template_id}"
+  end
+
  	def lookup_syllabus
   	@syllabus = Syllabus.find_by_edit_id(params[:id])
+
   	raise ActionController::RoutingError.new('Not Found') unless @syllabus
     @view_pdf_url = view_pdf_url
   	@content = @syllabus.payload
     @view_url = view_url
+    @template_url = template_url
   end
 
   def generate_syllabus_pdf(syllabus_view_id)

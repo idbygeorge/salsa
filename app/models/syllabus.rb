@@ -4,8 +4,15 @@ class Syllabus < ActiveRecord::Base
 
 	def ensure_ids
 		self.view_id = Syllabus.generate_id unless view_id
-		self.edit_id = Syllabus.generate_id unless edit_id
+    self.edit_id = Syllabus.generate_id unless edit_id
+    self.template_id = Syllabus.generate_id unless template_id
 	end
+
+  def reset_ids
+    self.view_id = Syllabus.generate_id
+    self.edit_id = Syllabus.generate_id
+    self.template_id = Syllabus.generate_id
+  end
 
 	protected
 

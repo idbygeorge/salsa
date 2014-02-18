@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20130816214114) do
+ActiveRecord::Schema.define(version: 20140217224048) do
 
   create_table "syllabuses", force: true do |t|
     t.string   "name"
@@ -20,6 +20,11 @@ ActiveRecord::Schema.define(version: 20130816214114) do
     t.text     "payload"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "template_id"
   end
+
+  add_index "syllabuses", ["edit_id"], name: "index_syllabuses_on_edit_id", unique: true
+  add_index "syllabuses", ["template_id"], name: "index_syllabuses_on_template_id", unique: true
+  add_index "syllabuses", ["view_id"], name: "index_syllabuses_on_view_id", unique: true
 
 end
