@@ -196,15 +196,10 @@ function liteOff(x){
                 toolbar: "bold italic underline | undo redo | bullist numlist",
                 statusbar: false,
                 menubar : false,
-                plugins : "autoresize,autolink,paste",
 
-                paste_use_dialog : false,
-                paste_auto_cleanup_on_paste : true,
-                paste_convert_headers_to_strong : false,
-                paste_strip_class_attributes : "all",
-                paste_remove_spans : true,
-                paste_remove_styles : true,
-                paste_retain_style_properties : "",
+                plugins : "autoresize,autolink,paste",
+                autoresize_min_height: "2em",
+                paste_as_text: true,
 
                 content_css : "/stylesheets/content.css",
                 width: '300',
