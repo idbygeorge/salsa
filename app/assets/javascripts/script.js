@@ -180,10 +180,11 @@ function liteOff(x){
 
         // make stuff editable
         $("section :header,#templates :header").addClass("editable").attr({ tabIndex: 0 });
+        $("section .editableHtml").attr({ tabIndex: 0 });
         $("section article .text,#templates .text").addClass("editableHtml");
 
         // edit an html block
-        $("body").on("click", "section .editableHtml", function(){
+        $("body").on("click keypress", "section .editableHtml", function(){
             var element = $(this);
             var text = element.toggleClass("editableHtml editingHtml").html();
 
@@ -195,7 +196,16 @@ function liteOff(x){
                 toolbar: "bold italic underline | undo redo | bullist numlist",
                 statusbar: false,
                 menubar : false,
-                plugins : "autoresize,autolink",
+                plugins : "autoresize,autolink,paste",
+
+                paste_use_dialog : false,
+                paste_auto_cleanup_on_paste : true,
+                paste_convert_headers_to_strong : false,
+                paste_strip_class_attributes : "all",
+                paste_remove_spans : true,
+                paste_remove_styles : true,
+                paste_retain_style_properties : "",
+
                 content_css : "/stylesheets/content.css",
                 width: '300',
                 height: '400',
