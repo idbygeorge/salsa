@@ -80,6 +80,10 @@ $hover: lighten($base_color, $lighten_percent);
             .content { min-height: 1.4em; }
                 .editing input, .editing textarea { width: 100% !important; text-align: left !important; }
                 .right.editing input, #grade_scale .editing input { width: 30px !important; text-align: right !important;}
+                #grade_scale.inactive td, #grade_scale.inactive th {
+                    color: #999;
+                    background: #eee;
+                }
                 .editingNum input, .editingNum textarea { width: 50%; text-align: right; }
 
 

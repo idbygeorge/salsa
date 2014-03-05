@@ -408,11 +408,11 @@
                                 <tr><th class="editable">Items</th><th>Points</th></tr>
                             </thead>
                             <tfoot>
-                                <tr class="total nodrag"><td>Total Points</td><td class="right">0</td></tr>
+                                <tr class="total nodrag"><td>Total Points</td><td class="right">-</td></tr>
                             </tfoot>
                             <tbody>
-                                    <tr id="1.1"><td class="editable">Item</td><td class="editable right">0</td></tr>
-                                    <tr id="1.2"><td class="editable">Item</td><td class="editable right">0</td></tr>
+                                    <tr id="1.1"><td class="editable">Item</td><td class="editable right">-</td></tr>
+                                    <tr id="1.2"><td class="editable">Item</td><td class="editable right">-</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -422,7 +422,6 @@
         
         <div id="section2G" class="section2 hide">
             <div class="editableHtml">
-                <p>&nbsp;</p>
                 <p>You will have the opportunity to earn Extra Credit:</p>
             </div>
             <div class="details">
@@ -433,10 +432,10 @@
                                 <tr><th class="editable">Items</th><th>Points</th></tr>
                             </thead>
                             <tfoot>
-                                <tr class="total nodrag"><td>Total Extra Credit Points</td><td class="right">0</td></tr>
+                                <tr class="total nodrag"><td>Total Extra Credit Points</td><td class="right">-</td></tr>
                             </tfoot>
                             <tbody>
-                                <tr id="2.1"><td class="editable">Item</td><td class="editable right">0</td></tr>
+                                <tr id="2.1"><td class="editable">Item</td><td class="editable right">-</td></tr>
                             </tbody>
                         </table>
                     </div> 
@@ -445,31 +444,125 @@
         </div><!-- .section2 -->
         <div id="section3G" class="section3">
             <div class="editableHtml">
-                <p>&nbsp;</p>
                 <p>Your grade will be calculated with this scale:</p>
             </div>
             <div class="details">
                 <div class="description">
                     <div>
-                        <table id="grade_scale" class="components" border="1">
+                        <table id="grade_scale" class="components inactive" border="1">
                                 <thead>
                                     <tr><th>Grade</th><th>Percentage</th><th>Points</th></tr>
                                 </thead>
-                                <tfoot>
-                                    <tr>&nbsp;</tr>
-                                </tfoot>
-                                  <tbody class="center">
-                                    <tr><td>A</td><td><span class="editable minRange">93</span>-&nbsp;&nbsp;<span class="maxRange">100</span></td><td>0&nbsp;&nbsp;-&nbsp;&nbsp;0</td></tr>
-                                    <tr class="even"><td>A-</td><td><span class="editable minRange">90</span>-&nbsp;&nbsp;<span class="maxRange">92</span></td><td>0&nbsp;&nbsp;-&nbsp;&nbsp;0</td></tr>
-                                    <tr><td>B+</td><td><span class="editable minRange">87</span>-&nbsp;&nbsp;<span class="maxRange">89</span></td><td>0&nbsp;&nbsp;-&nbsp;&nbsp;0</td></tr>
-                                    <tr class="even"><td>B</td><td><span class="editable minRange">83</span>-&nbsp;&nbsp;<span class="maxRange">86</span></td><td>0&nbsp;&nbsp;-&nbsp;&nbsp;0</td></tr>
-                                    <tr><td>B-</td><td><span class="editable minRange">80</span>-&nbsp;&nbsp;<span class="maxRange">82</span></td><td>0&nbsp;&nbsp;-&nbsp;&nbsp;0</td></tr>
-                                    <tr class="even"><td>C+</td><td><span class="editable minRange">77</span>-&nbsp;&nbsp;<span class="maxRange">79</span></td><td>0&nbsp;&nbsp;-&nbsp;&nbsp;0</td></tr>
-                                    <tr><td>C</td><td><span class="editable minRange">73</span>-&nbsp;&nbsp;<span class="maxRange">76</span></td><td>0&nbsp;&nbsp;-&nbsp;&nbsp;0</td></tr>
-                                    <tr class="even"><td>C-</td><td><span class="editable minRange">70</span>-&nbsp;&nbsp;<span class="maxRange">72</span></td><td>0&nbsp;&nbsp;-&nbsp;&nbsp;0</td></tr>
-                                    <tr><td>D+</td><td><span class="editable minRange">67</span>-&nbsp;&nbsp;<span class="maxRange">69</span></td><td>0&nbsp;&nbsp;-&nbsp;&nbsp;0</td></tr>
-                                    <tr class="even"><td>D</td><td><span class="editable minRange">60</span>-&nbsp;&nbsp;<span class="maxRange">66</span></td><td>0&nbsp;&nbsp;-&nbsp;&nbsp;0</td></tr>
-                                    <tr><td>F</td><td>&nbsp;&nbsp;&nbsp;<span class="minRange">0</span>&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;<span class="maxRange">59</span></td><td>0&nbsp;&nbsp;-&nbsp;&nbsp;0</td></tr>
+                                <tbody class="center">
+                                    <tr>
+                                        <td>A</td>
+                                        <td>
+                                            <span class="editable minRange">93</span>
+                                            -
+                                            <span class="maxRange">100</span>
+                                        </td>
+                                        <td>-</td>
+                                    </tr>
+
+                                    <tr class="even">
+                                        <td>A-</td>
+                                        <td>
+                                            <span class="editable minRange">90</span>
+                                            -
+                                            <span class="maxRange">92</span>
+                                        </td>
+                                        <td>-</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>B+</td>
+                                        <td>
+                                            <span class="editable minRange">87</span>
+                                            -
+                                            <span class="maxRange">89</span>
+                                        </td>
+                                        <td>-</td>
+                                    </tr>
+
+                                    <tr class="even">
+                                        <td>B</td>
+                                        <td>
+                                            <span class="editable minRange">83</span>
+                                            -
+                                            <span class="maxRange">86</span>
+                                        </td>
+                                        <td>-</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>B-</td>
+                                        <td>
+                                            <span class="editable minRange">80</span>
+                                            -
+                                            <span class="maxRange">82</span>
+                                        </td>
+                                        <td>-</td>
+                                    </tr>
+
+                                    <tr class="even">
+                                        <td>C+</td>
+                                        <td>
+                                            <span class="editable minRange">77</span>
+                                            -
+                                            <span class="maxRange">79</span>
+                                        </td>
+                                        <td>-</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>C</td>
+                                        <td>
+                                            <span class="editable minRange">73</span>
+                                            -
+                                            <span class="maxRange">76</span>
+                                        </td>
+                                        <td>-</td>
+                                    </tr>
+
+                                    <tr class="even">
+                                        <td>C-</td>
+                                        <td>
+                                            <span class="editable minRange">70</span>
+                                            -
+                                            <span class="maxRange">72</span>
+                                        </td>
+                                        <td>-</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>D+</td>
+                                        <td>
+                                            <span class="editable minRange">67</span>
+                                            -
+                                            <span class="maxRange">69</span>
+                                        </td>
+                                        <td>-</td>
+                                    </tr>
+
+                                    <tr class="even">
+                                        <td>D</td>
+                                        <td>
+                                            <span class="editable minRange">60</span>
+                                            -
+                                            <span class="maxRange">66</span>
+                                        </td>
+                                        <td>-</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>F</td>
+                                        <td>
+                                            <span class="minRange">0</span>
+                                            -
+                                            <span class="maxRange">59</span>
+                                        </td>
+                                        <td>-</td>
+                                    </tr>
                                 </tbody>
                         </table>
                     </div>

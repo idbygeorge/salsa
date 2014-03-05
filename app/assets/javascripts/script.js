@@ -236,9 +236,15 @@ function liteOff(x){
         });
 
         var makeNumericTextbox = function(editor){
-            editor.keyup(function(e){
+            editor.on('keyup focus change', function(e){
                 if ($.inArray(e.which, [37, 38, 39, 40]) != -1) return false;
                 editor.val(editor.val().replace(/\D/g, ''));
+            });
+
+            editor.on('blur', function(e){
+                if (!parseInt(editor.val())) {
+                    editor.val('-');
+                }
             });
         };
 
@@ -250,45 +256,52 @@ function liteOff(x){
             if(editor.val() == '0'){
                 editor.val('');
             }
+
+            // TODO: make generic validations
             if ($('#grade_components .right').has(editor).length > 0) {
                 editor.attr('maxlength',6);
                 makeNumericTextbox(editor);
-            }else if ($('#extra_credit .right').has(editor).length > 0) {
+            } else if ($('#extra_credit .right').has(editor).length > 0) {
                 editor.attr('maxlength',6);
                 makeNumericTextbox(editor);
-            }else if ($('#grade_scale').has(editor).length > 0) {
+            } else if ($('#grade_scale').has(editor).length > 0) {
                 editor.attr('maxlength',2);
                 makeNumericTextbox(editor);
             }
+
             editor.keydown(function(e){
                 var key = e.charCode ? e.charCode : e.keyCode ? e.keyCode : 0;
+
                 if (key == 13){
                     editor.blur();
                 }
             });
-            editor.focus();
+
+            editor.focus().select();
         });
 
         $("section").on("blur", ".editing input", function(){
             if($(this).val() == '' && $(this).parent().hasClass('right') == true){
-                $(this).val('0');
+                $(this).val('-');
             }
+
             var text = $(this).val();
-            var element = $(this).closest(".editing")
-            if (text == "" && element.data('can-delete') == true)
+            var element = $(this).closest(".editing");
+
+            if (text == "" && element.data('can-delete') == true) {
                 element.remove();
-            else {
+            } else {
                 element.html(text).toggleClass("editable editing");
-                 if ($('#grades').has(element)) {
+                if ($('#grades').has(element)) {
                     updateGradesPage(element);
-                 }
-             }
+                }
+            }
         });
 
         // preview control
         var previewSection = function(content_type, preview_label){
             var active_page = $('section.active').attr('id');
-            return previewPage("#" + content_type +"_"+active_page, preview_label);
+            return previewPage("#" + content_type + "_" + active_page, preview_label);
         };
 
         var previewPage = function(selector, preview_label){
@@ -532,16 +545,22 @@ function liteOff(x){
     });
 
     var updateGradeScale = function(grade_scale, total_points) {
-        console.log(grade_scale);
         if (!grade_scale) {
             grade_scale = $('#grade_scale');
         }
 
-        if (total_points < 100) {
-            console.log("grey out grade table and show message to user (non-intrusive)");
+        if(total_points === '-') {
+            total_points = 0;
+        }
 
+        if (total_points < 100) {
+            $(grade_scale).addClass('inactive');
+
+            $('tbody > tr > td:last-child', grade_scale).text('-');
             return false;
         };
+
+        $(grade_scale).removeClass('inactive');
 
         var rows = $('tbody > tr', grade_scale);
         var upper_points = total_points;
@@ -598,6 +617,10 @@ function liteOff(x){
                     sum += value;
                 }
             });
+
+            if(!sum) {
+                sum = '-';
+            }
 
             $("tfoot td:last-child", args.target).text(sum);
 
