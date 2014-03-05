@@ -507,6 +507,10 @@ function liteOff(x){
             return false;
         });
 
+        $('#extra_credit').on('blur', '.editing :input', function() {
+            callbacks['updateTableSum']({ target: '#extra_credit' });
+        });
+
         // publish
         $("#share_prompt").dialog({ modal:true, width:500, title:'Your SALSA has been published.', autoOpen:false });
         $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-state-default").focus();
