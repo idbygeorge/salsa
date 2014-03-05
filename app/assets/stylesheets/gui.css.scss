@@ -38,9 +38,9 @@ $hover: lighten($base_color, $lighten_percent);
         }
     }
 
-    nav {max-width: 930px;}
+    nav {max-width: 930px; margin: auto; }
 
-#wrapper { height: 100%; width: 916px; position: relative; overflow: hidden; min-height: 400px; float: left; }
+#wrapper { height: 100%; width: 916px; position: relative; overflow: hidden; min-height: 400px; margin: auto; }
     #tabs { float: left; margin-top: 140px; width: 108px; margin-left: 10px; }
         #tabs li { text-align: center; text-transform: lowercase; line-height: 1.4; }
             #tabs li a { display: block; padding: 4px 4px 4px 8px; background: #EBEBEB; color: black; text-decoration: none; border: solid 3px #EBEBEB; }

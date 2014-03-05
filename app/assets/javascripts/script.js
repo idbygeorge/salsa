@@ -376,6 +376,26 @@ function liteOff(x){
             return previewPage("#mySalsa",'Bookmark Your Editable SALSA');
         });
 
+        $("#tb_login_lms").on("click", function(e) {
+            $("#choose_institution_prompt").dialog({
+                modal: true,
+                title: "Login to your institution",
+                width: "600px",
+                draggable: false,
+                create: function() {
+                    $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-state-default");
+                }
+            });
+
+            e.preventDefault();
+        });
+
+        $("#choose_institution_prompt form").on('submit', function(e) {
+            window.location = $("#institution_login_select", this).val();
+
+            e.preventDefault();
+        });
+
         // save
         var publishing = false;
         $("#save_prompt").dialog({
