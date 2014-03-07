@@ -4,15 +4,17 @@
             <li>
                <%= link_to "Save", syllabus_path(@syllabus.edit_id), :authenticity_token => form_authenticity_token(), :method => :put, :remote => true, :id => 'tb_save' %>
             </li>
+            <li><a href="#" id='tb_link'><i class="foundicon-plus"></i>My SALSA</a></li>
             <li><%= link_to '<i class="foundicon-checkmark"></i>Preview'.html_safe, @view_url, :target => '_blank', :id => "tb_preview" %></li>
             <li><a href="#" id='tb_share'><i class="foundicon-right-arrow"></i>Publish</a></li>
-            <li><a href="#" id='tb_link'><i class="foundicon-plus"></i>My SALSA</a></li>
-       <li><%= link_to "Login to Canvas", oauth2_login_path(syllabus_id: @syllabus.edit_id), :authenticity_token => form_authenticity_token(), :id => 'tb_login_canvas' %></li>
-       <li><%= link_to "Save to Canvas", canvas_list_courses_path(id: @syllabus.edit_id), :authenticity_token => form_authenticity_token(), :remote => true, :id => 'tb_save_canvas' %></li>
+            <li>
+                <%= link_to "Save to Canvas", canvas_list_courses_path(id: @syllabus.edit_id), :authenticity_token => form_authenticity_token(), :remote => true, :id => 'tb_save_canvas' %>
+            </li>
         </ul>
         <ul style="float:right">
-        	<li><a href="#example" id="tb_example"><i class="foundicon-star"></i>Example</a></li>
-           	<li><a href="/help.html" target="_blank" id="tb_help"><i class="foundicon-heart"></i>Help</a></li>
+            <li><a href="#example" id="tb_example"><i class="foundicon-star"></i>Example</a></li>
+            <li><a href="/help.html" target="_blank" id="tb_help"><i class="foundicon-heart"></i>Help</a></li>
+            <li><%= link_to "Login", oauth2_login_path(syllabus_id: @syllabus.edit_id), :authenticity_token => form_authenticity_token(), :id => 'tb_login_lms' %></li>
         </ul>
     </nav>
 </header>
@@ -36,6 +38,58 @@
 </div>
 
 <div id="choose_course_prompt" style="display:none; cursor: default"></div>
+
+<div id="choose_institution_prompt" style="display:none; cursor: default">
+    <form>
+        <label for="institution_login_select">
+            Specify the institution to login and publish your Salsa to your LMS:
+        </label>
+
+        <div>
+            <select name="institution" id="institution_login_select">
+                <option></option>
+
+                <optgroup label="Nevada">
+                    <option value="<%= oauth2_login_path(syllabus_id: @syllabus.edit_id) %>&institution=nsc">Nevada State College</option>
+                </optgroup>
+
+                <optgroup label="Utah">
+                    <option value="<%= oauth2_login_path(syllabus_id: @syllabus.edit_id) %>&institution=dixie">Dixie College</option>
+                    <option value="<%= oauth2_login_path(syllabus_id: @syllabus.edit_id) %>&institution=slcc">Salt Lake Community College</option>
+                    <option value="<%= oauth2_login_path(syllabus_id: @syllabus.edit_id) %>&institution=snow">Snow College</option>
+                    <option value="<%= oauth2_login_path(syllabus_id: @syllabus.edit_id) %>&institution=suu">Southern Utah University</option>
+                    <option value="<%= oauth2_login_path(syllabus_id: @syllabus.edit_id) %>&institution=utah">University of Utah</option>
+                    <option value="<%= oauth2_login_path(syllabus_id: @syllabus.edit_id) %>&institution=usu">Utah State University</option>
+                    <option value="<%= oauth2_login_path(syllabus_id: @syllabus.edit_id) %>&institution=uvu">Utah Valley University</option>
+                    <option value="<%= oauth2_login_path(syllabus_id: @syllabus.edit_id) %>&institution=weber">Weber State University</option>
+                </optgroup>
+
+                <option id="otherIinstitution_login">Other...</option>
+            </select>
+
+           <!--  <div class="form-group">
+                Let us know who you are and we will work with you to get your institution added.
+
+                <label for="institution_login_new_contact">
+                    Name:
+                </label>
+
+                <input id="institution_login_new_contact" name="institution_contact">
+
+                <label for="institution_login_new_contact">
+                    Preferred contact Email:
+                </label>
+
+                <input id="institution_login_new_contact" name="institution_contact">
+
+            </div> -->
+
+            <button type="submit">Login</button>
+        </div>
+
+        <p>If your school is not listed, select the "Other..." option to let us know you would like to use Salsa at your institution.</p>
+    </form>
+</div>
 
 <div id="mySalsa">
     <p>The URL displayed in your browser is a unique, randomly-generated link to your <strong>editable</strong> SALSA:</p>

@@ -21,6 +21,10 @@
 <div id="editor_view">
     <%= render :partial => 'layouts/global/toolbar' %>
 
+    <% flash.each do |name, msg| -%>
+      <%= content_tag :div, msg, class: name %>
+    <% end -%>
+
     <div id="wrapper">
 
         <%= render :partial => 'layouts/global/section_nav' %>
