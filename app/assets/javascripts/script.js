@@ -404,7 +404,20 @@ function liteOff(x){
         });
 
         $("#choose_institution_prompt form").on('submit', function(e) {
-            window.location = $("#institution_login_select", this).val();
+            var baseLocation = $(this).closest('form').attr('action');
+            var institution = $("#institution_login_other", this).val();
+
+            if(institution === '') {
+                institution = $("#institution_login_select", this).val();
+            }
+
+            if(institution) {
+                var destination = baseLocation + '&institution=' + institution;
+
+                console.log(destination);
+
+                window.location = destination;
+            }
 
             e.preventDefault();
         });

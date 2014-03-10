@@ -10,14 +10,24 @@ class CanvasController < ApplicationController
   protected
 
   def fetch_course_list
-    canvas_client.get("/api/v1/courses")
+    if canvas_client
+      canvas_client.get("/api/v1/courses")
+    end
   end
 
   def canvas_access_token
     session[:canvas_access_token]["access_token"]
   end
 
-  def canvas_client
-    Canvas::API.new(:host => APP_CONFIG['canvas_api_endpoint'], :token => canvas_access_token)
+  def oauth_endpoint
+    session[:oauth_endpoint]
   end
+
+  def canvas_client
+    if(session[:oauth_endpoint])
+      debugger
+      lms_client = Canvas::API.new(:host => session[:oauth_endpoint], :token => canvas_access_token)
+    end
+  end
+
 end

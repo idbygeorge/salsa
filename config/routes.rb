@@ -4,5 +4,6 @@ Salsa::Application.routes.draw do
   resources :syllabuses
   get "canvas/list_courses"
   get "oauth2/login"
+  get "oauth2/logout"
   get "oauth2/callback"
 end
