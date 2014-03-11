@@ -5,11 +5,10 @@
 		<%= select_tag(:course_id, options_for_select( @courses.collect {|c| [ c['name'], c['id'] ] }, 1), :include_blank => true ) %>
 	</label>
 
-	<!--
-
+	
 	<%= link_to "Save and Publish to Canvas", syllabus_path(@syllabus.edit_id, canvas: true), :authenticity_token => form_authenticity_token(), :method => :put, :remote => true, :id => 'tb_send_canvas' %>
 
-	-->
+	
 
 <% else %>
 	You do not appear to be connected to an LMS.
