@@ -10,6 +10,7 @@ function liteOff(x){
 }
 (function($) {
     $(function(){
+        $(".click_on_init").trigger('click');
 
         // Check for existing sections and toggle their tab
         var tabs = ["information", "outcomes", "resources", "activities", "policies", "grades"]

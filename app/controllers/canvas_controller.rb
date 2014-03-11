@@ -11,7 +11,7 @@ class CanvasController < ApplicationController
 
   def fetch_course_list
     if canvas_client
-      canvas_client.get("/api/v1/courses")
+      canvas_client.get("/api/v1/courses", { include: 'syllabus_body' })
     end
   end
 

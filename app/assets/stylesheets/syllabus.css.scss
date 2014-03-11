@@ -4,6 +4,8 @@ html, body { height: 100%; min-height: 420px; position: relative; }
 
 #page_break { page-break-after: always; }
 
+#example_tab #example, #help_tab #help_page { display: block; max-height: 600px; overflow: auto; }
+
 #example, #mySalsa {
     display:none;
 }
