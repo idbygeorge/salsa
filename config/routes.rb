@@ -6,4 +6,5 @@ Salsa::Application.routes.draw do
   get "oauth2/login"
   get "oauth2/logout"
   get "oauth2/callback"
+  get "default/maintenance"
 end

@@ -4,4 +4,6 @@ class DefaultController < ApplicationController
   
   def index
   end
+  def maintenance
+  end
 end
