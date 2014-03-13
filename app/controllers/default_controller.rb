@@ -7,4 +7,6 @@ class DefaultController < ApplicationController
   def maintenance
   	response.headers.delete('X-Frame-Options')
   end
+  def tos
+  end
 end
