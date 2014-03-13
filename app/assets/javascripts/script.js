@@ -10,6 +10,10 @@ function liteOff(x){
 }
 (function($) {
     $(function(){
+        $("a[href=#togglenext]").on("click", function(){
+            $(this).next().toggle();
+        });
+
         $(".click_on_init").trigger('click');
 
         // Check for existing sections and toggle their tab
