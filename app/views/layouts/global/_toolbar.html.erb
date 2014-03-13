@@ -13,6 +13,10 @@
             <li><a href="/help.html" target="_blank" id="tb_help"><i class="general foundicon-question"></i>Help</a></li>
             -->
 
+            <li>
+                <%= link_to "Help", canvas_list_courses_path(id: @syllabus.edit_id), :authenticity_token => form_authenticity_token(), :remote => true, :id => 'tb_compilation' %>
+            </li>
+
             <% if session[:institution] && session[:institution] != '' %>
                 <li>
                     <%= link_to "Select Course...", canvas_list_courses_path(id: @syllabus.edit_id), :authenticity_token => form_authenticity_token(), :remote => true, :id => 'tb_save_canvas', :class => 'click_on_init' %>
@@ -21,7 +25,9 @@
                     <%= link_to "#{session[:institution].upcase}: Disconnect", controller: 'oauth2', action: 'logout' %>
                 </li>
             <% else %>
-                <%= link_to "Connect to LMS", oauth2_login_path(syllabus_id: @syllabus.edit_id), :authenticity_token => form_authenticity_token(), :id => 'tb_login_lms' %></li>
+                <li>
+                    <%= link_to "Connect to LMS", oauth2_login_path(syllabus_id: @syllabus.edit_id), :authenticity_token => form_authenticity_token(), :id => 'tb_login_lms' %>
+                </li>
             <% end %>
                 
         </ul>

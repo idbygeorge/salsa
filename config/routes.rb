@@ -1,7 +1,9 @@
 Salsa::Application.routes.draw do
   root 'default#index'
 
-  resources :syllabuses
+  resources :syllabuses, :as => :salsas
+  resources :salsas, :controller => "syllabuses", :as => 'syllabuses'
+
   get "canvas/list_courses"
   get "oauth2/login"
   get "oauth2/logout"
