@@ -24,7 +24,7 @@ class CanvasController < ApplicationController
   end
 
   def canvas_client
-    if(session[:oauth_endpoint])
+    if(session[:oauth_endpoint] && session[:oauth_endpoint] != '')
       lms_client = Canvas::API.new(:host => session[:oauth_endpoint], :token => canvas_access_token)
     end
   end

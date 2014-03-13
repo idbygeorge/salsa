@@ -36,8 +36,6 @@ $(function() {
       position: 'center top+20',
       open: function() {
         $('#clipboard_tab .editableHtml', this).tinymce(tinymceOptions);
-
-        console.log("why?")
       }
   });
 
@@ -67,7 +65,7 @@ $(function() {
     $('#clipboard_tab .editableHtml', coursePrompt).tinymce('create');
   });
 
-  $('#tb_save_canvas').on('ajax:success', function(event, xhr, settings) {
+  $('#tb_save_canvas, #tb_compilation').on('ajax:success', function(event, xhr, settings) {
     $("#choose_course_prompt").html(xhr.html);
 
     $('#tb_send_canvas').on('ajax:beforeSend', function(event, xhr, settings) {
