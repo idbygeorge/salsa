@@ -71,7 +71,7 @@ class SyllabusesController < ApplicationController
 
   def view_pdf_url
     if Rails.env.production?
-      "https://s3-#{APP_CONFIG['aws_region']}.amazonaws.com/#{APP_CONFIG['aws_bucket']}/syllabuses/#{@syllabus.view_id}.pdf"
+      "https://s3-#{APP_CONFIG['aws_region']}.amazonaws.com/#{APP_CONFIG['aws_bucket']}/hosted/#{@syllabus.view_id}.pdf"
     else
       "#{APP_CONFIG['domain']}/salsas/#{@syllabus.view_id}.pdf"
     end
