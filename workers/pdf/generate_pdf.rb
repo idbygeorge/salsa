@@ -19,17 +19,17 @@ class PdfGenerator
 
     view_id = url.split('/').last
 
-    name_w_path = "syllabuses/#{view_id}.pdf"
+    name_w_path = "salsas/#{view_id}.pdf"
 
     tmp_file = Dir.pwd + '/' + (0...32).map{65.+(rand(25)).chr}.join + '.pdf'
     generate(url, tmp_file)
 
-    puts "Uploading syllabus to s3: #{name_w_path}"
+    puts "Uploading SALSA to s3: #{name_w_path}"
     file = IO.read(tmp_file)
     bucket_url, bucket = s3_connect
     bucket.store(name_w_path, file, :access => :public_read)
 
-    puts "Successfully uploaded syllabus:"
+    puts "Successfully uploaded SALSA:"
     puts "#{bucket_url}/#{name_w_path}"
   end
 
