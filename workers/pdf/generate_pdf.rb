@@ -19,7 +19,7 @@ class PdfGenerator
 
     view_id = url.split('/').last
 
-    name_w_path = "salsas/#{view_id}.pdf"
+    name_w_path = "syllabuses/#{view_id}.pdf"
 
     tmp_file = Dir.pwd + '/' + (0...32).map{65.+(rand(25)).chr}.join + '.pdf'
     generate(url, tmp_file)
