@@ -57,7 +57,7 @@
 <div id="choose_institution_prompt" style="display:none; cursor: default">
     <form action="<%= oauth2_login_path(syllabus_id: @syllabus.edit_id) %>">
         <label for="institution_login_select" style="display: block; margin: 15px;">
-            Select your institution to login to your LMS:
+            Select your institution:
         </label>
 
         <div>
@@ -78,21 +78,20 @@
                     <option value="uvu">Utah Valley University</option>
                     <option value="weber">Weber State University</option>
                 </optgroup>
-
-                <option id="otherIinstitution_login">Other...</option>
             </select>
             <button type="submit">Login</button>
         </div>
-             <div style="margin: 15px;">
-                <p><em>If you would like your institution to be permenantly added to the list, please contact <a href="mailto:salsa@usu.edu">salsa@usu.edu</a></em></p>
-              </div>
-              <div>  
-                <p>Canvas manual login:</p>
+     
+    </form>
+    <form action="<%= oauth2_login_path(syllabus_id: @syllabus.edit_id) %>">
+       
+         <a href="#togglenext" style="float: right; padding-bottom: 10px;">manual login</a>  
+         
+              <div style="display: none;">  
                  <input type="text" name="institution" id="institution_login_other" style="margin: 10px;">.instructure.com/login&nbsp;&nbsp;
                   <label for="institution_login_other">
                     </label></input>
                     <button type="submit">Login</button>
-
                </div> 
    
 
