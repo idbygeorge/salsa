@@ -55,7 +55,9 @@
 <div id="choose_course_prompt" style="display:none; cursor: default"></div>
 
 <div id="choose_institution_prompt" style="display:none; cursor: default">
-    <form action="<%= oauth2_login_path(syllabus_id: @syllabus.edit_id) %>">
+    <form action="/oauth2/login">
+        <input type="hidden" name="syllabus_id" value="<%= @syllabus.edit_id %>">
+
         <label for="institution_login_select" style="display: block; margin: 15px;">
             Select your institution:
         </label>
@@ -83,36 +85,15 @@
         </div>
      
     </form>
-    <form action="<%= oauth2_login_path(syllabus_id: @syllabus.edit_id) %>">
-       
-         <a href="#togglenext" style="float: right; padding-bottom: 10px;">manual login</a>  
-         
-              <div style="display: none;">  
-                 <input type="text" name="institution" id="institution_login_other" style="margin: 10px;">.instructure.com/login&nbsp;&nbsp;
-                  <label for="institution_login_other">
-                    </label></input>
-                    <button type="submit">Login</button>
-               </div> 
-   
 
-           <!--  <div class="form-group">
-                Let us know who you are and we will work with you to get your institution added.
+    <form action="/oauth2/login">
+        <input type="hidden" name="syllabus_id" value="<%= @syllabus.edit_id %>">
+        <a href="#togglenext" style="float: right; padding-bottom: 10px;">manual login</a>  
 
-                <label for="institution_login_new_contact">
-                    Name:
-                </label>
-
-                <input id="institution_login_new_contact" name="institution_contact">
-
-                <label for="institution_login_new_contact">
-                    Preferred contact Email:
-                </label>
-
-                <input id="institution_login_new_contact" name="institution_contact">
-
-            </div> -->
-
-
+        <div style="display: none;">  
+            <input type="text" name="institution" id="institution_login_other" style="margin: 10px 0 10px 10px; text-align: right; ">.instructure.com/login&nbsp;&nbsp;
+            <button type="submit">Login</button>
+        </div> 
     </form>
 </div>
 
