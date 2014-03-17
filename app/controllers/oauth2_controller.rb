@@ -45,7 +45,7 @@ class Oauth2Controller < ApplicationController
       flash[:error] = params[:error]
     end
 
-    redirect_to syllabus_path(params[:syllabus_id])
+    redirect_to syllabus_path(params[:syllabus_id]) + '#/compilation/clipboard';
   end
 
   protected

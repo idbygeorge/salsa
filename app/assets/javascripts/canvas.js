@@ -26,14 +26,23 @@ $(function() {
     }
   };
 
+  var clipbaordTabIndex = 0;
+  var chooseCoursePromptAutoOpen = false;
+
+  if(window.location.hash == '#/compilation/clipboard') {
+    clipbaordTabIndex = $('#compilation_tabs a[href="#clipboard_tab"]').parent().index();
+    $("#tb_save_canvas").trigger('click');
+  }
+
   $("#choose_course_prompt").dialog({
       modal:true,
-      maxHeight: '80%',
+      maxHeight: editorMaxHeight,
       width: 800,
-      autoOpen:false,
+      autoOpen: chooseCoursePromptAutoOpen,
       closeOnEscape: true,
       title: 'Helper',
       position: 'center top+20',
+      active: clipbaordTabIndex,
       open: function() {
         $('#clipboard_tab .editableHtml', this).tinymce(tinymceOptions);
       }
