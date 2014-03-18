@@ -53,14 +53,21 @@ class SyllabusesController < ApplicationController
  	end
 
   def update
-    generate_syllabus_pdf(@syllabus.view_id) if Rails.env.production?
+    generate_syllabus_pdf(@syllabus.view_id) if Rails.env.production? && params[:publish]
+
     canvas_course_id = params[:canvas_course_id]
-    update_course_syllabus(canvas_course_id, request.raw_post) if params[:canvas] && canvas_course_id
+
+    if canvas_course_id
+      # publishing to canvas should not save in the syllabus model, the canvas version has been modified
+      update_course_syllabus(canvas_course_id, request.raw_post) if params[:canvas] && canvas_course_id
+    else
+      @syllabus.payload = request.raw_post
+      @syllabus.save!
+    end
+
     respond_to do |format|
-      msg = { :status => "ok", :message => "Success!", :html => "<b>...</b>" }
+      msg = { :status => "ok", :message => "Success!" }
       format.json  {
-        @syllabus.payload = request.raw_post
-        @syllabus.save!
         view_url = syllabus_url(@syllabus.view_id, :only_path => false)
         render :json => msg
       }

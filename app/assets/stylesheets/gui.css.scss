@@ -17,6 +17,31 @@ $hover: lighten($base_color, $lighten_percent);
     @include background-image(linear-gradient(top, $button_top 0%, $button_bottom 100%));
 }
 
+#share_prompt {
+    a.button {
+        background-color: $base_color;
+        padding: .5em 1.5em;
+        border-radius: 3px;
+        color: #fff;
+        text-decoration: none;
+
+        &:hover {
+            background-color: $hover;
+        }
+    }
+
+    .details {
+        margin-top: 1em;
+    }
+}
+
+#pdf_share_link {
+    em {
+        display: block;
+        font-size: .8em;
+    }
+}
+
 .masthead, footer, #preview_control { background: $base_color; overflow: hidden; }
     .masthead li { float: left; }
     footer li, #preview_control a { float: right; }

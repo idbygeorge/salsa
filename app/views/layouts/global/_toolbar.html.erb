@@ -4,9 +4,11 @@
             <li>
                <%= link_to "Save", syllabus_path(@syllabus.edit_id), :authenticity_token => form_authenticity_token(), :method => :put, :remote => true, :id => 'tb_save' %>
             </li>
-            <li><a href="#" id='tb_link'><i class="foundicon-plus"></i>My SALSA</a></li>
-            <li><%= link_to '<i class="foundicon-checkmark"></i>Preview'.html_safe, @view_url, :target => '_blank', :id => "tb_preview" %></li>
-            <li><a href="#" id='tb_share'><i class="general foundicon-right-arrow"></i>Publish</a></li>
+            <li><a href="#" id='tb_link'><i class="fi-plus"></i>My SALSA</a></li>
+            <li><%= link_to '<i class="fi-check"></i>Preview'.html_safe, @view_url, :target => '_blank', :id => "tb_preview" %></li>
+            <li>
+                <%= link_to '<i class="general fi-arrow-right"></i>Publish'.html_safe, syllabus_path(@syllabus.edit_id, :publish => true), :authenticity_token => form_authenticity_token(), :method => :put, :remote => true, :id => 'tb_share' %>
+            </li>
         </ul>
         <ul style="float:right">
             <!-- <li><a href="#example" id="tb_example"><i class="general foundicon-star"></i>Example</a></li>
@@ -38,19 +40,25 @@
     <div id="preview"></div>
 </div>
 
-<div id="share_prompt" style="display:none; cursor: default">
-    <p><i>&iexcl;Share your SALSA online!</i></p>
-    <p>PDF link:</p>
-    <p><%= link_to @view_pdf_url, @view_pdf_url, :target => '_blank', :id => "view_url" %></p>
-    <p>HTML link:</p>
-    <p><%= link_to @view_url, @view_url, :target => '_blank', :id => "view_url" %></p>
-    <p>Template link:</p>
-    <p><%= link_to @template_url, @template_url, :target => '_blank', :id => "view_url" %></p>
+<div id="save_prompt" class="hidden">
+    <p><%= image_tag 'busy.gif' %> <span id="saving_msg">Saving SALSA. Just a moment...</span></p>
 </div>
 
-<div id="save_prompt" style="display:none; cursor: default">
-    <p><br/><%= image_tag 'busy.gif' %> <span id="saving_msg">Saving SALSA. Just a moment...</span></p>
+<div id="share_prompt" style="display:none; cursor: default">
+    <p>PDF link:</p>
+    <div id="save_message">
+        <p><%= image_tag 'busy.gif' %> <span id="saving_msg">Generating a PDF of your SALSA...</span></p>
+    </div>
+    <p id="pdf_share_link" class="hidden"><%= link_to @view_pdf_url, @view_pdf_url, :target => '_blank', :id => "view_url" %><em>(right click and select 'Save As...' to download a copy of the PDF)</em></p>
+    <p>HTML link:</p>
+    <p><%= link_to @view_url, @view_url, :target => '_blank', :id => "view_url" %></p>
+    <p id="send_canvas" class="hidden">
+     <%= link_to "Send to Canvas", syllabus_path(@syllabus.edit_id, canvas: true), :authenticity_token => form_authenticity_token(), :method => :put, :remote => true, :id => 'tb_send_canvas', :class => 'button' %>
+     <br>
+    </p>
 </div>
+
+
 
 <div id="choose_course_prompt" style="display:none; cursor: default"></div>
 
@@ -102,4 +110,6 @@
     <p id="custom-url"></p>
     <p>If your browser’s bookmarks are visible, drag and drop the “My SALSA” link to create a bookmark.</p>
     <p>Or, create a bookmark with the following keyboard shortcuts: Ctrl+D (Windows and Chrome OS) or ⌘-D (Mac).</p>
+    <p>You can create a new SALSA based off of this document with the <strong>Template Link</strong>:</p>
+    <p id="custom-url"><%= link_to @template_url, @template_url, :target => '_blank', :id => "view_url" %></p>
 </div>

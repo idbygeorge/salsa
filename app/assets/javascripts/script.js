@@ -407,37 +407,18 @@ function liteOff(x){
 
             e.preventDefault();
         });
-        
+
         // save
         var publishing = false;
-        $("#save_prompt").dialog({
-            modal:true,
-            height:110,
-            autoOpen:false,
-            closeOnEscape: false,
-            dialogClass: 'no-close'
-        });
+        
         $('#tb_save').on('ajax:beforeSend', function(event, xhr, settings) {
-            if (publishing) {
-                $('#saving_msg').text('Your SALSA is on the way....');
-            } else {
-                $('#saving_msg').text('One moment please....');
-            }
             settings.data = $('#page-data').html();
-            $("#save_prompt").dialog('option', 'title', (publishing ? 'Publishing your SALSA' : 'Saving your SALSA'));
-            $("#save_prompt").dialog("open");
+
+            $('#save_prompt').stop().removeAttr('style').removeClass('hidden').css({display: 'block', zIndex: 999999999, top: 30, position: 'fixed', width: '100%', textAlign: 'center', backgroundColor: '#ffe', borderBottom: 'solid 1px #ddd'}).html('Saving...');
         });
+
         $('#tb_save').on('ajax:success', function(event, xhr, settings) {
-            setTimeout(function(){
-                $("#save_prompt").dialog("close")
-                if (publishing) {
-                    $("#share_prompt").dialog("open");
-                    $(".ui-widget-overlay").on("click", function (){
-                      $("div:ui-dialog:visible").dialog("close");
-                    });
-                    publishing = false;
-                }
-            },(publishing ? 15000 : 1000));
+            $("#save_prompt").html('saved at: ' + new Date().toLocaleTimeString()).delay(5000).fadeOut(1000);
         });
 
         // preview
@@ -524,11 +505,24 @@ function liteOff(x){
         });
 
         // publish
-        $("#share_prompt").dialog({ modal:true, width:500, title:'Your SALSA has been published.', autoOpen:false });
+        $("#share_prompt").dialog({ modal:true, width:500, title:'Publish', autoOpen:false });
         $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-state-default").focus();
-        $('#tb_share').click(function() {
-            publishing = true;
-            $('#tb_save').first().click();
+        
+        $('#tb_share').on('ajax:beforeSend', function(event, xhr, settings) {
+            settings.data = $('#page-data').html();
+
+            $('#save_message').show();
+            $('#pdf_share_link').hide();
+            $('#share_prompt').dialog('open');
+        });
+
+        $('#tb_share').on('ajax:success', function() {
+            setTimeout(
+                function() {
+                    $('#save_message').hide();
+                    $('#pdf_share_link').removeClass('hidden').show();
+                }, 15000
+            );
         });
 
         // table drag and drop
