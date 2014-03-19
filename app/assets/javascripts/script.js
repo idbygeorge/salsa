@@ -620,6 +620,9 @@ function liteOff(x){
 
             $("tfoot td:last-child", args.target).text(sum);
 
+            // reapply tableDnD so new rows will be draggable
+            callbacks['reapplyTableDnD'](args);
+
             return sum;
         },
 
@@ -627,6 +630,13 @@ function liteOff(x){
             var total_points = callbacks.updateTableSum(args);
 
             updateGradeScale($('#grade_scale'), total_points);
+
+            // reapply tableDnD so new rows will be draggable
+            callbacks['reapplyTableDnD'](args);
+        },
+
+        reapplyTableDnD: function(args) {
+            $(args.target).tableDnD({ onDragClass: "myDragClass"});
         }
     }
 
