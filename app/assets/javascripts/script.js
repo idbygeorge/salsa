@@ -296,7 +296,10 @@ function liteOff(x){
             if (text == "" && element.data('can-delete') == true) {
                 element.remove();
             } else {
-                element.html(text).toggleClass("editable editing");
+                // blur triggers twice when the window loses focus so we need to explicitly add and remove the needed classes
+                element.html(text).removeClass("editing");
+                element.html(text).addClass("editable");
+                
                 if ($('#grades').has(element)) {
                     updateGradesPage(element);
                 }
