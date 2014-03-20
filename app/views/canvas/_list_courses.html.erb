@@ -16,7 +16,7 @@
     <li class="right"><a href="#help_tab">Help</a></li>
   </ul>
   <div id="example_tab">
-  	<%= render :partial => 'layouts/global/example' %>
+  	<%= render :partial => "#{@view_folder}/example" %>
   </div>
   <div id="clipboard_tab">
   	<div class="editableHtml">
@@ -24,7 +24,7 @@
     </div>
   </div>
   <div id="help_tab">
-  	<%= render :partial => 'layouts/global/help' %>
+  	<%= render :partial => "#{@view_folder}/help" %>
   </div>
 </div>
 

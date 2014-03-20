@@ -5,7 +5,8 @@ class SyllabusesController < ApplicationController
 	layout 'view'
 
 	before_filter :lookup_syllabus, :only => [:edit, :update]
-
+  before_filter :init_view_folder, :only => [:edit, :update, :show]
+  
   def index
   	redirect_to :new
   end

@@ -19,7 +19,7 @@
   <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome </a> to experience this site.</p><![endif]-->
 
 <div id="editor_view">
-    <%= render :partial => 'layouts/global/toolbar' %>
+    <%= render :partial => "#{@view_folder}/toolbar" %>
 
     <% flash.each do |name, msg| -%>
       <%= content_tag :div, msg, class: name %>
@@ -27,9 +27,9 @@
 
     <div id="wrapper">
 
-        <%= render :partial => 'layouts/global/section_nav' %>
+        <%= render :partial => "#{@view_folder}/section_nav" %>
 
-        <%= render :partial => 'layouts/global/control_panel' %>
+        <%= render :partial => "#{@view_folder}/control_panel" %>
 
         <div role="main" id="container">
             <div id="page" class="editor_controls">
@@ -39,14 +39,14 @@
             </div>
         </div>
 
-        <%= render :partial => 'layouts/global/content_toolbar' %>
+        <%= render :partial => "#{@view_folder}/content_toolbar" %>
     </div>
 
-    <%= render :partial => 'layouts/global/footer' %>
+    <%= render :partial => "#{@view_folder}/footer" %>
 </div>
 
-<%= render :partial => 'layouts/global/example' %>
-<%= render :partial => 'layouts/global/help' %>
+<%= render :partial => "#{@view_folder}/example" %>
+<%= render :partial => "#{@view_folder}/help" %>
 
 </body>
 </html>

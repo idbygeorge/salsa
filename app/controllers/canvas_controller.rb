@@ -1,4 +1,6 @@
 class CanvasController < ApplicationController
+  before_filter :init_view_folder, :only => [:list_courses]
+
   def list_courses
     @syllabus = Syllabus.find_by_edit_id(params[:id])
     @courses = fetch_course_list
