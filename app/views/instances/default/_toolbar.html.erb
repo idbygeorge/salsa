@@ -15,22 +15,23 @@
             <li><a href="/help.html" target="_blank" id="tb_help"><i class="general foundicon-question"></i>Help</a></li>
             -->
 
-            <li>
-                <%= link_to "Help", canvas_list_courses_path(id: @syllabus.edit_id), :authenticity_token => form_authenticity_token(), :remote => true, :id => 'tb_compilation' %>
-            </li>
-
             <% if session[:institution] && session[:institution] != '' %>
+                 <li>
+                    <%= link_to "Disconnect from: #{session[:institution].upcase} Canvas", controller: 'oauth2', action: 'logout' %>
+                </li>
                 <li>
                     <%= link_to "Select Course...", canvas_list_courses_path(id: @syllabus.edit_id), :authenticity_token => form_authenticity_token(), :remote => true, :id => 'tb_save_canvas' %>
                 </li>
-                <li>
-                    <%= link_to "#{session[:institution].upcase}: Disconnect", controller: 'oauth2', action: 'logout' %>
-                </li>
+               
             <% else %>
                 <li>
                     <%= link_to "Connect to LMS", oauth2_login_path(syllabus_id: @syllabus.edit_id), :authenticity_token => form_authenticity_token(), :id => 'tb_login_lms' %>
                 </li>
             <% end %>
+
+              <li>
+                <%= link_to "Help", canvas_list_courses_path(id: @syllabus.edit_id), :authenticity_token => form_authenticity_token(), :remote => true, :id => 'tb_compilation' %>
+            </li>
                 
         </ul>
     </nav>
@@ -49,13 +50,18 @@
     <div id="save_message">
         <p><%= image_tag 'busy.gif' %> <span id="saving_msg">Generating a PDF of your SALSA...</span></p>
     </div>
-    <p id="pdf_share_link" class="hidden"><%= link_to @view_pdf_url, @view_pdf_url, :target => '_blank', :id => "view_url" %><em>(right click and select 'Save As...' to download a copy of the PDF)</em></p>
-    <p>HTML link:</p>
-    <p><%= link_to @view_url, @view_url, :target => '_blank', :id => "view_url" %></p>
-    <p id="send_canvas" class="hidden">
-     <%= link_to "Send to Canvas", syllabus_path(@syllabus.edit_id, canvas: true), :authenticity_token => form_authenticity_token(), :method => :put, :remote => true, :id => 'tb_send_canvas', :class => 'button' %>
-     <br>
-    </p>
+    <div>
+        <p id="pdf_share_link" class="hidden"><%= link_to @view_pdf_url, @view_pdf_url, :target => '_blank', :id => "view_url" %></p>
+        <p style="color: #666;"><em>Right click and select 'Save As...' to download a copy of the PDF.</em></p>
+        <p>HTML link:</p>
+        <p><%= link_to @view_url, @view_url, :target => '_blank', :id => "view_url" %></p>
+    </div>
+    <div style="padding: 20px 0px 10px;">
+        <p id="send_canvas" class="hidden">
+         <%= link_to "Send to Canvas", syllabus_path(@syllabus.edit_id, canvas: true), :authenticity_token => form_authenticity_token(), :method => :put, :remote => true, :id => 'tb_send_canvas', :class => 'button' %>
+         <br>
+        </p>
+    </div>
 </div>
 
 
@@ -63,14 +69,14 @@
 <div id="choose_course_prompt" style="display:none; cursor: default"></div>
 
 <div id="choose_institution_prompt" style="display:none; cursor: default">
-    <form action="/oauth2/login">
-        <input type="hidden" name="syllabus_id" value="<%= @syllabus.edit_id %>">
+    <div id="institution_list">
+        <form action="/oauth2/login">
+            <input type="hidden" name="syllabus_id" value="<%= @syllabus.edit_id %>">
 
-        <label for="institution_login_select" style="display: block; margin: 15px;">
-            Select your institution:
-        </label>
-
-        <div>
+            <label for="institution_login_select" style="display: block; margin: 15px;">
+                Select your institution:
+            </label>
+      
             <select name="institution" id="institution_login_select" style="margin: 15px;">
                 <option></option>
 
@@ -89,27 +95,31 @@
                     <option value="weber">Weber State University</option>
                 </optgroup>
             </select>
-            <button type="submit">Login</button>
-        </div>
-     
-    </form>
+            <button type="submit" id="listed">Login</button>
+        </form>
+    </div>
 
-    <form action="/oauth2/login">
+    <form action="/oauth2/login" style="display: none;">
+         <label for="syllabus_id" style="display: block; margin: 15px;">
+                Type in your institution:
+         </label>
         <input type="hidden" name="syllabus_id" value="<%= @syllabus.edit_id %>">
-        <a href="#togglenext" style="float: right; padding-bottom: 10px;">manual login</a>  
-
-        <div style="display: none;">  
-            <input type="text" name="institution" id="institution_login_other" style="margin: 10px 0 10px 10px; text-align: right; ">.instructure.com/login&nbsp;&nbsp;
-            <button type="submit">Login</button>
-        </div> 
+        
+        <input type="text" name="institution" id="institution_login_other" style="margin: 15px 0 14px 15px; text-align: right; ">.instructure.com/login&nbsp;&nbsp;
+        <button type="submit">Login</button>
     </form>
+
+     <a href="#togglenext" style="float: right; padding-bottom: 10px;">manual login</a>  
+
 </div>
 
 <div id="mySalsa">
-    <p>The URL displayed in your browser is a unique, randomly-generated link to your <strong>editable</strong> SALSA:</p>
-    <p id="custom-url"></p>
-    <p>If your browser’s bookmarks are visible, drag and drop the “My SALSA” link to create a bookmark.</p>
-    <p>Or, create a bookmark with the following keyboard shortcuts: Ctrl+D (Windows and Chrome OS) or ⌘-D (Mac).</p>
-    <p>You can create a new SALSA based off of this document with the <strong>Template Link</strong>:</p>
+    <p style="padding: 10px;">The <strong>Edit Link</strong> is a unique, randomly-generated URL for your SALSA:</p>
+    <p id="custom-url" style="text-decoration: underline;"></p>
+    <div style="color: #666; font-style: italic;">
+        <p>If your browser’s bookmarks are visible, drag and drop the “My SALSA” link to create a bookmark.</p>
+        <p>Or, create a bookmark with the following keyboard shortcuts: Ctrl+D (Windows and Chrome OS) or ⌘-D (Mac).</p>
+    </div>
+    <p style="padding: 10px;">The <strong>Template Link</strong> generates a <em>new</em> SALSA pre-populated with the information from your SALSA:</p>
     <p id="custom-url"><%= link_to @template_url, @template_url, :target => '_blank', :id => "view_url" %></p>
 </div>
