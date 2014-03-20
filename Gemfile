@@ -64,3 +64,5 @@ gem 'debugger', group: [:development, :test]
 #Add Foundation 4
 gem 'zurb-foundation'
 
+# Add awesome nested set
+gem 'awesome_nested_set', '~> 3.0.0.rc.3'

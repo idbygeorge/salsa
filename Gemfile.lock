@@ -27,6 +27,8 @@ GEM
       tzinfo (~> 0.3.37)
     arel (4.0.0)
     atomic (1.1.13)
+    awesome_nested_set (3.0.0.rc.3)
+      activerecord (>= 4.0.0, < 5)
     builder (3.1.4)
     canvas-api (0.7)
       json
@@ -170,6 +172,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  awesome_nested_set (~> 3.0.0.rc.3)
   canvas-api
   capistrano
   capistrano-bundler

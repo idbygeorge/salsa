@@ -11,7 +11,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140217224048) do
+ActiveRecord::Schema.define(version: 20140320173836) do
+
+  create_table "organizations", force: true do |t|
+    t.string   "name"
+    t.string   "slug"
+    t.integer  "parent_id"
+    t.integer  "lft"
+    t.integer  "rgt"
+    t.integer  "depth"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "lms_authentication_source"
+    t.string   "lms_authentication_id"
+    t.string   "lms_authentication_key"
+  end
+
+  add_index "organizations", ["depth"], name: "index_organizations_on_depth"
+  add_index "organizations", ["lft"], name: "index_organizations_on_lft"
+  add_index "organizations", ["parent_id"], name: "index_organizations_on_parent_id"
+  add_index "organizations", ["rgt"], name: "index_organizations_on_rgt"
+  add_index "organizations", ["slug", "parent_id"], name: "index_organizations_on_slug_and_parent_id", unique: true
 
   create_table "syllabuses", force: true do |t|
     t.string   "name"
