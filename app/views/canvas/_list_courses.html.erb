@@ -1,13 +1,16 @@
-<% if @courses %>
+<div style="padding: 10px 0px 20px;">
+  <% if @courses %>
 	<label>
 		Select a course to connect to:
-		<br>
+		<br><br>
 		<%= select_tag(:course_id, options_for_select( @courses.collect {|c| [ c['name'], c['id'] ] }, 1), :include_blank => true ) %>
 	</label>	
 
-<% else %>
-	You do not appear to be connected to an LMS.
-<% end %>
+  <% else %>
+  	You do not appear to be connected to an LMS.
+  <% end %>
+
+</div>
 
 <div id="compilation_tabs">
   <ul>

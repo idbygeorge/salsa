@@ -17,13 +17,14 @@ $hover: lighten($base_color, $lighten_percent);
     @include background-image(linear-gradient(top, $button_top 0%, $button_bottom 100%));
 }
 
-#share_prompt {
-    a.button {
-        background-color: $base_color;
-        padding: .5em 1.5em;
+#share_prompt, #choose_institution_prompt {
+    a.button, button {
+        background-color: #333;
+        padding: .5em .5em;
         border-radius: 3px;
         color: #fff;
         text-decoration: none;
+        border: none;
 
         &:hover {
             background-color: $hover;
@@ -31,7 +32,7 @@ $hover: lighten($base_color, $lighten_percent);
     }
 
     .details {
-        margin-top: 1em;
+        margin: -20px 0px 0px 140px;
     }
 }
 
@@ -145,7 +146,7 @@ $hover: lighten($base_color, $lighten_percent);
         border-color: #773420;
     }
 }
-#compilation_tabs .right { float: right; }
+#compilation_tabs .right { float: right;}
 
 #components tr.myDragClass td { font-weight: bold; background-color: #ffe4b5; }
 

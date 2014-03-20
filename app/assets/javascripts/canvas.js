@@ -41,7 +41,7 @@ $(function() {
       width: 800,
       autoOpen: chooseCoursePromptAutoOpen,
       closeOnEscape: true,
-      title: 'Helper',
+      title: 'Example | Clipboard | Help',
       position: 'center top+20',
       active: clipbaordTabIndex,
       open: function() {
@@ -64,22 +64,22 @@ $(function() {
 
       $('body').attr('data-course', JSON.stringify(courseData));
 
-      $("#tb_save_canvas").data('originaltext', $("#tb_save_canvas").text()).text('Course: ' + courseData.name.slice(0, 30) + (courseData.name.length > 30 ? '...' : ''));
+      $("#tb_save_canvas").data('originaltext', $("#tb_save_canvas").text()).html('Course: <b><em>' + courseData.name.slice(0, 30) + (courseData.name.length > 30 ? '...' : '') + '</em></b>');
       $('#clipboard_tab .editableHtml', coursePrompt).tinymce('destroy');
 
       if(courseData.syllabus && courseData.syllabus.length) {
         $("#compilation_tabs #clipboard_tab .editableHtml").html(courseData.syllabus);
-        $(this).closest('label').after($('<div class="message notice">The syllabus for the <em>' + courseData.name + '</em> course has been loaded into the clipboard for easy access.</div>'));
+        $(this).closest('label').after($('<div class="message notice">The syllabus information for <em><b>' + courseData.name + '</em></b> has been imported into the Clipboard.</div>'));
       } else {
         $("#compilation_tabs #clipboard_tab .editableHtml").html('');
-        $(this).closest('label').after($('<div class="message warning">There does not appear to be an existing syllabus for the <em>' + courseData.name + '</em> course.</div>'));
+        $(this).closest('label').after($('<div class="message warning">No syllabus information for <b><em>' + courseData.name + '</em></b> detected in the LMS.</div>'));
       }
 
       $('#compilation_tabs ul a[href="#clipboard_tab"]').trigger('click');
 
       $('#clipboard_tab .editableHtml', coursePrompt).tinymce('create');
 
-      $('#send_canvas').show().removeClass('hidden').append($('<div/>').addClass('details').text('Course: ' + courseData.name));
+      $('#send_canvas').show().removeClass('hidden').append($('<div/>').addClass('details').html('Course: <b><em>' + courseData.name + '</em></b>'));
     } else {
       $("#tb_save_canvas").text($("#tb_save_canvas").data('originaltext'));
       $("#compilation_tabs #clipboard_tab .editableHtml").html('');

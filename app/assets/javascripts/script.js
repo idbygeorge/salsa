@@ -11,7 +11,8 @@ function liteOff(x){
 (function($) {
     $(function(){
         $("a[href=#togglenext]").on("click", function(){
-            $(this).next().toggle();
+            $(this).siblings().toggle();
+
         });
 
         $(".click_on_init").trigger('click');
