@@ -13,8 +13,8 @@ class ApplicationController < ActionController::Base
     # if a matching org was found, check if there is a custom view folder set up for it
     if @organization
       # only update the view folder if the institution folder exists
-      if File.directory?("app/views/instances/#{@organization.slug}")
-        @view_folder = "instances/#{@organization.slug}"
+      if File.directory?("app/views/instances/custom/#{@organization.slug}")
+        @view_folder = "instances/custom/#{@organization.slug}"
       end
     end
   end
