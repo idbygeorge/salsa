@@ -1,3 +1,5 @@
+# TODO: this file shouldn't be tracked... each instance may be different
+
 # config valid only for Capistrano 3.1
 lock '3.1.0'
 
@@ -27,6 +29,10 @@ set :linked_files, %w{config/database.yml config/config.yml}
 
 # Default value for linked_dirs is []
 # set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
+
+# instances/custom view folder is not part of the public repository
+# any customization instance views will need to be added to the server another way
+set :linked_dirs, %w{views/instances/custom}
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
