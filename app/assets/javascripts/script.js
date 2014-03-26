@@ -129,60 +129,13 @@ function liteOff(x){
             var grade_scale = $('#grade_scale');
 
             if(grade_scale.has(element).length) {
-                validateGradeScale(grade_scale, element);
+                callbacks['validateGradeScale']({ target: grade_scale });
             }
 
             callbacks.updateGradeScale(args);
 
             return;
         };
-
-
-        var validateGradeScale = function(grade_scale, minRangeElement) {
-            var otherElements = $(minRangeElement).closest("tr").nextAll("tr").find("span.minRange");
-            var minRangeElements = $.merge(minRangeElement, otherElements);
-
-            $(minRangeElements).each(function(i, element){
-                console.log("looping", i, element);
-
-                var new_value = parseInt($(element).text());
-                var cell = $(element).closest("td");
-                var parts = $(cell).find('span');
-                var existingRange = {
-                    min: parseInt(parts.eq(0).text()),
-                    max: parseInt(parts.eq(1).text())
-                };
-
-                // don't allow a percentage that would invalidate a higher grade range
-                new_value = Math.min(new_value, existingRange.max-1);
-
-                if(!new_value) {
-                    console.log("not valid...", i, element, new_value);
-                }
-                $(element).text(new_value);
-
-                var next_grade = $('td', cell.closest("tr").next())[1];
-                parts = $(next_grade).find('span');
-
-                var nextRange = {
-                    min: parseInt(parts.eq(0).text()),
-                    max: parseInt(parts.eq(1).text())
-                };
-
-                if (parts.length > 0) {
-                    var new_minRange = Math.min(parseInt(nextRange.min), new_value-2);
-
-                    console.log("is this a number?", new_minRange, i, element);
-
-                    $(next_grade).find('span.minRange').text(new_minRange).siblings('span').text(new_value-1);
-                }
-
-            });
-
-            // cascade down
-
-        };
-
 
         // make stuff editable
         $("section :header,#templates :header").addClass("editable").attr({ tabIndex: 0 });
@@ -474,31 +427,6 @@ function liteOff(x){
                 });
 
                 $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-state-default").focus();
-
-        //this is the one that Heroku is using--9_13_13
-
-        /*
-                var previewDiv = $("<div/>").addClass('previewDialog').css({ backgroundColor: "#F5F5F5" }).html('preview goes here...');
-
-                previewDiv.load($(this).attr('href') + " #preview", function(data){
-                    console.log("load...", this, arguments);
-                    $("#preview", this).css({ paddingTop: '.5in' }).show();
-
-                    $(".editable", this).removeAttr("tabindex");
-
-                    $(this).dialog({
-                        modal:true,
-                        width:'10.75in',
-                        title:'Preview',
-                        maxHeight: $(window).innerHeight() - 150,
-                        close: function() {
-                            $(this).dialog("destroy");
-                        }
-                    });
-                    $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-state-default").focus();
-                });
-
-*/
             }
 
             return false;
@@ -559,7 +487,7 @@ function liteOff(x){
 
         $(grade_scale).removeClass('inactive');
 
-        var rows = $('tbody > tr', grade_scale);
+        var rows = $('tbody > tr:visible', grade_scale);
         var upper_points = total_points;
 
         rows.each(function(index, row){
@@ -628,6 +556,7 @@ function liteOff(x){
         },
 
         updateGradeScale: function(args) {
+            args.target = $('#grade_components');
             var total_points = callbacks.updateTableSum(args);
 
             updateGradeScale($('#grade_scale'), total_points);
@@ -638,6 +567,58 @@ function liteOff(x){
 
         reapplyTableDnD: function(args) {
             $(args.target).tableDnD({ onDragClass: "myDragClass"});
+        },
+
+        fixGradeScale: function(args) {
+            // if the target is not a table, set it to the closest table
+            var fixed_args = $.extend({}, args);
+            fixed_args.target = $(args.target).is('table') ? args.target : $(args.target).closest('table');
+
+            // set the upper percentage of the first row in the grade table to be 100
+            var first_row = $('tbody tr:visible:first .maxRange', fixed_args.target).text(100);
+
+            // revalidate the grade scale
+            callbacks.validateGradeScale(fixed_args);
+
+            // recalculate the points column
+            callbacks.updateGradeScale(fixed_args);
+        },
+        validateGradeScale: function(args) {
+
+            var minRangeElements = $('tr:visible', args.target).find("span.minRange");
+
+            $(minRangeElements).each(function(i, element){
+                var new_value = parseInt($(element).text());
+                var cell = $(element).closest("td");
+                var parts = $(cell).find('span');
+                var existingRange = {
+                    min: parseInt(parts.eq(0).text()),
+                    max: parseInt(parts.eq(1).text())
+                };
+
+                // don't allow a percentage that would invalidate a higher grade range
+                new_value = Math.min(new_value, existingRange.max-1);
+
+                $(element).text(new_value);
+
+                var next_grade = $('td', cell.closest("tr").next())[1];
+                parts = $(next_grade).find('span');
+
+                var nextRange = {
+                    min: parseInt(parts.eq(0).text()),
+                    max: parseInt(parts.eq(1).text())
+                };
+
+                if (parts.length > 0) {
+                    var new_minRange = Math.min(parseInt(nextRange.min), new_value-2);
+
+                    $(next_grade).find('span.minRange').text(new_minRange).siblings('span').text(new_value-1);
+                }
+
+            });
+
+            // cascade down
+
         }
     }
 
