@@ -478,7 +478,7 @@ function liteOff(x){
             total_points = 0;
         }
 
-        if (total_points < 100) {
+        if (grade_scale.length && total_points < 100) {
             $(grade_scale).addClass('inactive');
 
             $('tbody > tr > td:last-child', grade_scale).text('-');
