@@ -26,7 +26,6 @@ class ApplicationController < ActionController::Base
       @institution = session['institution']
     elsif !params[:institution] || params[:institution] == ''
       @institution = request.env['SERVER_NAME']
-      @callback_url = callback_url
     else
       @institution = params[:institution]
     end
