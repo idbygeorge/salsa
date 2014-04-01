@@ -3,6 +3,8 @@ class Oauth2Controller < ApplicationController
   def login
     session[:institution] = @institution
     session[:oauth_endpoint] = @oauth_endpoint
+    session[:canvas_access_token] = ''
+    session[:authenticated_institution] = ''
 
     redirect_to(@redirect_url)
   end
