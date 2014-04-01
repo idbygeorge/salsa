@@ -29,6 +29,13 @@ table.components td.left {text-align:left;}
 table.components td.right {text-align:right;}
 table.components tr.myDragClass td {color:#666;background-color: #ffe4b5; }
 
+a#tb_save_canvas.highlight {
+    color: orange;
+    background: white;
+    opacity: .8;
+    margin: 2px;   
+}
+
 #grade_components{
     input{
         width:60px;
