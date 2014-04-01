@@ -15,12 +15,12 @@
             <li><a href="/help.html" target="_blank" id="tb_help"><i class="general foundicon-question"></i>Help</a></li>
             -->
 
-            <% if session[:institution] && session[:institution] != '' %>
+            <% if session[:authenticated_institution] && session[:authenticated_institution] != '' %>
                  <li>
                     <%= link_to "Disconnect from: #{session[:institution].upcase} Canvas", controller: 'oauth2', action: 'logout' %>
                 </li>
                 <li>
-                    <%= link_to "Select Course...", canvas_list_courses_path(id: @syllabus.edit_id), :authenticity_token => form_authenticity_token(), :remote => true, :id => 'tb_save_canvas' %>
+                    <%= link_to "Select Course...", canvas_list_courses_path(id: @syllabus.edit_id), :authenticity_token => form_authenticity_token(), :remote => true, :id => 'tb_save_canvas', :class => 'highlight blink' %>
                 </li>
                
             <% else %>
@@ -46,16 +46,10 @@
 </div>
 
 <div id="share_prompt" style="display:none; cursor: default">
-    <p>PDF link:</p>
-    <div id="save_message">
-        <p><%= image_tag 'busy.gif' %> <span id="saving_msg">Generating a PDF of your SALSA...</span></p>
-    </div>
-    <div>
-        <p id="pdf_share_link" class="hidden"><%= link_to @view_pdf_url, @view_pdf_url, :target => '_blank', :id => "view_url" %></p>
-        <p style="color: #666;"><em>Right click and select 'Save As...' to download a copy of the PDF.</em></p>
+
         <p>HTML link:</p>
-        <p><%= link_to @view_url, @view_url, :target => '_blank', :id => "view_url" %></p>
-    </div>
+        <p id="html_share_link"><%= link_to @view_url, @view_url, :target => '_blank', :id => "view_url" %></p>
+
     <div style="padding: 20px 0px 10px;">
         <p id="send_canvas" class="hidden">
          <%= link_to "Send to Canvas", syllabus_path(@syllabus.edit_id, canvas: true), :authenticity_token => form_authenticity_token(), :method => :put, :remote => true, :id => 'tb_send_canvas', :class => 'button' %>

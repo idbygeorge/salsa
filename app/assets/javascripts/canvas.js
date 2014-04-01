@@ -64,7 +64,7 @@ $(function() {
 
       $('body').attr('data-course', JSON.stringify(courseData));
 
-      $("#tb_save_canvas").data('originaltext', $("#tb_save_canvas").text()).html('Course: <b><em>' + courseData.name.slice(0, 30) + (courseData.name.length > 30 ? '...' : '') + '</em></b>');
+      $("#tb_save_canvas").data('originaltext', $("#tb_save_canvas").text()).html('<span style="color: black;">' + 'Connected: <b><em>' + courseData.name.slice(0, 30) + (courseData.name.length > 30 ? '...' : '') + '</em></b></span>');
       $('#clipboard_tab .editableHtml', coursePrompt).tinymce('destroy');
 
       if(courseData.syllabus && courseData.syllabus.length) {
@@ -79,7 +79,7 @@ $(function() {
 
       $('#clipboard_tab .editableHtml', coursePrompt).tinymce('create');
 
-      $('#send_canvas').show().removeClass('hidden').append($('<div/>').addClass('details').html('Course: <b><em>' + courseData.name + '</em></b>'));
+      $('#send_canvas').show().removeClass('hidden').append($('<div/>').addClass('details').html('Connected: <b><em>' + courseData.name + '</em></b>'));
     } else {
       $("#tb_save_canvas").text($("#tb_save_canvas").data('originaltext'));
       $("#compilation_tabs #clipboard_tab .editableHtml").html('');
@@ -106,10 +106,13 @@ $(function() {
       // remove all hidden content, canvas doesn't like our CSS
       $('.hide, #page_break, .content:has(#grade_scale.inactive), .disabled, #spacer', salsaDocument).remove();
 
-      var pdfLink = $("#pdf_share_link a").clone().text('PDF Version');
-      var pdfDiv = $('<div/>').css({ display: 'block', textAlign: 'right', maxWidth: '8in' }).append(pdfLink);
+      var htmlLink = $("#html_share_link a").clone().text('SALSA HTML');
+      var htmlDiv = $('<div/>').css({ display: 'block', textAlign: 'right', maxWidth: '8in' }).append(htmlLink);
 
-      $('.content:first', salsaDocument).prepend(pdfDiv);
+/*      var pdfLink = $("#pdf_share_link a").clone().text('PDF Version');
+      var pdfDiv = $('<div/>').css({ display: 'block', textAlign: 'right', maxWidth: '8in' }).append(pdfLink);*/
+
+      $('.content:first', salsaDocument).prepend(htmlDiv);
 
       settings.data = salsaDocument.html();
 
