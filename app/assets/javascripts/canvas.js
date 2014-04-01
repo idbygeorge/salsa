@@ -115,7 +115,7 @@ $(function() {
 
       $("#choose_course_prompt").dialog("close");
 
-      loadingDialog = $('<div><img alt="Busy" src="/assets/busy.gif"> Sending your SALSA to canvas...</div>').dialog({modal: true, title: "Saving..."});
+      loadingDialog = $('<div>Sending your SALSA to canvas...</div>').prepend($('#save_prompt img').clone()).dialog({modal: true, title: "Saving..."});
       $('.ui-dialog-titlebar-close').html('close | x').removeClass('ui-state-default').focus();
     });
 
@@ -133,7 +133,7 @@ $(function() {
   });
 
   $('#tb_save_canvas').on('ajax:beforeSend', function(){
-    loadingDialog = $('<div><img alt="Busy" src="/assets/busy.gif"> Your course list is being loaded from canvas...</div>').dialog({modal: true, title: "Loading from Canvas"});
+    loadingDialog = $('<div>Your course list is being loaded from canvas...</div>').prepend($('#save_prompt img').clone()).dialog({modal: true, title: "Loading from Canvas"});
     $('.ui-dialog-titlebar-close').html('close | x').removeClass('ui-state-default').focus();
   });
 
