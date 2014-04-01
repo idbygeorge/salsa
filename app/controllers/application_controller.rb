@@ -46,7 +46,7 @@ class ApplicationController < ActionController::Base
     @lms_secret ||= APP_CONFIG['canvas_key']
     @callback_url ||= APP_CONFIG['domain'] + '/oauth2/callback'
 
-    if canvas_access_token != ''
+    if canvas_access_token && canvas_access_token != ''
       @lms_client = Canvas::API.new(:host => @oauth_endpoint, :token => canvas_access_token)
     else
       @lms_client = Canvas::API.new(:host => @oauth_endpoint, :client_id => @lms_client_id, :secret => @lms_secret)

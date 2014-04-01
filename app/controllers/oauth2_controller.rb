@@ -1,10 +1,12 @@
 class Oauth2Controller < ApplicationController
-  before_filter :lms_connection_information, only: [:login, :callback]
   def login
-    session[:institution] = @institution
-    session[:oauth_endpoint] = @oauth_endpoint
     session[:canvas_access_token] = ''
     session[:authenticated_institution] = ''
+
+    lms_connection_information
+
+    session[:institution] = @institution
+    session[:oauth_endpoint] = @oauth_endpoint
 
     redirect_to(@redirect_url)
   end
@@ -21,6 +23,8 @@ class Oauth2Controller < ApplicationController
   end
 
   def callback
+    lms_connection_information
+
     code = params[:code]
 
     if code
