@@ -109,14 +109,7 @@ class SyllabusesController < ApplicationController
   end
 
   def update_course_syllabus course_id, html
-    canvas_client.put("/api/v1/courses/#{course_id}", { course: { syllabus_body: html } })
-  end
-
-  def canvas_access_token
-    session[:canvas_access_token]["access_token"]
-  end
-
-  def canvas_client
-    Canvas::API.new(:host => APP_CONFIG['canvas_api_endpoint'], :token => canvas_access_token)
+    lms_connection_information
+    @lms_client.put("/api/v1/courses/#{course_id}", { course: { syllabus_body: html } })
   end
 end

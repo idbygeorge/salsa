@@ -46,7 +46,15 @@ class ApplicationController < ActionController::Base
     @lms_secret ||= APP_CONFIG['canvas_key']
     @callback_url ||= APP_CONFIG['domain'] + '/oauth2/callback'
 
-    @lms_client = Canvas::API.new(:host => @oauth_endpoint, :client_id => @lms_client_id, :secret => @lms_secret)
-    @redirect_url = "#{@lms_client.oauth_url(@callback_url)}%3Fsyllabus_id%3D#{params[:syllabus_id]}"
+    if canvas_access_token != ''
+      @lms_client = Canvas::API.new(:host => @oauth_endpoint, :token => canvas_access_token)
+    else
+      @lms_client = Canvas::API.new(:host => @oauth_endpoint, :client_id => @lms_client_id, :secret => @lms_secret)
+      @redirect_url = "#{@lms_client.oauth_url(@callback_url)}%3Fsyllabus_id%3D#{params[:syllabus_id]}"
+    end
+  end
+
+  def canvas_access_token
+    session[:canvas_access_token]["access_token"]
   end
 end
