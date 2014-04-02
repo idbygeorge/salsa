@@ -31,9 +31,10 @@ table.components tr.myDragClass td {color:#666;background-color: #ffe4b5; }
 
 a#tb_save_canvas.highlight {
     color: orange;
+    font-size: 10px;
     background: white;
-    opacity: .8;
-    margin: 2px;   
+    margin: 2px 0px 3px 0px;
+    padding-bottom: 3px;  
 }
 
 #grade_components{

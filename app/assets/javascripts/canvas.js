@@ -30,23 +30,19 @@ $(function() {
   var chooseCoursePromptAutoOpen = false;
   var loadingDialog;
 
-  if(window.location.hash == '#/compilation/clipboard') {
-    clipbaordTabIndex = $('#compilation_tabs a[href="#clipboard_tab"]').parent().index();
-    $("#tb_save_canvas").trigger('click');
-  }
-
   $("#choose_course_prompt").dialog({
       modal:true,
       maxHeight: editorMaxHeight,
-      width: 800,
+      width: 500,
       autoOpen: chooseCoursePromptAutoOpen,
       closeOnEscape: true,
-      title: 'Example | Clipboard | Help',
-      position: 'center top+20',
-      active: clipbaordTabIndex,
+      title: 'Select Course',
+      position: 'center ',
       open: function() {
-        $('#clipboard_tab .editableHtml', this).tinymce(tinymceOptions);
-        loadingDialog.dialog('close');
+        $('#loading_courses_dialog').dialog('close');
+      },
+      close: function() {
+        window.location.hash = '';
       }
   });
 
@@ -64,29 +60,39 @@ $(function() {
 
       $('body').attr('data-course', JSON.stringify(courseData));
 
-      $("#tb_save_canvas").data('originaltext', $("#tb_save_canvas").text()).html('<span style="color: black;">' + 'Connected: <b><em>' + courseData.name.slice(0, 30) + (courseData.name.length > 30 ? '...' : '') + '</em></b></span>');
-      $('#clipboard_tab .editableHtml', coursePrompt).tinymce('destroy');
+      $("#tb_save_canvas").data('originaltext', $("#tb_save_canvas").text()).html('<span style="color: black;">' + 'Connected to: <b><em>' + courseData.name.slice(0, 15) + (courseData.name.length > 15 ? '...' : '') + '</em></b></span>');
+      $('#CanvasImport_tab .editableHtml', coursePrompt).tinymce('destroy');
 
       if(courseData.syllabus && courseData.syllabus.length) {
-        $("#compilation_tabs #clipboard_tab .editableHtml").html(courseData.syllabus);
-        $(this).closest('label').after($('<div class="message notice">The syllabus information for <em><b>' + courseData.name + '</em></b> has been imported into the Clipboard.</div>'));
+        // store syllabus content in the clipboard
+        $("#compilation_tabs #CanvasImport_tab .editableHtml").html(courseData.syllabus);
+        
+        // generate message
+        var newMessage = $('<div class="courseSyllabusRetrieved"/>').html('The HTML from the <em><b>' + courseData.name + '</em></b> syllabus editor has been imported into the <a href="#CanvasImport_tab"><em>Canvas Import</em></a> tab in <b>Resources</b>.');
+
+        // put message in message queue
+        $("#messages").prepend(newMessage);
+
+        newMessage.delay(8000).fadeOut(1000, function(){
+          $(this).remove();
+        });
       } else {
-        $("#compilation_tabs #clipboard_tab .editableHtml").html('');
+        $("#compilation_tabs #CanvasImport_tab .editableHtml").html('');
         $(this).closest('label').after($('<div class="message warning">No syllabus information for <b><em>' + courseData.name + '</em></b> detected in the LMS.</div>'));
       }
 
-      $('#compilation_tabs ul a[href="#clipboard_tab"]').trigger('click');
+      // update the course selection link to show the currently selected course's title
+      $('#send_canvas').show().removeClass('hidden').append($('<div/>').data('course', courseData).addClass('details').html('<b><em>' + courseData.name.slice(0, 30) + (courseData.name.length > 30 ? '...' : '') + '</em></b>'));
 
-      $('#clipboard_tab .editableHtml', coursePrompt).tinymce('create');
-
-      $('#send_canvas').show().removeClass('hidden').append($('<div/>').addClass('details').html('Connected: <b><em>' + courseData.name + '</em></b>'));
+      // close the dialog
+      $('#choose_course_prompt').dialog('close');
     } else {
       $("#tb_save_canvas").text($("#tb_save_canvas").data('originaltext'));
-      $("#compilation_tabs #clipboard_tab .editableHtml").html('');
+      $("#compilation_tabs #CanvasImport_tab .editableHtml").html('');
     }
   });
 
-  $('#tb_save_canvas, #tb_compilation').on('ajax:success', function(event, xhr, settings) {
+  $('#tb_save_canvas').on('ajax:success', function(event, xhr, settings) {
     $("#choose_course_prompt").html(xhr.html);
 
     var loadingDialog;
@@ -135,14 +141,8 @@ $(function() {
     $("#choose_course_prompt").dialog("open");
   });
 
-  $('#tb_save_canvas').on('ajax:beforeSend', function(){
-    loadingDialog = $('<div>Your course list is being loaded from canvas...</div>').prepend($('#save_prompt img').clone()).dialog({modal: true, title: "Loading from Canvas"});
-    $('.ui-dialog-titlebar-close').html('close | x').removeClass('ui-state-default').focus();
-  });
-
   // TODO: Debugging code... remove when done.
   $('#tb_save_canvas').on('ajax:error', function(event, xhr, settings) {
     console.log("Ajax error saving to canvas...", event, xhr, settings);
   });
-
 });

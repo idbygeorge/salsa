@@ -17,7 +17,7 @@ class Oauth2Controller < ApplicationController
     session[:canvas_access_token] = ''
     session[:authenticated_institution] = ''
 
-    flash[:notice] = "This application has been detached from canvas"
+    flash[:notice] = "You are disconnected from Canvas."
 
     redirect_to(:back)
   end
@@ -31,12 +31,12 @@ class Oauth2Controller < ApplicationController
       token = @lms_client.retrieve_access_token(code, @redirect_url)
       session[:canvas_access_token] = token
 
-      flash[:notice] = 'Canvas authentication successful'
+      flash[:notice] = 'You are connected to Canvas. Please Select a Course.'
       session[:authenticated_institution] = session[:institution]
     else
       flash[:error] = params[:error]
     end
 
-    redirect_to syllabus_path(params[:syllabus_id]) + '#/compilation/clipboard';
+    redirect_to syllabus_path(params[:syllabus_id]) + '#/select/course';
   end
 end

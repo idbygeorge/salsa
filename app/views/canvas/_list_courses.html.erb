@@ -12,25 +12,6 @@
 
 </div>
 
-<div id="compilation_tabs">
-  <ul>
-    <li><a href="#example_tab">Example</a></li>
-    <li><a href="#clipboard_tab">Clipboard</a></li>
-    <li class="right"><a href="#help_tab">Help</a></li>
-  </ul>
-  <div id="example_tab">
-  	<%= render :partial => "#{@view_folder}/example" %>
-  </div>
-  <div id="clipboard_tab">
-  	<div class="editableHtml">
-      Select a course in the list above to load your syallabus into the clipboard.
-    </div>
-  </div>
-  <div id="help_tab">
-  	<%= render :partial => "#{@view_folder}/help" %>
-  </div>
-</div>
-
 <script>
 (function($) {
 	$(function(){

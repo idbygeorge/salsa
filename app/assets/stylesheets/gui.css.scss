@@ -80,7 +80,7 @@ $hover: lighten($base_color, $lighten_percent);
             #tabs li.policies a:hover, #tabs li.policies.selected a, .policies #container, .policies #controlPanel { border-color: #BEBEE0; }
             #tabs li.grades a:hover, #tabs li.grades.selected a, .grades #container, .grades #controlPanel { border-color: #D4DAC8; }
 
-    #controlPanel { float: right; width: 148px; margin-top: 35px; max-height: 490px; overflow: hidden; font-size: 12px; }
+    #controlPanel { float: right; width: 148px; margin-top: 46px; max-height: 490px; overflow: hidden; font-size: 12px; }
         #controlPanel header { }
             #controlPanel header input, #controlPanel header a { width: 100%; background: transparent; border: 0 none; color: #fff; font-weight: bold; text-decoration: none; }
             
@@ -101,7 +101,7 @@ $hover: lighten($base_color, $lighten_percent);
 
     #controlPanel, #container, #topBar { border: solid 2px #aaa; border-radius: 10px; }
 
-    #container, #topBar { position: absolute; top: 35px; bottom: 35px; left: 116px; overflow: auto; background: #fff; width: 640px; }
+    #container, #topBar { position: absolute; top: 46px; bottom: 35px; left: 116px; overflow: auto; background: #fff; width: 640px; }
         #page { padding: 15px; }
             .content { min-height: 1.4em; }
                 .editing input, .editing textarea { width: 100% !important; text-align: left !important; }
@@ -131,6 +131,15 @@ $hover: lighten($base_color, $lighten_percent);
             #topBar li a { background: #fff; color: #000; line-height: 1.6; text-decoration: none; display: block; }
             .outcomes #topBar li a { background: #7FC5EC; }
 
+#messages {
+    display: block; z-index: 999999999; top: 28px; position: fixed; width: 100%; text-align: center; background-color: #ffe; border-bottom: solid 1px #ddd;
+
+    div {
+
+    }
+}
+
+/* removing this for the #messages queue */
 .message {
     .font-size: .8em;
     border: solid 1px #090;
@@ -146,6 +155,7 @@ $hover: lighten($base_color, $lighten_percent);
         border-color: #773420;
     }
 }
+
 #compilation_tabs .right { float: right;}
 
 #components tr.myDragClass td { font-weight: bold; background-color: #ffe4b5; }

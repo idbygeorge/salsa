@@ -21,9 +21,12 @@
 <div id="editor_view">
     <%= render :partial => "#{@view_folder}/toolbar" %>
 
-    <% flash.each do |name, msg| -%>
-      <%= content_tag :div, msg, class: name %>
-    <% end -%>
+
+    <div id="messages">
+        <% flash.each do |name, msg| -%>
+          <%= content_tag :div, msg, class: name %>
+        <% end -%>
+    </div>
 
     <div id="wrapper">
 

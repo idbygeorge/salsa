@@ -17,10 +17,10 @@
 
             <% if session[:authenticated_institution] && session[:authenticated_institution] != '' %>
                  <li>
-                    <%= link_to "Disconnect from: #{session[:institution].upcase} Canvas", controller: 'oauth2', action: 'logout' %>
+                    <%= link_to "Disconnect from: Canvas", controller: 'oauth2', action: 'logout' %>
                 </li>
                 <li>
-                    <%= link_to "Select Course...", canvas_list_courses_path(id: @syllabus.edit_id), :authenticity_token => form_authenticity_token(), :remote => true, :id => 'tb_save_canvas', :class => 'highlight blink' %>
+                    <%= link_to "Select Course...", canvas_list_courses_path(id: @syllabus.edit_id), :authenticity_token => form_authenticity_token(), :remote => true, :id => 'tb_save_canvas', :class => 'highlight' %>
                 </li>
                
             <% else %>
@@ -30,7 +30,7 @@
             <% end %>
 
               <li>
-                <%= link_to "Help", canvas_list_courses_path(id: @syllabus.edit_id), :authenticity_token => form_authenticity_token(), :remote => true, :id => 'tb_compilation' %>
+                <%= link_to "Resources", '#/resources', :id => 'tb_resources' %>
             </li>
                 
         </ul>
@@ -46,9 +46,8 @@
 </div>
 
 <div id="share_prompt" style="display:none; cursor: default">
-
-        <p>HTML link:</p>
-        <p id="html_share_link"><%= link_to @view_url, @view_url, :target => '_blank', :id => "view_url" %></p>
+    <p>HTML link:</p>
+    <p id="html_share_link"><%= link_to @view_url, @view_url, :target => '_blank', :id => "view_url" %></p>
 
     <div style="padding: 20px 0px 10px;">
         <p id="send_canvas" class="hidden">
@@ -58,7 +57,33 @@
     </div>
 </div>
 
+<div id="loading_courses_dialog" class="hidden">
+    <p style="padding: 40px 0px 0px 20px;">
+        <%= image_tag 'busy.gif' %>
+        Your course list is being loaded from canvas...
+    </p>
+</div>
 
+<div id="help_viewer" class="hidden">
+    <div id="compilation_tabs">
+      <ul>
+        <li><a href="#example_tab">Example</a></li>
+        <li><a href="#CanvasImport_tab">Canvas Import</a></li>
+        <li class="right"><a href="#help_tab">Help</a></li>
+      </ul>
+      <div id="example_tab">
+        <%= render :partial => "#{@view_folder}/example" %>
+      </div>
+      <div id="CanvasImport_tab">
+        <div class="editableHtml">
+          Select a course to load your syallabus into the clipboard.
+        </div>
+      </div>
+      <div id="help_tab">
+        <%= render :partial => "#{@view_folder}/help" %>
+      </div>
+    </div>
+</div>
 
 <div id="choose_course_prompt" style="display:none; cursor: default"></div>
 

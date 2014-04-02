@@ -10,6 +10,10 @@ function liteOff(x){
 }
 (function($) {
     $(function(){
+        $('#messages div').delay(5000).fadeOut(1000, function() {
+            $(this).remove();
+        });
+
         $("a[href=#togglenext]").on("click", function(){
             $(this).siblings().toggle();
 
@@ -328,6 +332,22 @@ function liteOff(x){
             return previewPage("#help_page",'Help');
         });
 
+        $('#tb_resources').on('click', function() {
+            $('#help_viewer').removeClass('hidden').dialog({
+                modal:true,
+                maxHeight: $('body').innerHeight() * .8,
+                width: 800,
+                closeOnEscape: true,
+                title: 'Resources',
+                position: 'center ',
+                open: function() {
+                    $('#compilation_tabs').tabs();
+                    
+                    $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-state-default");
+                }
+            });
+        });
+
         $("#content_help_link").on("click", function(){
             return previewSection('help','Help');
         });
@@ -457,6 +477,19 @@ function liteOff(x){
             );
         });
 
+        // select course from LMS
+        $("#course_prompt").dialog({ modal:true, width:500, title:'Select Course', autoOpen:false });
+        $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-state-default").focus();
+        
+        $('#tb_share').on('ajax:beforeSend', function(event, xhr, settings) {
+            settings.data = $('#page-data').html();
+
+            $('#save_message').show();
+            $('#pdf_share_link').hide();
+            $('#share_prompt').dialog('open');
+        });
+
+
         // table drag and drop
         $("#grade_components,#extra_credit").tableDnD({ onDragClass: "myDragClass",});
 
@@ -467,6 +500,26 @@ function liteOff(x){
         }
 
         $("body").append($("<label>Edit Section Heading</label>").addClass("visuallyhidden")); // huh?
+
+        $('#tb_save_canvas').on('ajax:beforeSend', function(){
+            console.log($("#loading_courses_dialog"));
+            $('#loading_courses_dialog').removeClass('hidden').dialog({modal: true, width: 500, title: "Loading from Canvas"});
+            $('.ui-dialog-titlebar-close').html('close | x').removeClass('ui-state-default').focus();
+        });
+
+        $(window).on('hashchange', function() {
+            $('.ui-dialog-content').dialog('close');
+
+            if(window.location.hash === '#/resources' || window.location.hash === '#CanvasImport_tab') {
+                $("#tb_resources").trigger('click');
+                $('#compilation_tabs a[href="#CanvasImport_tab"]').trigger('click');
+            } else if(window.location.hash == '#/select/course') {
+                $("#tb_save_canvas").trigger('click');
+            } else if (window.location.hash.search(/^#[a-z]+$/) === 0) {
+                console.log(window.location.hash);
+                $('#tabs a[href=' + window.location.hash + ']').trigger('click');
+            }
+        }).trigger('hashchange');
     });
 
     var updateGradeScale = function(grade_scale, total_points) {

@@ -10,4 +10,6 @@ class DefaultController < ApplicationController
   end
   def tos
   end
+  def faq
+  end
 end
