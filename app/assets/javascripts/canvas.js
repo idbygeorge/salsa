@@ -103,10 +103,15 @@ $(function() {
       
       var salsaDocument = $('#page-data').clone();
 
+      // fix styling on div elements inside of headers (title looks terrible in canvas otherwise)
+      $(':header div', salsaDocument).each(function() {
+        $(this).css({ lineHeight: 1.4 });
+      });
+
       // fix headers, canvas doesn't allow h1 tags
       $(':header', salsaDocument).each(function() {
         var number = parseInt(this.tagName.replace(/^h/i, ''), 10);
-        $(this).replaceWith($('<h' + (number+1) + '/>').text($(this).text()));
+        $(this).replaceWith($('<h' + (number+1) + '/>').html($(this).html()));
       });
 
       // remove all hidden content, canvas doesn't like our CSS
