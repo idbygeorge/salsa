@@ -64,6 +64,11 @@ gem 'debugger', group: [:development, :test]
 #Add Foundation 4
 gem 'zurb-foundation'
 
+#TODO: remove foundation
+gem 'therubyracer'
+gem 'less-rails'
+gem 'twitter-bootstrap-rails'
+
 # Add awesome nested set
 gem 'awesome_nested_set', '~> 3.0.0.rc.3'
 
