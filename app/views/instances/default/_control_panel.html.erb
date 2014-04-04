@@ -20,8 +20,8 @@
                 </fieldset>
             </section>
 
-            <section data-target=".section1" onmouseover="liteOn(section1I,'#F5F5F5')" onmouseout="liteOff(section1I)">
-                <header data-method="toggleContent">
+            <section data-target=".section1" >
+                <header data-method="toggleContent" onmouseover="liteOn(section1I,'#F5F5F5')" onmouseout="liteOff(section1I)">
                     <input type="button" value="Contacts">
                 </header>
                 <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
@@ -31,7 +31,7 @@
                     <label for="informationContentSpacingRemove">Remove spacing</label>
                     <input type="button" name="informationContentSpacingRemove" id="informationContentSpacingRemove" value="-">
                 </fieldset>
-                <fieldset data-method="toggleContent" data-element=".contact" data-max="4" data-min="0" data-template="#contact_template" data-target='.contacts'>
+                <fieldset data-method="toggleContent" data-element=".contact" data-max="4" data-min="0" data-template="#contact_template" data-target='.contacts' onmouseover="liteOn(contacts1I,'#F5F5F5')" onmouseout="liteOff(contacts1I)">
                     <legend>contacts</legend>
                     <label for="informationContactAdd">Add contact</label>
                     <input type="button" name="informationContactAdd" id="informationContactAdd" value="+">
@@ -40,8 +40,8 @@
                 </fieldset>
             </section>
 
-            <section data-target=".section2" class="ui-state-default" onmouseover="liteOn(section2I,'#F5F5F5')" onmouseout="liteOff(section2I)">
-                <header data-method="toggleContent">
+            <section data-target=".section2" class="ui-state-default" >
+                <header data-method="toggleContent" onmouseover="liteOn(section2I,'#F5F5F5')" onmouseout="liteOff(section2I)">
                     <input type="button" value="Section 2">
                 </header>
                 <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="1" data-step="12px">
@@ -51,7 +51,7 @@
                     <label for="informationSection2SpacingRemove">Remove spacing</label>
                     <input type="button" name="informationSection2SpacingRemove" id="informationSection2SpacingRemove" value="-">
                 </fieldset>
-                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details">
+                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details" onmouseover="liteOn(headings2I,'#F5F5F5')" onmouseout="liteOff(headings2I)">
                     <legend>headings</legend>
                     <label for="informationAdd">Add activity</label>
                     <input type="button" name="informationAdd" id="informationAdd" value="+">
@@ -60,8 +60,8 @@
                 </fieldset>
             </section>
 
-            <section data-target=".section3" class="ui-state-default" onmouseover="liteOn(section3I,'#F5F5F5')" onmouseout="liteOff(section3I)">
-                <header data-method="toggleContent">
+            <section data-target=".section3" class="ui-state-default" >
+                <header data-method="toggleContent" onmouseover="liteOn(section3I,'#F5F5F5')" onmouseout="liteOff(section3I)">
                     <input type="button" value="Section 3">
                 </header>
                 <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="1" data-step="12px">
@@ -71,7 +71,7 @@
                     <label for="informationSection3SpacingRemove">Remove spacing</label>
                     <input type="button" name="informationSection3SpacingRemove" id="informationSection3SpacingRemove" value="-">
                 </fieldset>
-                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details">
+                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details" onmouseover="liteOn(headings3I,'#F5F5F5')" onmouseout="liteOff(headings3I)">
                     <legend>headings</legend>
                     <label for="informationAdd">Add activity</label>
                     <input type="button" name="informationAdd" id="informationAdd" value="+">
@@ -80,8 +80,8 @@
                 </fieldset>
             </section>
 
-            <section data-target=".section4" class="ui-state-default" onmouseover="liteOn(section4I,'#F5F5F5')" onmouseout="liteOff(section4I)">
-                <header data-method="toggleContent">
+            <section data-target=".section4" class="ui-state-default" >
+                <header data-method="toggleContent" onmouseover="liteOn(section4I,'#F5F5F5')" onmouseout="liteOff(section4I)">
                     <input type="button" value="Section 4">
                 </header>
                 <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
@@ -91,7 +91,7 @@
                     <label for="informationSection4SpacingRemove">Remove spacing</label>
                     <input type="button" name="informationSection4SpacingRemove" id="informationSection4SpacingRemove" value="-">
                 </fieldset>
-                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details">
+                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details" onmouseover="liteOn(headings4I,'#F5F5F5')" onmouseout="liteOff(headings4I)">
                     <legend>headings</legend>
                     <label for="informationAdd">Add activity</label>
                     <input type="button" name="informationAdd" id="informationAdd" value="+">
@@ -100,26 +100,6 @@
                 </fieldset>
             </section>
 
-            <!--
-            <section data-target=".section5" class="ui-state-default" onmouseover="liteOn(section5I,'#F5F5F5')" onmouseout="liteOff(section5I)">
-                <header data-method="toggleContent">
-                    <input type="button" value="Section 5">
-                </header>
-                <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
-                    <legend>spacing</legend>
-                    <label for="informationSection5SpacingAdd">Add spacing</label>
-                    <input type="button" name="informationSection5SpacingAdd" id="informationSection5SpacingAdd" value="+">
-                    <label for="informationSection5SpacingRemove">Remove spacing</label>
-                    <input type="button" name="informationSection5SpacingRemove" id="informationSection5SpacingRemove" value="-">
-                </fieldset>
-                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details">
-                    <legend>headings</legend>
-                    <label for="informationAdd">Add activity</label>
-                    <input type="button" name="informationAdd" id="informationAdd" value="+">
-                    <label for="policyRemove">Remove activity</label>
-                    <input type="button" name="informationRemove" id="informationRemove" value="-">
-                </fieldset>
-            </section> -->
         </aside>
 
         <aside class="outcomes" data-target="#outcomes .content">
@@ -239,8 +219,8 @@
                 </dl>
             </section>
 
-            <section data-target=".section1" onmouseover="liteOn(section1O,'#E6F7FF')" onmouseout="liteOff(section1O)">
-                <header data-method="toggleContent">
+            <section data-target=".section1" >
+                <header data-method="toggleContent" onmouseover="liteOn(section1O,'#E6F7FF')" onmouseout="liteOff(section1O)">
                     <input type="button" value="Outcomes">
                 </header>
                 <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
@@ -250,7 +230,7 @@
                     <label for="outcomesContentSpacingRemove">Remove spacing</label>
                     <input type="button" name="outcomesContentSpacingRemove" id="outcomesContentSpacingRemove" value="-">
                 </fieldset>
-                <fieldset data-method="toggleContent" data-target=".outcomes_list" data-template="#outcomes_list_template li:first" data-element="li" data-min="1">
+                <fieldset data-method="toggleContent" data-target=".outcomes_list" data-template="#outcomes_list_template li:first" data-element="li" data-min="1" onmouseover="liteOn(headings1O,'#E6F7FF')" onmouseout="liteOff(headings1O)">
                     <legend>text</legend>
                     <label for="outcomesOutcomeAdd">Add outcome</label>
                     <input type="button" name="outcomesOutcomeAdd" id="outcomesOutcomeAdd" value="+">
@@ -259,8 +239,8 @@
                 </fieldset>
             </section>
 
-            <section data-target=".section2" class="ui-state-default" onmouseover="liteOn(section2O,'#E6F7FF')" onmouseout="liteOff(section2O)">
-                <header data-method="toggleContent">
+            <section data-target=".section2" class="ui-state-default" >
+                <header data-method="toggleContent" onmouseover="liteOn(section2O,'#E6F7FF')" onmouseout="liteOff(section2O)">
                     <input type="button" value="Section 2">
                 </header>
                 <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
@@ -270,7 +250,7 @@
                     <label for="outcomesSection2SpacingRemove">Remove spacing</label>
                     <input type="button" name="outcomesSection2SpacingRemove" id="outcomesSection2SpacingRemove" value="-">
                 </fieldset>
-                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details">
+                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details" onmouseover="liteOn(headings2O,'#E6F7FF')" onmouseout="liteOff(headings2O)">
                     <legend>headings</legend>
                     <label for="outcomesAdd">Add activity</label>
                     <input type="button" name="outcomesAdd" id="outcomesAdd" value="+">
@@ -279,8 +259,8 @@
                 </fieldset>
             </section>
 
-            <section data-target=".section3" class="ui-state-default" onmouseover="liteOn(section3O,'#E6F7FF')" onmouseout="liteOff(section3O)">
-                <header data-method="toggleContent">
+            <section data-target=".section3" class="ui-state-default" >
+                <header data-method="toggleContent" onmouseover="liteOn(section3O,'#E6F7FF')" onmouseout="liteOff(section3O)">
                     <input type="button" value="Section 3">
                 </header>
                 <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
@@ -290,7 +270,7 @@
                     <label for="outcomesSection3SpacingRemove">Remove spacing</label>
                     <input type="button" name="outcomesSection3SpacingRemove" id="outcomesSection3SpacingRemove" value="-">
                 </fieldset>
-                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details">
+                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details" onmouseover="liteOn(headings3O,'#E6F7FF')" onmouseout="liteOff(headings3O)">
                     <legend>headings</legend>
                     <label for="outcomesAdd">Add activity</label>
                     <input type="button" name="outcomesAdd" id="outcomesAdd" value="+">
@@ -299,8 +279,8 @@
                 </fieldset>
             </section>
 
-            <section data-target=".section4" class="ui-state-default" onmouseover="liteOn(section4O,'#E6F7FF')" onmouseout="liteOff(section4O)">
-                <header data-method="toggleContent">
+            <section data-target=".section4" class="ui-state-default" >
+                <header data-method="toggleContent" onmouseover="liteOn(section4O,'#E6F7FF')" onmouseout="liteOff(section4O)">
                     <input type="button" value="Section 4">
                 </header>
                 <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
@@ -310,7 +290,7 @@
                     <label for="outcomesSection4SpacingRemove">Remove spacing</label>
                     <input type="button" name="outcomesSection4SpacingRemove" id="outcomesSection4SpacingRemove" value="-">
                 </fieldset>
-                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details">
+                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details" onmouseover="liteOn(headings4O,'#E6F7FF')" onmouseout="liteOff(headings4O)">
                     <legend>headings</legend>
                     <label for="outcomesAdd">Add activity</label>
                     <input type="button" name="outcomesAdd" id="outcomesAdd" value="+">
@@ -324,8 +304,8 @@
 
         <aside class="resources" data-target="#resources .content">
 
-            <section data-target=".section1" onmouseover="liteOn(section1R,'#FFFDE6')" onmouseout="liteOff(section1R)">
-                <header>
+            <section data-target=".section1" class="ui-state-active" >
+                <header onmouseover="liteOn(section1R,'#FFFDE6')" onmouseout="liteOff(section1R)">
                     Resources
                 </header>
                 <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
@@ -335,7 +315,7 @@
                     <label for="resourcesContentSpacingRemove">Remove spacing</label>
                     <input type="button" name="resourcesContentSpacingRemove" id="resourcesContentSpacingRemove" value="-">
                 </fieldset>
-                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details">
+                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details" onmouseover="liteOn(headings1R,'#FFFDE6')" onmouseout="liteOff(headings1R)">
                     <legend>headings</legend>
                     <label for="resourceAdd">Add resource</label>
                     <input type="button" name="resourceAdd" id="resourceAdd" value="+">
@@ -344,8 +324,8 @@
                 </fieldset>
             </section>
 
-            <section data-target=".section2" class="ui-state-default" onmouseover="liteOn(section2R,'#FFFDE6')" onmouseout="liteOff(section2R)">
-                <header data-method="toggleContent">
+            <section data-target=".section2" class="ui-state-default" >
+                <header data-method="toggleContent" onmouseover="liteOn(section2R,'#FFFDE6')" onmouseout="liteOff(section2R)">
                     <input type="button" value="Section 2">
                 </header>
                 <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
@@ -355,7 +335,7 @@
                     <label for="resourceSection2SpacingRemove">Remove spacing</label>
                     <input type="button" name="resourceSection2SpacingRemove" id="resourceSection2SpacingRemove" value="-">
                 </fieldset>
-                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details">
+                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details" onmouseover="liteOn(headings2R,'#FFFDE6')" onmouseout="liteOff(headings2R)">
                     <legend>headings</legend>
                     <label for="resourceAdd">Add resource</label>
                     <input type="button" name="resourceAdd" id="resourceAdd" value="+">
@@ -364,8 +344,8 @@
                 </fieldset>
             </section>
 
-            <section data-target=".section3" class="ui-state-default" onmouseover="liteOn(section3R,'#FFFDE6')" onmouseout="liteOff(section3R)">
-                <header data-method="toggleContent">
+            <section data-target=".section3" class="ui-state-default" >
+                <header data-method="toggleContent" onmouseover="liteOn(section3R,'#FFFDE6')" onmouseout="liteOff(section3R)">
                     <input type="button" value="Section 3">
                 </header>
                 <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
@@ -375,7 +355,7 @@
                     <label for="resourceSection3SpacingRemove">Remove spacing</label>
                     <input type="button" name="resourceSection3SpacingRemove" id="resourceSection3SpacingRemove" value="-">
                 </fieldset>
-                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details">
+                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details" od="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details" onmouseover="liteOn(headings3R,'#FFFDE6')" onmouseout="liteOff(headings3R)">
                     <legend>headings</legend>
                     <label for="resourceAdd">Add resource</label>
                     <input type="button" name="resourceAdd" id="resourceAdd" value="+">
@@ -384,8 +364,8 @@
                 </fieldset>
             </section>
 
-            <section data-target=".section4" class="ui-state-default" onmouseover="liteOn(section4R,'#FFFDE6')" onmouseout="liteOff(section4R)">
-                <header data-method="toggleContent">
+            <section data-target=".section4" class="ui-state-default" >
+                <header data-method="toggleContent" onmouseover="liteOn(section4R,'#FFFDE6')" onmouseout="liteOff(section4R)">
                     <input type="button" value="Section 4">
                 </header>
                 <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
@@ -395,7 +375,7 @@
                     <label for="resourceSection4SpacingRemove">Remove spacing</label>
                     <input type="button" name="resourceSection4SpacingRemove" id="resourceSection4SpacingRemove" value="-">
                 </fieldset>
-                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details">
+                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details" onmouseover="liteOn(headings4R,'#FFFDE6')" onmouseout="liteOff(headings4R)">
                     <legend>headings</legend>
                     <label for="resourceAdd">Add resource</label>
                     <input type="button" name="resourceAdd" id="resourceAdd" value="+">
@@ -406,8 +386,9 @@
         </aside>
 
         <aside class="activities" data-target="#activities .content">
-            <section data-target=".section1" onmouseover="liteOn(section1A,'#F8FFE6')" onmouseout="liteOff(section1A)">
-                <header>
+
+            <section data-target=".section1" class="ui-state-active">
+                <header onmouseover="liteOn(section1A,'#F8FFE6')" onmouseout="liteOff(section1A)">
                     Activities
                 </header>
                 <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
@@ -417,7 +398,7 @@
                     <label for="activityContentSpacingRemove">Remove spacing</label>
                     <input type="button" name="activityContentSpacingRemove" id="activityContentSpacingRemove" value="-">
                 </fieldset>
-                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details">
+                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details" onmouseover="liteOn(headings1A,'#F8FFE6')" onmouseout="liteOff(headings1A)">
                     <legend>headings</legend>
                     <label for="activityAdd">Add activity</label>
                     <input type="button" name="activityAdd" id="activityAdd" value="+">
@@ -426,8 +407,8 @@
                 </fieldset>
             </section>
 
-            <section data-target=".section2" class="ui-state-default" onmouseover="liteOn(section2A,'#F8FFE6')" onmouseout="liteOff(section2A)">
-                <header data-method="toggleContent">
+            <section data-target=".section2" class="ui-state-default" >
+                <header data-method="toggleContent" onmouseover="liteOn(section2A,'#F8FFE6')" onmouseout="liteOff(section2A)">
                     <input type="button" value="Section 2">
                 </header>
                 <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
@@ -437,7 +418,7 @@
                     <label for="activitySection2SpacingRemove">Remove spacing</label>
                     <input type="button" name="activitySection2SpacingRemove" id="activitySection2SpacingRemove" value="-">
                 </fieldset>
-                  <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details">
+                  <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details" onmouseover="liteOn(headings2A,'#F8FFE6')" onmouseout="liteOff(headings2A)">
                     <legend>headings</legend>
                     <label for="activityAdd">Add activity</label>
                     <input type="button" name="activityAdd" id="activityAdd" value="+">
@@ -446,8 +427,8 @@
                 </fieldset>
             </section>
 
-            <section data-target=".section3" class="ui-state-default" onmouseover="liteOn(section3A,'#F8FFE6')" onmouseout="liteOff(section3A)">
-                <header data-method="toggleContent">
+            <section data-target=".section3" class="ui-state-default" >
+                <header data-method="toggleContent" onmouseover="liteOn(section3A,'#F8FFE6')" onmouseout="liteOff(section3A)">
                     <input type="button" value="Section 3">
                 </header>
                 <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
@@ -457,7 +438,7 @@
                     <label for="activitySection3SpacingRemove">Remove spacing</label>
                     <input type="button" name="activitySection3SpacingRemove" id="activitySection3SpacingRemove" value="-">
                 </fieldset>
-                  <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details">
+                  <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details" onmouseover="liteOn(headings3A,'#F8FFE6')" onmouseout="liteOff(headings3A)">
                     <legend>headings</legend>
                     <label for="activityAdd">Add activity</label>
                     <input type="button" name="activityAdd" id="activityAdd" value="+">
@@ -466,8 +447,8 @@
                 </fieldset>
             </section>
 
-            <section data-target=".section4" class="ui-state-default" onmouseover="liteOn(section4A,'#F8FFE6')" onmouseout="liteOff(section4A)">
-                <header data-method="toggleContent">
+            <section data-target=".section4" class="ui-state-default" >
+                <header data-method="toggleContent" onmouseover="liteOn(section4A,'#F8FFE6')" onmouseout="liteOff(section4A)">
                     <input type="button" value="Section 4">
                 </header>
                 <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
@@ -477,7 +458,7 @@
                     <label for="activitySection4SpacingRemove">Remove spacing</label>
                     <input type="button" name="activitySection4SpacingRemove" id="activitySection4SpacingRemove" value="-">
                 </fieldset>
-                  <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details">
+                  <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details" onmouseover="liteOn(headings4A,'#F8FFE6')" onmouseout="liteOff(headings4A)">
                     <legend>headings</legend>
                     <label for="activityAdd">Add activity</label>
                     <input type="button" name="activityAdd" id="activityAdd" value="+">
@@ -488,8 +469,8 @@
         </aside>
 
         <aside class="policies" data-target="#policies .content">
-            <section data-target=".section1" onmouseover="liteOn(section1P,'#EBEBFF')" onmouseout="liteOff(section1P)">
-                <header>
+            <section data-target=".section1" class="ui-state-active" >
+                <header onmouseover="liteOn(section1P,'#EBEBFF')" onmouseout="liteOff(section1P)">
                     Policies
                 </header>
                 <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
@@ -499,7 +480,7 @@
                     <label for="policiesContentSpacingRemove">Remove spacing</label>
                     <input type="button" name="policiesContentSpacingRemove" id="policiesContentSpacingRemove" value="-">
                 </fieldset>
-                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details">
+                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details" onmouseover="liteOn(headings1P,'#EBEBFF')" onmouseout="liteOff(headings1P)">
                     <legend>headings</legend>
                     <label for="policyAdd">Add activity</label>
                     <input type="button" name="policyAdd" id="policyAdd" value="+">
@@ -508,8 +489,8 @@
                 </fieldset>
             </section>
 
-           <section data-target=".section2" class="ui-state-default" onmouseover="liteOn(section2P,'#EBEBFF')" onmouseout="liteOff(section2P)">
-                <header data-method="toggleContent">
+           <section data-target=".section2" class="ui-state-default" >
+                <header data-method="toggleContent" onmouseover="liteOn(section2P,'#EBEBFF')" onmouseout="liteOff(section2P)">
                     <input type="button" value="Section 2">
                 </header>
                 <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
@@ -519,7 +500,7 @@
                     <label for="policySection2SpacingRemove">Remove spacing</label>
                     <input type="button" name="policySection2SpacingRemove" id="policySection2SpacingRemove" value="-">
                 </fieldset>
-                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details">
+                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details" onmouseover="liteOn(headings2P,'#EBEBFF')" onmouseout="liteOff(headings2P)">
                     <legend>headings</legend>
                     <label for="policyAdd">Add activity</label>
                     <input type="button" name="policyAdd" id="policyAdd" value="+">
@@ -528,8 +509,8 @@
                 </fieldset>
             </section>
 
-            <section data-target=".section3" class="ui-state-default" onmouseover="liteOn(section3P,'#EBEBFF')" onmouseout="liteOff(section3P)">
-                <header data-method="toggleContent">
+            <section data-target=".section3" class="ui-state-default">
+                <header data-method="toggleContent" onmouseover="liteOn(section3P,'#EBEBFF')" onmouseout="liteOff(section3P)">
                     <input type="button" value="Section 3">
                 </header>
                 <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
@@ -539,7 +520,7 @@
                     <label for="policySection3SpacingRemove">Remove spacing</label>
                     <input type="button" name="policySection3SpacingRemove" id="policySection3SpacingRemove" value="-">
                 </fieldset>
-                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details">
+                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details" onmouseover="liteOn(headings3P,'#EBEBFF')" onmouseout="liteOff(headings3P)">
                     <legend>headings</legend>
                     <label for="policyAdd">Add activity</label>
                     <input type="button" name="policyAdd" id="policyAdd" value="+">
@@ -548,8 +529,8 @@
                 </fieldset>
             </section>
 
-            <section data-target=".section4" class="ui-state-default" onmouseover="liteOn(section4P,'#EBEBFF')" onmouseout="liteOff(section4P)">
-                <header data-method="toggleContent">
+            <section data-target=".section4" class="ui-state-default">
+                <header data-method="toggleContent" onmouseover="liteOn(section4P,'#EBEBFF')" onmouseout="liteOff(section4P)">
                     <input type="button" value="Section 4">
                 </header>
                 <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
@@ -559,7 +540,7 @@
                     <label for="policySection4SpacingRemove">Remove spacing</label>
                     <input type="button" name="policySection4SpacingRemove" id="policySection4SpacingRemove" value="-">
                 </fieldset>
-                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details">
+                <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="0" data-target=".details" onmouseover="liteOn(headings4P,'#EBEBFF')" onmouseout="liteOff(headings4P)">
                     <legend>headings</legend>
                     <label for="policyAdd">Add activity</label>
                     <input type="button" name="policyAdd" id="policyAdd" value="+">
@@ -568,8 +549,8 @@
                 </fieldset>
             </section>
 
-            <section data-target=".section5" class="ui-state-active" onmouseover="liteOn(section5P,'#EBEBFF')" onmouseout="liteOff(section5P)">
-                <header data-method="toggleContent">
+            <section data-target=".section5" class="ui-state-active">
+                <header data-method="toggleContent" onmouseover="liteOn(section5P,'#EBEBFF')" onmouseout="liteOff(section5P)">
                     <input type="button" value="Page Break">
                 </header>
                 <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
@@ -583,8 +564,8 @@
         </aside>
 
     <aside class="grades" data-target="#grades .content">
-       <section data-target="#section1G" onmouseover="liteOn(section1G,'#F9FFEB')" onmouseout="liteOff(section1G)">
-        <header>
+       <section data-target="#section1G" >
+        <header onmouseover="liteOn(section1G,'#F9FFEB')" onmouseout="liteOff(section1G)">
         Grades
         </header>
         <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
@@ -594,7 +575,7 @@
             <label for="gradesContentSpacingRemove">Remove spacing</label>
             <input type="button" name="gradesContentSpacingRemove" id="gradesContentSpacingRemove" value="-">
         </fieldset>
-            <fieldset data-method="toggleContent" data-template="#grade_component_row_template tr:last" data-element="tbody tr" data-max="20" data-min="2" data-target="#grade_components" data-callback="updateGradeScale">
+            <fieldset data-method="toggleContent" data-template="#grade_component_row_template tr:last" data-element="tbody tr" data-max="20" data-min="2" data-target="#grade_components" data-callback="updateGradeScale" onmouseover="liteOn(grade_components,'#F9FFEB')" onmouseout="liteOff(grade_components)">
             <legend>items</legend>
             <label for="gradesAdd">Add item</label>
             <input type="button" name="gradesAdd" id="gradesAdd" value="+">
@@ -603,8 +584,8 @@
         </fieldset>
         </section>
 
-        <section data-target=".section2" class="ui-state-default" onmouseover="liteOn(section2G,'#F9FFEB')" onmouseout="liteOff(section2G)">
-            <header data-method="toggleContent">
+        <section data-target=".section2" class="ui-state-default" >
+            <header data-method="toggleContent" onmouseover="liteOn(section2G,'#F9FFEB')" onmouseout="liteOff(section2G)">
                 <input type="button" value="Extra Credit">
             </header>
             <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
@@ -623,8 +604,8 @@
             </fieldset>
         </section>
 
-        <section data-target=".section3" onmouseover="liteOn(section3G,'#F9FFEB')" onmouseout="liteOff(section3G)">
-            <header>
+        <section data-target=".section3" >
+            <header onmouseover="liteOn(section3G,'#F9FFEB')" onmouseout="liteOff(section3G)">
                 Scale
             </header>
             <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
@@ -656,16 +637,16 @@
             <li>Outcome text here</li>
         </ul>
         <div class="contact" id="contact_template">
-            <h3 class="editable" data-can-delete="true">Contact Title</h3>
-            <div class="editableHtml">
-                <ul class="none">
-                    <li>name</li>
-                    <li>email</li>
-                    <li>phone</li>
-                    <li>other1</li>
-                    <li>other2</li>
-                </ul>
-            </div>
+                <h3 class="editable" data-can-delete="true">Contact Title</h3>
+                <div class="editableHtml">
+                    <ul class="none">
+                        <li>name</li>
+                        <li>email</li>
+                        <li>phone</li>
+                        <li>other1</li>
+                        <li>other2</li>
+                    </ul>
+                </div> 
         </div>
     </div>
 

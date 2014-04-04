@@ -3,10 +3,10 @@
 */
 
 function liteOn(x,color){
-    x.style.backgroundColor=color;
+    $(x).css({ backgroundColor: color });
 }
 function liteOff(x){
-    x.style.backgroundColor="#fff";
+    $(x).animate({ backgroundColor: 'transparent' }, { queue: false });
 }
 (function($) {
     $(function(){
