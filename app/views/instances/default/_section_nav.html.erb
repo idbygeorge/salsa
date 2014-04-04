@@ -1,10 +1,17 @@
     <nav id="tabs">
         <ul>
-            <li class="information"><a href="#information">Information</a></li>
-            <li class="outcomes"><a href="#outcomes">Outcomes</a></li>
-            <li class="resources"><a href="#resources">Resources</a></li>
-            <li class="activities"><a href="#activities">Activities</a></li>
-            <li class="policies"><a href="#policies">Policies</a></li>
-            <li class="grades"><a href="#grades">Grades</a></li>
+            <li class="my_salsa button"><a class="tool" href="#" id='tb_link'>My SALSA<i class="fi-plus"></i></a></li>
+            <li class="save button"><%= link_to "Save", syllabus_path(@syllabus.edit_id), :authenticity_token => form_authenticity_token(), :method => :put, :remote => true, :id => 'tb_save', :class => 'tool' %></li>
+           
+            <li class="information button" onmouseover="liteOn(information,'#F5F5F5')" onmouseout="liteOff(information)"><a href="#information">Information</a></li>
+            <li class="outcomes button" onmouseover="liteOn(outcomes,'#E6F7FF')" onmouseout="liteOff(outcomes)"><a href="#outcomes">Outcomes</a></li>
+            <li class="resources button" onmouseover="liteOn(resources,'#FFFDE6')" onmouseout="liteOff(resources)"><a href="#resources">Resources</a></li>
+            <li class="activities button" onmouseover="liteOn(activities,'#F8FFE6')" onmouseout="liteOff(activities)"><a href="#activities">Activities</a></li>
+            <li class="policies button" onmouseover="liteOn(policies,'#EBEBFF')" onmouseout="liteOff(policies)"><a href="#policies">Policies</a></li>
+            <li class="grades button" onmouseover="liteOn(grades,'#F9FFEB')" onmouseout="liteOff(grades)"><a href="#grades">Grades</a></li>
+           
+            <li class="preview button"><%= link_to 'Preview<i class="fi-check"></i>'.html_safe, @view_url, :target => '_blank', :id => "tb_preview", :class => 'tool' %></li>
+            <li class="send button"><%= link_to 'Send<i class="general fi-arrow-right"></i>'.html_safe, syllabus_path(@syllabus.edit_id), :authenticity_token => form_authenticity_token(), :method => :put, :remote => true, :id => 'tb_save', :class => 'tool' %></li>
+           
         </ul>
     </nav>
