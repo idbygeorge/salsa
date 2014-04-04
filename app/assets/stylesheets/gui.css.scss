@@ -67,8 +67,8 @@ $hover: lighten($base_color, $lighten_percent);
     nav {max-width: 930px; margin: auto; }
 
 #wrapper { height: 100%; width: 916px; position: relative; overflow: hidden; min-height: 400px; margin: auto; }
-    #tabs { float: left; margin-top: 65px; width: 100px; margin-left: 10px; }
-        #tabs li { text-align: left; text-transform: lowercase; line-height: 1.4; }
+    #tabs { float: left; margin-top: 100px; width: 100px; margin-left: 10px;}
+        #tabs li { text-align: left; line-height: 1.4; }
             #tabs li a { display: block; padding: 4px 4px 4px 8px; background: #EBEBEB; color: black; text-decoration: none; border: solid 3px #EBEBEB; }
             #tabs li a:hover, #tabs li.selected a { background: #fff; border-color: #aaa; }
             #tabs li a:hover.tool, #tabs li.selected a.tool { border-color: #556677;}
@@ -90,7 +90,7 @@ div#container {
     border-color: #556677;
 }
 
-    #controlPanel { float: right; width: 148px; margin-top: 60px; max-height: 490px; overflow: hidden; font-size: 12px; }
+    #controlPanel { float: right; width: 148px; margin-top: 46px; max-height: 490px; overflow: hidden; font-size: 12px; }
         #controlPanel header { }
             #controlPanel header input, #controlPanel header a { width: 100%; background: transparent; border: 0 none; color: #fff; font-weight: bold; text-decoration: none; }
             
@@ -99,6 +99,7 @@ div#container {
         #controlPanel .ui-state-default fieldset { display: none; }
         #controlPanel .ui-state-active fieldset { display: block; }
         #controlPanel section { padding: 5px; overflow: hidden; background: #fff;}
+        #controlPanel section.first { padding-bottom: 0px;}
         #controlPanel header { @include gradient(); color: #fff; padding: 0 5px; line-height: 1.8; font-weight: bold; white-space: nowrap; text-align: center; }
         #controlPanel header.tool { background: $base_color; }
         #controlPanel span.medium { font-size: 16px; line-height: 1.2;}
@@ -112,7 +113,7 @@ div#container {
 
     #controlPanel, #container, #topBar { border: solid 2px #aaa; border-radius: 10px; }
 
-    #container, #topBar { position: absolute; top: 50px; bottom: 35px; left: 116px; overflow: auto; background: #fff; width: 640px; }
+    #container, #topBar { position: absolute; top: 46px; bottom: 35px; left: 116px; overflow: auto; background: #fff; width: 640px; }
         #page { padding: 15px; }
             .content { min-height: 1.4em; }
                 .editing input, .editing textarea { width: 100% !important; text-align: left !important; }
@@ -202,7 +203,7 @@ div {
 }
 
 #editor_view{height:100%;}
-.content_toolbar {position:relative;top:50px;left:580px;width: 178px;}
+.content_toolbar { position: absolute; top: 57px; right: 170px;}
 .content_toolbar a {color:$base_color; font-size: 1em; text-decoration: none;}
 .informationIcon a {color:#c0c0c0; font-size: 1em; text-decoration: none;}
 .outcomesIcon a {color:#7fc5ec; font-size: 1em; text-decoration: none;}
