@@ -4,7 +4,6 @@ source 'https://rubygems.org'
 gem 'rails', '4.0.0'
 
 group :development, :test do
-  gem 'therubyracer'
   gem 'sqlite3'
 end
 
@@ -66,6 +65,7 @@ gem 'debugger', group: [:development, :test]
 gem 'zurb-foundation'
 
 #TODO: remove foundation
+gem 'therubyracer', :platforms => :ruby
 gem 'less-rails'
 gem 'twitter-bootstrap-rails'
 
