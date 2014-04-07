@@ -65,9 +65,10 @@ gem 'debugger', group: [:development, :test]
 gem 'zurb-foundation'
 
 #TODO: remove foundation
-gem 'therubyracer', :platforms => :ruby
-gem 'less-rails'
-gem 'twitter-bootstrap-rails'
+# gem 'libv8', git: 'https://github.com/cowboyd/libv8.git', submodules: true
+# gem 'therubyracer', git: 'https://github.com/cowboyd/therubyracer.git'
+# gem 'less-rails'
+# gem 'twitter-bootstrap-rails'
 
 # Add awesome nested set
 gem 'awesome_nested_set', '~> 3.0.0.rc.3'
