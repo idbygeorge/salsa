@@ -1,0 +1,52 @@
+<%= form_for(@organization, :html => { :class => "form-horizontal" } ) do |f| %>
+<fieldset>
+  <legend>Organization</legend>
+
+  <div class="control-group">
+    <%= f.label :name, class: "control-label" %>
+    <div class="controls">
+      <%= f.text_field :name %></p>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :slug, class: "control-label" %>
+    <div class="controls">
+      <%= f.text_field :slug %></p>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :parent_id, class: "control-label" %>
+    <div class="controls">
+      <%= f.select :parent_id, Organization.all.map { |org| [ (org[:name] ? org[:name] : '') + ' - ' + (org[:slug] ? org[:slug] : ''), org.id] }, include_blank: '-- top level organization --' %></p>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :lms_authentication_source, class: "control-label" %>
+    <div class="controls">
+      <%= f.text_field :lms_authentication_source %></p>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :lms_authentication_id, class: "control-label" %>
+    <div class="controls">
+      <%= f.text_field :lms_authentication_id %></p>
+    </div>
+  </div>
+
+  <div class="control-group">
+    <%= f.label :lms_authentication_key, class: "control-label" %>
+    <div class="controls">
+      <%= f.text_field :lms_authentication_key %></p>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <%= f.submit %>
+  </div>
+</fieldset>
+
+<% end %>

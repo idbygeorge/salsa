@@ -34,7 +34,10 @@
     <!-- Size should be 32 x 32 pixels -->
     <%= favicon_link_tag 'salsa.png', :rel => 'shortcut icon' %>
 
-    <%= javascript_include_tag "application" %>
+    <%= javascript_include_tag "jquery" %>
+    <%= javascript_include_tag "jquery_ujs" %>
+    <%= javascript_include_tag "twitter/bootstrap" %>
+    <%= javascript_include_tag "bootstrap" %>
   </head>
   <body>
 
@@ -49,9 +52,10 @@
           <a class="brand" href="/">Salsa</a>
           <div class="container-fluid nav-collapse">
             <ul class="nav">
-              <li><%= link_to "Organizations", organizations_list_path  %></li>
+              <li><%= link_to "Organizations", organizations_path  %></li>
               <li><%= link_to "Documents", "/path2"  %></li>
               <li><%= link_to "Servers", "/path3"  %></li>
+              <li class="logout"><%= link_to "Logout", "/path3"  %></li>
             </ul>
           </div><!--/.nav-collapse -->
         </div>
@@ -60,16 +64,28 @@
 
     <div class="container-fluid">
       <div class="row-fluid">
+        
         <div class="span3">
           <div class="well sidebar-nav">
-            <ul class="nav nav-list">
-              <li class="nav-header">Sidebar</li>
-              <li><%= link_to "Link1", "/path1"  %></li>
-              <li><%= link_to "Link2", "/path2"  %></li>
-              <li><%= link_to "Link3", "/path3"  %></li>
-            </ul>
+            <% if @organizations %>
+              <ul class="nav nav-list">
+                <li class="nav-header">Sidebar</li>
+                <li>
+                  <%= link_to 'Orphaned SALSAs', organization_path(id: '') %></li>
+                <% @organizations.each do |org| %>
+                  <li>
+                    <%= link_to org[:name], organization_path(id: org[:id]) %>
+                    <div> - <small><em><%= link_to org[:slug], 'http://' + org[:slug], target: '_blank' %></em></small></div>
+                  </li>
+                <% end %>
+              </ul>
+            <% end %>
+
+            <%= link_to 'Add Organization', new_organization_path %>
           </div><!--/.well -->
         </div><!--/span-->
+        
+
         <div class="span9">
           <%= bootstrap_flash %>
           <%= yield %>
@@ -77,7 +93,7 @@
       </div><!--/row-->
 
       <footer>
-        <p>&copy; Company 2014</p>
+        <p><%= link_to 'Salsa', root_path %></p>
       </footer>
 
     </div> <!-- /container -->
