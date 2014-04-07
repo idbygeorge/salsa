@@ -3,10 +3,11 @@
 */
 
 function liteOn(x,color){
-    $(x).css({ backgroundColor: color });
+    $('.control_highlighted').css({ backgroundColor: 'transparent' }).removeClass('control_highlighted');
+    $(x).css({ backgroundColor: color }).addClass('control_highlighted');
 }
 function liteOff(x){
-    $(x).animate({ backgroundColor: 'transparent' }, { queue: false });
+    $(x).css({ backgroundColor: 'transparent' });
 }
 (function($) {
     $(function(){

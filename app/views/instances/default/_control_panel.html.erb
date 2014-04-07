@@ -575,7 +575,7 @@
             <label for="gradesContentSpacingRemove">Remove spacing</label>
             <input type="button" name="gradesContentSpacingRemove" id="gradesContentSpacingRemove" value="-">
         </fieldset>
-            <fieldset data-method="toggleContent" data-template="#grade_component_row_template tr:last" data-element="tbody tr" data-max="20" data-min="2" data-target="#grade_components" data-callback="updateGradeScale" onmouseover="liteOn(grade_components,'#F9FFEB')" onmouseout="liteOff(grade_components)">
+            <fieldset data-method="toggleContent" data-template="#grade_component_row_template tr:last" data-element="tbody tr" data-max="20" data-min="2" data-target="#grade_components" data-callback="updateGradeScale" onmouseover="liteOn('#grade_components tbody','#F9FFEB')" onmouseout="liteOff('#grade_components tbody')">
             <legend>items</legend>
             <label for="gradesAdd">Add item</label>
             <input type="button" name="gradesAdd" id="gradesAdd" value="+">
@@ -595,7 +595,7 @@
                 <label for="gradesSection2SpacingRemove">Remove spacing</label>
                 <input type="button" name="gradesSection2SpacingRemove" id="gradesSection2SpacingRemove" value="-">
             </fieldset>
-            <fieldset data-method="toggleContent" data-template="#extra_credit_row_template tr:last" data-element="tbody tr" data-max="20" data-min="1" data-target="#extra_credit" data-callback="updateTableSum">
+            <fieldset data-method="toggleContent" data-template="#extra_credit_row_template tr:last" data-element="tbody tr" data-max="20" data-min="1" data-target="#extra_credit" data-callback="updateTableSum" onmouseover="liteOn('#extra_credit tbody','#F9FFEB')" onmouseout="liteOff('#extra_credit tbody')">
                 <legend>items</legend>
                 <label for="extraCreditAdd">Add item</label>
                 <input type="button" name="extraCreditAdd" id="extraCreditAdd" value="+">
