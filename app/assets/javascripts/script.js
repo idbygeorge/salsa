@@ -143,7 +143,6 @@ function liteOff(x){
         };
 
         // make stuff editable
-        $("section :header,#templates :header").addClass("editable").attr({ tabIndex: 0 });
         $("section .editableHtml").attr({ tabIndex: 0 });
         $("section article .text,#templates .text").addClass("editableHtml");
 

@@ -25,9 +25,14 @@ table.components th {color:#fff;background-color:#696969;;border-width: 1px;bord
 table.components tr.total {font-weight:bold;}
 table.components tr.even { background: #e8e8e8;}
 table.components td {border-width: 1px;padding: 8px;border-style: solid;border-color: #c0c0c0;}
-table.components td.left {text-align:left;}
-table.components td.right {text-align:right;}
+#compilation_tabs table.components td.left, #compilation_tabs table.components td.left, table.components td.left {text-align:left; float: none; }
+#compilation_tabs table.components td.right, #compilation_tabs table.components td.right, table.components td.right {text-align:right; float: none; }
 table.components tr.myDragClass td {color:#666;background-color: #ffe4b5; }
+
+#page section h1 div, #preview section h1 div, h1 div {
+    margin: 0;
+    padding: 0;
+}
 
 a#tb_save_canvas.highlight {
     color: orange;
