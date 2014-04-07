@@ -1,0 +1,12 @@
+<% if @salsas.length > 0 %>
+  <ul class="nav nav-list">
+    <li class="nav-header">SALSAs</li>
+    <% @salsas.each do |salsa| %>
+      <li><%= salsa.edit_id %> - <%= salsa.organization_id %></li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>
+    No SALSAs have been created for this organization
+  </p>
+<% end %>

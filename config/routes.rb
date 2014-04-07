@@ -4,6 +4,8 @@ Salsa::Application.routes.draw do
   resources :syllabuses, :as => :salsas
   resources :salsas, :controller => "syllabuses", :as => 'syllabuses'
 
+  resources :organizations
+
   get "canvas/list_courses"
   get "oauth2/login"
   get "oauth2/logout"

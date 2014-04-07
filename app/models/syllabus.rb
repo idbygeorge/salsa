@@ -1,6 +1,7 @@
 class Syllabus < ActiveRecord::Base
 
 	before_create :ensure_ids
+  belongs_to :organization
 
 	def ensure_ids
 		self.view_id = Syllabus.generate_id unless view_id
