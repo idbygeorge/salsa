@@ -289,21 +289,40 @@ function liteOff(x){
 
             // make sure the view disable link's icon matches the state of the section
             if($(viewSelector).hasClass("disabled")) {
-                $("#content_disable_link span").removeClass("fi-minus-circle").addClass("fi-eye");
+                $("#content_disable_link span").addClass("hidden");
 
                 // add the message to re-enable this view
                 enableViewMessage(viewName);
             } else {
-                $("#content_disable_link span").removeClass("fi-eye").addClass("fi-minus-circle");
+                $("#content_disable_link span").removeClass("hidden");
+
+                $("#messages .sectionDisabledMessage").stop().remove();
+
+
+                var disableSectionButton = $('#content_disable_link');
+                disableSectionButton.attr({onmouseover: $('#tabs .selected').attr('onmouseover') });
+                disableSectionButton.attr({onmouseout: $('#tabs .selected').attr('onmouseout') });
             }
         }
 
         var enableViewMessage = function(view_name) {
-            var messageElement = $("<div class='message'></div>").text("The " + view_name + " view has been disabled.");
+
+            $("#messages .sectionDisabledMessage").stop().remove();
+
+            // generate message
+            var newMessage = $('<div class="sectionDisabledMessage"/>').html("The " + view_name + " view has been disabled.");
+
+            // put message in message queue
+            $("#messages").prepend(newMessage);
+
+            newMessage.delay(5000).fadeOut(1000, function(){
+              $(this).remove();
+            });
+
             var enableButton = $("<button class='enable_view'></button>").text("Enable the " + view_name + " view").on("click", function(){
                 $("#content_disable_link").trigger('click');
             });
-            var viewMessageElement = $("<div class='enableViewMessage'></div>").append(messageElement).append(enableButton);
+            var viewMessageElement = $("<div class='enableViewMessage'></div>").append(enableButton);
 
             $("#container").append(viewMessageElement);
         }
