@@ -5,28 +5,49 @@ gem 'rails', '4.0.0'
 
 group :development, :test do
   gem 'sqlite3'
+  gem 'debugger'
+end
+
+group :development do
+  # Use Capistrano for deployment
+  gem 'capistrano'
+  gem 'capistrano-bundler'
+  gem 'capistrano-rails'
 end
 
 group :production do
+  #postgresql for production db
   gem 'pg'
+  
+  gem 'rails_12factor'
+  
+  # Use unicorn as the app server
+  gem 'unicorn'
 end
 
-# Use SCSS for stylesheets
+# preprocessors
 gem 'sass-rails', '~> 4.0.0'
-
-# Use Uglifier as compressor for JavaScript assets
-gem 'uglifier', '>= 1.3.0'
-
-# Use CoffeeScript for .js.coffee assets and views
-gem 'coffee-rails', '~> 4.0.0'
 gem 'compass-rails'
+gem 'coffee-rails', '~> 4.0.0'
+gem 'therubyracer', :platforms => :ruby
+gem 'uglifier', '>= 1.3.0'
+gem 'less-rails'
 
-# See https://github.com/sstephenson/execjs#readme for more supported runtimes
-# gem 'therubyracer', platforms: :ruby
+# bootstrap
+gem 'twitter-bootstrap-rails'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
+
+# editor is tinymce (for now)
+gem 'tinymce-rails'
+
+#TODO: remove foundation
+gem 'zurb-foundation'
+
+# Add awesome nested set
+gem 'awesome_nested_set', '~> 3.0.0.rc.3'
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
@@ -34,44 +55,20 @@ gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 1.2'
 
+# for aws bucket usage
 gem 'uber-s3'
-gem 'tinymce-rails'
-gem 'wicked_pdf', group: :development
 
+# instructure canvas api
 gem 'canvas-api'
+
+
+# Use ActiveModel has_secure_password
+# gem 'bcrypt-ruby', '~> 3.0.0'
+
+# newrelic for monitoring
+gem 'newrelic_rpm'
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
   gem 'sdoc', require: false
 end
-
-gem 'rails_12factor', group: :production
-
-# Use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.0.0'
-
-# Use unicorn as the app server
-gem 'unicorn'
-
-# Use Capistrano for deployment
-gem 'capistrano', group: :development
-gem 'capistrano-bundler', group: :development
-gem 'capistrano-rails', group: :development
-
-# Use debugger
-gem 'debugger', group: [:development, :test]
-
-#Add Foundation 4
-gem 'zurb-foundation'
-
-#TODO: remove foundation
-# gem 'libv8', git: 'https://github.com/cowboyd/libv8.git', submodules: true
-# gem 'therubyracer', git: 'https://github.com/cowboyd/therubyracer.git'
-# gem 'less-rails'
-# gem 'twitter-bootstrap-rails'
-
-# Add awesome nested set
-gem 'awesome_nested_set', '~> 3.0.0.rc.3'
-
-# newrelic
-gem 'newrelic_rpm'
