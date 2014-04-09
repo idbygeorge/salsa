@@ -2,7 +2,7 @@ html, body { height: 100%; min-height: 420px; position: relative; }
 
 .hide { display: none; }
 
-#page_break, .page_break { page-break-after: always; }
+#page_break, .page_break { page-break-after: always; text-align: center; }
 
 #example_tab #example, #help_tab #help_page { display: block; max-height: 600px; overflow: auto; }
 
@@ -80,4 +80,6 @@ a#tb_save_canvas.highlight {
     -o-border-radius: 4px;
     border-radius: 4px;
 }
+
+.clear { clear: both; margin: 0; padding: 0; float: left; }
 
