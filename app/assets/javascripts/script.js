@@ -15,8 +15,10 @@ function liteOff(x){
             $(this).remove();
         });
 
-        $("a[href=#togglenext]").on("click", function(){
+        $("a[href=#togglenext]").on("click", function(e){
             $(this).siblings().toggle();
+            
+            e.preventDefault();
         });
 
         $(".click_on_init").trigger('click');
