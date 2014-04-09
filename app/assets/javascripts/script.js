@@ -17,13 +17,12 @@ function liteOff(x){
 
         $("a[href=#togglenext]").on("click", function(){
             $(this).siblings().toggle();
-
         });
 
         $(".click_on_init").trigger('click');
 
         // Check for existing sections and toggle their tab
-        var tabs = ["information", "outcomes", "resources", "activities", "policies", "grades"]
+        var tabs = ["information", "outcomes", "resources", "activities", "policies", "grades"];
         $.each(tabs, function (i){
             var j=2;
             for(var j=2; j<5; j++){
@@ -303,7 +302,7 @@ function liteOff(x){
                 disableSectionButton.attr({onmouseover: $('#tabs .selected').attr('onmouseover') });
                 disableSectionButton.attr({onmouseout: $('#tabs .selected').attr('onmouseout') });
             }
-        }
+        };
 
         var enableViewMessage = function(view_name) {
 
@@ -325,7 +324,7 @@ function liteOff(x){
             var viewMessageElement = $("<div class='enableViewMessage'></div>").append(enableButton);
 
             $("#container").append(viewMessageElement);
-        }
+        };
 
         $("#preview_control a").on("click", function(){
             $("#preview,#preview_control").hide();
@@ -521,7 +520,6 @@ function liteOff(x){
         $("body").append($("<label>Edit Section Heading</label>").addClass("visuallyhidden")); // huh?
 
         $('#tb_save_canvas').on('ajax:beforeSend', function(){
-            console.log($("#loading_courses_dialog"));
             $('#loading_courses_dialog').removeClass('hidden').dialog({modal: true, width: 500, title: "Loading from Canvas"});
             $('.ui-dialog-titlebar-close').html('close | x').removeClass('ui-state-default').focus();
         });
@@ -535,7 +533,6 @@ function liteOff(x){
             } else if(window.location.hash == '#/select/course') {
                 $("#tb_save_canvas").trigger('click');
             } else if (window.location.hash.search(/^#[a-z]+$/) === 0) {
-                console.log(window.location.hash);
                 $('#tabs a[href=' + window.location.hash + ']').trigger('click');
             }
         }).trigger('hashchange');
@@ -692,7 +689,7 @@ function liteOff(x){
             // cascade down
 
         }
-    }
+    };
 
     var controlMethods = {
         toggleContent: function(args) {
@@ -796,12 +793,13 @@ function liteOff(x){
 
             var topBar = $("<div id='topBar'><ul class='inner'/></div>");
             topBar.prepend($("<h2/>").text(args.source.text()));
+            
             args.source.nextUntil("dt").each(function(){
                 var newItem = $("<li><a href='#'/></li>");
                 $("a", newItem).text($(this).text());
 
                 newItem.appendTo($(".inner", topBar));
-            })
+            });
 
             $("#topBar").remove();
             $("#container").before($(topBar)).css({ top: (parseInt(topBar.css("top"), 10) + parseInt(topBar.outerHeight(), 10) + 5) + "px" });
