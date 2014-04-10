@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140407172645) do
+ActiveRecord::Schema.define(version: 20140410105425) do
 
   create_table "organizations", force: true do |t|
     t.string   "name"
@@ -42,9 +42,12 @@ ActiveRecord::Schema.define(version: 20140407172645) do
     t.datetime "updated_at"
     t.string   "template_id"
     t.integer  "organization_id"
+    t.string   "lms_course_id"
+    t.datetime "lms_published_at"
   end
 
   add_index "syllabuses", ["edit_id"], name: "index_syllabuses_on_edit_id", unique: true
+  add_index "syllabuses", ["lms_course_id"], name: "index_syllabuses_on_lms_course_id"
   add_index "syllabuses", ["organization_id"], name: "index_syllabuses_on_organization_id"
   add_index "syllabuses", ["template_id"], name: "index_syllabuses_on_template_id", unique: true
   add_index "syllabuses", ["view_id"], name: "index_syllabuses_on_view_id", unique: true
