@@ -5,7 +5,7 @@
   <div class="control-group">
     <%= f.label :name, class: "control-label" %>
     <div class="controls">
-      <%= f.text_field :name %>
+      <%= f.text_field :name, class: 'input-xxlarge' %>
     </div>
   </div>
 
@@ -19,16 +19,20 @@
   <div class="control-group">
     <%= f.label :parent_id, class: "control-label" %>
     <div class="controls">
-      <%= f.select :parent_id, Organization.all.map { |org| [ (org[:name] ? org[:name] : '') + ' - ' + (org[:slug] ? org[:slug] : ''), org.id] }, include_blank: '-- top level organization --' %></p>
+      <%= f.select :parent_id, Organization.where.not(id: params[:id]) { |org| [ (org[:name] ? org[:name] : '') + ' - ' + (org[:slug] ? org[:slug] : ''), org.id] }, include_blank: '-- top level organization --' %></p>
     </div>
   </div>
+</fieldset>
 
+<fieldset>
+  <legend>LMS Information</legend>
+  
   <div class="control-group">
     <%= f.label :lms_authentication_source, class: "control-label" %>
     <div class="controls">
       <%= f.text_field :lms_authentication_source %>
+      Canvas expects the format: <code>https://<em>instance</em>.instructure.com</code>
     </div>
-    (Canvas expects the format: <code>https://<em>instance</em>.instructure.com</code>)
   </div>
 
   <div class="control-group">
@@ -41,7 +45,7 @@
   <div class="control-group">
     <%= f.label :lms_authentication_key, class: "control-label" %>
     <div class="controls">
-      <%= f.text_field :lms_authentication_key %>
+      <%= f.text_field :lms_authentication_key, class: 'input-xxlarge' %>
     </div>
   </div>
 

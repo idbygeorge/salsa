@@ -54,12 +54,12 @@ class OrganizationsController < ApplicationController
       @salsas = Syllabus.where organization_id: org
       @organization = Organization.find_by id:org
     else 
-      @salsas = Syllabus.all
+      @salsas = Syllabus.where organization_id: nil
     end
   end
 
   def get_organizations
-    @organizations = Organization.where.not(id: params[:id])
+    @organizations = Organization.all
   end
 
   def organization_params

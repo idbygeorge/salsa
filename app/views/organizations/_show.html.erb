@@ -1,8 +1,25 @@
 <% if @salsas.length > 0 %>
   <ul class="nav nav-list">
-    <li class="nav-header">SALSAs</li>
     <% @salsas.each do |salsa| %>
-      <li><%= salsa.edit_id %> - <%= salsa.organization_id %></li>
+      <li class="nav-header">SALSA: <%= salsa.id %></li>
+      <li class="row-fluid">
+      	<% if salsa.lms_published_at %>
+	      	<div>
+		      	<code class="pull-right">Published at: <%= salsa.lms_published_at %></code>
+	  			Published to:
+	  			
+	  			<a href="<%= salsa.organization[:lms_authentication_source] + '/courses/' + salsa.lms_course_id + '/assignments/syllabus' %>">
+	  				<%= salsa.organization[:lms_authentication_source] + '/courses/' + salsa.lms_course_id + '/assignments/syllabus' %>
+	  			</a>
+	      	</div>
+	    <% end %>
+	    
+      	<div>
+	      	Edit: <%= link_to syllabus_path(id: salsa.edit_id) %>
+	      	<br>
+	      	Template: <%= link_to syllabus_path(id: salsa.template_id) %>
+      	</div>
+      </li>
     <% end %>
   </ul>
 <% else %>

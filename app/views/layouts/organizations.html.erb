@@ -55,7 +55,6 @@
                 <% @organizations.each do |org| %>
                   <li>
                     <%= link_to org[:name], organization_path(id: org[:id]) %>
-                    <div> - <small><em><%= link_to org[:slug], 'http://' + org[:slug], target: '_blank' %></em></small></div>
                   </li>
                 <% end %>
               </ul>
