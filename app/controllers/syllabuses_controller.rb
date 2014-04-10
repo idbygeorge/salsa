@@ -111,5 +111,11 @@ class SyllabusesController < ApplicationController
   def update_course_syllabus course_id, html
     lms_connection_information
     @lms_client.put("/api/v1/courses/#{course_id}", { course: { syllabus_body: html } })
+    
+    salsa = Syllabus.find_by edit_id: params[:id]
+    
+    if salsa
+      salsa.update(lms_published_at: DateTime.now, lms_course_id: course_id)
+    end
   end
 end
