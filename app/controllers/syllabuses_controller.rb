@@ -81,16 +81,16 @@ class SyllabusesController < ApplicationController
     if Rails.env.production?
       "https://s3-#{APP_CONFIG['aws_region']}.amazonaws.com/#{APP_CONFIG['aws_bucket']}/hosted/#{@syllabus.view_id}.pdf"
     else
-      "#{APP_CONFIG['domain']}/salsas/#{@syllabus.view_id}.pdf"
+      "http://#{request.env['SERVER_NAME']}/salsas/#{@syllabus.view_id}.pdf"
     end
   end
 
   def view_url
-    "#{APP_CONFIG['domain']}/salsas/#{@syllabus.view_id}"
+    "http://#{request.env['SERVER_NAME']}/salsas/#{@syllabus.view_id}"
   end
 
   def template_url
-    "#{APP_CONFIG['domain']}/salsas/#{@syllabus.template_id}"
+    "http://#{request.env['SERVER_NAME']}/salsas/#{@syllabus.template_id}"
   end
 
  	def lookup_syllabus
