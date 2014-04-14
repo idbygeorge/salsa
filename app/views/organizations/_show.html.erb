@@ -14,8 +14,10 @@
 	    
       	<div>
 	      	Edit: <%= link_to syllabus_path(id: salsa.edit_id) %>
-	      	<br>
-	      	Template: <%= link_to syllabus_path(id: salsa.template_id) %>
+          <% if salsa.template_id %>
+  	      	<br>
+  	      	Template: <%= link_to syllabus_path(id: salsa.template_id) %>
+          <% end %>
       	</div>
       </li>
     <% end %>
