@@ -23,7 +23,7 @@ a:hover { color: #777; }
 a:focus { outline: thin dotted; }
 a:hover, a:active { outline: 0; }
 abbr[title] { border-bottom: 1px dotted; }
-acronym[title] { color: inherit; border-bottom-color: inherit; }
+acronym[title] { color: inherit; border-bottom-color: inherit; text-transform: none; }
 b, strong { font-weight: bold; }
 blockquote { margin: 1em 40px; }
 dfn { font-style: italic; }
