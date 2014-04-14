@@ -16,7 +16,13 @@ body { margin: 0; font-size: 16px; line-height: 1.4em; }
 
 a { color: #176c9a; text-decoration: underline }
 
-.inline-list a { text-decoration: none; }
+
+.inline-list a, .top-bar a { text-decoration: none; }
+.top-bar a { line-height: 45px; color: #fff; display: block; }
+.top-bar .name { font-size: 1.1em; }
+.top-bar .name a { padding: 0 15px; font-weight: bold; }
+.top-bar a:focus, .top-bar a:hover { background: #1F93D2; color: #fff; }
+.top-bar section { padding: 0; }
 
 a:visited {  }
 a:hover { color: #777; }
