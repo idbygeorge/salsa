@@ -19,7 +19,7 @@
   <div class="control-group">
     <%= f.label :parent_id, class: "control-label" %>
     <div class="controls">
-      <%= f.select :parent_id, Organization.where.not(id: params[:id]) { |org| [ (org[:name] ? org[:name] : '') + ' - ' + (org[:slug] ? org[:slug] : ''), org.id] }, include_blank: '-- top level organization --' %></p>
+      <%= f.select :parent_id, Organization.where.not(id: params[:id]).collect { |org| [ org.slug + ' - ' + org.name, org.id ] }, include_blank: '-- top level organization --' %></p>
     </div>
   </div>
 </fieldset>
