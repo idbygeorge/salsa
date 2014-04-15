@@ -6,9 +6,13 @@
       	<% if salsa.lms_published_at %>
 	      	<div>
 		      	<code class="pull-right">Published at: <%= salsa.lms_published_at %></code>
-	  			Published to:
-	  			
-	  			
+	  			  Published to:
+	  			  
+            <% if salsa.organization %>
+  	  			  <a href="<%= salsa.organization[:lms_authentication_source] + '/courses/' + salsa.lms_course_id + '/assignments/syllabus' %>">
+                <%= salsa.organization[:lms_authentication_source] + '/courses/' + salsa.lms_course_id + '/assignments/syllabus' %>
+              </a>
+            <% end %>
 	      	</div>
 	    <% end %>
 	    

@@ -33,18 +33,6 @@ class Oauth2Controller < ApplicationController
 
       flash[:notice] = 'You are connected to Canvas. Please Select a Course.'
       session[:authenticated_institution] = session[:institution]
-      
-      # find the org to bind this to
-      org = Organization.find_by slug: session[:institution]
-      
-      # if there is a matching org, save the salsa under that org
-      if org
-        salsa = Syllabus.find_by edit_id: params[:syllabus_id]
-        
-        if salsa
-          salsa.update(organization_id: org[:id])
-        end
-      end
     else
       flash[:error] = params[:error]
     end

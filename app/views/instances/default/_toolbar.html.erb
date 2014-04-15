@@ -25,7 +25,11 @@
                
             <% else %>
                 <li>
-                    <%= link_to "Connect to LMS", oauth2_login_path(syllabus_id: @syllabus.edit_id), :authenticity_token => form_authenticity_token(), :id => 'tb_login_lms' %>
+                    <% if @organization && @organization[:lms_authentication_source] != '' %>
+                        <%= link_to "Connect to LMS", oauth2_login_path(syllabus_id: @syllabus.edit_id) %>
+                    <% else %>
+                        <%= link_to "Connect to LMS", oauth2_login_path(syllabus_id: @syllabus.edit_id), :authenticity_token => form_authenticity_token(), :id => 'tb_login_lms' %>
+                    <% end %>
                 </li>
             <% end %> 
 

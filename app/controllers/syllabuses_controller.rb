@@ -115,6 +115,17 @@ class SyllabusesController < ApplicationController
     salsa = Syllabus.find_by edit_id: params[:id]
     
     if salsa
+
+      if !salsa[:organization_id] && session[:authenticated_institution] && session[:authenticated_institution] != ''
+        # find the org to bind this to
+        org = Organization.find_by slug: session[:authenticated_institution]
+        
+        # if there is a matching org, save the salsa under that org
+        if org
+          salsa[:organization_id] = org[:id]
+        end
+      end
+debugger
       salsa.update(lms_published_at: DateTime.now, lms_course_id: course_id)
     end
   end

@@ -9,8 +9,8 @@ class ApplicationController < ActionController::Base
     # establish the default view folder
     @view_folder = "instances/default"
 
-    # find the matching organizaiton based on the request and being a top-level organization
-    @organization = Organization.find_by slug: request.env['SERVER_NAME'], parent_id: nil
+    # find the matching organizaiton based on the request
+    @organization = Organization.find_by slug: request.env['SERVER_NAME']
 
     # if a matching org was found, check if there is a custom view folder set up for it
     if @organization
