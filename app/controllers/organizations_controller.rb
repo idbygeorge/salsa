@@ -49,13 +49,15 @@ class OrganizationsController < ApplicationController
     end
   end
 
-  def get_salsas org=params[:id]
+  def get_salsas org=params[:id], page=params[:page], per=25
     if org
-      @salsas = Syllabus.where organization_id: org
+      salsas = Syllabus.where organization_id: org
       @organization = Organization.find_by id:org
     else 
-      @salsas = Syllabus.where organization_id: nil
+      salsas = Syllabus.where organization_id: nil
     end
+
+    @salsas = salsas.page(page).per(per)
   end
 
   def get_organizations

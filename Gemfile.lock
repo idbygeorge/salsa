@@ -80,6 +80,9 @@ GEM
       jquery-rails
       railties (>= 3.1.0)
     json (1.8.0)
+    kaminari (0.15.1)
+      actionpack (>= 3.0.0)
+      activesupport (>= 3.0.0)
     kgio (2.8.1)
     less (2.5.0)
       commonjs (~> 0.2.7)
@@ -198,6 +201,7 @@ DEPENDENCIES
   jbuilder (~> 1.2)
   jquery-rails
   jquery-ui-rails
+  kaminari
   less-rails
   newrelic_rpm
   pg
