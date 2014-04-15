@@ -2,5 +2,16 @@
   <%= @organization[:name] %>
 </h1>
 
-<%= render 'edit' %>
+<div id="organizationControl">
+  <% if @salsas.length != 0 %>
+    <a class="button" data-toggle="collapse" data-parent="#organizationControl" href="#editOrganization">
+      Edit
+    </a>
+  <% end %>
+
+    <div id="editOrganization"<% if @salsas.length != 0 %> class="collapse"<% end %>>
+      <%= render 'edit' %>
+    </div>
+</div>
+
 <%= render 'show' %>
