@@ -116,16 +116,20 @@ class SyllabusesController < ApplicationController
     
     if salsa
 
-      if !salsa[:organization_id] && session[:authenticated_institution] && session[:authenticated_institution] != ''
-        # find the org to bind this to
-        org = Organization.find_by slug: session[:authenticated_institution]
-        
-        # if there is a matching org, save the salsa under that org
-        if org
-          salsa[:organization_id] = org[:id]
+      if !salsa[:organization_id]
+        if session[:authenticated_institution] && session[:authenticated_institution] != ''
+          # find the org to bind this to
+          org = Organization.find_by slug: session[:authenticated_institution]
+          
+          # if there is a matching org, save the salsa under that org
+          if org
+            salsa[:organization_id] = org[:id]
+          end
+        elsif @organization
+          salsa[:organization_id] = @organization[:id]
         end
       end
-debugger
+
       salsa.update(lms_published_at: DateTime.now, lms_course_id: course_id)
     end
   end
