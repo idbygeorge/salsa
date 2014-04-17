@@ -158,7 +158,7 @@ function liteOff(x){
             var editorMaxHeight = $('body').innerHeight() * .8;
 
             $('#contentTextControl', this).tinymce({
-                toolbar: "bold italic underline | undo redo | bullist numlist indent outdent | link unlink",
+                toolbar: "bold italic | undo redo | bullist numlist indent outdent | link unlink",
                 statusbar: false,
                 menubar : false,
 
