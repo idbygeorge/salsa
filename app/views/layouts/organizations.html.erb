@@ -14,10 +14,7 @@
 
     <%= stylesheet_link_tag "bootstrap_and_overrides", :media => "all" %>
 
-    <%= javascript_include_tag "jquery" %>
-    <%= javascript_include_tag "jquery_ujs" %>
-    <%= javascript_include_tag "twitter/bootstrap" %>
-    <%= javascript_include_tag "bootstrap" %>
+    <%= javascript_include_tag "admin" %>
   </head>
   <body>
 
@@ -50,13 +47,13 @@
           <div class="well sidebar-nav">
             <% if @organizations %>
               <h2 class="nav-header">
-                <code class='pull-right'><%= Syllabus.all.count %></code>
+                <code class='pull-right'><%= Syllabus.where('syllabuses.organization_id IS NULL AND syllabuses.updated_at != syllabuses.created_at').count %></code>
                 <%= link_to 'Orphaned SALSAs', organization_path(id: '') %>
               </h2>
               <ul class="nav nav-list">
                 <% @organizations.each do |org| %>
                   <li>
-                    <code class='pull-right'><%= org.syllabuses.count %></code>
+                    <code class='pull-right'><%= org.syllabuses.where('syllabuses.updated_at != syllabuses.created_at').count %></code>
                     <%= link_to org[:name], organization_path(id: org[:id]) %>
                   </li>
                 <% end %>

@@ -62,10 +62,10 @@ class OrganizationsController < ApplicationController
 
   def get_salsas org=params[:id], page=params[:page], per=25
     if org
-      salsas = Syllabus.where organization_id: org
+      salsas = Syllabus.where('syllabuses.organization_id=? AND syllabuses.updated_at != syllabuses.created_at', org)
       @organization = Organization.find_by id:org
     else 
-      salsas = Syllabus.where organization_id: nil
+      salsas = Syllabus.where('syllabuses.organization_id IS NULL AND syllabuses.updated_at != syllabuses.created_at')
     end
 
     @salsas = salsas.order(updated_at: :desc, created_at: :desc).page(page).per(per)
