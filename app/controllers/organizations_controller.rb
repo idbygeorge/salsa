@@ -10,7 +10,18 @@ class OrganizationsController < ApplicationController
     @organization = Organization.new
   end
 
-  def edit
+  def documents
+    if params[:salsa_ids]
+      if params[:organization][:id] != ''
+        org_id = params[:organization][:id]
+      else
+        org_id = nil
+      end
+
+      Syllabus.update_all(["organization_id=?", org_id], :id => params[:salsa_ids])
+    end
+
+    redirect_to organizations_path
   end
 
   def show
@@ -57,11 +68,11 @@ class OrganizationsController < ApplicationController
       salsas = Syllabus.where organization_id: nil
     end
 
-    @salsas = salsas.page(page).per(per)
+    @salsas = salsas.order(updated_at: :desc, created_at: :desc).page(page).per(per)
   end
 
   def get_organizations
-    @organizations = Organization.all
+    @organizations = Organization.all.order(:depth, :name)
   end
 
   def organization_params

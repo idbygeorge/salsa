@@ -6,6 +6,8 @@ Salsa::Application.routes.draw do
 
   resources :organizations
 
+  post "organizations/documents"
+
   get "canvas/list_courses"
   get "oauth2/login"
   get "oauth2/logout"

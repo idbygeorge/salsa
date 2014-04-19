@@ -43,24 +43,25 @@
     </div>
 
     <div class="container-fluid">
+      <%= link_to 'Add Organization', new_organization_path %>
       <div class="row-fluid">
         
         <div class="span3">
           <div class="well sidebar-nav">
             <% if @organizations %>
+              <h2 class="nav-header">
+                <code class='pull-right'><%= @salsas.count %></code>
+                <%= link_to 'Orphaned SALSAs', organization_path(id: '') %>
+              </h2>
               <ul class="nav nav-list">
-                <li class="nav-header">Sidebar</li>
-                <li>
-                  <%= link_to 'Orphaned SALSAs', organization_path(id: '') %></li>
                 <% @organizations.each do |org| %>
                   <li>
+                    <code class='pull-right'><%= org.syllabuses.count %></code>
                     <%= link_to org[:name], organization_path(id: org[:id]) %>
                   </li>
                 <% end %>
               </ul>
             <% end %>
-
-            <%= link_to 'Add Organization', new_organization_path %>
           </div><!--/.well -->
         </div><!--/span-->
         
