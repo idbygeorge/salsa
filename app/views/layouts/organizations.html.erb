@@ -50,7 +50,7 @@
           <div class="well sidebar-nav">
             <% if @organizations %>
               <h2 class="nav-header">
-                <code class='pull-right'><%= @salsas.count %></code>
+                <code class='pull-right'><%= Syllabus.all.count %></code>
                 <%= link_to 'Orphaned SALSAs', organization_path(id: '') %>
               </h2>
               <ul class="nav nav-list">
