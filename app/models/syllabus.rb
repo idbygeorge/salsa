@@ -1,4 +1,5 @@
 class Syllabus < ActiveRecord::Base
+  versioned
 
 	before_create :ensure_ids
   belongs_to :organization
