@@ -7,6 +7,9 @@
         <%= select('organization', 'id', Organization.where.not(id: params[:id]).collect { |org| [ org.slug + ' - ' + org.name, org.id ] }, include_blank: true) %></p>
       </div>
 
+      <a class="button" data-toggle="collapse" data-parent="form li" href="#salsaDocuments .collapse">
+        show/hide all
+      </a>
     </div>
 
     <ul class="nav nav-list" id="salsaDocuments">
@@ -46,7 +49,7 @@
               <% end %>
 
               <% if salsa.lms_course_id %>
-                (LMS Course ID:<%= salsa.lms_course_id %>)
+                (LMS Course ID: <%= salsa.lms_course_id %>)
               <% end %>
   	      	</div>
   	      <% end %>
