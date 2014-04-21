@@ -62,7 +62,7 @@ class OrganizationsController < ApplicationController
 
   def get_salsas org=params[:id], page=params[:page], per=25, key=params[:key]
     if key == 'abandoned'
-      operation = '==';
+      operation = '=';
     else
       operation = '!='
     end

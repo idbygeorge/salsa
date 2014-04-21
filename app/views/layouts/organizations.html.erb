@@ -47,7 +47,7 @@
           <div class="well sidebar-nav">
             <% if @organizations %>
               <div class="nav-header clearfix">
-                <code class='pull-right'><%= Syllabus.where('syllabuses.organization_id IS NULL AND syllabuses.updated_at != syllabuses.created_at').count %>:<%= link_to Syllabus.where('syllabuses.organization_id IS NULL AND syllabuses.updated_at == syllabuses.created_at').count, organization_path(id: '', key: 'abandoned') %></code>
+                <code class='pull-right'><%= Syllabus.where('syllabuses.organization_id IS NULL AND syllabuses.updated_at != syllabuses.created_at').count %>:<%= link_to Syllabus.where('syllabuses.organization_id IS NULL AND syllabuses.updated_at = syllabuses.created_at').count, organization_path(id: '', key: 'abandoned') %></code>
 
                 <%= link_to 'Orphaned SALSAs', organization_path(id: '') %>
               </div>
@@ -55,7 +55,7 @@
               <ul class="nav nav-list">
                 <% @organizations.each do |org| %>
                   <li>
-                    <code class='pull-right'><%= org.syllabuses.where('syllabuses.updated_at != syllabuses.created_at').count %>:<%= link_to org.syllabuses.where('syllabuses.updated_at == syllabuses.created_at').count, organization_path(id: org[:id], key: 'abandoned') %></code>
+                    <code class='pull-right'><%= org.syllabuses.where('syllabuses.updated_at != syllabuses.created_at').count %>:<%= link_to org.syllabuses.where('syllabuses.updated_at = syllabuses.created_at').count, organization_path(id: org[:id], key: 'abandoned') %></code>
                     <%= link_to org[:name], organization_path(id: org[:id]) %>
                   </li>
                 <% end %>
