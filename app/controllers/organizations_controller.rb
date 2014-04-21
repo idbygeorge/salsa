@@ -60,12 +60,18 @@ class OrganizationsController < ApplicationController
     end
   end
 
-  def get_salsas org=params[:id], page=params[:page], per=25
+  def get_salsas org=params[:id], page=params[:page], per=25, key=params[:key]
+    if key == 'abandoned'
+      operation = '==';
+    else
+      operation = '!='
+    end
+
     if org
-      salsas = Syllabus.where('syllabuses.organization_id=? AND syllabuses.updated_at != syllabuses.created_at', org)
+      salsas = Syllabus.where("syllabuses.organization_id=? AND syllabuses.updated_at #{operation} syllabuses.created_at", org)
       @organization = Organization.find_by id:org
-    else 
-      salsas = Syllabus.where('syllabuses.organization_id IS NULL AND syllabuses.updated_at != syllabuses.created_at')
+    else
+      salsas = Syllabus.where("syllabuses.organization_id IS NULL AND syllabuses.updated_at #{operation} syllabuses.created_at")
     end
 
     @salsas = salsas.order(updated_at: :desc, created_at: :desc).page(page).per(per)

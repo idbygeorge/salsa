@@ -1,5 +1,9 @@
 <h1>
-Orphaned SALSAs
+  <% if params[:key] == 'abandoned' %>
+    <strong>Abandoned</strong>
+  <% end %>
+
+  Orphaned SALSAs
 </h1>
 
 <%= render 'show' %>
