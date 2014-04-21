@@ -48,7 +48,10 @@ gem 'zurb-foundation'
 
 # Add awesome nested set
 gem 'awesome_nested_set', '~> 3.0.0.rc.3'
+# pagination
 gem 'kaminari'
+# active record version control
+gem 'vestal_versions', :git => 'git://github.com/laserlemon/vestal_versions'
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
