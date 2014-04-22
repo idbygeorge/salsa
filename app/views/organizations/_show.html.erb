@@ -1,4 +1,4 @@
-<% if @salsas.length > 0 %>
+<% if @documents.length > 0 %>
   <%= form_tag('/organizations/documents', :html => { :class => "form-vertical" } ) do |f| %>
     <%= submit_tag 'submit', { class: 'pull-right'} %>
     <div class="control-group">
@@ -13,62 +13,62 @@
     </div>
 
     <ul class="nav nav-list" id="salsaDocuments">
-      <% @salsas.each do |salsa| %>
+      <% @documents.each do |document| %>
         <li class="nav-header checkbox">
-          <%= check_box_tag "salsa_ids[]", salsa.id, false, id: "salsa_#{salsa.id}" %>
-          <% if salsa.lms_published_at %>
-              <div class="pull-right info">Published <%= time_ago_in_words salsa.lms_published_at %> ago</div>
+          <%= check_box_tag "document_ids[]", document.id, false, id: "document_#{document.id}" %>
+          <% if document.lms_published_at %>
+              <div class="pull-right info">Published <%= time_ago_in_words document.lms_published_at %> ago</div>
           <% end %>
-          <label for="<%= "salsa_#{salsa.id}" %>">SALSA <%= salsa.id %>: <%= salsa.name %></label>
+          <label for="<%= "document_#{document.id}" %>">SALSA <%= document.id %>: <%= document.name %></label>
 
 
-          <time datetime="<%= salsa.created_at %>">Created <%= time_ago_in_words salsa.created_at %> ago</time>
+          <time datetime="<%= document.created_at %>">Created <%= time_ago_in_words document.created_at %> ago</time>
 
-          <% if time_ago_in_words(salsa.created_at) != time_ago_in_words(salsa.updated_at) %>
-            <time datetime="<%= salsa.created_at %>">Updated <%= time_ago_in_words salsa.updated_at %> ago</time>
+          <% if time_ago_in_words(document.created_at) != time_ago_in_words(document.updated_at) %>
+            <time datetime="<%= document.created_at %>">Updated <%= time_ago_in_words document.updated_at %> ago</time>
           <% end %>
 
-          <a class="button" data-toggle="collapse" data-parent="#salsaDocuments" href="#<%= "salsa_#{salsa.id}_wrapper" %>">
-            More Information for SALSA <%= salsa.id %>
+          <a class="button" data-toggle="collapse" data-parent="#salsaDocuments" href="#<%= "document_#{document.id}_wrapper" %>">
+            More Information for SALSA <%= document.id %>
           </a>
         </li>
 
-        <li class="row-fluid collapse" id="<%= "salsa_#{salsa.id}_wrapper" %>">
+        <li class="row-fluid collapse" id="<%= "document_#{document.id}_wrapper" %>">
           <div class='version info'>
-            Version: <%= salsa.version %>
+            Version: <%= document.version %>
           </div>
           
-        	<% if salsa.lms_published_at %>
+        	<% if document.lms_published_at %>
   	      	<div>
   	  			  Published to:
   	  			  
-              <% if salsa.organization %>
-    	  			  <a href="<%= salsa.organization[:lms_authentication_source] + '/courses/' + salsa.lms_course_id + '/assignments/syllabus' %>">
-                  <%= salsa.organization[:lms_authentication_source] + '/courses/' + salsa.lms_course_id + '/assignments/syllabus' %>
+              <% if document.organization %>
+    	  			  <a href="<%= document.organization[:lms_authentication_source] + '/courses/' + document.lms_course_id + '/assignments/syllabus' %>">
+                  <%= document.organization[:lms_authentication_source] + '/courses/' + document.lms_course_id + '/assignments/syllabus' %>
                 </a>
               <% end %>
 
-              <% if salsa.lms_course_id %>
-                (LMS Course ID: <%= salsa.lms_course_id %>)
+              <% if document.lms_course_id %>
+                (LMS Course ID: <%= document.lms_course_id %>)
               <% end %>
   	      	</div>
   	      <% end %>
   	    
         	<div>
-            View: <%= link_to syllabus_path(id: salsa.view_id), syllabus_path(id: salsa.view_id), target: "_blank" %>
+            View: <%= link_to document_path(id: document.view_id), document_path(id: document.view_id), target: "_blank" %>
             <br>
-            Edit: <%= link_to syllabus_path(id: salsa.edit_id), syllabus_path(id: salsa.edit_id), target: "_blank" %>
+            Edit: <%= link_to document_path(id: document.edit_id), document_path(id: document.edit_id), target: "_blank" %>
             
-            <% if salsa.template_id %>
+            <% if document.template_id %>
               <br>
-              Template: <%= link_to syllabus_path(id: salsa.template_id), syllabus_path(id: salsa.template_id), target: "_blank" %>
+              Template: <%= link_to document_path(id: document.template_id), document_path(id: document.template_id), target: "_blank" %>
             <% end %>
         	</div>
         </li>
       <% end %>
     </ul>
   <% end %>
-  <%= paginate @salsas %>
+  <%= paginate @documents %>
 <% else %>
   <p>
     No SALSAs have been created for this organization

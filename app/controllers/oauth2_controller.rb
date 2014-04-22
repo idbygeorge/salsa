@@ -37,6 +37,6 @@ class Oauth2Controller < ApplicationController
       flash[:error] = params[:error]
     end
 
-    redirect_to syllabus_path(params[:syllabus_id]) + '#/select/course';
+    redirect_to document_path(params[:document_id]) + '#/select/course';
   end
 end

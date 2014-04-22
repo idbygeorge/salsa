@@ -3,7 +3,7 @@ class OrganizationsController < ApplicationController
   before_filter :get_organizations, only: [:index, :new, :edit, :show]
 
   def index
-    get_salsas
+    get_documents
   end
 
   def new
@@ -11,21 +11,21 @@ class OrganizationsController < ApplicationController
   end
 
   def documents
-    if params[:salsa_ids]
+    if params[:document_ids]
       if params[:organization][:id] != ''
         org_id = params[:organization][:id]
       else
         org_id = nil
       end
 
-      Syllabus.update_all(["organization_id=?", org_id], :id => params[:salsa_ids])
+      Document.update_all(["organization_id=?", org_id], :id => params[:document_ids])
     end
 
     redirect_to organizations_path
   end
 
   def show
-    get_salsas params[:id]
+    get_documents params[:id]
   end
 
   # commit actions
@@ -60,7 +60,7 @@ class OrganizationsController < ApplicationController
     end
   end
 
-  def get_salsas org=params[:id], page=params[:page], per=25, key=params[:key]
+  def get_documents org=params[:id], page=params[:page], per=25, key=params[:key]
     if key == 'abandoned'
       operation = '=';
     else
@@ -68,13 +68,13 @@ class OrganizationsController < ApplicationController
     end
 
     if org
-      salsas = Syllabus.where("syllabuses.organization_id=? AND syllabuses.updated_at #{operation} syllabuses.created_at", org)
+      documents = Document.where("documents.organization_id=? AND documents.updated_at #{operation} documents.created_at", org)
       @organization = Organization.find_by id:org
     else
-      salsas = Syllabus.where("syllabuses.organization_id IS NULL AND syllabuses.updated_at #{operation} syllabuses.created_at")
+      documents = Document.where("documents.organization_id IS NULL AND documents.updated_at #{operation} documents.created_at")
     end
 
-    @salsas = salsas.order(updated_at: :desc, created_at: :desc).page(page).per(per)
+    @documents = documents.order(updated_at: :desc, created_at: :desc).page(page).per(per)
   end
 
   def get_organizations

@@ -3,13 +3,13 @@
 </h1>
 
 <div id="organizationControl">
-  <% if @salsas.length != 0 %>
+  <% if @documents.length != 0 %>
     <a class="button" data-toggle="collapse" data-parent="#organizationControl" href="#editOrganization">
       Edit Organization
     </a>
   <% end %>
 
-    <div id="editOrganization"<% if @salsas.length != 0 %> class="collapse"<% end %>>
+    <div id="editOrganization"<% if @documents.length != 0 %> class="collapse"<% end %>>
       <%= render 'edit' %>
     </div>
 </div>
