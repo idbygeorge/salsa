@@ -113,7 +113,7 @@ class DocumentsController < ApplicationController
 
   def update_course_document course_id, html
     lms_connection_information
-    debugger
+
     @lms_client.put("/api/v1/courses/#{course_id}", { course: { syllabus_body: html } })
     
     document = Document.find_by edit_id: params[:id]
