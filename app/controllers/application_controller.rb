@@ -41,10 +41,10 @@ class ApplicationController < ActionController::Base
     end
 
     # defaults
-    @oauth_endpoint = "https://#{@institution}.instructure.com" if @oauth_endpoint == ''
-    @lms_client_id = APP_CONFIG['canvas_id'] if @lms_client_id == ''
-    @lms_secret = APP_CONFIG['canvas_key'] if @lms_secret == ''
-    @callback_url = APP_CONFIG['domain'] + '/oauth2/callback' if @callback_url == ''
+    @oauth_endpoint = "https://#{@institution}.instructure.com" unless @oauth_endpoint
+    @lms_client_id = APP_CONFIG['canvas_id'] unless @lms_client_id
+    @lms_secret = APP_CONFIG['canvas_key'] unless @lms_secret
+    @callback_url = request.env['SERVER_NAME'] + '/oauth2/callback' unless @callback_url
 
     if canvas_access_token && canvas_access_token != ''
       @lms_client = Canvas::API.new(:host => @oauth_endpoint, :token => canvas_access_token)
