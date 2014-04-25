@@ -15,16 +15,34 @@ function liteOff(x){
             items: 'li:not(:first-child)',
             start: function(e, ui) {
                 $("#page section").addClass('active');
-                $("#controlPanel aside").addClass('active').show();
+                //$("#controlPanel aside").addClass('active').show();
             },
             change: function(e, ui) {
                 var tabLink = $('a', ui.item);
-                var section = $(tabLink.attr('href'));
+                var movedSection = $(tabLink.attr('href'));
                 
                 var index = ui.placeholder.index();
 
-                // move section with item
-                $(section).insertAfter(section.parent().find('section').eq(index-1));
+                // move all of the sections to the tempElement
+                var tempElement = $('<div/>');
+                $('#page-data section').appendTo(tempElement);
+
+                // arrange all sections to match list (skip the item being moved for this loop)
+                $(this).children(':not(.ui-sortable-helper)').each(function(i){
+                    var sectionSelector = $('a', this).attr('href');
+                    var section = $(sectionSelector, tempElement);
+
+                    // if we hit the placeholder, it is time to append the section being moved
+                    if($(this).is('.ui-sortable-placeholder')) {
+                        section = movedSection;
+                    }
+
+                    // append the section to move to the page
+                    $("#page-data").append(section);
+                });
+
+                console.log(tempElement);
+
             },
             beforeStop: function(e, ui) {
                 var tabLink = $('a', ui.item);
