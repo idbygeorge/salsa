@@ -19,6 +19,13 @@ section.disabled {
 #view_syllabus #preview {display:block;}
 #view_syllabus i{display:none;}
 
+.col-left { width: 30%; }
+.col-left15 { width: 15%; }
+.col-middle { width: 30%; }
+.col-middle35 { width: 35%; }
+.col-right { width: 40%; } 
+.col-right50 { width: 50%; } 
+
 table.components { color:#000;width:70%;border-width: 1px;border-color: #c0c0c0;border-collapse: collapse; margin: 1em 0; margin-left: 20px; }
 table.components tbody.center {text-align:center;}
 table.components th {color:#fff;background-color:#696969;;border-width: 1px;border-style: solid;border-color: #c0c0c0;text-align:center;}
@@ -28,6 +35,16 @@ table.components td {border-width: 1px;padding: 8px;border-style: solid;border-c
 #compilation_tabs table.components td.left, #compilation_tabs table.components td.left, table.components td.left {text-align:left; float: none; }
 #compilation_tabs table.components td.right, #compilation_tabs table.components td.right, table.components td.right {text-align:right; float: none; }
 table.components tr.myDragClass td {color:#666;background-color: #ffe4b5; }
+
+table.schedule {
+    color:#000;width:90%;border-width: 1px;border-color: #c0c0c0;border-collapse: collapse; margin: 1em 0; margin-left: 20px;
+    th {color:#fff;background-color:#696969;;border-width: 1px;border-style: solid;border-color: #c0c0c0;text-align:center;}
+    td {border-width: 1px;padding: 8px;border-style: solid;border-color: #c0c0c0;}
+    td.left {text-align:left; float: none; }
+     td.center {text-align:center; float: none; }
+    td.right {text-align:right; float: none; }
+    tr.myDragClass td {color:#666;background-color: #ffe4b5; }
+}
 
 #page section h1 div, #preview section h1 div, h1 div {
     margin: 0;

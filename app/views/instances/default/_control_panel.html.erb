@@ -20,7 +20,7 @@
                 </fieldset>
             </section>
 
-            <section data-target=".section1" >
+            <section data-target=".section1" class="ui-state-active">
                 <header data-method="toggleContent" onmouseover="liteOn(section1I,'#F5F5F5')" onmouseout="liteOff(section1I)">
                     <input type="button" value="Contacts">
                 </header>
@@ -99,8 +99,7 @@
                     <input type="button" name="informationRemove" id="informationRemove" value="-">
                 </fieldset>
             </section>
-
-        </aside>
+        </aside><!-- .information -->
 
         <aside class="outcomes" data-target="#outcomes .content">
             <section data-target=".section1">
@@ -298,7 +297,7 @@
                     <input type="button" name="outcomesRemove" id="outcomesRemove" value="-">
                 </fieldset>
             </section>
-        </aside>
+        </aside><!-- .outcomes -->
 
 
 
@@ -383,7 +382,7 @@
                     <input type="button" name="resourceRemove" id="resourceRemove" value="-">
                 </fieldset>
             </section>
-        </aside>
+        </aside><!-- .resources -->
 
         <aside class="activities" data-target="#activities .content">
 
@@ -466,7 +465,7 @@
                     <input type="button" name="activityRemove" id="activityRemove" value="-">
                 </fieldset>
             </section>
-        </aside>
+        </aside><!-- .activities -->
 
         <aside class="policies" data-target="#policies .content">
             <section data-target=".section1" class="ui-state-active" >
@@ -561,7 +560,98 @@
                     <input type="button" name="policySection5SpacingRemove" id="policySection5SpacingRemove" value="-">
                 </fieldset>
             </section>
-        </aside>
+        </aside><!-- .policies -->
+
+        <aside class="schedule" data-target="#schedule .content">
+
+        <section data-target=".section1" class="ui-state-active" onmouseover="liteOn(section1S,'#f8ffea')" onmouseout="liteOff(section1S)">
+            <header data-method="toggleContent">
+                <input type="button" value="Page Break">
+            </header>
+            <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
+                <legend>
+                    spacing
+                </legend>
+                <label for="policySection3SpacingAdd">Add spacing</label>
+                <input type="button" name="scheduleSection1SpacingAdd" id="scheduleSection1SpacingAdd" value="+">
+                <label for="scheduleSection3SpacingRemove">Remove spacing</label>
+                <input type="button" name="scheduleSection1SpacingRemove" id="scheduleSection1SpacingRemove" value="-">
+            </fieldset>
+
+        </section>
+
+        <section data-target="#section2S" onmouseover="liteOn(section2S,'#f8ffea')" onmouseout="liteOff(section2S)">
+            <header>
+                Table 1
+            </header>
+            <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
+                <legend>
+                    spacing
+                </legend>
+                <label for="scheduleContentSpacingAdd">Add spacing</label>
+                <input type="button" name="scheduleContentSpacingAdd" id="scheduleContentSpacingAdd" value="+">
+                <label for="scheduleContentSpacingRemove">Remove spacing</label>
+                <input type="button" name="scheduleContentSpacingRemovescheduleContentSpacingRemove" id="scheduleContentSpacingRemove" value="-">
+            </fieldset>
+            <fieldset data-method="toggleContent" data-template="#table1_row_template tr:last" data-element="tbody tr" data-max="20" data-min="1" data-target="#table1" data-callback="reapplyTableDnD">
+                <legend>
+                    items
+                </legend>
+                <label for="scheduleAdd">Add item</label>
+                <input type="button" name="scheduleAdd" id="scheduleAdd" value="+">
+                <label for="scheduleRemove">Remove item</label>
+                <input type="button" name="scheduleRemove" id="scheduleRemove" value="-">
+            </fieldset>
+        </section>
+
+        <section data-target="#section3S" class="ui-state-default" onmouseover="liteOn(section3S,'#f8ffea')" onmouseout="liteOff(section3S)">
+            <header data-method="toggleContent">
+                <input type="button" value="Table 2">
+            </header>
+            <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
+                <legend>
+                    spacing
+                </legend>
+                <label for="scheduleContentSpacingAdd">Add spacing</label>
+                <input type="button" name="scheduleContentSpacingAdd" id="scheduleContentSpacingAdd" value="+">
+                <label for="scheduleContentSpacingRemove">Remove spacing</label>
+                <input type="button" name="scheduleContentSpacingRemovescheduleContentSpacingRemove" id="scheduleContentSpacingRemove" value="-">
+            </fieldset>
+            <fieldset data-method="toggleContent" data-template="#table2_row_template tr:last" data-element="tbody tr" data-max="20" data-min="1" data-target="#table2" data-callback="reapplyTableDnD">
+                <legend>
+                    items
+                </legend>
+                <label for="scheduleAdd">Add item</label>
+                <input type="button" name="scheduleAdd" id="scheduleAdd" value="+">
+                <label for="scheduleRemove">Remove item</label>
+                <input type="button" name="scheduleRemove" id="scheduleRemove" value="-">
+            </fieldset>
+        </section>
+
+        <section data-target="#section4S" class="ui-state-default" onmouseover="liteOn(section4S,'#f8ffea')" onmouseout="liteOff(section4S)">
+            <header data-method="toggleContent">
+                <input type="button" value="Table 3">
+            </header>
+            <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
+                <legend>
+                    spacing
+                </legend>
+                <label for="scheduleContentSpacingAdd">Add spacing</label>
+                <input type="button" name="scheduleContentSpacingAdd" id="scheduleContentSpacingAdd" value="+">
+                <label for="scheduleContentSpacingRemove">Remove spacing</label>
+                <input type="button" name="scheduleContentSpacingRemovescheduleContentSpacingRemove" id="scheduleContentSpacingRemove" value="-">
+            </fieldset>
+            <fieldset data-method="toggleContent" data-template="#table3_row_template tr:last" data-element="tbody tr" data-max="20" data-min="1" data-target="#table3" data-callback="reapplyTableDnD">
+                <legend>
+                    items
+                </legend>
+                <label for="scheduleAdd">Add item</label>
+                <input type="button" name="scheduleAdd" id="scheduleAdd" value="+">
+                <label for="scheduleRemove">Remove item</label>
+                <input type="button" name="scheduleRemove" id="scheduleRemove" value="-">
+            </fieldset>
+        </section>
+    </aside> <!-- .schedule -->
 
     <aside class="grades" data-target="#grades .content">
        <section data-target="#section1G" >
@@ -620,22 +710,18 @@
  
     </form>
 
+<!-- Used by right-hand tool pallette to create new fields and rows -->
     <div id="templates">
+
+    <!-- h3 template -->         
         <div class="description">
             <h3 class="editable" data-can-delete="true">Heading</h3>
             <div class="editableHtml">
                 Text
             </div>
         </div>
-        <table id="grade_component_row_template">
-            <tr><td class="editable">Item</td><td class="editable right">-</td></tr>
-        </table>
-        <table id="extra_credit_row_template">
-            <tr><td class="editable">Item</td><td class="editable right">-</td></tr>
-        </table>
-        <ul id="outcomes_list_template" class="outcomes_list">
-            <li>Outcome text here</li>
-        </ul>
+
+    <!-- contact template --> 
         <div class="contact" id="contact_template">
                 <h3 class="editable" data-can-delete="true">Contact Title</h3>
                 <div class="editableHtml">
@@ -648,6 +734,69 @@
                     </ul>
                 </div> 
         </div>
-    </div>
+
+    <!-- Outcomes template -->        
+        <ul id="outcomes_list_template" class="outcomes_list">
+            <li>Outcome text here</li>
+        </ul>
+
+    <!-- generic table templates -->
+       <!-- 3-column table template -->
+
+        <table id="3_column_template">
+        <tr>
+            <td header="col-left" class="col-left editable left">Text</td>
+            <td header="col-middle" class="col-middle editable left">Text</td>
+            <td header="col-right" class="col-right editable left">Text</td>
+        </tr>
+
+        <!-- 2-column table template -->
+        <table id="2_column_template">
+        <tr>
+            <td header="col-left" class="col-left editable left">Text</td>
+            <td header="col-right" class="col-right editable left">Text</td>
+        </tr>
+        </table>
+
+    <!-- Schedule table templates -->
+        <!-- table1 template -->
+        <table id="table1_row_template">
+        <tr>
+            <td header="col2s-left" class="col-left15 editable center">#</td>
+            <td header="col2s-middle" class="col-middle35 editable left">Text</td>
+            <td header="col2s-right" class="col-right50 editable left">Text</td>
+        </tr>
+        </table>
+
+        <!-- table2 template -->
+        <table id="table2_row_template">
+        <tr>
+            <td header="col3s-left" class="col-left15 editable center">#</td>
+            <td header="col3s-middle" class="col-middle35 editable left">Text</td>
+            <td header="col3s-right" class="col-right50 editable left">Text</td>
+        </tr>
+        </table>
+
+        <!-- table3 template -->
+        <table id="table3_row_template">
+        <tr>
+            <td header="col4s-left" class="col-left15 editable center">#</td>
+            <td header="col4s-middle" class="col-middle35 editable left">Text</td>
+            <td header="col4s-right" class="col-right50 editable left">Text</td>
+        </tr>
+        </table>
+
+    <!-- Grades table templates -->
+        <!-- Grade item template -->
+        <table id="grade_component_row_template">
+            <tr><td class="editable">Item</td><td class="editable right">-</td></tr>
+        </table>
+
+        <!-- Extra Credit item template -->
+        <table id="extra_credit_row_template">
+            <tr><td class="editable">Item</td><td class="editable right">-</td></tr>
+        </table>
+
+    </div> <!-- #templates -->
 
 
