@@ -40,9 +40,6 @@ function liteOff(x){
                     // append the section to move to the page
                     $("#page-data").append(section);
                 });
-
-                console.log(tempElement);
-
             },
             beforeStop: function(e, ui) {
                 var tabLink = $('a', ui.item);
