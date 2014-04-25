@@ -90,7 +90,7 @@ div#container {
     border-color: #556677;
 }
 
-    #controlPanel { float: right; width: 148px; margin-top: 46px; max-height: 490px; overflow: hidden; font-size: 12px; }
+    #controlPanel { float: right; width: 148px; margin-top: 46px; max-height: 80%; overflow: auto; font-size: 12px; }
         #controlPanel header { }
             #controlPanel header input, #controlPanel header a { width: 100%; background: transparent; border: 0 none; color: #fff; font-weight: bold; text-decoration: none; }
             
@@ -149,6 +149,11 @@ div#container {
     div {
 
     }
+}
+
+h2.prompt {
+    font-weight: normal;
+    font-style: italic;
 }
 
 /* removing this for the #messages queue */

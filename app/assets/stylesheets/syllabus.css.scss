@@ -38,13 +38,19 @@ table.components tr.myDragClass td {color:#666;background-color: #ffe4b5; }
 
 table.schedule {
     color:#000;width:90%;border-width: 1px;border-color: #c0c0c0;border-collapse: collapse; margin: 1em 0; margin-left: 20px;
-    th {color:#fff;background-color:#696969;;border-width: 1px;border-style: solid;border-color: #c0c0c0;text-align:center;}
+    th {
+        color:#fff;background-color:#696969;;border-width: 1px;border-style: solid;border-color: #c0c0c0;text-align:center;
+
+        input { text-align: center !important; }
+    }
     td {border-width: 1px;padding: 8px;border-style: solid;border-color: #c0c0c0;}
     td.left {text-align:left; float: none; }
      td.center {text-align:center; float: none; }
     td.right {text-align:right; float: none; }
     tr.myDragClass td {color:#666;background-color: #ffe4b5; }
 }
+
+caption { padding-bottom: 15px; font-size: 1em; font-weight: bold; }
 
 #page section h1 div, #preview section h1 div, h1 div {
     margin: 0;

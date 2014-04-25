@@ -547,19 +547,6 @@
                     <input type="button" name="policyRemove" id="policyRemove" value="-">
                 </fieldset>
             </section>
-
-            <section data-target=".section5" class="ui-state-active">
-                <header data-method="toggleContent" onmouseover="liteOn(section5P,'#EBEBFF')" onmouseout="liteOff(section5P)">
-                    <input type="button" value="Page Break">
-                </header>
-                <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
-                    <legend>spacing</legend>
-                    <label for="policySection5SpacingAdd">Add spacing</label>
-                    <input type="button" name="policySection5SpacingAdd" id="policySection5SpacingAdd" value="+">
-                    <label for="policySection5SpacingRemove">Remove spacing</label>
-                    <input type="button" name="policySection5SpacingRemove" id="policySection5SpacingRemove" value="-">
-                </fieldset>
-            </section>
         </aside><!-- .policies -->
 
         <aside class="schedule" data-target="#schedule .content">
@@ -654,9 +641,22 @@
     </aside> <!-- .schedule -->
 
     <aside class="grades" data-target="#grades .content">
+       <section data-target=".section_break_P" class="ui-state-active">
+        <header data-method="toggleContent" onmouseover="liteOn(section_break_P,'#EBEBFF')" onmouseout="liteOff(section_break_P)">
+            <input type="button" value="Page Break">
+        </header>
+        <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
+            <legend>spacing</legend>
+            <label for="policySection5SpacingAdd">Add spacing</label>
+            <input type="button" name="policySection5SpacingAdd" id="policySection5SpacingAdd" value="+">
+            <label for="policySection5SpacingRemove">Remove spacing</label>
+            <input type="button" name="policySection5SpacingRemove" id="policySection5SpacingRemove" value="-">
+        </fieldset>
+       </section>
+
        <section data-target="#section1G" >
         <header onmouseover="liteOn(section1G,'#F9FFEB')" onmouseout="liteOff(section1G)">
-        Grades
+            Grades
         </header>
         <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
             <legend>spacing</legend>

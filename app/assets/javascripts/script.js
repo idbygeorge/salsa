@@ -11,6 +11,29 @@ function liteOff(x){
 }
 (function($) {
     $(function(){
+        $('#tabs ul').sortable({
+            items: 'li:not(:first-child)',
+            start: function(e, ui) {
+                $("#page section").addClass('active');
+                $("#controlPanel aside").addClass('active').show();
+            },
+            change: function(e, ui) {
+                var tabLink = $('a', ui.item);
+                var section = $(tabLink.attr('href'));
+                
+                var index = ui.placeholder.index();
+
+                // move section with item
+                $(section).insertAfter(section.parent().find('section').eq(index-1));
+            },
+            beforeStop: function(e, ui) {
+                var tabLink = $('a', ui.item);
+                var section = $(tabLink.attr('href'));
+                
+                tabLink.trigger('click');
+            }
+        });
+
         $('#messages div').delay(5000).fadeOut(1000, function() {
             $(this).remove();
         });
@@ -245,12 +268,21 @@ function liteOff(x){
         });
 
         $("section").on("blur", ".editing input", function(){
-            if($(this).val() == '' && $(this).parent().hasClass('right') == true){
-                $(this).val('-');
+            var element = $(this).closest(".editing");
+            var text = $(this).val();
+            
+            if(text == '' && $(this).parent().hasClass('right') == true){
+                text = '-';
             }
 
-            var text = $(this).val();
-            var element = $(this).closest(".editing");
+            var promptText = 'Please enter a title or disable this section';
+
+            if(element.is('h2') && text == '') {
+                text = promptText;
+                element.addClass('prompt');
+            } else if(element.hasClass('prompt') && text != promptText) {
+                element.removeClass('prompt');
+            }
 
             if (text == "" && element.data('can-delete') == true) {
                 element.remove();

@@ -14,6 +14,7 @@
 //= require jquery_ujs
 //= require jquery.ui.dialog
 //= require jquery.ui.tabs
+//= require jquery.ui.sortable
 //= require tinymce-jquery
 //= require modernizr
 //= require jquery.tablednd.0.7.min
