@@ -7,7 +7,7 @@ function liteOn(x,color){
     $(x).css({ backgroundColor: color }).addClass('control_highlighted');
 }
 function liteOff(x){
-    $(x).css({ backgroundColor: 'transparent' });
+    $(x).css({ backgroundColor: '' });
 }
 (function($) {
     $(function(){
@@ -160,8 +160,6 @@ function liteOff(x){
             control.action = $(this).val();
 
             result = controlMethods[control.method](control);
-
-            return false;
         });
 
         // grades
@@ -855,6 +853,17 @@ function liteOff(x){
 
             args.source.siblings(".ui-state-active").removeClass("ui-state-active");
             args.source.addClass("ui-state-active");
+        },
+        specifyGradingUnits: function(args) {
+            if(args.action === 'points') {
+                $('th:last', args.target).text('Points');
+                $('tr.total td:first-child', args.target).text('Total Points');
+                $('th:last-child,td:last-child', '#grade_scale').show();
+            } else if(args.action === 'percent') {
+                $('th:last', args.target).text('Percentage');
+                $('tr.total td:first-child', args.target).text('Total');
+                $('th:last-child,td:last-child', '#grade_scale').hide();
+            }
         }
     };
 })(jQuery);

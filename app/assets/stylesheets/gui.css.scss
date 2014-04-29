@@ -107,9 +107,12 @@ div#container {
             #controlPanel dt { background: #fff; line-height: 1.9; margin-bottom: 3px; text-align: center; cursor: pointer; }
             #controlPanel dt.ui-state-active { font-weight: bold; background: $base_color; opacity: .6; color: #fff; }
             #controlPanel dd { display: none; text-align: center; }
-        #controlPanel legend { background: #fff; margin-right: 4px; text-indent: 5px; float: left; width: 70px; line-height: 1.9; }
+        #controlPanel legend { background: #fff; margin-right: 4px; float: left; width: 70px; line-height: 1.9; text-align: center; }
+        #controlPanel fieldset.radioset legend { width: 100%; margin-bottom: .5em; }
         #controlPanel fieldset label { position: absolute; left: -999999px; }
-        #controlPanel fieldset input { width: 2em; height: 2em; float: left; margin-left: 2px; line-height: 1; padding-left: 0; padding-right: 0; text-align: center; }
+        #controlPanel fieldset.radioset label { position: static; left: 0; font-size: .8em; }
+        #controlPanel fieldset input { width: 2em; height: 2em; float: left; margin-left: 2px; line-height: 1; padding-left: 0; padding-right: 0; text-align: center; vertical-align: middle; }
+        #controlPanel fieldset.radioset input { width: auto; height: auto; float: none; }
 
     #controlPanel, #container, #topBar { border: solid 2px #aaa; border-radius: 10px; }
 
