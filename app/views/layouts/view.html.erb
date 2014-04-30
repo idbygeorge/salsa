@@ -9,7 +9,6 @@
 <meta name="description" content="">
 
 <meta name="viewport" content="width=device-width">
-<%= wicked_pdf_stylesheet_link_tag "application" if Rails.env.development? -%>
 <%= stylesheet_link_tag 'application', media: "all" %>
 
 <%= stylesheet_link_tag 'preview', media: "screen" %>
@@ -19,7 +18,7 @@
   <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome </a> to experience this site.</p><![endif]-->
 
 <div id="preview">
-    <div id="page-data" data-view-id="<%= @syllabus.view_id %>">
+    <div id="page-data" data-view-id="<%= @document.view_id %>">
         <%= yield %>
     </div>
 </div>

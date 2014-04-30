@@ -5,6 +5,7 @@
 #realy_test_this_time { background: none; }
 
 article, aside, details, figcaption, figure, footer, header, hgroup, nav, section { display: block; }
+section {padding-top: 15px;}
 audio, canvas, video { display: inline-block; *display: inline; *zoom: 1; }
 audio:not([controls]) { display: none; }
 [hidden] { display: none; }
@@ -13,12 +14,22 @@ html { font-size: 100%; -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 10
 html, button, input, select, textarea { font-family: sans-serif; color: #222; }
 body { margin: 0; font-size: 16px; line-height: 1.4em; }
 
-a { color: #176c9a; }
+a { color: #176c9a; text-decoration: underline }
+
+
+.inline-list a, .top-bar a { text-decoration: none; }
+.top-bar a { line-height: 45px; color: #fff; display: block; }
+.top-bar .name { font-size: 1.1em; }
+.top-bar .name a { padding: 0 15px; font-weight: bold; }
+.top-bar a:focus, .top-bar a:hover { background: #1F93D2; color: #fff; }
+.top-bar section { padding: 0; }
+
 a:visited {  }
-a:hover { color: #ccc; }
+a:hover { color: #777; }
 a:focus { outline: thin dotted; }
 a:hover, a:active { outline: 0; }
 abbr[title] { border-bottom: 1px dotted; }
+acronym[title] { color: inherit; border-bottom-color: inherit; text-transform: none; }
 b, strong { font-weight: bold; }
 blockquote { margin: 1em 40px; }
 dfn { font-style: italic; }
@@ -65,7 +76,7 @@ td { vertical-align: top; }
 
 .chromeframe { margin: 0.2em 0; background: #ccc; color: black; padding: 0.2em 0; }
 
-
+.button .action-text { color: #176C9A; padding-bottom: .5em; font-size: 1.4em; font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif; }
 
 
 

@@ -1,0 +1,17 @@
+<h1>
+  <%= @organization[:name] %>
+</h1>
+
+<div id="organizationControl">
+  <% if @documents.length != 0 %>
+    <a class="button" data-toggle="collapse" data-parent="#organizationControl" href="#editOrganization">
+      Edit Organization
+    </a>
+  <% end %>
+
+    <div id="editOrganization"<% if @documents.length != 0 %> class="collapse"<% end %>>
+      <%= render 'edit' %>
+    </div>
+</div>
+
+<%= render 'show' %>

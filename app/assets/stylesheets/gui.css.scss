@@ -67,20 +67,30 @@ $hover: lighten($base_color, $lighten_percent);
     nav {max-width: 930px; margin: auto; }
 
 #wrapper { height: 100%; width: 916px; position: relative; overflow: hidden; min-height: 400px; margin: auto; }
-    #tabs { float: left; margin-top: 140px; width: 108px; margin-left: 10px; }
-        #tabs li { text-align: center; text-transform: lowercase; line-height: 1.4; }
+    #tabs { float: left; margin-top: 100px; width: 100px; margin-left: 10px;}
+        #tabs li { text-align: left; line-height: 1.4; }
             #tabs li a { display: block; padding: 4px 4px 4px 8px; background: #EBEBEB; color: black; text-decoration: none; border: solid 3px #EBEBEB; }
-
             #tabs li a:hover, #tabs li.selected a { background: #fff; border-color: #aaa; }
+            #tabs li a:hover.tool, #tabs li.selected a.tool { border-color: #556677;}
+            #tabs li i {float: right;}
+           
+            #tabs li.button {margin-bottom: 3px;}
+            #tabs li.noicon {padding-right: 15px;}
+            #tabs li.save {margin-bottom: 20px;}
+            #tabs li.preview {margin-top: 20px;}
 
-            #tabs li.information a:hover, #tabs li.information.selected a, .information #container, .information #controlPanel { border-color: #C0C0C0; }
-            #tabs li.outcomes a:hover, #tabs li.outcomes.selected a, .outcomes #container, .outcomes #controlPanel, .outcomes #topBar { border-color: #7FC5EC; }
-            #tabs li.resources a:hover, #tabs li.resources.selected a, .resources #container, .resources #controlPanel { border-color: #F0E22E; }
-            #tabs li.activities a:hover, #tabs li.activities.selected a, .activities #container, .activities #controlPanel { border-color: #A1CC3A; }
-            #tabs li.policies a:hover, #tabs li.policies.selected a, .policies #container, .policies #controlPanel { border-color: #BEBEE0; }
-            #tabs li.grades a:hover, #tabs li.grades.selected a, .grades #container, .grades #controlPanel { border-color: #D4DAC8; }
+            #tabs li.information a:hover, #tabs li.information.selected a, .information #controlPanel { border-color: #C0C0C0; }
+            #tabs li.outcomes a:hover, #tabs li.outcomes.selected a, .outcomes #controlPanel, .outcomes #topBar { border-color: #7FC5EC; }
+            #tabs li.resources a:hover, #tabs li.resources.selected a, .resources #controlPanel { border-color: #F0E22E; }
+            #tabs li.activities a:hover, #tabs li.activities.selected a, .activities #controlPanel { border-color: #A1CC3A; }
+            #tabs li.policies a:hover, #tabs li.policies.selected a, .policies #controlPanel { border-color: #BEBEE0; }
+            #tabs li.grades a:hover, #tabs li.grades.selected a, .grades #controlPanel { border-color: #D4DAC8; }
 
-    #controlPanel { float: right; width: 148px; margin-top: 46px; max-height: 490px; overflow: hidden; font-size: 12px; }
+div#container {
+    border-color: #556677;
+}
+
+    #controlPanel { float: right; width: 148px; margin-top: 46px; max-height: 80%; overflow: auto; font-size: 12px; }
         #controlPanel header { }
             #controlPanel header input, #controlPanel header a { width: 100%; background: transparent; border: 0 none; color: #fff; font-weight: bold; text-decoration: none; }
             
@@ -89,15 +99,20 @@ $hover: lighten($base_color, $lighten_percent);
         #controlPanel .ui-state-default fieldset { display: none; }
         #controlPanel .ui-state-active fieldset { display: block; }
         #controlPanel section { padding: 5px; overflow: hidden; background: #fff;}
+        #controlPanel section.first { padding-bottom: 0px;}
         #controlPanel header { @include gradient(); color: #fff; padding: 0 5px; line-height: 1.8; font-weight: bold; white-space: nowrap; text-align: center; }
         #controlPanel header.tool { background: $base_color; }
+        #controlPanel span.medium { font-size: 16px; line-height: 1.2;}
         #controlPanel fieldset, #controlPanel dl { border: 0 none; padding: 3px 3px 3px 5px; background: #eee; margin: 0; }
             #controlPanel dt { background: #fff; line-height: 1.9; margin-bottom: 3px; text-align: center; cursor: pointer; }
             #controlPanel dt.ui-state-active { font-weight: bold; background: $base_color; opacity: .6; color: #fff; }
             #controlPanel dd { display: none; text-align: center; }
-        #controlPanel legend { background: #fff; margin-right: 4px; text-indent: 5px; float: left; width: 70px; line-height: 1.9; }
+        #controlPanel legend { background: #fff; margin-right: 4px; float: left; width: 70px; line-height: 1.9; text-align: center; }
+        #controlPanel fieldset.radioset legend { width: 100%; margin-bottom: .5em; }
         #controlPanel fieldset label { position: absolute; left: -999999px; }
-        #controlPanel fieldset input { width: 2em; height: 2em; float: left; margin-left: 2px; line-height: 1; padding-left: 0; padding-right: 0; text-align: center; }
+        #controlPanel fieldset.radioset label { position: static; left: 0; font-size: .8em; }
+        #controlPanel fieldset input { width: 2em; height: 2em; float: left; margin-left: 2px; line-height: 1; padding-left: 0; padding-right: 0; text-align: center; vertical-align: middle; }
+        #controlPanel fieldset.radioset input { width: auto; height: auto; float: none; }
 
     #controlPanel, #container, #topBar { border: solid 2px #aaa; border-radius: 10px; }
 
@@ -137,6 +152,11 @@ $hover: lighten($base_color, $lighten_percent);
     div {
 
     }
+}
+
+h2.prompt {
+    font-weight: normal;
+    font-style: italic;
 }
 
 /* removing this for the #messages queue */
@@ -191,7 +211,7 @@ div {
 }
 
 #editor_view{height:100%;}
-.content_toolbar {position:relative;top:50px;left:580px;width: 178px;}
+.content_toolbar { position: absolute; top: 57px; right: 170px;}
 .content_toolbar a {color:$base_color; font-size: 1em; text-decoration: none;}
 .informationIcon a {color:#c0c0c0; font-size: 1em; text-decoration: none;}
 .outcomesIcon a {color:#7fc5ec; font-size: 1em; text-decoration: none;}

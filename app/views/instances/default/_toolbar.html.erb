@@ -1,15 +1,15 @@
 <header class="masthead">
     <nav id="toolbar">
-        <ul>
-            <li>
-               <%= link_to "Save", syllabus_path(@syllabus.edit_id), :authenticity_token => form_authenticity_token(), :method => :put, :remote => true, :id => 'tb_save' %>
-            </li>
-            <li><a href="#" id='tb_link'><i class="fi-plus"></i>My SALSA</a></li>
-            <li><%= link_to '<i class="fi-check"></i>Preview'.html_safe, @view_url, :target => '_blank', :id => "tb_preview" %></li>
-            <li>
-                <%= link_to '<i class="general fi-arrow-right"></i>Publish'.html_safe, syllabus_path(@syllabus.edit_id, :publish => true), :authenticity_token => form_authenticity_token(), :method => :put, :remote => true, :id => 'tb_share' %>
-            </li>
-        </ul>
+    <ul>
+        <li>
+        <%= link_to "Save", document_path(@document.edit_id), :authenticity_token => form_authenticity_token(), :method => :put, :remote => true, :id => 'tb_save' %>
+        </li>
+        <li><a href="#" id='tb_link'><i class="fi-plus"></i>My SALSA</a></li>
+        <li><%= link_to '<i class="fi-check"></i>Preview'.html_safe, @view_url, :target => '_blank', :id => "tb_preview" %></li>
+        <li>
+        <%= link_to '<i class="general fi-arrow-right"></i>Publish'.html_safe, document_path(@document.edit_id, :publish => true), :authenticity_token => form_authenticity_token(), :method => :put, :remote => true, :id => 'tb_share' %>
+        </li>
+    </ul>
         <ul style="float:right">
             <!-- <li><a href="#example" id="tb_example"><i class="general foundicon-star"></i>Example</a></li>
             <li><a href="/help.html" target="_blank" id="tb_help"><i class="general foundicon-question"></i>Help</a></li>
@@ -20,19 +20,22 @@
                     <%= link_to "Disconnect from: Canvas", controller: 'oauth2', action: 'logout' %>
                 </li>
                 <li>
-                    <%= link_to "Select Course...", canvas_list_courses_path(id: @syllabus.edit_id), :authenticity_token => form_authenticity_token(), :remote => true, :id => 'tb_save_canvas', :class => 'highlight' %>
+                    <%= link_to "Select Course...", canvas_list_courses_path(id: @document.edit_id), :authenticity_token => form_authenticity_token(), :remote => true, :id => 'tb_save_canvas', :class => 'highlight' %>
                 </li>
                
             <% else %>
                 <li>
-                    <%= link_to "Connect to LMS", oauth2_login_path(syllabus_id: @syllabus.edit_id), :authenticity_token => form_authenticity_token(), :id => 'tb_login_lms' %>
+                    <% if @organization && @organization[:lms_authentication_source] != '' %>
+                        <%= link_to "Connect to LMS", oauth2_login_path(document_id: @document.edit_id) %>
+                    <% else %>
+                        <%= link_to "Connect to LMS", oauth2_login_path(document_id: @document.edit_id), :authenticity_token => form_authenticity_token(), :id => 'tb_login_lms' %>
+                    <% end %>
                 </li>
-            <% end %>
+            <% end %> 
 
-              <li>
-                <%= link_to "Resources", '#/resources', :id => 'tb_resources' %>
-            </li>
-                
+            <li>
+                <%= link_to "Help", '#/resources', :id => 'tb_resources' %>
+            </li>          
         </ul>
     </nav>
 </header>
@@ -51,7 +54,7 @@
 
     <div style="padding: 20px 0px 10px;">
         <p id="send_canvas" class="hidden">
-         <%= link_to "Send to Canvas", syllabus_path(@syllabus.edit_id, canvas: true), :authenticity_token => form_authenticity_token(), :method => :put, :remote => true, :id => 'tb_send_canvas', :class => 'button' %>
+         <%= link_to "Send to Canvas", document_path(@document.edit_id, canvas: true), :authenticity_token => form_authenticity_token(), :method => :put, :remote => true, :id => 'tb_send_canvas', :class => 'button' %>
          <br>
         </p>
     </div>
@@ -76,7 +79,7 @@
       </div>
       <div id="CanvasImport_tab">
         <div class="editableHtml">
-          Select a course to load your syallabus into the clipboard.
+          Select a course to load your syllabus into the clipboard.
         </div>
       </div>
       <div id="help_tab">
@@ -90,7 +93,7 @@
 <div id="choose_institution_prompt" style="display:none; cursor: default">
     <div id="institution_list">
         <form action="/oauth2/login">
-            <input type="hidden" name="syllabus_id" value="<%= @syllabus.edit_id %>">
+            <input type="hidden" name="document_id" value="<%= @document.edit_id %>">
 
             <label for="institution_login_select" style="display: block; margin: 15px;">
                 Select your institution:
@@ -119,10 +122,10 @@
     </div>
 
     <form action="/oauth2/login" style="display: none;">
-         <label for="syllabus_id" style="display: block; margin: 15px;">
+         <label for="document_id" style="display: block; margin: 15px;">
                 Type in your institution:
          </label>
-        <input type="hidden" name="syllabus_id" value="<%= @syllabus.edit_id %>">
+        <input type="hidden" name="document_id" value="<%= @document.edit_id %>">
         
         <input type="text" name="institution" id="institution_login_other" style="margin: 15px 0 14px 15px; text-align: right; ">.instructure.com/login&nbsp;&nbsp;
         <button type="submit">Login</button>

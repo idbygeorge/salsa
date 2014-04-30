@@ -1,8 +1,14 @@
 Salsa::Application.routes.draw do
   root 'default#index'
 
-  resources :syllabuses, :as => :salsas
-  resources :salsas, :controller => "syllabuses", :as => 'syllabuses'
+  resources :documents, path: 'SALSA'
+
+  get '/:alias/:document', to: redirect('/SALSA/%{document}'), constraints: { alias: /(syllabuses|salsas?)/ }
+  get '/:alias/:document/:action', to: redirect('/SALSA/%{document}/%{action}'), constraints: { alias: /(syllabuses|salsas?)/, action: /(edit|template)?/ }
+
+  resources :organizations
+
+  post "organizations/documents"
 
   get "canvas/list_courses"
   get "oauth2/login"

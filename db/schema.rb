@@ -11,7 +11,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140320173836) do
+ActiveRecord::Schema.define(version: 20140422162953) do
+
+  create_table "documents", force: true do |t|
+    t.string   "name"
+    t.string   "edit_id"
+    t.string   "view_id"
+    t.text     "payload"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "template_id"
+    t.integer  "organization_id"
+    t.string   "lms_course_id"
+    t.datetime "lms_published_at"
+  end
+
+  add_index "documents", ["edit_id"], name: "index_documents_on_edit_id", unique: true
+  add_index "documents", ["lms_course_id"], name: "index_documents_on_lms_course_id"
+  add_index "documents", ["organization_id"], name: "index_documents_on_organization_id"
+  add_index "documents", ["template_id"], name: "index_documents_on_template_id", unique: true
+  add_index "documents", ["view_id"], name: "index_documents_on_view_id", unique: true
 
   create_table "organizations", force: true do |t|
     t.string   "name"
@@ -33,18 +52,25 @@ ActiveRecord::Schema.define(version: 20140320173836) do
   add_index "organizations", ["rgt"], name: "index_organizations_on_rgt"
   add_index "organizations", ["slug", "parent_id"], name: "index_organizations_on_slug_and_parent_id", unique: true
 
-  create_table "syllabuses", force: true do |t|
-    t.string   "name"
-    t.string   "edit_id"
-    t.string   "view_id"
-    t.text     "payload"
+  create_table "versions", force: true do |t|
+    t.integer  "versioned_id"
+    t.string   "versioned_type"
+    t.integer  "user_id"
+    t.string   "user_type"
+    t.string   "user_name"
+    t.text     "modifications"
+    t.integer  "number"
+    t.integer  "reverted_from"
+    t.string   "tag"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "template_id"
   end
 
-  add_index "syllabuses", ["edit_id"], name: "index_syllabuses_on_edit_id", unique: true
-  add_index "syllabuses", ["template_id"], name: "index_syllabuses_on_template_id", unique: true
-  add_index "syllabuses", ["view_id"], name: "index_syllabuses_on_view_id", unique: true
+  add_index "versions", ["created_at"], name: "index_versions_on_created_at"
+  add_index "versions", ["number"], name: "index_versions_on_number"
+  add_index "versions", ["tag"], name: "index_versions_on_tag"
+  add_index "versions", ["user_id", "user_type"], name: "index_versions_on_user_id_and_user_type"
+  add_index "versions", ["user_name"], name: "index_versions_on_user_name"
+  add_index "versions", ["versioned_id", "versioned_type"], name: "index_versions_on_versioned_id_and_versioned_type"
 
 end
