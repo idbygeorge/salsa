@@ -93,16 +93,27 @@ body {
   }
 }
 
-/* Center align the text within the three columns below the carousel */
-.marketing .col-sm-4 {
+.marketing .col-sm-12 {
   margin-bottom: 20px;
 }
 .marketing h2 {
   font-weight: normal;
 }
-.container .col-sm-4, .container .col-sm-8 {
+.container .col-sm-4, .container .col-sm-8, .container .col-sm-12 {
+  p, h2, h3, form {
+    margin-right: 30px;
+    margin-left: 30px;
+  }
+}
+.container .col-sm-6.left {
   p, h2 {
     margin-right: 10px;
+    margin-left: 30px;
+  }
+}
+.container .col-sm-6.right {
+  p, h2 {
+    margin-right: 30px;
     margin-left: 10px;
   }
 }
@@ -125,6 +136,10 @@ footer {
   background: #d7d7d7;
   padding-bottom: 120px;
 
+  h2, h3 { font-size: 1.25em;
+  }
+
+
   .container {
     max-width: 960px;
   }
@@ -135,7 +150,7 @@ footer {
 -------------------------------------------------- */
 @media (min-width: 620px) {
   .marketing {
-    padding-top: 100px;
+    padding-top: 75px;
   }
 
   .carousel {
