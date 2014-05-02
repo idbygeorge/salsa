@@ -62,6 +62,8 @@ Salsa::Application.configure do
   # config.assets.precompile += %w( search.js )
   config.assets.precompile += %w( start.css )
   config.assets.precompile += %w( bootstrap_and_overrides.css )
+  config.assets.precompile += %w( home.css )
+  config.assets.precompile += %w( home.js )
   config.assets.precompile += %w( admin.js )
   #config.assets.precompile += ['*.js', '*.css']
 

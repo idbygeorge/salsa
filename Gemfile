@@ -29,12 +29,10 @@ end
 gem 'sass-rails', '~> 4.0.0'
 gem 'compass-rails'
 gem 'coffee-rails', '~> 4.0.0'
-gem 'therubyracer', :platforms => :ruby
 gem 'uglifier', '>= 1.3.0'
-gem 'less-rails'
 
 # bootstrap
-gem 'twitter-bootstrap-rails'
+gem 'bootstrap-sass'
 
 # Use jquery as the JavaScript library
 gem 'jquery-rails'

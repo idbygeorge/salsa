@@ -3,6 +3,7 @@ class DefaultController < ApplicationController
   layout false
   
   def index
+    render layout: 'home'
   end
 
   def maintenance

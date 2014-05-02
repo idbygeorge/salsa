@@ -1,0 +1,196 @@
+@import "bootstrap";
+
+/* GLOBAL STYLES
+-------------------------------------------------- */
+/* Padding below the footer and lighter body text */
+
+body {
+  color: #5a5a5a;
+  background: #f4f4f4;
+  font-family: "HelveticaNeue-Light", "Helvetica Neue Light", "Helvetica Neue", Helvetica, "Lucida Grande", Arial, sans-serif; 
+  font-weight: 300;
+  min-width: 220px;
+}
+
+
+
+/* CUSTOMIZE THE NAVBAR
+-------------------------------------------------- */
+
+/* Special class on .container surrounding .navbar, used for positioning it into place. */
+.navbar-wrapper {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 20;
+}
+
+/* Flip around the padding for proper display in narrow viewports */
+.navbar-wrapper .container {
+  padding-right: 0;
+  padding-left: 0;
+}
+.navbar-wrapper .navbar {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+
+
+/* CUSTOMIZE THE CAROUSEL
+-------------------------------------------------- */
+
+/* Carousel base class */
+.carousel {
+  max-width: 1160px;
+  margin: 0 auto;
+}
+/* Since positioning the image, we need to help out the caption */
+.carousel-caption {
+  position: static;
+  color: #333;
+  text-shadow: none;
+
+  p {
+    padding-left: 12%;
+    text-align: left;
+    text-transform: lowercase;
+    font-size: 1.5em;
+    line-height: .9;
+  }
+}
+
+/* Declare heights because of positioning of img element */
+.carousel-inner { overflow: visible; }
+.carousel-inner > .item > h1 {
+  margin: auto;
+  text-align: center;
+}
+.carousel-inner > .item > h1 > img {
+  max-width: 100%;
+}
+
+.btn-primary, .btn-primary:link {
+  margin-top: .5em;
+}
+
+
+
+/* MARKETING CONTENT
+-------------------------------------------------- */
+
+/* Pad the edges of the mobile views a bit */
+.marketing {
+  padding-right: 15px;
+  padding-left: 15px;
+  background: #fff;
+  max-width: 960px;
+  padding-top: 2em;
+  overflow: hidden;
+
+  img {
+    max-width: 100%;
+  }
+}
+
+/* Center align the text within the three columns below the carousel */
+.marketing .col-sm-4 {
+  margin-bottom: 20px;
+}
+.marketing h2 {
+  font-weight: normal;
+}
+.container .col-sm-4, .container .col-sm-8 {
+  p, h2 {
+    margin-right: 10px;
+    margin-left: 10px;
+  }
+}
+
+/* Featurettes
+------------------------- */
+
+.featurette-divider {
+  margin: 80px 0; /* Space out the Bootstrap <hr> more */
+}
+
+/* Thin out the marketing headings */
+.featurette-heading {
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+
+footer {
+  background: #d7d7d7;
+  padding-bottom: 120px;
+
+  .container {
+    max-width: 960px;
+  }
+}
+
+
+/* RESPONSIVE CSS
+-------------------------------------------------- */
+@media (min-width: 620px) {
+  .marketing {
+    padding-top: 100px;
+  }
+
+  .carousel {
+    position: relative;
+  }
+
+  .carousel-caption {
+    position: absolute;
+    z-index: 10;
+    right: 0;
+    left: 0;
+    top: 60%;
+    bottom: 0;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+  }
+
+  .btn-primary, .btn-primary:link {
+    background: url('/img/home/create.png') no-repeat;
+    width: 593px;
+    height: 131px;
+    border: 0 none;
+    margin: 0 auto;
+    display: block;
+    position: relative;
+    bottom: -25px;
+    box-shadow: none;
+    background-color: transparent;
+    font-size: 3.2em;
+    line-height: 2.4;
+    font-weight: bold;
+  }
+}
+
+@media (min-width: 768px) {
+
+  /* Remove the edge padding needed for mobile */
+  .marketing {
+    padding-right: 0;
+    padding-left: 0;
+  }
+
+  .col-sm-4 img {
+    display: block;
+    margin: auto;
+  }
+
+  .carousel-caption p {
+    font-size: 2.3em;
+  }
+}
+
+@media (min-width: 920px) {
+  .carousel-caption p {
+    font-size: 2.54em;
+  }
+}
+  
