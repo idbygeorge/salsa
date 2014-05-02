@@ -1,201 +1,40 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
-  <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-
-    <!-- Uncomment to make IE8 render like IE7 -->
-    <!-- <meta http-equiv="X-UA-Compatible" content="IE=7" /> -->
-
-    <!-- Set the viewport width to device width for mobile -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <title>Salsa: styled &amp; accessible learning service agreements</title>
-    <%= stylesheet_link_tag "start", media: "all" %>
-    <%= stylesheet_link_tag "application" %>
-    <%= csrf_meta_tags %>
-    <link rel="app/assets/stylesheets" type="text/css" href="foundation_and_overrides.css">
-    <script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-      ga('create', 'UA-44309909-1', 'usu.edu');
-      ga('send', 'pageview');
-    </script>
-  </head>
-
-  <body>
-<!-- Navigation -->
-
-  <nav class="top-bar">
-    <ul class="title-area">
-      <!-- Title Area -->
-      <li class="name">
-        <a href="#">
-          Salsa
-        </a>
-      </li>
-      <!--menu
-      <li class="toggle-topbar menu-icon"><a href="#"><span>menu</span></a></li>
-       end menu-->
-    </ul>
-
-
-    <section class="top-bar-section">
-      <ul class="right">
-        <li>
-          <a href="mailto:salsa@usu.edu">salsa@usu.edu</a>
-        </li>
+<div class="container marketing">
+  <!-- Three columns of text below the carousel -->
+  <div class="row">
+    <div class="col-sm-4">
+      <img src="/img/home/what.jpg" alt="">
+      <h2>What are <acronym title="Styled &amp; accessible learning service agreements">SALSAs</acronym>?</h2>
+      <p>SALSAs are Styled &amp; Accessible Learning Service Agreements.</p>
+    </div><!-- /.col-sm-4 -->
+    <div class="col-sm-4">
+      <img src="/img/home/why.jpg" alt="">
+      <h2>How is a <acronym title="Styled &amp; accessible learning service agreement">SALSA</acronym> different?</h2>
+      <p>SALSA’s promote:</p>
+      <ul>
+        <li>learner-centric formatting</li>
+        <li>well-defined learning</li>
+        <li>outcomes/objectives</li>
+        <li>compliance with ADA requirements</li>
+        <li>provide targeted information for today's learning environments: online, hybrid, flex and face-to-face.</li>
       </ul>
-    </section>
+    </div><!-- /.col-sm-4 -->
+    <div class="col-sm-4">
+      <img src="/img/home/how.jpg" alt="">
+      <h2>How does Salsa work?</h2>
+      <p>Salsa generates a unique and random hyperlink for you. Bookmark or copy your hyperlink with the "My SALSA" button. Use the hyperlink to return and edit your SALSAs. Publish your SALSAs to generate a new hyperlink to a "read-only" copy of your Salsa in HTML format. No email address or signup is required.</p>
+    </div><!-- /.col-sm-4 -->
+  </div><!-- /.row -->
 
-  </nav>
+  <div class="row">
+    <div class="col-sm-8">
+      <h2>Who is developing Salsa?</h2>
 
-  <!-- End Top Bar -->
+      <p>Salsa is an open-source web application being developed at <a href="http://usu.edu/">Utah State University</a>. The project team is located at the <a href="http://cidi.usu.edu/">Center for Innovative Design &amp; Instruction</a>.<p>
+    </div><!-- .col-sm-8 -->
 
-  <!-- Content -->
-
-  <div class="content row">
-    <div class="large-12 columns">
-
-  <!-- logo & button -->
-
-          <div class="row">
-              <div class="large-7 push-5 columns">
-                <div class="top">
-                  <%= link_to sanitize('<div class="action-text">Create your <acronym title="Styled &amp; Accessible Learning Service Agreement">SALSA</acronym></div><i>no email or signup required</i>'), new_document_path, class: "medium button", rel: "nofollow" %>
-                 </div>
-
-                <div class="slogan hide-for-small">
-                 <h1>styled &amp; accessible learning service agreements</h1>
-                </div>
-
-              </div>
-              <div class="large-5 pull-7 columns hide-for-small">
-              <%= image_tag "logo6.png", alt: '' %>
-              </div>
-          </div>
-
-    <!-- End logo & button -->
-
-    <!-- What -->
-            <div class="large-8 small-12 columns">
-               <h2>What are SALSAs?</h2><hr>
-                  <p>SALSAs are <strong>S</strong>tyled &amp; <strong>A</strong>ccessible <strong>L</strong>earning <strong>S</strong>ervice <strong>A</strong>greements.</p><br />
-              <h3>How is a <acronym title="Styled &amp; Accessible Learning Service Agreement">SALSA</acronym> different from a traditional syllabus?</h3><hr>
-                   <p><acronym title="Styled &amp; Accessible Learning Service agreements">SALSAs</acronym> promote:</p>
-                   <ul>
-                       <li>learner-centric formatting</li>
-                       <li>well-defined learning outcomes/objectives</li>
-                       <li>compliance with <acronym title="Americans with Disabilities Act">ADA</acronym> requirements</li>
-                   </ul>
-                   <p><acronym title="Styled &amp; Accessible Learning Service agreements">SALSAs</acronym> provide targeted information for today's learning environments: online, hybrid, flex and face-to-face.</p><br />
-              <h3>How does Salsa work?</h3><hr>
-                   <p>Salsa generates a unique and random hyperlink for you. Bookmark or copy your hyperlink with the "My <acronym title="Styled &amp; Accessible Learning Service agreement">SALSA</acronym>" button. Use the hyperlink to return and edit your <acronym title="Styled &amp; Accessible Learning Service agreements">SALSAs</acronym>. Publish your <acronym title="Styled &amp; Accessible Learning Service agreements">SALSAs</acronym> to generate a <strong>new</strong> hyperlink to a "read-only" copy of your Salsa in <acronym title="HyperText markup language">HTML</acronym> format.<i> No email address or signup is required</i>.</p><br />
-              <h3>Who is developing Salsa?</h3><hr>
-                  <p>Salsa is an open-source web application being developed at <a href="http://www.usu.edu" target="_blank">Utah State University</a>. The project team is located at the <a href="http://cidi.usu.edu" target="_blank">Center for Innovative Design &amp; Instruction</a>.</p><br>
-              
-              <%#
-                <h3>FAQs</h3>
-                <hr>
-                <p><a href="default/faq" target="_blank">Frequently Asked Questions</a>.</p>
-              %>
-            </div>
-
-    <!-- End What -->
-
-  <!-- News -->
-          <div class="row">
-
-            <div class="large-4 small-12 columns">
-              <h2>News</h2><hr>
-              <div class="panel">
-                <h3>opensource.com</h3>
-                <div class="subheader">
-                    <a href="http://opensource.com/education/13/11/salsa-open-source-syllabus" target="_blank">Salsa: open source syllabus creator for educators</a>.
-                </div>
-                <hr>
-                <h3>Brainstorm in Progress</h3>
-                <div class="subheader">
-                  <a href="http://cain.blogspot.com/2013/11/oer-salsa-open-source-syllabus-builder.html" target="_blank"><acronym title="Open Educational Resources">OER</acronym>: Salsa - an open source syllabus builder</a>.
-                </div>
-              </div>
-            </div>
-
-            <div class="large-4 small-12 columns">
-
-              <h2>Resources</h2><hr>
-              <div class="panel">
-                <h3>Open Syllabus Project</h3>
-
-                <div class="subheader">
-                  The <a href="http://opensyllabusproject.org/" target="_blank">Open Syllabus Project</a> seeks to promote institutional cooperation in the task of gathering and analyzing a significant corpus of syllabi.
-                </div>
-                <hr>
-                <h3><acronym title="higher-education">HE</acronym> Syllabus Templates</h3>
-
-                <div class="subheader">
-                  Archive of <a href="https://docs.google.com/document/d/12HomlfD_1sPuQo8zUmst7FZLQ7jF8tT5VJiJuO6w9eg/edit?usp=sharing" target="_blank">higher-education syllabus templates</a>.
-                </div>
-              </div>
-
-              <h2>Contribute</h2><hr>
-              <div class="panel">
-                <h3>GitHub</h3>
-                <div class="subheader">
-                    <a href="https://github.com/idbygeorge/salsa" target="_blank">Salsa project repository</a>
-                </div>
-                <hr>
-                <h3>PayPal</h3>
-                <div class="subheader" style="margin-left: 60px;">
-                  <form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
-                      <input type="hidden" name="cmd" value="_s-xclick">
-                      <input type="hidden" name="hosted_button_id" value="2DEQVJLACRFUA">
-                      <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_SM.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
-                      <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
-                  </form>
-                </div>
-              </div>
-            </div>
-
-      <!-- End News -->
-
-      <!-- Footer -->
-
-      <footer class="row" style="margin: 10px;">
-        <div class="large-12 columns"><hr>
-            <div class="row">
-
-              <div class="large-6 small-6 columns">
-                      <a href="https://twitter.com/Salsa4HE" class="twitter-follow-button" data-show-count="false">Follow @Salsa4HE</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-                    
-              </div>
-
-              <div class="large-6 small-6 columns">
-            
-                  <ul class="inline-list right">
-                    <li><a href="default/tos" target="_blank">Terms of Service</a></li>
-                    <li><a href="http://cidi.usu.edu" target="_blank"><acronym title="Center for Innovative Design &amp; Instruction">CIDI</acronym> </a></li>
-                    <li><a href="http://www.usu.edu" target="_blank"><acronym title="Utah State University">USU</acronym> </a></li>
-                  </ul>
-              </div>
-
-            </div>
-        </div>
-      </footer>
-
-    <!-- End Footer -->
-
-      </div>
-    </div>
-
-    <!-- End Content -->
-
-
-   <%= javascript_include_tag "application" %>
-
-
-  </body>
-</html>
-
+    <div class="col-sm-4">
+      <a href="https://twitter.com/salsa4he">@Salsa4HE</a>
+      <a href="mailto:salsa@usu.edu">Email Us</a>
+    </div><!-- .col-sm-4 -->
+  </div><!-- .row -->
+</div><!-- .container.marketing -->
