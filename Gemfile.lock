@@ -6,6 +6,14 @@ GIT
       activerecord (>= 3, < 5)
       activesupport (>= 3, < 5)
 
+GIT
+  remote: https://github.com/galetahub/ckeditor.git
+  revision: 9e35addb42b42c7d520bbb579ecdb3d89d6a5847
+  specs:
+    ckeditor (4.0.11)
+      mime-types
+      orm_adapter (~> 0.5.0)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -109,6 +117,7 @@ GEM
       net-ssh (>= 2.6.5)
     net-ssh (2.7.0)
     newrelic_rpm (3.7.3.204)
+    orm_adapter (0.5.0)
     pg (0.16.0)
     polyglot (0.3.3)
     rack (1.5.2)
@@ -169,7 +178,7 @@ GEM
       atomic
     tilt (1.4.1)
     tins (0.13.1)
-    tinymce-rails (4.0.2)
+    tinymce-rails (4.0.19)
       railties (>= 3.1.1)
     treetop (1.4.15)
       polyglot
@@ -203,6 +212,7 @@ DEPENDENCIES
   capistrano
   capistrano-bundler
   capistrano-rails
+  ckeditor!
   coffee-rails (~> 4.0.0)
   compass-rails
   debugger
@@ -219,7 +229,7 @@ DEPENDENCIES
   sdoc
   sqlite3
   therubyracer
-  tinymce-rails
+  tinymce-rails (~> 4.0)
   turbolinks
   twitter-bootstrap-rails
   uber-s3
