@@ -3,7 +3,7 @@ Salsa
 
 Styled and Accessible Learning Service Agreements
 
-Visit syllabustool.com for more information
+Visit [syllabustool.com](http://syllabustool.com) for more information
 
 Development Installation Notes (Rough Cuts)
 ===========================================
