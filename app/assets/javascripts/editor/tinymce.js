@@ -40,3 +40,15 @@ function tinyMCE_init(context) {
         }
     });
 }
+
+function tinyMCE_destroy(context) {
+    var html = $(context).val();
+    
+    if (html.length == 0) {
+        html = $('#old_html').html();
+    }
+
+    var element = $(context).closest(".editingHtml");
+    element.html(html);
+    element.toggleClass("editableHtml editingHtml");
+}

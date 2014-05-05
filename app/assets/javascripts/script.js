@@ -1,4 +1,4 @@
-var editor = 'ckEditor';
+var editor = 'CKEditor';
 //var editor = 'tinyMCE';
 
 function liteOn(x,color){
@@ -188,16 +188,8 @@ function liteOff(x){
             initEditor(editor, this);
         });
 
-        $("section").on("blur", ".editingHtml textarea", function(){
-            var html = $(this).val();
-            
-            if (html.length == 0) {
-                html = $('#old_html').html();
-            }
-
-            var element = $(this).closest(".editingHtml");
-            element.html(html);
-            element.toggleClass("editableHtml editingHtml");
+        $("section").on("blur", ".editingHtml textarea,[contenteditable]", function(){
+            destroyEditor(editor, this);
         });
 
         var makeNumericTextbox = function(editor){
@@ -836,8 +828,8 @@ function liteOff(x){
         return window[editor + '_init'](context);
     }
 
-    var destroyEditor = function(){
-        
+    var destroyEditor = function(editor, context){
+        return window[editor + '_destroy'](context);
     };
 })(jQuery);
 
