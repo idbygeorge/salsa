@@ -4,8 +4,11 @@ CKEDITOR.editorConfig = (config) ->
     ['Undo', 'Redo'],
     ['Link', 'Unlink'],
     ['BulletedList', 'NumberedList', '-', 'Outdent', 'Indent'],
-    ['JustifyLeft', 'JustifyCenter', 'JustifyRight']
+    
+    # these buttons don't work with the config.allowedContent specified...
+    # ['JustifyLeft', 'JustifyCenter', 'JustifyRight']
   ]
+
 
   # set the default toolbar
   config.toolbar = 'TextBlock'
@@ -20,10 +23,8 @@ CKEDITOR.editorConfig = (config) ->
   config.allowedContent = {
     '$1': {
       elements: 'p strong em ol li ul',
-    },
-    ul: {
       classes: '*',
-      propertiesOnly: true
+      attributes: 'style'
     }
   }
 
