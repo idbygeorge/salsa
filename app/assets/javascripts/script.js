@@ -864,6 +864,15 @@ function liteOff(x){
                 $('tr.total td:first-child', args.target).text('Total');
                 $('th:last-child,td:last-child', '#grade_scale').hide();
             }
+        },
+        specifyDepartment: function(args) {
+            if(args.action === 'SPED') {
+                $('#department1').show();
+                 $('#department2').hide();
+            } else if(args.action === 'REH') {
+                $('#department1').hide();
+                $('#department2').show();
+            }
         }
     };
 })(jQuery);
