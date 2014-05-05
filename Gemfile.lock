@@ -6,14 +6,6 @@ GIT
       activerecord (>= 3, < 5)
       activesupport (>= 3, < 5)
 
-GIT
-  remote: https://github.com/galetahub/ckeditor.git
-  revision: 9e35addb42b42c7d520bbb579ecdb3d89d6a5847
-  specs:
-    ckeditor (4.0.11)
-      mime-types
-      orm_adapter (~> 0.5.0)
-
 GEM
   remote: https://rubygems.org/
   specs:
@@ -62,6 +54,8 @@ GEM
       capistrano (~> 3.1)
       capistrano-bundler (~> 1.1)
     chunky_png (1.2.9)
+    ckeditor_rails (4.3.4)
+      railties (>= 3.0)
     coffee-rails (4.0.0)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0.beta, < 5.0)
@@ -112,7 +106,6 @@ GEM
       net-ssh (>= 2.6.5)
     net-ssh (2.7.0)
     newrelic_rpm (3.7.3.204)
-    orm_adapter (0.5.0)
     pg (0.16.0)
     polyglot (0.3.3)
     rack (1.5.2)
@@ -199,7 +192,7 @@ DEPENDENCIES
   capistrano
   capistrano-bundler
   capistrano-rails
-  ckeditor!
+  ckeditor_rails
   coffee-rails (~> 4.0.0)
   compass-rails
   debugger

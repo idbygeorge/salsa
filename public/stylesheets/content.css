@@ -2,7 +2,7 @@ body { font-size: 10pt; line-height: 1.4em; font-family: arial, sans-serif; marg
 #tinymce { background: #fff; }
 #preview, #page, #topBar { font-size: 10pt; }
 h1,h2,h3,h4,h5,h6,p,section div { margin-top: 0; margin-bottom: 12px; font-size: 1em; min-height: 1.4em; }
-#preview section div, #page section div { padding-left: 15px; }
+#preview section div, #page section div { margin-left: 15px; }
 
 #wrapper #page .details, #wrapper table div { padding-left: 0; margin: 0; min-height: 0; }
 

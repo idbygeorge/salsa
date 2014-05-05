@@ -40,7 +40,7 @@ gem 'jquery-ui-rails'
 
 # editor is tinymce (for now)
 gem 'tinymce-rails', '~> 4.0'
-gem 'ckeditor', :git => "https://github.com/galetahub/ckeditor.git"
+gem 'ckeditor_rails'
 
 #TODO: remove foundation
 gem 'zurb-foundation'

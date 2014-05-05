@@ -1,7 +1,14 @@
-function tinyMCE_init(selector, context) {
+function tinyMCE_init(context) {
     var editorMaxHeight = $('body').innerHeight() * .8;
 
-    $(selector, context).tinymce({
+    var element = $(context);
+    var text = element.toggleClass("editableHtml editingHtml").html();
+    var id = "contentTextControl";
+
+    element.html($("<textarea/>").attr("id", id).val(text)).find("textarea");
+    element.append($("<div id='old_html'>" + text + '</div>'));
+
+    $('#' + id, context).tinymce({
         toolbar: "bold italic | undo redo | bullist numlist indent outdent | link unlink",
         statusbar: false,
         menubar : false,

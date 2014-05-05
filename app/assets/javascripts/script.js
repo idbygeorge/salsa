@@ -1,4 +1,5 @@
-var editor = 'tinyMCE';
+var editor = 'ckEditor';
+//var editor = 'tinyMCE';
 
 function liteOn(x,color){
     $('.control_highlighted').css({ backgroundColor: 'transparent' }).removeClass('control_highlighted');
@@ -184,19 +185,16 @@ function liteOff(x){
 
         // edit an html block
         $("body").on("click keypress", "section .editableHtml", function(){
-            var element = $(this);
-            var text = element.toggleClass("editableHtml editingHtml").html();
-
-            element.html($("<textarea/>").attr("id", "contentTextControl").val(text)).find("textarea");
-            element.append($("<div id='old_html'>" + text + '</div>'));
-
-            initEditor(editor, '#contentTextControl', this);
+            initEditor(editor, this);
         });
 
         $("section").on("blur", ".editingHtml textarea", function(){
             var html = $(this).val();
-            if (html.length == 0)
+            
+            if (html.length == 0) {
                 html = $('#old_html').html();
+            }
+
             var element = $(this).closest(".editingHtml");
             element.html(html);
             element.toggleClass("editableHtml editingHtml");
@@ -834,8 +832,8 @@ function liteOff(x){
         }
     };
 
-    var initEditor = function(editor, selector, context) {
-        return window[editor + '_init'](selector, context);
+    var initEditor = function(editor, context) {
+        return window[editor + '_init'](context);
     }
 
     var destroyEditor = function(){
