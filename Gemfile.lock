@@ -54,6 +54,8 @@ GEM
       capistrano (~> 3.1)
       capistrano-bundler (~> 1.1)
     chunky_png (1.2.9)
+    ckeditor_rails (4.3.4)
+      railties (>= 3.0)
     coffee-rails (4.0.0)
       coffee-script (>= 2.2.0)
       railties (>= 4.0.0.beta, < 5.0)
@@ -160,7 +162,7 @@ GEM
       atomic
     tilt (1.4.1)
     tins (0.13.1)
-    tinymce-rails (4.0.2)
+    tinymce-rails (4.0.19)
       railties (>= 3.1.1)
     treetop (1.4.15)
       polyglot
@@ -190,6 +192,7 @@ DEPENDENCIES
   capistrano
   capistrano-bundler
   capistrano-rails
+  ckeditor_rails
   coffee-rails (~> 4.0.0)
   compass-rails
   debugger
@@ -204,7 +207,7 @@ DEPENDENCIES
   sass-rails (~> 4.0.0)
   sdoc
   sqlite3
-  tinymce-rails
+  tinymce-rails (~> 4.0)
   turbolinks
   uber-s3
   uglifier (>= 1.3.0)

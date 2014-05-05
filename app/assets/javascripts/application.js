@@ -16,6 +16,9 @@
 //= require jquery.ui.tabs
 //= require jquery.ui.sortable
 //= require tinymce-jquery
+//= require editor/tinymce.js
+//= require ckeditor-jquery
+//= require editor/ckeditor.js
 //= require modernizr
 //= require jquery.tablednd.0.7.min
 //= require script
