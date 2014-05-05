@@ -93,18 +93,19 @@ body {
   }
 }
 
-/* Center align the text within the three columns below the carousel */
-.marketing .col-sm-4 {
+.marketing .col-sm-12 {
   margin-bottom: 20px;
 }
 .marketing h2 {
   font-weight: normal;
 }
-.container .col-sm-4, .container .col-sm-8 {
-  p, h2 {
-    margin-right: 10px;
-    margin-left: 10px;
+.container .col-sm-4, .container .col-sm-6, .container .col-sm-8, .container .col-sm-12 {
+  p, h2, h3, form {
+    margin-right: 30px;
   }
+}
+div.row {
+  margin-left: 30px;
 }
 
 /* Featurettes
@@ -124,6 +125,11 @@ body {
 footer {
   background: #d7d7d7;
   padding-bottom: 120px;
+  h2 { font-size: 1.5em; font-weight: bold; color: #336699;
+  }
+  h2, h3 { font-size: 1.25em;
+  }
+
 
   .container {
     max-width: 960px;
@@ -135,7 +141,7 @@ footer {
 -------------------------------------------------- */
 @media (min-width: 620px) {
   .marketing {
-    padding-top: 100px;
+    padding-top: 75px;
   }
 
   .carousel {
