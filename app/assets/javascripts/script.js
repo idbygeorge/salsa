@@ -1,4 +1,5 @@
 var editor = 'CKEditor';
+var controlMethods;
 //var editor = 'tinyMCE';
 
 function liteOn(x,color){
@@ -702,7 +703,7 @@ function liteOff(x){
         }
     };
 
-    var controlMethods = {
+    controlMethods = {
         toggleContent: function(args) {
             var existingElements = args.target.find(args.element);
             var visibleElements = existingElements.filter(":visible");
@@ -829,15 +830,6 @@ function liteOff(x){
                 $('th:last', args.target).text('Percentage');
                 $('tr.total td:first-child', args.target).text('Total');
                 $('th:last-child,td:last-child', '#grade_scale').hide();
-            }
-        },
-        specifyDepartment: function(args) {
-            if(args.action === 'SPED') {
-                $('#department1').show();
-                 $('#department2').hide();
-            } else if(args.action === 'REH') {
-                $('#department1').hide();
-                $('#department2').show();
             }
         }
     };

@@ -16,7 +16,7 @@ h3 { font-size: 10pt; font-style:italic; }
 
 .none { list-style: none; }
 
-.hide { display: none; }
+.hide, #controlPanel fieldset.hide { display: none; }
 
 .example { display: none; }
 
