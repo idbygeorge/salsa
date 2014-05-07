@@ -180,16 +180,14 @@ function liteOff(x){
         };
 
         // make stuff editable
-        $("section .editableHtml").attr({ tabIndex: 0 });
+        $(".editableHtml,.editable", "section").attr({ tabIndex: 0 });
         $("section article .text,#templates .text").addClass("editableHtml");
 
         // edit an html block
-        $("body").on("click keypress", "section .editableHtml", function(){
-            initEditor(editor, this);
-        });
-
-        $("section").on("blur", ".editingHtml textarea,[contenteditable]", function(){
-            destroyEditor(editor, this);
+        $("body").on("click keypress", ".editableHtml,[contenteditable]", function(){
+            focusEditor(editor, this);
+        }).on("blur", ".editingHtml textarea,[contenteditable]", function(){
+            blurEditor(editor, this);
         });
 
         var makeNumericTextbox = function(editor){
@@ -540,6 +538,8 @@ function liteOff(x){
                 $('#tabs a[href=' + window.location.hash + ']').trigger('click');
             }
         }).trigger('hashchange');
+
+        initEditor(editor, $('#page'));
     });
 
     var updateGradeScale = function(grade_scale, total_points) {
@@ -824,12 +824,20 @@ function liteOff(x){
         }
     };
 
-    var initEditor = function(editor, context) {
-        return window[editor + '_init'](context);
+    var focusEditor = function(editor, context) {
+        return window[editor + '_focus'](context);
     }
 
-    var destroyEditor = function(editor, context){
-        return window[editor + '_destroy'](context);
+    var blurEditor = function(editor, context){
+        return window[editor + '_blur'](context);
     };
+
+    var cleanupEditor = function(editor, context){
+        return window[editor + '_cleanup'](context);
+    }
+
+    var initEditor = function(editor, context){
+        return window[editor + '_init'](context);
+    }
 })(jQuery);
 

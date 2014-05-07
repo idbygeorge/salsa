@@ -1,5 +1,5 @@
-function tinyMCE_init(context) {
-    var editorMaxHeight = $('body').innerHeight() * .8;
+function tinyMCE_focus(context) {
+    var editorMaxHeight = jQuery('body').innerHeight() * .8;
 
     var element = $(context);
     var text = element.toggleClass("editableHtml editingHtml").html();
@@ -8,7 +8,7 @@ function tinyMCE_init(context) {
     element.html($("<textarea/>").attr("id", id).val(text)).find("textarea");
     element.append($("<div id='old_html'>" + text + '</div>'));
 
-    $('#' + id, context).tinymce({
+    jQuery('#' + id, context).tinymce({
         toolbar: "bold italic | undo redo | bullist numlist indent outdent | link unlink",
         statusbar: false,
         menubar : false,
@@ -35,20 +35,28 @@ function tinyMCE_init(context) {
 
             ed.on('blur', function(e){
                 ed.remove();
-                $(".editingHtml textarea").blur();
+                jQuery(".editingHtml textarea").blur();
             });
         }
     });
 }
 
-function tinyMCE_destroy(context) {
-    var html = $(context).val();
+function tinyMCE_blur(context) {
+    var html = jQuery(context).val();
     
     if (html.length == 0) {
-        html = $('#old_html').html();
+        html = jQuery('#old_html').html();
     }
 
-    var element = $(context).closest(".editingHtml");
+    var element = jQuery(context).closest(".editingHtml");
     element.html(html);
     element.toggleClass("editableHtml editingHtml");
+}
+
+function tinyMCE_cleanup(context) {
+
+}
+
+function tinyMCE_init(context) {
+
 }

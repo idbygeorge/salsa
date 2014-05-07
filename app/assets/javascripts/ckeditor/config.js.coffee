@@ -1,7 +1,7 @@
 CKEDITOR.editorConfig = (config) ->
   config.toolbar_TextBlock = [
-    ['Bold', 'Italic', '-', 'RemoveFormat'],
     ['Undo', 'Redo'],
+    ['Bold', 'Italic', '-', 'RemoveFormat'],
     ['Link', 'Unlink'],
     ['BulletedList', 'NumberedList', '-', 'Outdent', 'Indent'],
     
@@ -22,9 +22,12 @@ CKEDITOR.editorConfig = (config) ->
   # allow specific elements/classes
   config.allowedContent = {
     '$1': {
-      elements: 'p strong em ol li ul',
+      elements: 'p strong em ol li ul div',
       classes: '*',
       attributes: 'style'
+    },
+    'a': {
+      attributes: 'href'
     }
   }
 
