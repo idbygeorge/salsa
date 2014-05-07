@@ -409,7 +409,9 @@ function liteOff(x){
         var publishing = false;
         
         $('#tb_save').on('ajax:beforeSend', function(event, xhr, settings) {
+            cleanupEditor(editor, document);
             settings.data = $('#page-data').html();
+            initEditor(editor, document);
 
             $('#save_prompt').stop().removeAttr('style').removeClass('hidden').css({display: 'block', zIndex: 999999999, top: 30, position: 'fixed', width: '100%', textAlign: 'center', backgroundColor: '#ffe', borderBottom: 'solid 1px #ddd'}).html('Saving...');
         });
@@ -453,6 +455,7 @@ function liteOff(x){
                 $(".example", previewWrapper).hide();
 
                 $(".editable, .editableHtml", previewWrapper).removeClass("editable editableHtml").removeAttr("tabindex");
+                // TODO: remove editor by calling cleanupEditor
 
                 previewWrapper.dialog({
                     modal:true,
@@ -723,6 +726,10 @@ function liteOff(x){
                     if(args.template && $(args.template, "#templates").length) {
                         newElement = $(args.template, "#templates").clone();
                         newElement.removeAttr('id');
+
+                        $(".editableHtml,.editable", newElement).attr({ tabIndex: 0 });
+
+                        initEditor(editor, newElement);
                     } else {
                         if(args.text instanceof Array) {
                             newText = args.text[existingElements.length];
