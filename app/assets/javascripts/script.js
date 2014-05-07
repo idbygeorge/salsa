@@ -103,6 +103,8 @@ function liteOff(x){
 
             $("#topBar").remove();
             $("#container").removeAttr("style");
+
+            initEditor(editor, document);
         });
 
         // control panel
@@ -160,6 +162,8 @@ function liteOff(x){
             control.action = $(this).val();
 
             result = controlMethods[control.method](control);
+
+            initEditor(editor, document);
         });
 
         // grades
@@ -728,8 +732,6 @@ function liteOff(x){
                         newElement.removeAttr('id');
 
                         $(".editableHtml,.editable", newElement).attr({ tabIndex: 0 });
-
-                        initEditor(editor, newElement);
                     } else {
                         if(args.text instanceof Array) {
                             newText = args.text[existingElements.length];
