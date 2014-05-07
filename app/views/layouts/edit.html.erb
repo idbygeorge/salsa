@@ -37,7 +37,7 @@
         <div role="main" id="container">
             <div id="page" class="editor_controls">
                 <div id="page-data" data-view-id="<%= @document.view_id %>">
-                    <%= yield %>
+                    <%= yield.force_encoding("utf-8") %>
                 </div>
             </div>
         </div>
