@@ -58,6 +58,8 @@ class DocumentsController < ApplicationController
 
     canvas_course_id = params[:canvas_course_id]
 
+    verify_org
+
     if canvas_course_id
       # publishing to canvas should not save in the Document model, the canvas version has been modified
       update_course_document(canvas_course_id, request.raw_post) if params[:canvas] && canvas_course_id
@@ -116,25 +118,25 @@ class DocumentsController < ApplicationController
 
     @lms_client.put("/api/v1/courses/#{course_id}", { course: { syllabus_body: html } })
     
-    document = Document.find_by edit_id: params[:id]
-    
-    if document
-
-      if !document[:organization_id]
-        if session[:authenticated_institution] && session[:authenticated_institution] != ''
-          # find the org to bind this to
-          org = Organization.find_by slug: session[:authenticated_institution]
-          
-          # if there is a matching org, save the document under that org
-          if org
-            document[:organization_id] = org[:id]
-          end
-        elsif @organization
-          document[:organization_id] = @organization[:id]
-        end
-      end
-
-      document.update(lms_published_at: DateTime.now, lms_course_id: course_id)
+    if @document
+      @document.update(lms_published_at: DateTime.now, lms_course_id: course_id)
     end
+  end
+
+  def verify_org
+    document_slug = request.env['SERVER_NAME']
+
+    if session[:authenticated_institution] && session[:authenticated_institution] != ''
+      document_slug = session[:authenticated_institution] + '.' + document_slug
+
+      # find the org to bind this to
+      org = Organization.find_by slug: document_slug
+    elsif @organization
+      org = @organization
+    end
+
+    # if there is no org yet, make one
+    org = Organization.create name: document_slug + ' (unverified)', slug: document_slug unless org
+    @document[:organization_id] = org[:id]
   end
 end
