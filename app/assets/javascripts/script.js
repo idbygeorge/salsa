@@ -7,7 +7,7 @@ function liteOn(x,color){
     $(x).css({ backgroundColor: color }).addClass('control_highlighted');
 }
 function liteOff(x){
-    $(x).css({ backgroundColor: '' });
+    $(x).css({ backgroundColor: '' }).removeClass('control_highlighted');
 }
 
 (function($) {
@@ -62,20 +62,35 @@ function liteOff(x){
 
         $(".click_on_init").trigger('click');
 
-        // Check for existing sections and toggle their tab
-        var tabs = ["information", "outcomes", "resources", "activities", "policies", "grades"];
-        $.each(tabs, function (i){
-            var j=2;
-            for(var j=2; j<5; j++){
-                if(!$("#"+tabs[i]).find(".section"+j).hasClass("hide")){
-                    $("aside."+tabs[i]).find("[data-target='.section"+j+"']").removeClass("ui-state-default").addClass("ui-state-active");
+        // dynamically get all of the top level sections as an array
+        var sectionsNames = $('#tabs a').map(function(){
+           return $(this).attr('href').replace(/^#/, '');
+        }).get().join().split(',');
+
+        // loop through all sections and sync up the control panel to the document's current state
+        $.each(sectionsNames, function (i){
+            // store the current section's name
+            var sectionName = this;
+
+            // find the element for this section
+            var currentsection = $("#" + sectionName);
+
+            // loop through all sub sections in the current section
+            currentsection.find('[class^=section]').each(function() {
+                // get the subSection's class name
+                var subSectionClassName = $(this).attr('class').replace(/(.+\s)?(section[^\s]+)(.+|$)/, '$2');
+
+                // find the control for this section
+                var sectionToggleControl = $("aside." + sectionName).find("[data-target='." + subSectionClassName + "']");
+                
+                // sync the controls state for this section with the document
+                if($(this).hasClass("hide")){
+                    sectionToggleControl.removeClass("ui-state-active").addClass("ui-state-default");
+                } else {
+                    sectionToggleControl.removeClass("ui-state-default").addClass("ui-state-active");
                 }
-            }
+            });
         });
-        // for some reason page break is opposite
-        if($("#section5P").hasClass("hide")){
-            $("aside.policies").find("[data-target='.section5']").removeClass("ui-state-active").addClass("ui-state-default");
-        }
 
         // left sidebar section selector
         $("#tabs a").on("click", function(){
