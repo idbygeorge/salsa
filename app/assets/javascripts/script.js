@@ -429,10 +429,8 @@ function liteOff(x){
         var publishing = false;
         
         $('#tb_save').on('ajax:beforeSend', function(event, xhr, settings) {
-            cleanupEditor(editor, document);
-            settings.data = $('#page-data').html();
-            initEditor(editor, document);
-
+            settings.data = cleanupDocument($('#page-data').html());
+            
             $('#save_prompt').stop().removeAttr('style').removeClass('hidden').css({display: 'block', zIndex: 999999999, top: 30, position: 'fixed', width: '100%', textAlign: 'center', backgroundColor: '#ffe', borderBottom: 'solid 1px #ddd'}).html('Saving...');
         });
 
@@ -475,7 +473,7 @@ function liteOff(x){
                 $(".example", previewWrapper).hide();
 
                 $(".editable, .editableHtml", previewWrapper).removeClass("editable editableHtml").removeAttr("tabindex");
-                // TODO: remove editor by calling cleanupEditor
+                previewWrapper.html(cleanupDocument(previewWrapper));
 
                 previewWrapper.dialog({
                     modal:true,
@@ -504,7 +502,7 @@ function liteOff(x){
         $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-state-default").focus();
         
         $('#tb_share').on('ajax:beforeSend', function(event, xhr, settings) {
-            settings.data = $('#page-data').html();
+            settings.data = cleanupDocument($('#page-data').html());
 
             $('#save_message').show();
             $('#pdf_share_link').hide();
@@ -525,7 +523,7 @@ function liteOff(x){
         $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-state-default").focus();
         
         $('#tb_share').on('ajax:beforeSend', function(event, xhr, settings) {
-            settings.data = $('#page-data').html();
+            settings.data = cleanupDocument($('#page-data').html());
 
             $('#save_message').show();
             $('#pdf_share_link').hide();
@@ -863,6 +861,21 @@ function liteOff(x){
 
     var initEditor = function(editor, context){
         return window[editor + '_init'](context);
+    }
+
+    var cleanupDocument = function(context) {
+        var documentToPublish = $('<div/>').html(context);
+
+        cleanupEditor(editor, documentToPublish);
+
+        // force cleanup of items no document should have in them (artifacts from editor)
+        $('[contenteditable],[tabindex]', documentToPublish).removeAttr('contenteditable tabindex');
+
+        // remove other styling artifacts
+        // tablednd
+        $('[style="cursor: move;"]', documentToPublish).removeAttr('style');
+
+        return documentToPublish.html();
     }
 })(jQuery);
 
