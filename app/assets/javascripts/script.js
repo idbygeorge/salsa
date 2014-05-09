@@ -225,7 +225,9 @@ function liteOff(x){
 
         // edit a simple value (no html)
         $("#page").on("click keypress", ".editable", function(){
-            var text = $(this).toggleClass("editable editing").text();
+            var text = $(this).toggleClass("editable editing").text()
+            // trim leading and trailing spaces
+            text = text.replace(/(^\s+|\s+$)/g, '');
 
             var editor = $(this).html($("<input/>").attr("id", "headerTextControl").val(text)).find("input");
             if(editor.val() == '0'){
@@ -878,4 +880,3 @@ function liteOff(x){
         return documentToPublish.html();
     }
 })(jQuery);
-
