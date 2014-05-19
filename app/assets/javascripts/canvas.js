@@ -115,7 +115,7 @@ $(function() {
       });
 
       // remove all hidden content, canvas doesn't like our CSS
-      $('.hide, #page_break, .page-break, .content:has(#grade_scale.inactive), .disabled, #spacer, [style*=display: none;]', salsaDocument).remove();
+      $('.hide, #page_break, .page-break, .content:has(#grade_scale.inactive), .disabled, #spacer, [style*="display: none;"]', salsaDocument).remove();
 
       var htmlLink = $("#html_share_link a").clone().text('SALSA HTML');
       var htmlDiv = $('<div/>').css({ display: 'block', textAlign: 'right', maxWidth: '8in' }).append(htmlLink);
