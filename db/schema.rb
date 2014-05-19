@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140422162953) do
+ActiveRecord::Schema.define(version: 20140519222631) do
 
   create_table "documents", force: true do |t|
     t.string   "name"
@@ -44,6 +44,7 @@ ActiveRecord::Schema.define(version: 20140422162953) do
     t.string   "lms_authentication_source"
     t.string   "lms_authentication_id"
     t.string   "lms_authentication_key"
+    t.string   "lms_info_slug"
   end
 
   add_index "organizations", ["depth"], name: "index_organizations_on_depth"

@@ -62,7 +62,7 @@ class DocumentsController < ApplicationController
 
     if canvas_course_id
       # publishing to canvas should not save in the Document model, the canvas version has been modified
-      update_course_document(canvas_course_id, request.raw_post) if params[:canvas] && canvas_course_id
+      update_course_document(canvas_course_id, request.raw_post, @organization[:lms_info_slug]) if params[:canvas] && canvas_course_id
     else
       @document.payload = request.raw_post
       @document.save!
@@ -113,11 +113,15 @@ class DocumentsController < ApplicationController
     response = Net::HTTP.post_form(uri, {"url" => view_url})
   end
 
-  def update_course_document course_id, html
+  def update_course_document course_id, html, lms_info_slug
     lms_connection_information
 
     @lms_client.put("/api/v1/courses/#{course_id}", { course: { syllabus_body: html } })
-    
+
+    if(lms_info_slug)
+      @lms_client.put("/api/v1/courses/#{course_id}/#{lms_info_slug}", { wiki_page: { body: "<p><a href='#{ document_url(@document[:edit_id]) }' target='_blank'>Edit your <abbr title='Styled and Accessible Learning Service Agreement'>SALSA</abbr></a></p>", hide_from_students: true } })
+    end
+
     if @document
       @document.update(lms_published_at: DateTime.now, lms_course_id: course_id)
     end
