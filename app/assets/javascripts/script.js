@@ -460,7 +460,7 @@ function liteOff(x){
                     }
                 });
 
-                var previewHTML = $("#container #page").children().html();
+                var previewHTML = $('<div id="preview-data"/>').append($("#container #page").children().html());
                 var preview = $('#preview').html(previewHTML);
 
                 var previewWrapper = $('#previewWrapper').clone().css({ backgroundColor: "#F5F5F5" });
@@ -841,11 +841,14 @@ function liteOff(x){
                 $('th:last', args.target).text('Points');
                 $('tr.total td:first-child', args.target).text('Total Points');
                 $('th:last-child,td:last-child', '#grade_scale').show();
-            } else if(args.action === 'percent') {
+            } 
+            else if(args.action === 'percent') {
                 $('th:last', args.target).text('Percentage');
                 $('tr.total td:first-child', args.target).text('Total');
                 $('th:last-child,td:last-child', '#grade_scale').hide();
             }
+
+            updateGradeScale($('#grade_scale'), $('#grade_components .total td:last').text());
         }
     };
 
