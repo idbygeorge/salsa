@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140519222631) do
+ActiveRecord::Schema.define(version: 20140519232016) do
 
   create_table "documents", force: true do |t|
     t.string   "name"
@@ -52,6 +52,16 @@ ActiveRecord::Schema.define(version: 20140519222631) do
   add_index "organizations", ["parent_id"], name: "index_organizations_on_parent_id"
   add_index "organizations", ["rgt"], name: "index_organizations_on_rgt"
   add_index "organizations", ["slug", "parent_id"], name: "index_organizations_on_slug_and_parent_id", unique: true
+
+  create_table "templates", force: true do |t|
+    t.string   "slug"
+    t.text     "payload"
+    t.integer  "organization_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "templates", ["slug", "organization_id"], name: "index_templates_on_slug_and_organization_id", unique: true
 
   create_table "versions", force: true do |t|
     t.integer  "versioned_id"
