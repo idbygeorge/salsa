@@ -60,6 +60,10 @@ function liteOff(x){
             e.preventDefault();
         });
 
+        $("a.click_on_init").not('[href^=#]').on('click', function(){
+            window.location = $(this).attr('href');
+        });
+
         $(".click_on_init").trigger('click');
 
         // dynamically get all of the top level sections as an array
