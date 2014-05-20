@@ -42,7 +42,7 @@
   	      	<div>
   	  			  Published to:
   	  			  
-              <% if document.organization %>
+              <% if document.organization[:lms_authentication_source] %>
     	  			  <a href="<%= document.organization[:lms_authentication_source] + '/courses/' + document.lms_course_id + '/assignments/syllabus' %>" target="_blank">
                   <%= document.organization[:lms_authentication_source] + '/courses/' + document.lms_course_id + '/assignments/syllabus' %>
                 </a>
