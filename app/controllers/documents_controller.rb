@@ -5,15 +5,19 @@ class DocumentsController < ApplicationController
 	layout 'view'
 
 	before_filter :lookup_document, :only => [:edit, :update]
-  before_filter :init_view_folder, :only => [:edit, :update, :show]
+  before_filter :init_view_folder, :only => [:new, :edit, :update, :show]
   
   def index
   	redirect_to :new
   end
 
   def new
-  	document = Document.create(:name => 'Unnamed')
-  	redirect_to edit_document_path(:id => document.edit_id)
+    @document = Document.new(name: 'Unnamed', organization_id: @organization[:id])
+    verify_org
+
+    @document.save!
+
+  	redirect_to edit_document_path(:id => @document.edit_id)
  	end
 
   def show
@@ -130,7 +134,7 @@ class DocumentsController < ApplicationController
   def verify_org
     document_slug = request.env['SERVER_NAME']
 
-    if session[:authenticated_institution] && session[:authenticated_institution] != ''
+    if session[:authenticated_institution] && session[:authenticated_institution] != '' && session[:authenticated_institution] != document_slug
       document_slug = session[:authenticated_institution] + '.' + document_slug
 
       # find the org to bind this to

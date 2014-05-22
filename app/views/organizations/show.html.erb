@@ -1,17 +1,25 @@
-<h1>
+<h1 class="page-header">
   <%= @organization[:name] %>
 </h1>
 
-<div id="organizationControl">
+<div id="organizationControl row">
   <% if @documents.length != 0 %>
-    <a class="button" data-toggle="collapse" data-parent="#organizationControl" href="#editOrganization">
-      Edit Organization
-    </a>
+    <p>
+      <a class="btn btn-default" data-toggle="collapse" data-parent="#organizationControl" href="#editOrganization">
+        Edit Organization
+      </a>
+    </p>
   <% end %>
 
     <div id="editOrganization"<% if @documents.length != 0 %> class="collapse"<% end %>>
       <%= render 'edit' %>
     </div>
+  <hr>
 </div>
 
+
+<div class="row">
+
 <%= render 'show' %>
+
+</div>
