@@ -12,7 +12,7 @@
             var salsaID = $(".content").attr('id'),
                 salsaLink = 'http://salsa.usu.edu/SALSA/' + salsaID;
 
-            $('.edit_syllabus_link').before('<a class="btn salsaLink button-sidebar-wide" href="/courses/' + coursenum + '/wiki/edit-gui-salsa" data-tooltip="top" title="Button will open in a new tab" target="_blank"><img src="https://elearn.usu.edu/canvas_branding/images/salsa_icon.png"> Edit My SALSA</a>');
+            $('.edit_syllabus_link').before('<a class="btn salsaLink button-sidebar-wide" href="/courses/' + coursenum + '/wiki/edit-gui-salsa" data-tooltip="top" title="Button will open in a new tab" target="_blank"><img src="https://raw.githubusercontent.com/idbygeorge/salsa/master/public/img/salsa_icon.png"> Edit My SALSA</a>');
         }
 
         if ($('a:contains("Edit your SALSA")').length > 0){
