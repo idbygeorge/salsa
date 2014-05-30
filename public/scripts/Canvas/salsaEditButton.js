@@ -3,6 +3,19 @@
 // Example: salsaLink = 'http://myschool.salsa.usu.edu/SALSA/' + salsaID;
 // Paste JavaScript into your Canvas global JS file
 
+// Store Canvas course number in a variable
+
+var coursenum, matches, killspot;
+coursenum = null;
+matches = location.pathname.match(/\/courses\/(.*)/);
+if (matches) {
+    coursenum = matches[1];
+    killspot = coursenum.indexOf("/", 0);
+    if (killspot >= 0) {
+        coursenum = coursenum.slice(0, killspot);
+    }
+}
+
 (function($) {
 
     $(function(){
