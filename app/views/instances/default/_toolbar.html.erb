@@ -34,7 +34,7 @@
             <% end %> 
 
             <li>
-                <%= link_to "Help", '#/resources', :id => 'tb_resources' %>
+                <%= link_to "Resources", '#/resources', :id => 'tb_resources' %>
             </li>          
         </ul>
     </nav>
@@ -72,7 +72,6 @@
       <ul>
         <li><a href="#example_tab">Example</a></li>
         <li><a href="#CanvasImport_tab">Canvas Import</a></li>
-        <li class="right"><a href="#help_tab">Help</a></li>
       </ul>
       <div id="example_tab">
         <%= render :partial => "#{@view_folder}/example" %>
@@ -84,7 +83,7 @@
       </div>
       <div id="help_tab">
         <%= render :partial => "#{@view_folder}/help" %>
-      </div>
+      </div> 
     </div>
 </div>
 

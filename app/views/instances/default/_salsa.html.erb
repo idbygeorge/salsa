@@ -329,101 +329,11 @@
     </div><!-- .content -->
 </section><!-- #policies -->
 
-<section id="schedule">
-    <div class="content">
-        <div id="section1S" class="section1">
-            <div class="page_break editableHtml">
-                <div align="center">
-                    ----Please see next page for Schedule information----
-                </div>
-            </div>
-        </div><!-- .section1S-->
 
-        <h2 class="editable">Course Schedule</h2>
-        <div id="section2S" class="section2">
-            <div class="details">
-                <div class="description">
-                    <div>
-                        <table id="table1" class="schedule" border="1">
-                            <caption class="editable">Table 1 Caption</caption>
-                            <thead>
-                                <tr>
-                                    <th id="col2S-left" class="col-left15 editable">Module</th>
-                                    <th id="col2S-middle" class="col-middle35 editable">Topic</th>
-                                    <th id="col2S-right" class="col-right50 editable">Assignment</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td header="col2S-left" class="editable center">#</td>
-                                    <td header="col2S-middle" class="editable left">Text</td>
-                                    <td header="col2S-right" class="editable left">Text</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div><!-- #table1 -->
-
-        <div id="section3S" class="section3 hide">
-            <div class="details">
-                <div class="description">
-                    <div>
-                        <table id="table2" class="schedule" border="1">
-                            <caption class="editable">Table 2 Caption</caption>
-                            <thead>
-                                <tr>
-                                    <th id="col3S-left" class="col-left15 editable">Module</th>
-                                    <th id="col3S-middle" class="col-middle35 editable">Topic</th>
-                                    <th id="col3S-right" class="col-right50 editable">Assignment</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td header="col3S-left" class="editable center">#</td>
-                                    <td header="col3S-middle" class="editable left">Text</td>
-                                    <td header="col3S-right" class="editable left">Text</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div><!-- #table2 -->
-
-        <div id="section4S" class="section4 hide">
-            <div class="details">
-                <div class="description">
-                    <div>
-                        <table id="table3" class="schedule" border="1">
-                            <caption class="editable">Table 3 Caption</caption>
-                            <thead>
-                                <tr>
-                                    <th id="col4S-left" class="col-left15 editable">Module</th>
-                                    <th id="col4S-middle" class="col-middle35 editable">Topic</th>
-                                    <th id="col4S-right" class="col-right50 editable">Assignment</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td header="col4S-left" class="editable center">#</td>
-                                    <td header="col4S-middle" class="editable left">Text</td>
-                                    <td header="col4S-right" class="editable left">Text</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div><!-- #table3 -->
-    </div><!-- .content -->
-
-</section><!-- #schedule -->
 
 <section id="grades">
     <div class="content">
-        <div id="section_break_P" class="section_break_P">
+        <div id="section_break_P" class="section_break_P hide">
             <div class="editableHtml page_break">
                 <div align="center">
                     ----Please see next page for Grades information----
@@ -433,13 +343,11 @@
 
         <div id="section1G" class="section1">
            <h2 class="editable">Grades</h2>
-           <div class="editableHtml">
-                    <p>Your grade will be based on the following:</p>
-           </div>
             <div class="details">
                 <div class="description">
                     <div>
                         <table id="grade_components" class="components" border="1">
+                            <caption class="grade editable">Your grade will be based on the following:</caption>
                             <thead>
                                 <tr><th class="editable">Items</th><th>Points</th></tr>
                             </thead>
@@ -451,19 +359,20 @@
                                     <tr id="1.2"><td class="editable">Item</td><td class="editable right">-</td></tr>
                             </tbody>
                         </table>
+                    <div id="tableText1G" class="tableText"> 
+                        <div class="editableHtml hide">Text</div>
+                    </div>  
                     </div>
                 </div>
             </div>
         </div><!-- .section1 -->
         
         <div id="section2G" class="section2 hide">
-            <div class="editableHtml">
-                <p>You will have the opportunity to earn Extra Credit:</p>
-            </div>
             <div class="details">
                 <div class="description">
                     <div>
                         <table id="extra_credit" class="components" border="1">
+                            <caption class="grade editable">You will have the opportunity to earn Extra Credit:</caption>
                             <thead>
                                 <tr><th class="editable">Items</th><th>Points</th></tr>
                             </thead>
@@ -474,18 +383,19 @@
                                 <tr id="2.1"><td class="editable">Item</td><td class="editable right">-</td></tr>
                             </tbody>
                         </table>
+                    <div id="tableText2G" class="tableText"> 
+                        <div class="editableHtml hide">Text</div>
+                    </div>  
                     </div> 
                 </div>
             </div>                                                                                         
         </div><!-- .section2 -->
         <div id="section3G" class="section3">
-            <div class="editableHtml">
-                <p>Your grade will be calculated with this scale:</p>
-            </div>
             <div class="details">
                 <div class="description">
                     <div>
                         <table id="grade_scale" class="components inactive" border="1">
+                                <caption class="grade editable">Your grade will be calculated with this scale:</caption>
                                 <thead>
                                     <tr><th>Grade</th><th>Percentage</th><th>Points</th></tr>
                                 </thead>
@@ -608,3 +518,104 @@
     </div><!-- .content -->
     
 </section><!-- #grades -->
+
+<section id="schedule">
+    <div class="content">
+        <div id="section1S" class="section1 hide">
+            <div class="page_break editableHtml">
+                <div align="center">
+                    ----Please see next page for Schedule information----
+                </div>
+            </div>
+        </div><!-- .section1S-->
+
+        <h2 class="editable">Course Schedule</h2>
+        <div id="section2S" class="section2">
+            <div class="details">
+                <div class="description">
+                    <div>
+                        <table id="table1" class="schedule" border="1">
+                            <caption class="editable">Table 1 Caption</caption>
+                            <thead>
+                                <tr>
+                                    <th id="col2S-left" class="col-left15 editable">Module</th>
+                                    <th id="col2S-middle" class="col-middle35 editable">Topic</th>
+                                    <th id="col2S-right" class="col-right50 editable">Assignment</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td header="col2S-left" class="editable center">#</td>
+                                    <td header="col2S-middle" class="editable left">Text</td>
+                                    <td header="col2S-right" class="editable left">Text</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    <div id="tableText2S" class="tableText"> 
+                        <div class="editableHtml hide">Text</div>
+                    </div>  
+                    </div>
+                </div>
+            </div>
+        </div><!-- #table1 -->
+
+        <div id="section3S" class="section3 hide">
+            <div class="details">
+                <div class="description">
+                    <div>
+                        <table id="table2" class="schedule" border="1">
+                            <caption class="editable">Table 2 Caption</caption>
+                            <thead>
+                                <tr>
+                                    <th id="col3S-left" class="col-left15 editable">Module</th>
+                                    <th id="col3S-middle" class="col-middle35 editable">Topic</th>
+                                    <th id="col3S-right" class="col-right50 editable">Assignment</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td header="col3S-left" class="editable center">#</td>
+                                    <td header="col3S-middle" class="editable left">Text</td>
+                                    <td header="col3S-right" class="editable left">Text</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    <div id="tableText3S" class="tableText"> 
+                        <div class="editableHtml hide">Text</div>
+                    </div>  
+                    </div>
+                </div>
+            </div>
+        </div><!-- #table2 -->
+
+        <div id="section4S" class="section4 hide">
+            <div class="details">
+                <div class="description">
+                    <div>
+                        <table id="table3" class="schedule" border="1">
+                            <caption class="editable">Table 3 Caption</caption>
+                            <thead>
+                                <tr>
+                                    <th id="col4S-left" class="col-left15 editable">Module</th>
+                                    <th id="col4S-middle" class="col-middle35 editable">Topic</th>
+                                    <th id="col4S-right" class="col-right50 editable">Assignment</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td header="col4S-left" class="editable center">#</td>
+                                    <td header="col4S-middle" class="editable left">Text</td>
+                                    <td header="col4S-right" class="editable left">Text</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    <div id="tableText4S" class="tableText"> 
+                        <div class="editableHtml hide">Text</div>
+                    </div>  
+                    </div>
+                </div>
+            </div>
+        </div><!-- #table3 -->
+    </div><!-- .content -->
+
+</section><!-- #schedule -->
