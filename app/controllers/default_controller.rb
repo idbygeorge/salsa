@@ -1,7 +1,8 @@
 class DefaultController < ApplicationController
 
   layout false
-  
+  before_filter :init_view_folder
+
   def index
     render layout: 'home'
   end
