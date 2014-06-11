@@ -13,3 +13,4 @@ production:
   aws_secret_access_key: 'AMAZON SECRET ACCESS KEY'
   aws_bucket: 'AMAZON BUCKET'
   aws_region: 'AMAZON REGION'
+  google_analytics_id: 'UA-XXXXXXX-XX'
