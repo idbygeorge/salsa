@@ -12,7 +12,8 @@ class DocumentsController < ApplicationController
   end
 
   def new
-    @document = Document.new(name: 'Unnamed', organization_id: @organization[:id])
+    @document = Document.new(name: 'Unnamed')
+
     verify_org
 
     @document.save!

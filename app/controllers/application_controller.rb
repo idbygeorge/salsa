@@ -11,6 +11,7 @@ class ApplicationController < ActionController::Base
 
     # find the matching organizaiton based on the request
     @organization = Organization.find_by slug: request.env['SERVER_NAME']
+    @google_analytics_id = APP_CONFIG['google_analytics_id'] if APP_CONFIG['google_analytics_id']
 
     # if a matching org was found, check if there is a custom view folder set up for it
     if @organization
