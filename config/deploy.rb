@@ -32,7 +32,7 @@ set :linked_files, %w{config/database.yml config/config.yml config/newrelic.yml}
 
 # instances/custom view folder is not part of the public repository
 # any customization instance views will need to be added to the server another way
-set :linked_dirs, %w{app/views/instances/custom}
+set :linked_dirs, %w{app/views/instances/custom assets/ckeditor}
 
 # Default value for default_env is {}
 # set :default_env, { path: "/opt/ruby/bin:$PATH" }
