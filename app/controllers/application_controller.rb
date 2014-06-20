@@ -19,6 +19,8 @@ class ApplicationController < ActionController::Base
       if File.directory?("app/views/instances/custom/#{@organization.slug}")
         @view_folder = "instances/custom/#{@organization.slug}"
       end
+    else
+      @organization = { slug: request.env['SERVER_NAME'] }
     end
   end
 
