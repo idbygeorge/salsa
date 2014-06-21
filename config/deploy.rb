@@ -4,7 +4,7 @@
 lock '3.1.0'
 
 set :application, 'salsa'
-set :repo_url, 'git@github.com:idbygeorge/salsa.git'
+set :repo_url, 'https://github.com/idbygeorge/salsa.git'
 
 # Default branch is :master
 set :branch, 'master' # proc { `git rev-parse --abbrev-ref HEAD`.chomp }
