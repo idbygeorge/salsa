@@ -64,6 +64,7 @@ Salsa::Application.configure do
   config.assets.precompile += %w( home.css )
   config.assets.precompile += %w( home.js )
   config.assets.precompile += %w( admin.js )
+  config.assets.precompile += %w( admin.css )
   #config.assets.precompile += ['*.js', '*.css']
 
   # Ignore bad email addresses and do not raise email delivery errors.
