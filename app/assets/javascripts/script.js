@@ -1,6 +1,7 @@
-var editor = 'CKEditor';
-var controlMethods;
 //var editor = 'tinyMCE';
+var editor = 'CKEditor';
+
+var controlMethods;
 
 function liteOn(x,color){
     $('.control_highlighted').css({ backgroundColor: 'transparent' }).removeClass('control_highlighted');

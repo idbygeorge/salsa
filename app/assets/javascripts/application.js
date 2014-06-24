@@ -15,11 +15,13 @@
 //= require jquery.ui.dialog
 //= require jquery.ui.tabs
 //= require jquery.ui.sortable
-//= require tinymce-jquery
-//= require editor/tinymce.js
-//= require ckeditor-jquery
-//= require editor/ckeditor.js
-//= require modernizr
+
 //= require jquery.tablednd.0.7.min
+
+//= require modernizr
+
+//= require editor/ckeditor_init.js
+//= require editor/tinymce_init.js
+
 //= require script
 //= require canvas

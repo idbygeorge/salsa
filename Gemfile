@@ -38,10 +38,6 @@ gem 'bootstrap-sass'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 
-# editor is tinymce (for now)
-gem 'tinymce-rails', '~> 4.0'
-gem 'ckeditor_rails'
-
 #TODO: remove foundation
 gem 'zurb-foundation'
 
