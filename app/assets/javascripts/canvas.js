@@ -61,7 +61,6 @@ $(function() {
       $('body').attr('data-course', JSON.stringify(courseData));
 
       $("#tb_save_canvas").data('originaltext', $("#tb_save_canvas").text()).html('<span style="color: black;">' + 'Connected to: <b><em>' + courseData.name.slice(0, 15) + (courseData.name.length > 15 ? '...' : '') + '</em></b></span>');
-      $('#CanvasImport_tab .editableHtml', coursePrompt).tinymce('destroy');
 
       if(courseData.syllabus && courseData.syllabus.length) {
         // store syllabus content in the clipboard

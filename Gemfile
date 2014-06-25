@@ -65,8 +65,7 @@ gem 'canvas-api'
 # gem 'bcrypt-ruby', '~> 3.0.0'
 
 # newrelic for monitoring
-#breaking right now...
-#gem 'newrelic_rpm'
+gem 'newrelic_rpm'
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
