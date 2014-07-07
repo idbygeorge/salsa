@@ -579,7 +579,13 @@ function liteOff(x){
             total_points = 0;
         }
 
-        if (($('#grade_components:visible').length && total_points < 100) || ($('#gradeUnitsPercent').is(':checked') && total_points != 100)) {
+        var requiredPoints = 0;
+
+        if(!$('#gradeUnitsPercent').is(':checked') && $('[data-grades-scale-required-points]').length == 1) {
+            requiredPoints = $('[data-grades-scale-required-points]').data('grades-scale-required-points');
+        }
+
+        if ((requiredPoints != 0 && requiredPoints != total_points) || (($('#grade_components:visible').length && total_points < 100) || ($('#gradeUnitsPercent').is(':checked') && total_points != 100))) {
             $(grade_scale).addClass('inactive');
 
             $('tbody > tr > td:last-child', grade_scale).text('-');
