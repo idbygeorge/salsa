@@ -42,6 +42,8 @@ class DocumentsController < ApplicationController
     end
 
     @content = @document.payload
+    @action = 'show'
+
     respond_to do |format|
       format.html {
   	    render :layout => 'view', :template => '/documents/content'
