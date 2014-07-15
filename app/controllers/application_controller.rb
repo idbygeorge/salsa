@@ -33,7 +33,7 @@ class ApplicationController < ActionController::Base
       @institution = params[:institution]
     end
 
-    @organization = Organization.find_by slug: @institution
+    @organization = Organization.find_by slug: @institution unless @organization
 
     redirect_port = ':' + request.env['SERVER_PORT'] unless ['80', '443'].include?(request.env['SERVER_PORT'])
 
