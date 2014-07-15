@@ -60,6 +60,6 @@ class ApplicationController < ActionController::Base
   end
 
   def canvas_access_token
-    session[:canvas_access_token]["access_token"]
+    session[:canvas_access_token]["access_token"] if session[:canvas_access_token]
   end
 end
