@@ -14,6 +14,9 @@ class DocumentsController < ApplicationController
   def new
     @document = Document.new(name: 'Unnamed')
 
+    # if an lms course ID is specified, capture it with the document
+    @document[:lms_course_id] = params[:lms_course_id]
+
     verify_org
 
     @document.save!
