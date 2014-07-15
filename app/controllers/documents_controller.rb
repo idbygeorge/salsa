@@ -59,7 +59,7 @@ class DocumentsController < ApplicationController
   def edit
     # capture the canvas user in the session
     lms_connection_information
-    @lms_user = @lms_client.get("/api/v1/users/self/profile") if @lms_client
+    @lms_user = @lms_client.get("/api/v1/users/self/profile") if @lms_client.token
     
   	render :layout => 'edit', :template => '/documents/content'
  	end
