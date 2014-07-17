@@ -53,7 +53,8 @@ class ApplicationController < ActionController::Base
 
     if canvas_access_token && canvas_access_token != ''
       @lms_client = Canvas::API.new(:host => @oauth_endpoint, :token => canvas_access_token)
-    else
+      @lms_user = @lms_client.get("/api/v1/users/self/profile") if @lms_client.token
+    elsif @lms_client_id
       @lms_client = Canvas::API.new(:host => @oauth_endpoint, :client_id => @lms_client_id, :secret => @lms_secret)
       @redirect_url = "#{@lms_client.oauth_url(@callback_url)}%3Fdocument_id%3D#{params[:document_id]}"
     end

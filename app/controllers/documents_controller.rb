@@ -4,7 +4,8 @@ class DocumentsController < ApplicationController
 
 	layout 'view'
 
-	before_filter :lookup_document, :only => [:edit, :update]
+	before_filter :lms_connection_information, :only => [:edit, :course, :course_list]
+  before_filter :lookup_document, :only => [:edit, :update]
   before_filter :init_view_folder, :only => [:new, :edit, :update, :show, :course]
   
   def index
@@ -60,18 +61,10 @@ class DocumentsController < ApplicationController
   end
 
   def edit
-    # capture the canvas user in the session
-    lms_connection_information
-    @lms_user = @lms_client.get("/api/v1/users/self/profile") if @lms_client.token
-    
   	render :layout => 'edit', :template => '/documents/content'
  	end
 
   def course
-    # capture the canvas user in the session
-    lms_connection_information
-    @lms_user = @lms_client.get("/api/v1/users/self/profile") if @lms_client.token
-
     begin
       lms_course = @lms_client.get("/api/v1/courses/#{params[:lms_course_id]}") if @lms_client.token
     rescue
@@ -99,10 +92,6 @@ class DocumentsController < ApplicationController
   end
 
   def course_list
-    # capture the canvas user in the session
-    lms_connection_information
-    @lms_user = @lms_client.get("/api/v1/users/self/profile") if @lms_client.token
-
     raise ActionController::RoutingError.new('Not Found') unless @lms_user
 
     verify_org
