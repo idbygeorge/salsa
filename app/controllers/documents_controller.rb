@@ -81,7 +81,7 @@ class DocumentsController < ApplicationController
     @document = Document.find_by lms_course_id: params[:lms_course_id], organization: @organization
 
     unless @document
-      @document = Document.create!(lms_course_id: params[:lms_course_id], organization: @organization)
+      @document = Document.create!(name: lms_course['name'], lms_course_id: params[:lms_course_id], organization: @organization)
     end
 
     @view_pdf_url = view_pdf_url
@@ -96,6 +96,12 @@ class DocumentsController < ApplicationController
   end
 
   def course_list
+    # capture the canvas user in the session
+    lms_connection_information
+    @lms_user = @lms_client.get("/api/v1/users/self/profile") if @lms_client.token
+
+    raise ActionController::RoutingError.new('Not Found') unless @lms_user
+
     verify_org
 
     if params[:page]
@@ -104,9 +110,6 @@ class DocumentsController < ApplicationController
       @page = 1
     end
 
-    # capture the canvas user in the session
-    lms_connection_information
-    @lms_user = @lms_client.get("/api/v1/users/self/profile") if @lms_client.token
     @lms_courses = @lms_client.get("/api/v1/courses", per_page: 20, page: @page) if @lms_client.token
 
     render :layout => 'organizations', :template => '/documents/from_lms'

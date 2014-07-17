@@ -13,7 +13,7 @@
 <ul class="col-sm-4 nav">
   <% @lms_courses.each do |course| %>
    <li class="row">
-      <% doc = Document.find_by lms_course_id: course['id'], organization: @organization %>
+      <% doc = Document.find_by lms_course_id: course['id'].to_s, organization: @organization %>
 
       <%= doc %>
       <% if doc %>
