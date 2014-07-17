@@ -8,6 +8,9 @@ Salsa::Application.routes.draw do
 
   resources :organizations
 
+  get '/lms/courses', to: 'documents#course_list', as: 'lms_course_list'
+  get '/lms/courses/:lms_course_id', to: 'documents#course', as: 'lms_course_document'
+
   post "organizations/documents"
 
   get "canvas/list_courses"

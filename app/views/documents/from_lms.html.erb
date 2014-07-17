@@ -1,0 +1,34 @@
+
+<% if @lms_courses.any? %>
+  <% if @page > 1 %>
+    <%= link_to 'Previous', lms_course_list_path(page: @page-1) %>
+  <% end %>
+  <% if @lms_courses.more? %>
+    <%= link_to 'Next', lms_course_list_path(page: @page+1) %>
+  <% end %>
+<% else %>
+  You do not appear to have access to any courses in your LMS.
+<% end %>
+
+<ul class="col-sm-4 nav">
+  <% @lms_courses.each do |course| %>
+   <li class="row">
+      <% doc = Document.find_by lms_course_id: course['id'], organization: @organization %>
+
+      <%= doc %>
+      <% if doc %>
+        <% course_link_text = '<span class="glyphicon glyphicon-pencil"></span> <span class="sr-only">Edit</span>' %>
+      <% else %>
+        <% course_link_text = '<span class="glyphicon glyphicon-plus"></span> <span class="sr-only">Create</span>' %>
+      <% end %>
+
+
+      <div class="pull-right col-sm-3">
+
+        <%= link_to course_link_text.html_safe, lms_course_document_path(course['id']) %>
+      </div>
+
+      <%= course['name'] %>
+   </li>
+  <% end %>
+</ul>
