@@ -14,8 +14,7 @@
   <% @lms_courses.each do |course| %>
    <li class="row">
       <% doc = Document.find_by lms_course_id: course['id'].to_s, organization: @organization %>
-
-      <%= doc %>
+      
       <% if doc %>
         <% course_link_text = '<span class="glyphicon glyphicon-pencil"></span> <span class="sr-only">Edit</span>' %>
       <% else %>
