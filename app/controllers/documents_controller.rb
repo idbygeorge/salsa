@@ -81,8 +81,11 @@ class DocumentsController < ApplicationController
     @document = Document.find_by lms_course_id: params[:lms_course_id], organization: @organization
 
     unless @document
-      @document = Document.create!(name: lms_course['name'], lms_course_id: params[:lms_course_id], organization: @organization)
+      debugger
+      @document = Document.new(name: lms_course['name'], lms_course_id: params[:lms_course_id], organization: @organization)
+      @document.save!
     end
+    debugger
 
     @view_pdf_url = view_pdf_url
     @content = @document.payload
@@ -192,19 +195,22 @@ class DocumentsController < ApplicationController
   def verify_org
     document_slug = request.env['SERVER_NAME']
 
-    if session[:authenticated_institution] && session[:authenticated_institution] != '' && session[:authenticated_institution] != document_slug
-      document_slug = session[:authenticated_institution] + '.' + document_slug
+
+    if @organization
+      org = @organization
+    else
+      if session[:authenticated_institution] && session[:authenticated_institution] != '' && session[:authenticated_institution] != document_slug
+        document_slug = session[:authenticated_institution] + '.' + document_slug
+      end
 
       # find the org to bind this to
       org = Organization.find_by slug: document_slug
-    elsif @organization
-      org = @organization
     end
 
     # if there is no org yet, make one
     org = Organization.create name: document_slug + ' (unverified)', slug: document_slug unless org
     @document[:organization_id] = org[:id] if @document
 
-    @organization = org unless @organization
+    @organization = org
   end
 end
