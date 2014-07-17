@@ -74,11 +74,9 @@ class DocumentsController < ApplicationController
     @document = Document.find_by lms_course_id: params[:lms_course_id], organization: @organization
 
     unless @document
-      debugger
       @document = Document.new(name: lms_course['name'], lms_course_id: params[:lms_course_id], organization: @organization)
       @document.save!
     end
-    debugger
 
     @view_pdf_url = view_pdf_url
     @content = @document.payload
