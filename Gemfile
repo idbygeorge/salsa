@@ -23,6 +23,9 @@ group :production do
   
   # Use unicorn as the app server
   gem 'unicorn'
+
+  # newrelic for monitoring
+  gem 'newrelic_rpm'
 end
 
 # preprocessors
@@ -63,9 +66,6 @@ gem 'canvas-api'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
-
-# newrelic for monitoring
-gem 'newrelic_rpm'
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
