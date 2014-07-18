@@ -24,7 +24,7 @@
 <body id="edit_syllabus" data-lms-login-id="<%= @lms_user['login_id'] if @lms_user %>">
   <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome </a> to experience this site.</p><![endif]-->
 
-<div id="editor_view" data-lms-course="<%= @document[:lms_course_id] %>">
+<div id="editor_view" <% if @lms_course %>data-lms-course="<%= @lms_course.to_json %>"<% end %>>
     <%= render :partial => "#{@view_folder}/toolbar" %>
 
 

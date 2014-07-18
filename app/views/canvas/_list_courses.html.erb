@@ -3,8 +3,18 @@
 	<label>
 		Select a course to connect to:
 		<br><br>
-		<%= select_tag(:course_id, options_for_select( @courses.collect {|c| [ c['name'], c['id'] ] }, 1), :include_blank => true ) %>
-	</label>	
+		<%= select_tag(:course_id, options_for_select( @courses.collect {|c| [ c['name'], c['id'] ] }, @document[:lms_course_id]), :include_blank => true ) %>
+	</label>
+  <p>
+    <!-- <br>
+    or
+  </p>
+  <label>
+    Enter the Canvas course ID for the course to connect to:
+    <br><br>
+
+    <input type="text" value="<%= @document[:lms_course_id] %>" name="course_id" id="course_input_id">
+  </label> -->
 
   <% else %>
   	You do not appear to be connected to an LMS.
@@ -15,7 +25,6 @@
 <script>
 (function($) {
 	$(function(){
-		console.log($);
 		$('#compilation_tabs').tabs();
 	});
 }(jQuery));

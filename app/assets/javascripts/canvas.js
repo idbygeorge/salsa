@@ -30,6 +30,16 @@ $(function() {
   var chooseCoursePromptAutoOpen = false;
   var loadingDialog;
 
+  var syncPublishButton = function(courseData) {
+    if(courseData && courseData.id) {
+      $('#send_canvas').show().removeClass('hidden').append($('<div/>').data('course', courseData).addClass('details').html('<b><em>' + courseData.name.slice(0, 30) + (courseData.name.length > 30 ? '...' : '') + '</em></b>'));
+    } else {
+      $('#send_canvas').hide().addClass('hidden').find('.details').remove();
+    }
+  };
+
+  syncPublishButton($('#editor_view').data('lmsCourse'));
+
   $("#choose_course_prompt").dialog({
       modal:true,
       maxHeight: editorMaxHeight,
@@ -52,19 +62,16 @@ $(function() {
     var coursePrompt = $(this).closest("#choose_course_prompt");
     coursePrompt.find('.message').remove();
 
-    // remove course title from publish prompt
-    $('#send_canvas').hide().find('.details').remove();
-
     if($(this).val()) {
-      var courseData = { id: $(this).val(), name: courses[this.selectedIndex-1].name, syllabus: courses[this.selectedIndex-1].syllabus_body };
+      var courseData = courses[this.selectedIndex-1];
 
-      $('body').attr('data-course', JSON.stringify(courseData));
+      $('#editor_view').data('lmsCourse', courseData);
 
       $("#tb_save_canvas").data('originaltext', $("#tb_save_canvas").text()).html('<span style="color: black;">' + 'Connected to: <b><em>' + courseData.name.slice(0, 15) + (courseData.name.length > 15 ? '...' : '') + '</em></b></span>');
 
-      if(courseData.syllabus && courseData.syllabus.length) {
-        // store syllabus content in the clipboard
-        $("#compilation_tabs #CanvasImport_tab .editableHtml").html(courseData.syllabus);
+      if(courseData.syllabus_body && courseData.syllabus_body.length) {
+        // store syllabus_body content in the clipboard
+        $("#compilation_tabs #CanvasImport_tab .editableHtml").html(courseData.syllabus_body);
         
         // generate message
         var newMessage = $('<div class="courseSyllabusRetrieved"/>').html('The HTML from the <em><b>' + courseData.name + '</em></b> syllabus editor has been imported into the <a href="#CanvasImport_tab"><em>Canvas Import</em></a> tab in <b>Resources</b>.');
@@ -81,7 +88,7 @@ $(function() {
       }
 
       // update the course selection link to show the currently selected course's title
-      $('#send_canvas').show().removeClass('hidden').append($('<div/>').data('course', courseData).addClass('details').html('<b><em>' + courseData.name.slice(0, 30) + (courseData.name.length > 30 ? '...' : '') + '</em></b>'));
+      syncPublishButton(courseData);
 
       // close the dialog
       $('#choose_course_prompt').dialog('close');
@@ -94,55 +101,60 @@ $(function() {
   $('#tb_save_canvas').on('ajax:success', function(event, xhr, settings) {
     $("#choose_course_prompt").html(xhr.html);
 
-    var loadingDialog;
+    $("#choose_course_prompt").dialog("open");
+  });
 
-    $('#tb_send_canvas').on('ajax:beforeSend', function(event, xhr, settings) {
-      course_id = $('#course_id').val()
-      settings.url = settings.url + "&canvas_course_id=" + course_id
-      
-      var salsaDocument = $('#page-data').clone();
+  var loadingDialog;
 
-      // fix styling on div elements inside of headers (title looks terrible in canvas otherwise)
-      $(':header div', salsaDocument).each(function() {
-        $(this).css({ lineHeight: 1.4 });
-      });
+  $('#tb_send_canvas').on('ajax:beforeSend', function(event, xhr, settings) {
+    console.log('settings');
 
-      // fix headers, canvas doesn't allow h1 tags
-      $(':header', salsaDocument).each(function() {
-        var number = parseInt(this.tagName.replace(/^h/i, ''), 10);
-        $(this).replaceWith($('<h' + (number+1) + '/>').html($(this).html()));
-      });
+    course_id = $('#editor_view').data('lmsCourse').id;
 
-      // remove all hidden content, canvas doesn't like our CSS
-      $('.hide, #page_break, .page-break, .content:has(#grade_scale.inactive), .disabled, #spacer, [style*="display: none;"], .dynamic-component', salsaDocument).remove();
+    console.log(course_id);
 
-      var htmlLink = $("#html_share_link a").clone().text('SALSA HTML');
-      var htmlDiv = $('<div/>').css({ float: 'right' }).append(htmlLink);
+    settings.url = settings.url + "&canvas_course_id=" + course_id;
+    
+    var salsaDocument = $('#page-data').clone();
+
+    // fix styling on div elements inside of headers (title looks terrible in canvas otherwise)
+    $(':header div', salsaDocument).each(function() {
+      $(this).css({ lineHeight: 1.4 });
+    });
+
+    // fix headers, canvas doesn't allow h1 tags
+    $(':header', salsaDocument).each(function() {
+      var number = parseInt(this.tagName.replace(/^h/i, ''), 10);
+      $(this).replaceWith($('<h' + (number+1) + '/>').html($(this).html()));
+    });
+
+    // remove all hidden content, canvas doesn't like our CSS
+    $('.hide, #page_break, .page-break, .content:has(#grade_scale.inactive), .disabled, #spacer, [style*="display: none;"], .dynamic-component, script', salsaDocument).remove();
+
+    var htmlLink = $("#html_share_link a").clone().text('SALSA HTML');
+    var htmlDiv = $('<div/>').css({ float: 'right' }).append(htmlLink);
 
 /*      var pdfLink = $("#pdf_share_link a").clone().text('PDF Version');
-      var pdfDiv = $('<div/>').css({ display: 'block', textAlign: 'right', maxWidth: '8in' }).append(pdfLink);*/
+    var pdfDiv = $('<div/>').css({ display: 'block', textAlign: 'right', maxWidth: '8in' }).append(pdfLink);*/
 
-      $('.content:first', salsaDocument).prepend(htmlDiv);
+    $('.content:first', salsaDocument).prepend(htmlDiv);
 
-      settings.data = salsaDocument.html();
+    settings.data = salsaDocument.html();
 
-      $("#choose_course_prompt").dialog("close");
+    $("#choose_course_prompt").dialog("close");
 
-      loadingDialog = $('<div>Sending your SALSA to canvas...</div>').prepend($('#save_prompt img').clone()).dialog({modal: true, title: "Saving..."});
-      $('.ui-dialog-titlebar-close').html('close | x').removeClass('ui-state-default').focus();
-    });
+    loadingDialog = $('<div>Sending your SALSA to canvas...</div>').prepend($('#save_prompt img').clone()).dialog({modal: true, title: "Saving..."});
+    $('.ui-dialog-titlebar-close').html('close | x').removeClass('ui-state-default').focus();
+  });
 
-    $('#tb_send_canvas').on('ajax:error', function(event, xhr, settings) {
-      $('<div>There was an error saving your SALSA to Canvas.</div>').dialog({modal: true, title: 'Error'});
-      $('.ui-dialog-titlebar-close').html('close | x').removeClass('ui-state-default').focus();
-    }).on('ajax:success', function(event, xhr, settings) {
-      $('<div>Your SALSA was successfully saved to canvas.</div>').dialog({modal: true, title: 'Success'});
-      $('.ui-dialog-titlebar-close').html('close | x').removeClass('ui-state-default').focus();
-    }).on('ajax:complete', function(event, xhr, settings) {
-      loadingDialog.dialog('close');
-    });
-
-    $("#choose_course_prompt").dialog("open");
+  $('#tb_send_canvas').on('ajax:error', function(event, xhr, settings) {
+    $('<div>There was an error saving your SALSA to Canvas.</div>').dialog({modal: true, title: 'Error'});
+    $('.ui-dialog-titlebar-close').html('close | x').removeClass('ui-state-default').focus();
+  }).on('ajax:success', function(event, xhr, settings) {
+    $('<div>Your SALSA was successfully saved to canvas.</div>').dialog({modal: true, title: 'Success'});
+    $('.ui-dialog-titlebar-close').html('close | x').removeClass('ui-state-default').focus();
+  }).on('ajax:complete', function(event, xhr, settings) {
+    loadingDialog.dialog('close');
   });
 
   // TODO: Debugging code... remove when done.
