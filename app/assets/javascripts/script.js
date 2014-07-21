@@ -436,6 +436,11 @@ function liteOff(x){
         var publishing = false;
         
         $('#tb_save').on('ajax:beforeSend', function(event, xhr, settings) {
+            if($('body').hasClass('disable-save')) {
+                xhr.abort();
+                return false;
+            }
+
             settings.data = cleanupDocument($('#page-data').html());
             
             $('#save_prompt').stop().removeAttr('style').removeClass('hidden').css({display: 'block', zIndex: 999999999, top: 30, position: 'fixed', width: '100%', textAlign: 'center', backgroundColor: '#ffe', borderBottom: 'solid 1px #ddd'}).html('Saving...');
@@ -509,6 +514,11 @@ function liteOff(x){
         $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-state-default").focus();
         
         $('#tb_share').on('ajax:beforeSend', function(event, xhr, settings) {
+            if($('body').hasClass('disable-save')) {
+                xhr.abort();
+                return false;
+            }
+            
             settings.data = cleanupDocument($('#page-data').html());
 
             $('#save_message').show();
@@ -528,15 +538,6 @@ function liteOff(x){
         // select course from LMS
         $("#course_prompt").dialog({ modal:true, width:500, title:'Select Course', autoOpen:false });
         $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-state-default").focus();
-        
-        $('#tb_share').on('ajax:beforeSend', function(event, xhr, settings) {
-            settings.data = cleanupDocument($('#page-data').html());
-
-            $('#save_message').show();
-            $('#pdf_share_link').hide();
-            $('#share_prompt').dialog('open');
-        });
-
 
         // table drag and drop
         $("#grade_components,#extra_credit,table.sortable").tableDnD({ onDragClass: "myDragClass",});

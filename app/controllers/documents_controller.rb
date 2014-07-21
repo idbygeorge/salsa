@@ -66,7 +66,7 @@ class DocumentsController < ApplicationController
 
   def course
     begin
-      lms_course = @lms_client.get("/api/v1/courses/#{params[:lms_course_id]}") if @lms_client.token
+      @lms_course = @lms_client.get("/api/v1/courses/#{params[:lms_course_id]}", { include: 'syllabus_body' }) if @lms_client.token
     rescue
       raise ActionController::RoutingError.new('Not Found')
     end
@@ -74,7 +74,7 @@ class DocumentsController < ApplicationController
     @document = Document.find_by lms_course_id: params[:lms_course_id], organization: @organization
 
     unless @document
-      @document = Document.new(name: lms_course['name'], lms_course_id: params[:lms_course_id], organization: @organization)
+      @document = Document.new(name: @lms_course['name'], lms_course_id: params[:lms_course_id], organization: @organization)
       @document.save!
     end
 
