@@ -78,6 +78,8 @@ class DocumentsController < ApplicationController
       @document.save!
     end
 
+    @document.revert_to params[:version].to_i if params[:version]
+
     @view_pdf_url = view_pdf_url
     @content = @document.payload
     @view_url = view_url
