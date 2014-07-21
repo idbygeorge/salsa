@@ -539,7 +539,7 @@ function liteOff(x){
 
 
         // table drag and drop
-        $("#grade_components,#extra_credit").tableDnD({ onDragClass: "myDragClass",});
+        $("#grade_components,#extra_credit,table.sortable").tableDnD({ onDragClass: "myDragClass",});
 
         // load the information section by default
         $("#controlPanel aside").hide();
