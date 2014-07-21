@@ -117,6 +117,9 @@ class DocumentsController < ApplicationController
       update_course_document(canvas_course_id, request.raw_post, @organization[:lms_info_slug]) if params[:canvas] && canvas_course_id
     else
       @document.payload = request.raw_post
+
+      @document.payload = nil if @document.payload == ''
+
       @document.save!
     end
 
