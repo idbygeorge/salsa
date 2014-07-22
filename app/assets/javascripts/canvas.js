@@ -131,7 +131,7 @@ $(function() {
     // remove all hidden content, canvas doesn't like our CSS
     $('.hide, #page_break, .page-break, .content:has(#grade_scale.inactive), .disabled, #spacer, [style*="display: none;"], .dynamic-component, script', salsaDocument).remove();
 
-    var htmlLink = $("#html_share_link a").clone().text('SALSA HTML');
+    var htmlLink = $("#html_share_link a").clone().text('SALSA HTML').attr('id', 'salsa_document_view_link');
     var htmlDiv = $('<div/>').css({ float: 'right' }).append(htmlLink);
 
 /*      var pdfLink = $("#pdf_share_link a").clone().text('PDF Version');
