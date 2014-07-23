@@ -17,7 +17,7 @@ Clone repository
 
 Copy `config/database.yml.default` paste to `config/database.yml`, change as necessary.
 
-Copy `config/config.yml.default` paste to `config/database.yml`, change as necessary.
+Copy `config/config.yml.default` paste to `config/config.yml`, change as necessary.
 
     bundle install
     rake db:create
