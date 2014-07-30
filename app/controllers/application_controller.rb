@@ -56,7 +56,12 @@ class ApplicationController < ActionController::Base
       @lms_user = @lms_client.get("/api/v1/users/self/profile") if @lms_client.token
     elsif @lms_client_id
       @lms_client = Canvas::API.new(:host => @oauth_endpoint, :client_id => @lms_client_id, :secret => @lms_secret)
-      @redirect_url = "#{@lms_client.oauth_url(@callback_url)}%3Fdocument_id%3D#{params[:document_id]}"
+
+      if params[:lms_course_id]
+        @redirect_url = "#{@lms_client.oauth_url(@callback_url)}%3Flms_course_id%3D#{params[:lms_course_id]}"
+      else
+        @redirect_url = "#{@lms_client.oauth_url(@callback_url)}%3Fdocument_id%3D#{params[:document_id]}"
+      end
     end
   end
 
