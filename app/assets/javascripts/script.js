@@ -510,7 +510,7 @@ function liteOff(x){
         });
 
         // publish
-        $("#share_prompt").dialog({ modal:true, width:500, title:'Publish', autoOpen:false });
+        $("#share_prompt").dialog({ modal:true, width:600, title:'Publish', autoOpen:false });
         $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-state-default").focus();
         
         $('#tb_share').on('ajax:beforeSend', function(event, xhr, settings) {
@@ -524,6 +524,9 @@ function liteOff(x){
             $('#save_message').show();
             $('#pdf_share_link').hide();
             $('#share_prompt').dialog('open');
+
+            // should be save to LMS...
+            $('#tb_send_canvas:visible').trigger('click');
         });
 
         $('#tb_share').on('ajax:success', function() {
