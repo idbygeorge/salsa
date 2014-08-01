@@ -16,12 +16,9 @@
             -->
 
             <% if session[:authenticated_institution] && session[:authenticated_institution] != '' %>
-                 <li>
-                    <%= link_to "Disconnect from: Canvas", controller: 'oauth2', action: 'logout' %>
-                </li>
                 <li>
-                    <% if @lms_course %>
-                        <a href="<%= @organization[:lms_authentication_source] %>/courses/<%= @lms_course['id'] %>/assignments/syllabus" target="_blank">Course: <%= @lms_course['name'] %></a>
+                    <% if @document[:lms_course_id] %>
+                        <a href="<%= @organization[:lms_authentication_source] %>/courses/<%= @document[:lms_course_id] %>/assignments/syllabus" target="_blank"><% if @lms_course %><%= @lms_course['name'] %><% else %>Course: <%= @document[:lms_course_id] %><% end %></a>
                     <% else %>
                         <%= link_to "Select Course...", canvas_list_courses_path(id: @document.edit_id), :authenticity_token => form_authenticity_token(), :remote => true, :id => 'tb_save_canvas', :class => 'highlight' %>
                     <% end %>
