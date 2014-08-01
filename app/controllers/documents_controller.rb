@@ -112,8 +112,6 @@ class DocumentsController < ApplicationController
   end
 
   def update
-    generate_document_pdf(@document.view_id) if Rails.env.production? && params[:publish]
-
     canvas_course_id = params[:canvas_course_id]
 
     verify_org
@@ -167,11 +165,6 @@ class DocumentsController < ApplicationController
 
     # backwards compatibility alias
     @syllabus = @document
-  end
-
-  def generate_document_pdf(document_view_id)
-    uri = URI.parse(APP_CONFIG['pdf_generator_webhook'])
-    response = Net::HTTP.post_form(uri, {"url" => view_url})
   end
 
   def update_course_document course_id, html, lms_info_slug
