@@ -68,27 +68,31 @@ class DocumentsController < ApplicationController
     begin
       @lms_course = @lms_client.get("/api/v1/courses/#{params[:lms_course_id]}", { include: 'syllabus_body' }) if @lms_client.token
     rescue
-      raise ActionController::RoutingError.new('Not Found')
+      raise ActionController::RoutingError.new('Not Authorized')
     end
 
-    @document = Document.find_by lms_course_id: params[:lms_course_id], organization: @organization
+    if @lms_course
+      @document = Document.find_by lms_course_id: params[:lms_course_id], organization: @organization
 
-    unless @document
-      @document = Document.new(name: @lms_course['name'], lms_course_id: params[:lms_course_id], organization: @organization)
-      @document.save!
+      unless @document
+        @document = Document.new(name: @lms_course['name'], lms_course_id: params[:lms_course_id], organization: @organization)
+        @document.save!
+      end
+
+      @document.revert_to params[:version].to_i if params[:version]
+
+      @view_pdf_url = view_pdf_url
+      @content = @document.payload
+      @view_url = view_url
+      @template_url = template_url
+
+      # backwards compatibility alias
+      @syllabus = @document
+      
+      render :layout => 'edit', :template => '/documents/content'
+    else
+      redirect_to controller: 'oauth2', action: 'login', lms_course_id: params[:lms_course_id]
     end
-
-    @document.revert_to params[:version].to_i if params[:version]
-
-    @view_pdf_url = view_pdf_url
-    @content = @document.payload
-    @view_url = view_url
-    @template_url = template_url
-
-    # backwards compatibility alias
-    @syllabus = @document
-    
-    render :layout => 'edit', :template => '/documents/content'
   end
 
   def course_list
