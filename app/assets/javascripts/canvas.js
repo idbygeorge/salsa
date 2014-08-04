@@ -67,14 +67,17 @@ $(function() {
 
       $('#editor_view').data('lmsCourse', courseData);
 
-      $("#tb_save_canvas").data('originaltext', $("#tb_save_canvas").text()).html('<img src="https://usu.instructure.com/favicon.ico" height="16" alt="Canvas"> &nbsp;' + courseData.name.slice(0, 15) + (courseData.name.length > 15 ? '...' : '')).removeClass('highlight');
+      $("#tb_save_canvas").data('originaltext', $("#tb_save_canvas").text()).html('<img src="https://lms.instructure.com/favicon.ico" height="16" alt="Canvas"> &nbsp;' + courseData.name.slice(0, 15) + (courseData.name.length > 15 ? '...' : '')).removeClass('highlight');
 
       if(courseData.syllabus_body && courseData.syllabus_body.length) {
         // store syllabus_body content in the clipboard
-        $("#compilation_tabs #CanvasImport_tab .editableHtml").html(courseData.syllabus_body);
-        
+
+        // don't do this. IDs are duplicated, messed up js for control panel if there are any duplicate IDs for controlled elements
+        //$("#compilation_tabs #CanvasImport_tab .editableHtml").html(courseData.syllabus_body);
+        $("#compilation_tabs #CanvasImport_tab .editableHtml").html('');
+
         // generate message
-        var newMessage = $('<div class="courseSyllabusRetrieved"/>').html('The HTML from the <em><b>' + courseData.name + '</em></b> syllabus editor has been imported into the <a href="#CanvasImport_tab"><em>Canvas Import</em></a> tab in <b>Resources</b>.');
+        var newMessage = $('<div class="courseSyllabusRetrieved"/>').html('This SALSA is now connected to <em><b>' + courseData.name + '</em></b>');
 
         // put message in message queue
         $("#messages").prepend(newMessage);
