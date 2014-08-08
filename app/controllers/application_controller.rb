@@ -53,7 +53,14 @@ class ApplicationController < ActionController::Base
 
     if canvas_access_token && canvas_access_token != ''
       @lms_client = Canvas::API.new(:host => @oauth_endpoint, :token => canvas_access_token)
-      @lms_user = @lms_client.get("/api/v1/users/self/profile") if @lms_client.token
+
+      # if this throws an error, there is something wrong with the token
+      begin
+        @lms_user = @lms_client.get("/api/v1/users/self/profile") if @lms_client.token
+      rescue
+        # clear the session and start over
+        redirect_to oauth2_logout_path
+      end
     elsif @lms_client_id
       @lms_client = Canvas::API.new(:host => @oauth_endpoint, :client_id => @lms_client_id, :secret => @lms_secret)
 
