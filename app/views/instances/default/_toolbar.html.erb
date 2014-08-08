@@ -54,7 +54,7 @@
     <p id="html_share_link"><%= link_to @view_url, @view_url, :target => '_blank', :id => "view_url" %></p>
 
     <div style="padding: 20px 0px 10px;">
-        <p id="send_canvas" class="hidden">
+        <p id="send_canvas" <% if !@document[:lms_course_id] %>class="hidden"<% end %>>
          <%= link_to "Send to Canvas", document_path(@document.edit_id, canvas: true), :authenticity_token => form_authenticity_token(), :method => :put, :remote => true, :id => 'tb_send_canvas', :class => 'button' %>
          <br>
         </p>

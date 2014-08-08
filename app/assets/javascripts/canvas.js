@@ -67,14 +67,17 @@ $(function() {
 
       $('#editor_view').data('lmsCourse', courseData);
 
-      $("#tb_save_canvas").data('originaltext', $("#tb_save_canvas").text()).html('<span style="color: black;">' + 'Connected to: <b><em>' + courseData.name.slice(0, 15) + (courseData.name.length > 15 ? '...' : '') + '</em></b></span>');
+      $("#tb_save_canvas").data('originaltext', $("#tb_save_canvas").text()).html('<img src="https://lms.instructure.com/favicon.ico" height="16" alt="Canvas"> &nbsp;' + courseData.name.slice(0, 15) + (courseData.name.length > 15 ? '...' : '')).removeClass('highlight');
 
       if(courseData.syllabus_body && courseData.syllabus_body.length) {
         // store syllabus_body content in the clipboard
-        $("#compilation_tabs #CanvasImport_tab .editableHtml").html(courseData.syllabus_body);
-        
+
+        // don't do this. IDs are duplicated, messed up js for control panel if there are any duplicate IDs for controlled elements
+        //$("#compilation_tabs #CanvasImport_tab .editableHtml").html(courseData.syllabus_body);
+        $("#compilation_tabs #CanvasImport_tab .editableHtml").html('');
+
         // generate message
-        var newMessage = $('<div class="courseSyllabusRetrieved"/>').html('The HTML from the <em><b>' + courseData.name + '</em></b> syllabus editor has been imported into the <a href="#CanvasImport_tab"><em>Canvas Import</em></a> tab in <b>Resources</b>.');
+        var newMessage = $('<div class="courseSyllabusRetrieved"/>').html('This SALSA is now connected to <em><b>' + courseData.name + '</em></b>');
 
         // put message in message queue
         $("#messages").prepend(newMessage);
@@ -107,12 +110,9 @@ $(function() {
   var loadingDialog;
 
   $('#tb_send_canvas').on('ajax:beforeSend', function(event, xhr, settings) {
-    console.log('settings');
+    $(this).html('Publishing...').prepend($('<span class="in-progress"></span>'));
 
     course_id = $('#editor_view').data('lmsCourse').id;
-
-    console.log(course_id);
-
     settings.url = settings.url + "&canvas_course_id=" + course_id;
     
     var salsaDocument = $('#page-data').clone();
@@ -142,23 +142,14 @@ $(function() {
     settings.data = salsaDocument.html();
 
     $("#choose_course_prompt").dialog("close");
-
-    loadingDialog = $('<div>Sending your SALSA to canvas...</div>').prepend($('#save_prompt img').clone()).dialog({modal: true, title: "Saving..."});
-    $('.ui-dialog-titlebar-close').html('close | x').removeClass('ui-state-default').focus();
   });
 
   $('#tb_send_canvas').on('ajax:error', function(event, xhr, settings) {
-    $('<div>There was an error saving your SALSA to Canvas.</div>').dialog({modal: true, title: 'Error'});
-    $('.ui-dialog-titlebar-close').html('close | x').removeClass('ui-state-default').focus();
+    $('#send_canvas .details').html('There was a problem publishing to Canvas');
   }).on('ajax:success', function(event, xhr, settings) {
-    $('<div>Your SALSA was successfully saved to canvas.</div>').dialog({modal: true, title: 'Success'});
-    $('.ui-dialog-titlebar-close').html('close | x').removeClass('ui-state-default').focus();
+    $('#send_canvas .details').html(new Date());
   }).on('ajax:complete', function(event, xhr, settings) {
-    loadingDialog.dialog('close');
-  });
-
-  // TODO: Debugging code... remove when done.
-  $('#tb_save_canvas').on('ajax:error', function(event, xhr, settings) {
-    console.log("Ajax error saving to canvas...", event, xhr, settings);
+    $('.in-progress', this).remove();
+    $(this).html('Sent to Canvas');
   });
 });
