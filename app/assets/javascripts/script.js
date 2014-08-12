@@ -754,7 +754,7 @@ function liteOff(x){
                         activateElement.html(newText);
                     }
 
-                    activateElement.show();
+                    activateElement.show().removeClass('hide');
                 } else if(args.max === undefined || existingElements.length < args.max) {
                     var newElement;
 
