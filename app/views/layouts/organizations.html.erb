@@ -50,7 +50,7 @@
               </li>
 
               <% @organizations.each do |org| %>
-                <li>
+                <li class="depth-<%= org.depth %>">
                   <%= link_to org[:name], organization_path(id: org[:id]) %>
                   <div class='info'><%= org.documents.where('documents.updated_at != documents.created_at').count %>:<%= link_to org.documents.where('documents.updated_at = documents.created_at').count, organization_path(id: org[:id], key: 'abandoned') %></div>
                 </li>
@@ -64,6 +64,7 @@
 
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
           <%# bootstrap_flash %>
+          <%#<%= yield(:content) or yield %>
           <%= yield %>
         </div>
       </div><!--/row-->

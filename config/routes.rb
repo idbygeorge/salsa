@@ -6,7 +6,13 @@ Salsa::Application.routes.draw do
   get '/:alias/:document', to: redirect('/SALSA/%{document}'), constraints: { alias: /(syllabuses|salsas?)/ }
   get '/:alias/:document/:action', to: redirect('/SALSA/%{document}/%{action}'), constraints: { alias: /(syllabuses|salsas?)/, action: /(edit|template)?/ }
 
-  resources :organizations
+  scope 'admin' do
+    resources :organizations
+
+    scope 'organization/:organization_slug' do
+      resources :components, param: :slug, constraints: { organization_slug: /[^\/]+/ }
+    end
+  end
 
   get '/lms/courses', to: 'documents#course_list', as: 'lms_course_list'
   get '/lms/courses/:lms_course_id', to: 'documents#course', as: 'lms_course_document'

@@ -24,6 +24,21 @@ li:hover .info { visibility: visible; }
   time { display: block; }
 }
 
+li.depth-1 {
+  padding-left: 15px;
+}
+li.depth-2 {
+  padding-left: 30px;
+}
+li.depth-3 {
+  padding-left: 45px;
+}
+li.depth-4 {
+  padding-left: 60px;
+}
+li.depth-5 {
+  padding-left: 75px;
+}
 /*
  * Base structure
  */

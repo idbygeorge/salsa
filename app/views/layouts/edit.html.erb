@@ -24,9 +24,8 @@
 <body id="edit_syllabus" data-lms-login-id="<%= @lms_user['login_id'] if @lms_user %>">
   <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome </a> to experience this site.</p><![endif]-->
 
-<div id="editor_view" data-lms-course="<% if @lms_course %><%= @lms_course.to_json %><% elsif @document[:lms_course_id] %>{&quot;id&quot;:<%= @document[:lms_course_id] %>, &quot;name&quot;: &quot;Course: <%= @document[:lms_course_id] %>&quot;}<% end %>">
-    <%= render :partial => "#{@view_folder}/toolbar" %>
-
+<div id="editor_view" data-lms-course="<% if @lms_course %><%= @lms_course.to_json %><% elsif @document[:lms_course_id] %>{&quot;id&quot;:<%= @document[:lms_course_id] %>, &quot;name&quot;: &quot;Course: <%= @document[:lms_course_id] %>&quot;}<% end %>" <% if @document.component %>data-org-config="<%= "{\"css\":\"https://s3-us-west-2.amazonaws.com/salsa.assets/#{@organization.slug}/#{@document.component.slug}/css/salsa-#{@document.component_version}.css\"}" %>"<% end %>>
+    <%= salsa_partial 'toolbar' %>
 
     <div id="messages">
         <% flash.each do |name, msg| -%>
@@ -36,9 +35,8 @@
 
     <div id="wrapper">
 
-        <%= render :partial => "#{@view_folder}/section_nav" %>
-
-        <%= render :partial => "#{@view_folder}/control_panel" %>
+        <%= salsa_partial 'section_nav' %>
+        <%= salsa_partial 'control_panel' %>
 
         <div role="main" id="container">
             <div id="page" class="editor_controls">
@@ -48,14 +46,14 @@
             </div>
         </div>
 
-        <%= render :partial => "#{@view_folder}/content_toolbar" %>
+        <%= salsa_partial 'content_toolbar' %>
     </div>
 
-    <%= render :partial => "#{@view_folder}/footer" %>
+    <%= salsa_partial 'footer' %>
 </div>
 
-<%= render :partial => "#{@view_folder}/example" %>
-<%= render :partial => "#{@view_folder}/help" %>
+<%= salsa_partial 'example' %>
+<%= salsa_partial 'help' %>
 <%= render :partial => "/default/analytics.js" %>
 
 </body>

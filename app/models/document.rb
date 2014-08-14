@@ -3,6 +3,7 @@ class Document < ActiveRecord::Base
 
 	before_create :ensure_ids
   belongs_to :organization
+  belongs_to :component
 
 	def ensure_ids
 		self.view_id = Document.generate_id unless view_id

@@ -163,6 +163,11 @@ class DocumentsController < ApplicationController
     @view_url = view_url
     @template_url = template_url
 
+    # use the component that was used when this document was created
+    if @document.component_version
+      @document.component.revert_to @document.component_version
+    end
+    
     # backwards compatibility alias
     @syllabus = @document
   end
@@ -183,7 +188,6 @@ class DocumentsController < ApplicationController
 
   def verify_org
     document_slug = request.env['SERVER_NAME']
-
 
     if @organization
       org = @organization

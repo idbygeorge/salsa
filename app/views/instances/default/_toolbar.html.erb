@@ -36,7 +36,13 @@
 
             <li>
                 <%= link_to "Resources", '#/resources', :id => 'tb_resources' %>
-            </li>          
+            </li>
+
+            <% if @document.component && @document.component.version != @document.component.versions.count + 1 %>
+                <li>
+                    using: <%= @document.component.version - @document.component.versions.count - 1 %>
+                </li>
+            <% end %>
         </ul>
     </nav>
 </header>
@@ -75,7 +81,7 @@
         <li><a href="#CanvasImport_tab">Canvas Import</a></li>
       </ul>
       <div id="example_tab">
-        <%= render :partial => "#{@view_folder}/example" %>
+        <%= salsa_partial 'example' %>
       </div>
       <div id="CanvasImport_tab">
         <div class="editableHtml">
