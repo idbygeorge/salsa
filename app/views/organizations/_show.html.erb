@@ -61,14 +61,20 @@
   	      	</div>
   	      <% end %>
   	    
+          <% org_base = '' %>
+
+          <% if @organization %>
+            <% org_base = "//#{@organization[:slug]}" %>
+          <% end %>
+
         	<div>
-            View: <%= link_to document_path(id: document.view_id), document_path(id: document.view_id), target: "_blank" %>
+            View: <%= link_to "#{org_base}#{document_path(id: document.view_id)}", "#{org_base}#{document_path(id: document.view_id)}", target: "_blank" %>
             <br>
-            Edit: <%= link_to document_path(id: document.edit_id), document_path(id: document.edit_id), target: "_blank" %>
+            Edit: <%= link_to "#{org_base}#{document_path(id: document.edit_id)}", "#{org_base}#{document_path(id: document.edit_id)}", target: "_blank" %>
             
             <% if document.template_id %>
               <br>
-              Template: <%= link_to document_path(id: document.template_id), document_path(id: document.template_id), target: "_blank" %>
+              Template: <%= link_to "#{org_base}#{document_path(id: document.template_id)}", "#{org_base}#{document_path(id: document.template_id)}", target: "_blank" %>
             <% end %>
         	</div>
         </li>
