@@ -14,14 +14,16 @@ body { padding-top: 50px; }
   font-family: Monaco, Menlo, Consolas, "Courier New", monospace;
   font-size: 12px;
   text-align: right;
-  visibility: hidden;
 }
 
-li:hover .info { visibility: visible; }
-
 #salsaDocuments {
-
   time { display: block; }
+
+  li.nav-header { 
+    margin-top: 1em;
+    padding-top: 1em;
+    border-top: solid 1px #ddd;
+  }
 }
 
 li.depth-1 {

@@ -31,7 +31,7 @@
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
               <li class="active"><%= link_to "Organizations", organizations_path  %></li>
-              <li class="logout"><%= link_to "Logout", "/path3"  %></li>
+              <li class="logout"><%= link_to "Logout", "organizations#logout"  %></li>
             </ul>
           </div>
       </div>
@@ -40,29 +40,36 @@
     <div class="container-fluid">
       <div class="row">
         
-        <div class="col-sm-3 col-md-2 sidebar">
+        <div class="col-sm-4 col-md-3 sidebar">
+          <div class="pull-right text-right">
+            <%= Document.where('documents.updated_at != documents.created_at').count %> documents<br>
+            <%= Document.where('documents.updated_at = documents.created_at').count %> abandoned
+          </div>
+
+          <%= link_to 'Add Organization', new_organization_path, class: 'btn btn-success' %>
+
+          <hr>
+
           <% if @organizations %>
             <ul class="nav nav-sidebar">
               <li class="nav-header clearfix">
-                <%= link_to 'Orphaned SALSAs', organization_path(id: '') %>
-
-                <div class='info'><%= Document.where('documents.organization_id IS NULL AND documents.updated_at != documents.created_at').count %>:<%= link_to Document.where('documents.organization_id IS NULL AND documents.updated_at = documents.created_at').count, organization_path(id: '', key: 'abandoned') %></div>
+                <%= link_to 'Orphaned SALSAs', organizations_path %>
               </li>
 
               <% @organizations.each do |org| %>
                 <li class="depth-<%= org.depth %>">
-                  <%= link_to org[:name], organization_path(id: org[:id]) %>
-                  <div class='info'><%= org.documents.where('documents.updated_at != documents.created_at').count %>:<%= link_to org.documents.where('documents.updated_at = documents.created_at').count, organization_path(id: org[:id], key: 'abandoned') %></div>
+                  <% if org[:slug] %>
+                    <%= link_to org[:name], organization_path(slug: org[:slug]) %>
+                  <% end %>
                 </li>
               <% end %>
             </ul>
           <% end %>
 
-          <%= link_to 'Add Organization', new_organization_path, class: 'btn btn-success pull-right' %>
         </div><!--/span-->
         
 
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <div class="col-sm-8 col-sm-offset-4 col-md-9 col-md-offset-3 main">
           <%# bootstrap_flash %>
           <%#<%= yield(:content) or yield %>
           <%= yield %>

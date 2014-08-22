@@ -25,7 +25,11 @@ class OrganizationsController < ApplicationController
   end
 
   def show
-    get_documents params[:id]
+    get_documents params[:slug]
+  end
+
+  def edit
+    get_documents params[:slug]
   end
 
   # commit actions
@@ -36,9 +40,10 @@ class OrganizationsController < ApplicationController
   end
 
   def update
-    Organization.update params[:id], organization_params
+    @organization = Organization.find_by slug:params[:slug]
+    @organization.update organization_params
 
-    redirect_to organizations_path(id: params[:id])
+    redirect_to organization_path(slug: @organization[:slug])
   end
 
   def delete
@@ -60,7 +65,7 @@ class OrganizationsController < ApplicationController
     end
   end
 
-  def get_documents org=params[:id], page=params[:page], per=25, key=params[:key]
+  def get_documents org=params[:slug], page=params[:page], per=25, key=params[:key]
     if key == 'abandoned'
       operation = '=';
     else
@@ -68,8 +73,8 @@ class OrganizationsController < ApplicationController
     end
 
     if org
-      documents = Document.where("documents.organization_id=? AND documents.updated_at #{operation} documents.created_at", org)
-      @organization = Organization.find_by id:org
+      @organization = Organization.find_by slug:org
+      documents = Document.where("documents.organization_id=? AND documents.updated_at #{operation} documents.created_at", @organization[:id])
     else
       documents = Document.where("documents.organization_id IS NULL AND documents.updated_at #{operation} documents.created_at")
     end
@@ -78,7 +83,7 @@ class OrganizationsController < ApplicationController
   end
 
   def get_organizations
-    @organizations = Organization.all.order(:depth, :name)
+    @organizations = Organization.all.order(:lft, :rgt, :name)
   end
 
   def organization_params

@@ -1,7 +1,7 @@
 <% if @component[:id] %>
-  <% post_url = component_path(@organization.slug, @component) %>
+  <% post_url = component_path(@organization[:slug], @component[:slug]) %>
 <% else %>
-  <% post_url = component_path(@organization.slug, @component) %>
+  <% post_url = component_path(@organization[:slug], '') %>
 <% end %>
 
 <%= form_for(@component, url: post_url, html: { class: "form-horizontal col-md-9" } ) do |f| %>
