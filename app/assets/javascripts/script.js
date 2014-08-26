@@ -349,6 +349,7 @@ function liteOff(x){
 
             var enableButton = $("<button class='enable_view'></button>").text("Enable the " + view_name + " view").on("click", function(){
                 $("#content_disable_link").trigger('click');
+                initEditor(editor, document);
             });
             var viewMessageElement = $("<div class='enableViewMessage'></div>").append(enableButton);
 
