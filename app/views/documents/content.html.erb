@@ -1,1 +1,5 @@
-<%= (@content.html_safe || salsa_partial("salsa")) %>
+<% if @content %>
+  <%= @content.html_safe %>
+<% else %>
+  <%= salsa_partial("salsa") %>
+<% end %>
