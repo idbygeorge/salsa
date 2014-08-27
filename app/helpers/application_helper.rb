@@ -15,8 +15,8 @@ module ApplicationHelper
     #need a way to control who can do this though... or how much?
 
     # if this document is using a configuration and that configuration has the partial being requested, use it
-    if @document && @document.component && @document.component[name]
-      output = @document.component[name]
+    if @organization && @organization.components && @organization.components.find_by(slug: name)
+      output = @organization.components.find_by(slug: name).layout
     # if there is a customized partial for this organization, use that
     elsif @view_folder && File.exists?("app/views/#{@view_folder}/#{path}_#{partial}.html.erb")
       output = render partial: "#{@view_folder}/#{path}#{partial}"

@@ -11,7 +11,35 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140519232016) do
+ActiveRecord::Schema.define(version: 20140805173235) do
+
+  create_table "components", force: true do |t|
+    t.string   "name"
+    t.string   "slug"
+    t.text     "description"
+    t.string   "category"
+    t.integer  "organization_id"
+    t.text     "css"
+    t.text     "js"
+    t.text     "layout"
+    t.text     "format"
+    t.text     "gui_css"
+    t.text     "gui_js"
+    t.text     "gui_templates"
+    t.text     "gui_controls"
+    t.text     "gui_section_nav"
+    t.text     "gui_help"
+    t.text     "gui_example"
+    t.text     "gui_footer"
+    t.text     "gui_content_toolbar"
+    t.text     "gui_header"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "components", ["category"], name: "index_components_on_category"
+  add_index "components", ["organization_id"], name: "index_components_on_organization_id"
+  add_index "components", ["slug", "organization_id"], name: "index_components_on_slug_and_organization_id", unique: true
 
   create_table "documents", force: true do |t|
     t.string   "name"
@@ -24,8 +52,11 @@ ActiveRecord::Schema.define(version: 20140519232016) do
     t.integer  "organization_id"
     t.string   "lms_course_id"
     t.datetime "lms_published_at"
+    t.integer  "component_id"
+    t.integer  "component_version"
   end
 
+  add_index "documents", ["component_id"], name: "index_documents_on_component_id"
   add_index "documents", ["edit_id"], name: "index_documents_on_edit_id", unique: true
   add_index "documents", ["lms_course_id"], name: "index_documents_on_lms_course_id"
   add_index "documents", ["organization_id"], name: "index_documents_on_organization_id"

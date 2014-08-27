@@ -14,7 +14,7 @@ Salsa::Application.routes.draw do
     post "organizations/documents"
     get "logout", to: 'organizations#logout'
 
-    resources :organizations, param: :slug, constraints: { slug: /.+/ }
+    resources :organizations, param: :slug, constraints: { slug: /.*/ }
 
     scope 'organization/:organization_slug' do
       resources :components, param: :slug, constraints: { slug: /.*/, organization_slug: /.+/ }

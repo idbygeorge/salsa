@@ -14,17 +14,15 @@
 </h1>
 
 <div id="organizationControl row">
-  <% if @documents.length != 0 %>
-    <p>
-      <a class="btn btn-default" href="<%= edit_organization_path(id: @organization[:id]) %>">
-        Edit Organization
-      </a>
+  <p>
+    <a class="btn btn-default" href="<%= edit_organization_path(id: @organization[:id]) %>">
+      Edit Organization
+    </a>
 
-      <a class="btn btn-default" href="<%= components_path(organization_slug: @organization[:slug]) %>">
-        Manage Components
-      </a>
-    </p>
-  <% end %>
+    <a class="btn btn-default" href="<%= components_path(organization_slug: @organization[:slug]) %>">
+      Manage Components
+    </a>
+  </p>
   <hr>
 </div>
 

@@ -1,5 +1,11 @@
 <div class="row">
-  <%= form_for(@organization, url: organization_path(slug: @organization[:slug]), :html => { :class => "form-horizontal col-md-9" } ) do |f| %>
+  <% if @organization[:slug] %>
+    <% form_action = organization_path slug: @organization[:slug] %>
+  <% else %>
+    <% form_action = organization_path slug: '' %>
+  <% end %>
+
+  <%= form_for(@organization, url: form_action, :html => { :class => "form-horizontal col-md-9" } ) do |f| %>
     <fieldset>
       <legend>Organization</legend>
 
