@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
         @view_folder = "instances/custom/#{@organization.slug}"
       end
     else
-      @organization = { slug: request.env['SERVER_NAME'] }
+      @organization = Organization.new  slug: request.env['SERVER_NAME']
     end
   end
 
