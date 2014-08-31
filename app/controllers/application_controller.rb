@@ -3,25 +3,27 @@ class ApplicationController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
 
+  include ApplicationHelper
+
   protected
 
   def init_view_folder
-    # establish the default view folder
-    @view_folder = "instances/default"
-
-    # find the matching organizaiton based on the request
-    @organization = Organization.find_by slug: request.env['SERVER_NAME']
     @google_analytics_id = APP_CONFIG['google_analytics_id'] if APP_CONFIG['google_analytics_id']
 
-    # if a matching org was found, check if there is a custom view folder set up for it
-    if @organization
-      # only update the view folder if the institution folder exists
-      if File.directory?("app/views/instances/custom/#{@organization.slug}")
-        @view_folder = "instances/custom/#{@organization.slug}"
-      end
-    else
-      @organization = Organization.new  slug: request.env['SERVER_NAME']
+    org_slug = request.env['SERVER_NAME']
+
+    if params[:sub_organization_slugs]
+      org_slug += '/' + params[:sub_organization_slugs]
     end
+
+    # find the matching organizaiton based on the request
+    @organization = Organization.find_by slug: org_slug
+
+    # get a placeholder org matching the org slug if there is no matching or in the database
+    @organization = Organization.new  slug: org_slug unless @organization
+
+    @view_folder = get_view_folder @organization
+    @view_folder = "instances/default" unless @view_folder
   end
 
   def lms_connection_information

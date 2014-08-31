@@ -3,10 +3,6 @@ Salsa::Application.routes.draw do
 
   resources :documents, path: 'SALSA', constraints: { slug: /.*/ }
 
-  scope ':sub_organization_slugs' do
-    resources :documents, path: 'SALSA', constraints: { sub_organization_slugs: /.+/ }
-  end
-
   get '/:alias/:document', to: redirect('/SALSA/%{document}'), constraints: { alias: /(syllabuses|salsas?)/ }
   get '/:alias/:document/:action', to: redirect('/SALSA/%{document}/%{action}'), constraints: { alias: /(syllabuses|salsas?)/, action: /(edit|template)?/ }
 
@@ -34,4 +30,9 @@ Salsa::Application.routes.draw do
   get "default/maintenance"
   get "default/tos"
   get "default/faq"
+
+  scope ':sub_organization_slugs' do
+    resources :documents, path: 'SALSA', constraints: { sub_organization_slugs: /.+/ }
+    get '', to: 'default#index', constraints: { sub_organization_slugs: /.+/ }
+  end
 end
