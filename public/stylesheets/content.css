@@ -1,4 +1,4 @@
-body { font-size: 10pt; line-height: 1.4em; font-family: arial, sans-serif; margin: 0; background: #f8f8f8; }
+body { font-size: 10pt; line-height: 1.4em; font-family: arial, sans-serif; margin: 0; background: #f8f8f8; word-wrap: break-word; }
 #tinymce { background: #fff; }
 #preview, #page, #topBar { font-size: 10pt; }
 h1,h2,h3,h4,h5,h6,p,section div { margin-top: 0; margin-bottom: 12px; font-size: 1em; min-height: 1.4em; }
