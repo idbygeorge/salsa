@@ -32,7 +32,7 @@ Salsa::Application.routes.draw do
   get "default/faq"
 
   scope ':sub_organization_slugs' do
-    resources :documents, path: 'SALSA', constraints: { sub_organization_slugs: /.+/ }
+    resources :documents, path: 'SALSA', constraints: { sub_organization_slugs: /.+/ }, as: 'sub_org_document'
     get '', to: 'default#index', constraints: { sub_organization_slugs: /.+/ }
   end
 end

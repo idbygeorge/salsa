@@ -4,7 +4,7 @@
   <div class="carousel-inner">
     <div class="item active">
       <h1>
-        <a href="<%= new_document_path %>"><img src="/img/home/hero.jpg" alt="SALSA"></a>
+        <a href="<% if params[:sub_organization_slugs] %><%= new_sub_org_document_path params[:sub_organization_slugs] %><% else %><%= new_document_path %><% end %>"><img src="/img/home/hero.jpg" alt="SALSA"></a>
       </h1>
 
       <div class="container">
@@ -14,7 +14,7 @@
             <br>
             Service Agreements
           </p>
-          <a class="btn btn-lg btn-primary" href="<%= new_document_path sub_organization_slugs: params[:sub_organization_slugs] %>" role="button">Create your <abbr title="Styled and accessible learning service agreement">SALSA</abbr></a>
+          <a class="btn btn-lg btn-primary" href="<% if params[:sub_organization_slugs] %><%= new_sub_org_document_path params[:sub_organization_slugs] %><% else %><%= new_document_path %><% end %>" role="button">Create your <abbr title="Styled and accessible learning service agreement">SALSA</abbr></a>
         </div>
       </div>
     </div>

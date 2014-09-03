@@ -22,7 +22,12 @@ class DocumentsController < ApplicationController
 
     @document.save!
 
-  	redirect_to edit_document_path(:id => @document.edit_id)
+    sub_slugs = nil
+    if params[:sub_organization_slugs]
+      redirect_to edit_sub_org_document_path(id: @document.edit_id, sub_organization_slugs: params[:sub_organization_slugs])
+    else
+      redirect_to edit_document_path(id: @document.edit_id)
+    end
  	end
 
   def show
@@ -189,7 +194,11 @@ class DocumentsController < ApplicationController
   def verify_org
     document_slug = request.env['SERVER_NAME']
 
-    if @organization
+    if params[:sub_organization_slugs]
+      document_slug += '/' + params[:sub_organization_slugs]
+    end
+debugger
+    if @organization && @organization[:id]
       org = @organization
     else
       if session[:authenticated_institution] && session[:authenticated_institution] != '' && session[:authenticated_institution] != document_slug
