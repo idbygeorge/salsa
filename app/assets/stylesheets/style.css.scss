@@ -1,9 +1,6 @@
 @import url(/stylesheets/content.css);
 /* HTML5 Boilerplate  */
 
-/* TODO: deleteme :: testing asset pipeline deploy on new instance */
-#realy_test_this_time { background: none; }
-
 article, aside, details, figcaption, figure, footer, header, hgroup, nav, section { display: block; }
 section {padding-top: 15px;}
 audio, canvas, video { display: inline-block; *display: inline; *zoom: 1; }
@@ -172,3 +169,18 @@ td { vertical-align: top; }
 .no-close .ui-dialog-titlebar-close {display: none }
 .ui-widget-overlay { opacity: .60;filter:Alpha(Opacity=60); }
 
+img { max-width: 100%; }
+
+@media (max-width: 8.5in) {
+  #preview { width: auto; }
+}
+
+@media (max-width: 560px) {
+  #preview { padding: 0 1em; }
+  #preview section div { margin-left: 0; }
+
+  #preview table.components {
+    width: 100%;
+    margin-left: 0;
+  }
+}
