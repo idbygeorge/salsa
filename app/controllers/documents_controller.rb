@@ -50,7 +50,6 @@ class DocumentsController < ApplicationController
       return
     end
 
-    @content = @document.payload
     @action = 'show'
 
     respond_to do |format|
@@ -66,7 +65,9 @@ class DocumentsController < ApplicationController
   end
 
   def edit
-  	render :layout => 'edit', :template => '/documents/content'
+    @document.revert_to params[:version].to_i if params[:version]
+
+    render :layout => 'edit', :template => '/documents/content'
  	end
 
   def course
@@ -87,7 +88,6 @@ class DocumentsController < ApplicationController
       @document.revert_to params[:version].to_i if params[:version]
 
       @view_pdf_url = view_pdf_url
-      @content = @document.payload
       @view_url = view_url
       @template_url = template_url
 
@@ -164,8 +164,7 @@ class DocumentsController < ApplicationController
 
   	raise ActionController::RoutingError.new('Not Found') unless @document
     @view_pdf_url = view_pdf_url
-  	@content = @document.payload
-    @view_url = view_url
+  	@view_url = view_url
     @template_url = template_url
 
     # use the component that was used when this document was created
@@ -197,7 +196,7 @@ class DocumentsController < ApplicationController
     if params[:sub_organization_slugs]
       document_slug += '/' + params[:sub_organization_slugs]
     end
-debugger
+
     if @organization && @organization[:id]
       org = @organization
     else
