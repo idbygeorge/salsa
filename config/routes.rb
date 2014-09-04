@@ -10,7 +10,7 @@ Salsa::Application.routes.draw do
     resources :documents, as: 'admin_document', controller: 'admin_documents'
 
     post "organizations/documents"
-    get "logout", to: 'organizations#logout'
+    get "logout", to: 'admin#logout', as: 'admin_logout'
 
     resources :organizations, param: :slug, constraints: { slug: /.*/ }
 
