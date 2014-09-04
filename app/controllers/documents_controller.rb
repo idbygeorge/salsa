@@ -2,14 +2,14 @@ require 'net/http'
 
 class DocumentsController < ApplicationController
 
-	layout 'view'
+  layout 'view'
 
-	before_filter :lms_connection_information, :only => [:edit, :course, :course_list]
+  before_filter :lms_connection_information, :only => [:edit, :course, :course_list]
   before_filter :lookup_document, :only => [:edit, :update]
   before_filter :init_view_folder, :only => [:new, :edit, :update, :show, :course]
   
   def index
-  	redirect_to :new
+    redirect_to :new
   end
 
   def new
@@ -28,7 +28,7 @@ class DocumentsController < ApplicationController
     else
       redirect_to edit_document_path(id: @document.edit_id)
     end
- 	end
+  end
 
   def show
     @document = Document.find_by_view_id(params[:id])
@@ -54,7 +54,7 @@ class DocumentsController < ApplicationController
 
     respond_to do |format|
       format.html {
-  	    render :layout => 'view', :template => '/documents/content'
+        render :layout => 'view', :template => '/documents/content'
       }
       format.pdf{
         html = render_to_string :layout => 'view', :template => '/documents/content.html.erb'
@@ -65,10 +65,12 @@ class DocumentsController < ApplicationController
   end
 
   def edit
+    
     @document.revert_to params[:version].to_i if params[:version]
+    verify_org
 
     render :layout => 'edit', :template => '/documents/content'
- 	end
+  end
 
   def course
     begin
@@ -141,7 +143,7 @@ class DocumentsController < ApplicationController
     end
   end
 
- 	protected
+  protected
 
   def view_pdf_url
     if Rails.env.production?
@@ -159,12 +161,12 @@ class DocumentsController < ApplicationController
     "http://#{request.env['SERVER_NAME']}/SALSA/#{@document.template_id}"
   end
 
- 	def lookup_document
-  	@document = Document.find_by_edit_id(params[:id])
+  def lookup_document
+    @document = Document.find_by_edit_id(params[:id])
 
-  	raise ActionController::RoutingError.new('Not Found') unless @document
+    raise ActionController::RoutingError.new('Not Found') unless @document
     @view_pdf_url = view_pdf_url
-  	@view_url = view_url
+    @view_url = view_url
     @template_url = template_url
 
     # use the component that was used when this document was created
@@ -192,9 +194,12 @@ class DocumentsController < ApplicationController
 
   def verify_org
     document_slug = request.env['SERVER_NAME']
+    @salsa_link = document_path(@document[:edit_id])
 
     if params[:sub_organization_slugs]
       document_slug += '/' + params[:sub_organization_slugs]
+
+      @salsa_link = sub_org_document_path @document[:edit_id], sub_organization_slugs: params[:sub_organization_slugs]
     end
 
     if @organization && @organization[:id]

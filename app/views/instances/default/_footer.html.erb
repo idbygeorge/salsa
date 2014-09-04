@@ -4,31 +4,37 @@
     </nav>
 
     <% if has_role 'admin' %>
-      <nav class="nav nav-horizontal" style=" float: right; width: auto; position: relative; z-index: 999999;">
+      <nav class="doc-nav" style=" float: right; width: auto; position: relative; z-index: 999999;">
           <ul>
+              <% if @document.version > 2 %>
+                <li>
+                  <a style="text-decoration: none;" href="edit?version=1">&laquo;</a>
+                </li>
+              <% end %>
+
+              <% if @document.version > 1 %>
+                <li>
+                  <a style="text-decoration: none;" href="edit?version=<%= @document.version - 1 %>">&lt;</a>
+                </li>
+              <% end %>
+              <li>
+                  <span>v<%= @document.version %></span>
+              </li>
+              <% if params[:version].to_i > 0 && params[:version].to_i < @document.versions.count + 1 %>
+                <li>
+                  <a style="text-decoration: none;" href="edit?version=<%= @document.version + 1 %>">&gt;</a>
+                </li>
+              <% end %>
+              <% if params[:version].to_i > 0 && params[:version].to_i < @document.versions.count %>
+                <li>
+                  <a style="text-decoration: none;" href="edit">&raquo;</a>
+                </li>
+              <% end %>
               <li>
                   <a style="display: block; color: #600; text-decoration: none; font-weight: bold;" href="edit?version=1">Reset Document</a>
               </li>
               <li>
-                  <% if @document.version > 2 %>
-                      <a style="text-decoration: none;" href="edit?version=1">&laquo;</a>
-                  <% end %>
-                  <% if @document.version > 1 %>
-                      <a style="text-decoration: none;" href="edit?version=<%= @document.version - 1 %>">&lt;</a>
-                  <% end %>
-              </li>
-              <li>
-                  v<%= @document.version %>
-              </li>
-              <li>
-                  <% if params[:version].to_i > 0 && params[:version].to_i < @document.versions.count + 1 %>
-                      <a style="text-decoration: none;" href="edit?version=<%= @document.version + 1 %>">&gt;</a>
-                  <% end %>
-              </li>
-              <li>
-                  <% if params[:version].to_i > 0 && params[:version].to_i < @document.versions.count %>
-                      <a style="text-decoration: none;" href="edit">&raquo;</a>
-                  <% end %>
+                <%= link_to 'Admin', organization_path(@document.organization.slug) %>
               </li>
           </ul>
       </nav>

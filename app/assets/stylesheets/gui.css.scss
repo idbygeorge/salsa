@@ -44,8 +44,9 @@ $hover: lighten($base_color, $lighten_percent);
 }
 
 .masthead, footer, #preview_control { background: $base_color; overflow: hidden; }
-    .masthead li { float: left; }
-    footer li, #preview_control a { float: right; }
+    .masthead li, footer li { float: left; }
+    footer li a, footer span { padding: 5px; display: block; }
+    #preview_control a { float: right; }
 
     .masthead a, footer a, #preview_control a, .masthead a:visited, footer a:visited, #preview_control a:visited, #preview_control .previewLabel { display: block; padding: 5px 20px; color: #fff; text-decoration: none; }
     .masthead a:hover, footer a:hover, #preview_control a:hover, .masthead a:focus, footer a:focus, #preview_control a:focus { background: $hover; color: #eee; }
