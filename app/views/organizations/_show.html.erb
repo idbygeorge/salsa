@@ -28,12 +28,15 @@
                   <div>Published <%= time_ago_in_words document.lms_published_at %> ago</div>
               <% end %>
               
-              <div class="info pull-right">Version: <%= document.version %></div>
+              <div class="info pull-right">
+                Version: <%= document.version %>
+              </div>
             </div>
 
             <%= check_box_tag "document_ids[]", document.id, false, id: "document_#{document.id}" %>
-
-            <label for="<%= "document_#{document.id}" %>">SALSA <%= document.id %>: <%= document.name %></label>
+            <label for="<%= "document_#{document.id}" %>"><%= document.name %></label>
+            
+            <%= link_to 'edit', edit_admin_document_path(document) %>
 
             <time datetime="<%= document.created_at %>">Created <%= time_ago_in_words document.created_at %> ago</time>
 
@@ -64,6 +67,13 @@
                     Course Edit Link: <%= link_to "#{org_base}#{lms_course_document_path(lms_course_id: document.lms_course_id)}", "#{org_base}#{lms_course_document_path(lms_course_id: document.lms_course_id)}", target: "_blank" %>
                   </div>        
                 <% end %>
+              </div>
+            <% elsif document.lms_course_id %>
+              <div>
+                LMS Course ID: <%= document.lms_course_id %>
+                <div class="badge alert-warning">
+                  manually set, unpublished
+                </div>
               </div>
             <% end %>
           

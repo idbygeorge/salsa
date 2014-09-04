@@ -2,4 +2,35 @@
     <nav>
         <a class="home" href="/">Salsa</a>
     </nav>
+
+    <% if has_role 'admin' %>
+      <nav class="nav nav-horizontal" style=" float: right; width: auto; position: relative; z-index: 999999;">
+          <ul>
+              <li>
+                  <a style="display: block; color: #600; text-decoration: none; font-weight: bold;" href="edit?version=1">Reset Document</a>
+              </li>
+              <li>
+                  <% if @document.version > 2 %>
+                      <a style="text-decoration: none;" href="edit?version=1">&laquo;</a>
+                  <% end %>
+                  <% if @document.version > 1 %>
+                      <a style="text-decoration: none;" href="edit?version=<%= @document.version - 1 %>">&lt;</a>
+                  <% end %>
+              </li>
+              <li>
+                  v<%= @document.version %>
+              </li>
+              <li>
+                  <% if params[:version].to_i > 0 && params[:version].to_i < @document.versions.count + 1 %>
+                      <a style="text-decoration: none;" href="edit?version=<%= @document.version + 1 %>">&gt;</a>
+                  <% end %>
+              </li>
+              <li>
+                  <% if params[:version].to_i > 0 && params[:version].to_i < @document.versions.count %>
+                      <a style="text-decoration: none;" href="edit">&raquo;</a>
+                  <% end %>
+              </li>
+          </ul>
+      </nav>
+    <% end %>
 </footer>

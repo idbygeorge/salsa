@@ -1,7 +1,7 @@
 class OrganizationsController < ApplicationController
   before_filter :require_admin_password
   before_filter :get_organizations, only: [:index, :new, :edit, :show]
-
+  layout 'admin'
   def index
     get_documents
   end
@@ -50,20 +50,6 @@ class OrganizationsController < ApplicationController
   end
 
   private
-
-  def require_admin_password
-    # if there is no admin password set up for the server and we are in the development
-    # or test environment, bypass the securtiy check
-    if !APP_CONFIG['admin_password'] && (Rails.env.development? || Rails.env.test?)
-      session[:admin_authorized] = true
-    elsif params[:admin_password] && params[:admin_password] != ''
-      session[:admin_authorized] = params[:admin_password] == APP_CONFIG['admin_password']
-    end
-
-    if session[:admin_authorized] != true
-      throw "Unauthroized"
-    end
-  end
 
   def get_documents org=params[:slug], page=params[:page], per=25, key=params[:key]
     if key == 'abandoned'

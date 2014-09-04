@@ -46,4 +46,28 @@ module ApplicationHelper
     # only update the view folder if the institution folder exists
     "instances/custom/#{org.slug}" if File.directory?("app/views/instances/custom/#{org.slug}")
   end
+
+  def require_admin_password
+    # if there is no admin password set up for the server and we are in the development
+    # or test environment, bypass the securtiy check
+    if !APP_CONFIG['admin_password'] && (Rails.env.development? || Rails.env.test?)
+      session[:admin_authorized] = true
+    elsif params[:admin_password] && params[:admin_password] != ''
+      session[:admin_authorized] = params[:admin_password] == APP_CONFIG['admin_password']
+    end
+
+    if has_role 'admin'
+      throw "Unauthroized"
+    end
+  end
+
+  def has_role role
+    result = false
+
+    if role == 'admin'
+      result = session[:admin_authorized]
+    end
+
+    result
+  end
 end
