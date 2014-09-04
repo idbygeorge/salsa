@@ -52,7 +52,6 @@ body {
   text-shadow: none;
 
   p {
-    padding-left: 12%;
     text-align: left;
     text-transform: lowercase;
     font-size: 1.5em;
@@ -88,9 +87,10 @@ body {
   padding-top: 2em;
   overflow: hidden;
 
-  img {
-    max-width: 100%;
-  }
+}
+
+img {
+  max-width: 100%;
 }
 
 .marketing .col-sm-12 {
@@ -103,9 +103,6 @@ body {
   p, h2, h3, form {
     margin-right: 30px;
   }
-}
-div.row {
-  margin-left: 30px;
 }
 
 /* Featurettes
@@ -191,6 +188,7 @@ footer {
 
   .carousel-caption p {
     font-size: 2.3em;
+    padding-left: 12%;
   }
 }
 
@@ -198,9 +196,6 @@ footer {
   .carousel-caption p {
     font-size: 2.54em;
   }
+
+  div.row { margin-left: 30px; }
 }
-
-
-
-
-  
