@@ -7,6 +7,8 @@ Salsa::Application.routes.draw do
   get '/:alias/:document/:action', to: redirect('/SALSA/%{document}/%{action}'), constraints: { alias: /(syllabuses|salsas?)/, action: /(edit|template)?/ }
 
   scope 'admin' do
+    get "search", to: 'admin#search', as: 'admin_search'
+
     resources :documents, as: 'admin_document', controller: 'admin_documents'
 
     post "organizations/documents"
