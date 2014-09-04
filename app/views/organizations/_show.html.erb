@@ -1,5 +1,7 @@
 <% if @documents.length > 0 %>
   <%= paginate @documents %>
+  <span class="badge"><%= @documents.total_count %> documents</span>
+
   <%= form_tag('/admin/organizations/documents', :html => { :class => "form-vertical" } ) do |f| %>
     <div class="row">
       <div class="form-group col-sm-4">
