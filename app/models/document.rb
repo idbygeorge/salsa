@@ -1,7 +1,8 @@
 class Document < ActiveRecord::Base
   versioned
 
-  before_save [:normalize_blank_values, :ensure_ids]
+  before_validation :normalize_blank_values
+  before_validation :ensure_ids
 
   belongs_to :organization
   belongs_to :component
