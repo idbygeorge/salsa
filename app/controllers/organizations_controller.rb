@@ -68,10 +68,6 @@ class OrganizationsController < ApplicationController
     @documents = documents.order(updated_at: :desc, created_at: :desc).page(page).per(per)
   end
 
-  def get_organizations
-    @organizations = Organization.all.order(:lft, :rgt, :name)
-  end
-
   def organization_params
     params.require(:organization).permit(:name, :slug, :parent_id, :lms_authentication_source, :lms_authentication_id, :lms_authentication_key, :lms_info_slug)
   end

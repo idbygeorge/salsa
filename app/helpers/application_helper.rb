@@ -70,4 +70,8 @@ module ApplicationHelper
 
     result
   end
+
+  def get_organizations
+    @organizations = Organization.all.order(:lft, :rgt, :name)
+  end
 end

@@ -44,10 +44,6 @@ class AdminDocumentsController < ApplicationController
     @document = Document.find_by id: id
   end
 
-  def get_organizations
-    @organizations = Organization.all.order(:lft, :rgt, :name)
-  end
-
   def document_params
     params.require(:document).permit(:name, :lms_course_id, :organization_id)
   end

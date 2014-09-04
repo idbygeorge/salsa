@@ -10,6 +10,7 @@ Salsa::Application.routes.draw do
     get "search", to: 'admin#search', as: 'admin_search'
 
     resources :documents, as: 'admin_document', controller: 'admin_documents'
+    resources :reports
 
     post "organizations/documents"
     get "logout", to: 'admin#logout', as: 'admin_logout'
