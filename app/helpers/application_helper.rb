@@ -56,7 +56,7 @@ module ApplicationHelper
       session[:admin_authorized] = params[:admin_password] == APP_CONFIG['admin_password']
     end
 
-    if has_role 'admin'
+    if !has_role 'admin'
       throw "Unauthroized"
     end
   end
