@@ -57,7 +57,7 @@ module ApplicationHelper
     end
 
     if !has_role 'admin'
-      throw "Unauthroized"
+      redirect_to root_path
     end
   end
 
