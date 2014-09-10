@@ -49,6 +49,10 @@ class OrganizationsController < ApplicationController
   def delete
   end
 
+  def import
+    
+  end
+
   private
 
   def get_documents org=params[:slug], page=params[:page], per=25, key=params[:key]

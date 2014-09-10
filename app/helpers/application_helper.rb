@@ -39,6 +39,10 @@ module ApplicationHelper
       end
     end
 
+    if output == ''
+      output = "#{path}#{partial} does not exist"
+    end
+
     return output.html_safe
   end
 

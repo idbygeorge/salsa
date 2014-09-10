@@ -1,0 +1,14 @@
+<%= form_tag('/admin/organizations/import', class: "form-vertical" ) do |f| %>
+  <div class="form-group">
+    <%= f.label :accounts, class: "control-label" %>
+    <div class="controls">
+      <%= f.file_field :accounts, class: 'form-control input-large' %>
+    </div>
+  </div>
+
+  <div class="form-group pull-right text-right">
+    <br>
+    <%= submit_tag 'submit', {class: 'btn btn-default'}%>
+  </div>
+
+<% end %>

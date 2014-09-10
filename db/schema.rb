@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140805173235) do
+ActiveRecord::Schema.define(version: 20140905152111) do
 
   create_table "components", force: true do |t|
     t.string   "name"
@@ -76,10 +76,12 @@ ActiveRecord::Schema.define(version: 20140805173235) do
     t.string   "lms_authentication_id"
     t.string   "lms_authentication_key"
     t.string   "lms_info_slug"
+    t.string   "lms_id"
   end
 
   add_index "organizations", ["depth"], name: "index_organizations_on_depth"
   add_index "organizations", ["lft"], name: "index_organizations_on_lft"
+  add_index "organizations", ["lms_id"], name: "index_organizations_on_lms_id"
   add_index "organizations", ["parent_id"], name: "index_organizations_on_parent_id"
   add_index "organizations", ["rgt"], name: "index_organizations_on_rgt"
   add_index "organizations", ["slug", "parent_id"], name: "index_organizations_on_slug_and_parent_id", unique: true
