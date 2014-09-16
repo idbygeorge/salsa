@@ -2,7 +2,7 @@
     <nav id="toolbar">
     <ul>
         <li>
-        <%= link_to "Save", @salsa_link, :authenticity_token => form_authenticity_token(), :method => :put, :remote => true, :id => 'tb_save' %>
+        <%= link_to "Save", document_path(@document.edit_id), :authenticity_token => form_authenticity_token(), :method => :put, :remote => true, :id => 'tb_save' %>
         </li>
         <li><a href="#" id='tb_link'><i class="fi-plus"></i>My SALSA</a></li>
         <li><%= link_to '<i class="fi-check"></i>Preview'.html_safe, @view_url, :target => '_blank', :id => "tb_preview" %></li>
