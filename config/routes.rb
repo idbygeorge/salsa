@@ -39,7 +39,10 @@ Salsa::Application.routes.draw do
   get "default/tos"
   get "default/faq"
 
+  get path: 'doc/:alias', constraints: { alias: /.+/ }, as: 'org_document_alias', controller: 'documents', action: 'alias'
+
   scope ':sub_organization_slugs' do
+    get path: 'doc/:alias', constraints: { alias: /.+/, organization_slug: /.+/ }, as: 'sub_org_document_alias', controller: 'documents', action: 'alias'
     resources :documents, path: 'SALSA', constraints: { sub_organization_slugs: /.+/ }, as: 'sub_org_document'
     get '', to: 'default#index', constraints: { sub_organization_slugs: /.+/ }
   end
