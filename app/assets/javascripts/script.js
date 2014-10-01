@@ -161,13 +161,15 @@ function liteOff(x){
         });
 
         $("body").on("click", "#topBar a", function(){
-            if($("#controlPanel .active dl").data('target').find('li:first').text() == 'Outcome text here') {
-                $("#controlPanel .active dl").data('target').find('li:first').remove();
-            }
+          var firstItemText = $("#controlPanel .active dl").data('target').find('li:first').text();
 
-            $("#controlPanel .active dl").data({ element: "li", text: $(this).text() }).find(".ui-state-active").click();
+          if(firstItemText == 'Outcome text here' || firstItemText == 'Objective text here.') {
+            $("#controlPanel .active dl").data('target').find('li:first').remove();
+          }
 
-            return false;
+          $("#controlPanel .active dl").data({ element: "li", text: $(this).text() }).find(".ui-state-active").click();
+
+          return false;
         });
 
         $("#controlPanel").on("click", "input,dt", function() {
