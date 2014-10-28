@@ -39,14 +39,14 @@ module ApplicationHelper
       end
     end
 
-    if output == ''
+    if output == '' && has_role('admin')
       output = "#{path}#{partial} does not exist"
     end
 
     return output.html_safe
   end
 
-  def get_view_folder(org) 
+  def get_view_folder(org)
     # only update the view folder if the institution folder exists
     "instances/custom/#{org.slug}" if File.directory?("app/views/instances/custom/#{org.slug}")
   end
