@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141028043634) do
+ActiveRecord::Schema.define(version: 20141028192115) do
 
   create_table "components", force: true do |t|
     t.string   "name"
@@ -112,6 +112,22 @@ ActiveRecord::Schema.define(version: 20141028043634) do
   end
 
   add_index "terms", ["slug", "organization_id"], name: "index_terms_on_slug_and_organization_id", unique: true
+
+  create_table "user_assignments", force: true do |t|
+    t.integer "user_id"
+    t.integer "organization_id"
+    t.string  "username"
+    t.boolean "cascades"
+    t.string  "role"
+  end
+
+  add_index "user_assignments", ["username", "organization_id"], name: "index_user_assignments_on_username_and_organization_id", unique: true
+
+  create_table "users", force: true do |t|
+    t.string   "name"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "versions", force: true do |t|
     t.integer  "versioned_id"
