@@ -7,7 +7,7 @@ class DocumentsController < ApplicationController
   before_filter :lms_connection_information, :only => [:edit, :course, :course_list]
   before_filter :lookup_document, :only => [:edit, :update]
   before_filter :init_view_folder, :only => [:new, :edit, :update, :show, :course]
-  
+
   def index
     redirect_to :new
   end
@@ -22,7 +22,6 @@ class DocumentsController < ApplicationController
 
     @document.save!
 
-    sub_slugs = nil
     if params[:sub_organization_slugs]
       redirect_to edit_sub_org_document_path(id: @document.edit_id, sub_organization_slugs: params[:sub_organization_slugs])
     else
@@ -65,7 +64,7 @@ class DocumentsController < ApplicationController
   end
 
   def edit
-    
+
     @document.revert_to params[:version].to_i if params[:version]
     verify_org
 
@@ -95,7 +94,7 @@ class DocumentsController < ApplicationController
 
       # backwards compatibility alias
       @syllabus = @document
-      
+
       render :layout => 'edit', :template => '/documents/content'
     else
       redirect_to controller: 'oauth2', action: 'login', lms_course_id: params[:lms_course_id]
@@ -109,7 +108,7 @@ class DocumentsController < ApplicationController
 
     if params[:page]
       @page = params[:page].to_i if params[:page]
-    else 
+    else
       @page = 1
     end
 
@@ -149,16 +148,24 @@ class DocumentsController < ApplicationController
     if Rails.env.production?
       "https://s3-#{APP_CONFIG['aws_region']}.amazonaws.com/#{APP_CONFIG['aws_bucket']}/hosted/#{@document.view_id}.pdf"
     else
-      "http://#{request.env['SERVER_NAME']}/SALSA/#{@document.view_id}.pdf"
+      "http://#{request.env['SERVER_NAME']}#{redirect_port}/#{sub_org_slugs}SALSA/#{@document.view_id}.pdf"
     end
   end
 
   def view_url
-    "http://#{request.env['SERVER_NAME']}/SALSA/#{@document.view_id}"
+    "http://#{request.env['SERVER_NAME']}#{redirect_port}/#{sub_org_slugs}SALSA/#{@document.view_id}"
   end
 
   def template_url
-    "http://#{request.env['SERVER_NAME']}/SALSA/#{@document.template_id}"
+    "http://#{request.env['SERVER_NAME']}#{redirect_port}/#{sub_org_slugs}SALSA/#{@document.template_id}"
+  end
+
+  def redirect_port
+    ':' + request.env['SERVER_PORT'] unless ['80', '443'].include?(request.env['SERVER_PORT'])
+  end
+
+  def sub_org_slugs
+    params[:sub_organization_slugs] + '/' if params[:sub_organization_slugs]
   end
 
   def lookup_document
@@ -173,7 +180,7 @@ class DocumentsController < ApplicationController
     if @document.component_version
       @document.component.revert_to @document.component_version
     end
-    
+
     # backwards compatibility alias
     @syllabus = @document
   end
