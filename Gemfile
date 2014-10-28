@@ -19,9 +19,9 @@ end
 group :production do
   #postgresql for production db
   gem 'pg'
-  
+
   gem 'rails_12factor'
-  
+
   # Use unicorn as the app server
   gem 'unicorn'
 

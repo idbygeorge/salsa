@@ -10,6 +10,8 @@ Development Installation Notes (Rough Cuts)
 
 Requires Ruby 1.9+, Rails 4.0+
 
+(2.0.0-p481 works with the debugger gem, the latest didn't)
+
 Clone repository
 
     git clone https://github.com/idbygeorge/salsa.git
@@ -26,7 +28,7 @@ Copy `config/config.yml.default` paste to `config/config.yml`, change as necessa
 To run the server, from the project root type:
 
     rails server
-    
+
 Goto [http://localhost:3000](http://localhost:3000) (ctrl + c shutsdown the server)
 
 Production Notes
