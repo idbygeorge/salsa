@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140905152111) do
+ActiveRecord::Schema.define(version: 20141028043634) do
 
   create_table "components", force: true do |t|
     t.string   "name"
@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(version: 20140905152111) do
     t.datetime "lms_published_at"
     t.integer  "component_id"
     t.integer  "component_version"
+    t.string   "term_id"
   end
 
   add_index "documents", ["component_id"], name: "index_documents_on_component_id"
@@ -61,6 +62,7 @@ ActiveRecord::Schema.define(version: 20140905152111) do
   add_index "documents", ["lms_course_id"], name: "index_documents_on_lms_course_id"
   add_index "documents", ["organization_id"], name: "index_documents_on_organization_id"
   add_index "documents", ["template_id"], name: "index_documents_on_template_id", unique: true
+  add_index "documents", ["term_id"], name: "index_documents_on_term_id"
   add_index "documents", ["view_id"], name: "index_documents_on_view_id", unique: true
 
   create_table "organizations", force: true do |t|
@@ -95,6 +97,21 @@ ActiveRecord::Schema.define(version: 20140905152111) do
   end
 
   add_index "templates", ["slug", "organization_id"], name: "index_templates_on_slug_and_organization_id", unique: true
+
+  create_table "terms", force: true do |t|
+    t.string   "slug"
+    t.string   "name"
+    t.integer  "organization_id"
+    t.datetime "start_date"
+    t.integer  "duration"
+    t.string   "cycle"
+    t.integer  "sequence"
+    t.boolean  "is_default"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "terms", ["slug", "organization_id"], name: "index_terms_on_slug_and_organization_id", unique: true
 
   create_table "versions", force: true do |t|
     t.integer  "versioned_id"
