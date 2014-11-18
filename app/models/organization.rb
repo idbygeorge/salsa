@@ -5,4 +5,6 @@ class Organization < ActiveRecord::Base
   has_many :components
 
   default_scope order('lft, rgt')
+  validates :slug, presence: true
 end
+
