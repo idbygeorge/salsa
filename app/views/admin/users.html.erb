@@ -25,4 +25,7 @@
 </ul>
 
 <pre>
-  <%= @session['canvas_access_token']['user'].to_json %>
+  <% if @session['canvas_access_token'] %>
+    <%= @session['canvas_access_token']['user'].to_json %>
+  <% end %>
+</pre>
