@@ -77,32 +77,71 @@ module ApplicationHelper
 
   def get_organizations
     # only show orgs that the logged in use should see
+    unless session[:admin_authorized]
+      # load all orgs that the user has a cascade == true assignment
+      user = UserAssignment.find_by_username(
+        session['canvas_access_token']['user']['id']
+      ).user
 
-    # load all orgs that the user has a cascade == true assignment
-    user = UserAssignment.find_by_username(
-      session['canvas_access_token']['user']['id']
-    ).user
+      cascade_permissions = user.user_assignments.where(cascades: true)
+      cascade_organizations = Organization.where(id: cascade_permissions.map(&:organization_id))
 
-    cascade_permissions = user.user_assignments.where(cascades: true)
-    cascade_organizations = Organization.where(id: cascade_permissions.map(&:organization_id))
+      filter_query = ['id IN (?)']
+      filter_values = [user.user_assignments.map(&:organization_id)]
 
-    filter_query = ['id IN (?)']
-    filter_values = [user.user_assignments.map(&:organization_id)]
+      cascade_organizations.each do |org|
+        filter_query.push '(lft > ? AND rgt < ?)'
+        filter_values.push org.lft
+        filter_values.push org.rgt
+      end
 
-    cascade_organizations.each do |org|
-      filter_query.push '(lft > ? AND rgt < ?)'
-      filter_values.push org.lft
-      filter_values.push org.rgt
+      filter_querystring = filter_query.join(' OR ')
+
+      @organizations = Organization.where(filter_querystring, *filter_values)
+    else
+      @organizations = Organization.all.order(:lft, :rgt, :name)
+    end
+  end
+
+  def full_org_path org
+    if org[:depth] > 0 and org[:slug].start_with? '/'
+      org_slug = org.self_and_ancestors.pluck(:slug).join ''
+    else
+      org_slug = org[:slug]
     end
 
-    filter_querystring = filter_query.join(' OR ')
+    org_slug
+  end
 
-    @organizations = Organization.where(filter_querystring, *filter_values)
+  def org_slug_parts org
+    org_slug = full_org_path(org)
 
-    #debugger
+    if org_slug
+      parts = org_slug.split '/', 2
+    end
 
-    #orgTrees = Organization.where(id)
+    parts = ['', ''] unless parts
 
-    #@organizations = Organization.all.order(:lft, :rgt, :name)
+    parts
+  end
+
+  def find_org_by_path path
+    unless path.include? '/'
+      organization = Organization.find_by! slug:path
+    else
+      path.split('/').each do |slug|
+        unless organization
+          organization = Organization.find_by! slug: slug, depth: 0
+        else
+          organization = organization.children.find_by! slug: "/" + slug
+        end
+      end
+    end
+
+    organization
+  end
+
+  def redirect_port
+    ':' + request.env['SERVER_PORT'] unless ['80', '443'].include?(request.env['SERVER_PORT'])
   end
 end

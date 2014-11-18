@@ -1,5 +1,4 @@
-class OrganizationsController < ApplicationController
-  before_filter :require_admin_password
+class OrganizationsController < AdminController
   before_filter :get_organizations, only: [:index, :new, :edit, :show]
   layout 'admin'
   def index
@@ -55,15 +54,16 @@ class OrganizationsController < ApplicationController
 
   private
 
-  def get_documents org=params[:slug], page=params[:page], per=25, key=params[:key]
+  def get_documents path=params[:slug], page=params[:page], per=25, key=params[:key]
     if key == 'abandoned'
       operation = '=';
     else
       operation = '!='
     end
 
-    if org
-      @organization = Organization.find_by slug:org
+    if path
+      @organization = find_org_by_path path
+
       documents = Document.where("documents.organization_id=? AND documents.updated_at #{operation} documents.created_at", @organization[:id])
     else
       documents = Document.where("documents.organization_id IS NULL AND documents.updated_at #{operation} documents.created_at")

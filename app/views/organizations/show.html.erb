@@ -6,7 +6,7 @@
 <h1 class="page-header">
   <% @organization.ancestors.each do |org| %>
     <small>
-      <%= link_to org[:name], organization_path(id: org[:id]) %> &raquo;<br>
+      <%= org[:name] %> &raquo;<br>
     </small>
   <% end %>
 
@@ -21,6 +21,11 @@
 
     <a class="btn btn-default" href="<%= components_path(organization_slug: @organization[:slug]) %>">
       Manage Components
+    </a>
+
+    <a class="btn btn-success pull-right" href="//<%= "#{org_slug_parts(@organization)[0]}#{redirect_port}" %><% if @organization.depth > 0 %>/<%= org_slug_parts(@organization)[1] %><% end %>/SALSA/new">
+      <span class="glyphicon glyphicon-plus"></span>
+      SALSA
     </a>
   </p>
   <hr>

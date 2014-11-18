@@ -1,5 +1,4 @@
-class AdminDocumentsController < ApplicationController
-  before_filter :require_admin_password
+class AdminDocumentsController < AdminController
   before_filter :get_organizations, only: [:new, :edit, :update]
   layout 'admin'
 
@@ -28,7 +27,7 @@ class AdminDocumentsController < ApplicationController
       end
 
       redirect_to organization_path(slug: slug)
-    else 
+    else
       flash[:error] = @document.errors.messages
 
       render 'edit'

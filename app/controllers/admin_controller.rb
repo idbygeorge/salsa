@@ -1,4 +1,6 @@
 class AdminController < ApplicationController
+  before_filter :require_admin_password
+  
   def logout
     session[:admin_authorized] = false
 

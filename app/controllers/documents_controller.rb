@@ -160,10 +160,6 @@ class DocumentsController < ApplicationController
     "http://#{request.env['SERVER_NAME']}#{redirect_port}/#{sub_org_slugs}SALSA/#{@document.template_id}"
   end
 
-  def redirect_port
-    ':' + request.env['SERVER_PORT'] unless ['80', '443'].include?(request.env['SERVER_PORT'])
-  end
-
   def sub_org_slugs
     params[:sub_organization_slugs] + '/' if params[:sub_organization_slugs]
   end
@@ -206,7 +202,11 @@ class DocumentsController < ApplicationController
     if params[:sub_organization_slugs]
       document_slug += '/' + params[:sub_organization_slugs]
 
-      @salsa_link = sub_org_document_path @document[:edit_id], sub_organization_slugs: params[:sub_organization_slugs]
+      if @document[:edit_id]
+        @salsa_link = sub_org_document_path @document[:edit_id], sub_organization_slugs: params[:sub_organization_slugs]
+      else
+        @salsa_link = new_sub_org_document_path sub_organization_slugs: params[:sub_organization_slugs]
+      end
     end
 
     if @organization && @organization[:id]
