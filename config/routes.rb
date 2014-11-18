@@ -8,11 +8,12 @@ Salsa::Application.routes.draw do
 
   scope 'admin' do
     get "search", to: 'admin#search', as: 'admin_search'
+    get "users", to: 'admin#users', as: 'admin_users'
 
     resources :documents, as: 'admin_document', controller: 'admin_documents'
 
     post "organizations/documents"
-    
+
     get "organizations/import"
 
     get "logout", to: 'admin#logout', as: 'admin_logout'
@@ -21,7 +22,7 @@ Salsa::Application.routes.draw do
 
     scope 'organization/:organization_slug' do
       resources :components, param: :slug, constraints: { slug: /.*/, organization_slug: /.+/ }
-      resources :reports, param: :slug, constraints: { slug: /.*/, organization_slug: /.+/ } 
+      resources :reports, param: :slug, constraints: { slug: /.*/, organization_slug: /.+/ }
     end
   end
 

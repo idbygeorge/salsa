@@ -50,7 +50,7 @@ class OrganizationsController < ApplicationController
   end
 
   def import
-    
+
   end
 
   private

@@ -76,6 +76,33 @@ module ApplicationHelper
   end
 
   def get_organizations
-    @organizations = Organization.all.order(:lft, :rgt, :name)
+    # only show orgs that the logged in use should see
+
+    # load all orgs that the user has a cascade == true assignment
+    user = UserAssignment.find_by_username(
+      session['canvas_access_token']['user']['id']
+    ).user
+
+    cascade_permissions = user.user_assignments.where(cascades: true)
+    cascade_organizations = Organization.where(id: cascade_permissions.map(&:organization_id))
+
+    filter_query = ['id IN (?)']
+    filter_values = [user.user_assignments.map(&:organization_id)]
+
+    cascade_organizations.each do |org|
+      filter_query.push '(lft > ? AND rgt < ?)'
+      filter_values.push org.lft
+      filter_values.push org.rgt
+    end
+
+    filter_querystring = filter_query.join(' OR ')
+
+    @organizations = Organization.where(filter_querystring, *filter_values)
+
+    #debugger
+
+    #orgTrees = Organization.where(id)
+
+    #@organizations = Organization.all.order(:lft, :rgt, :name)
   end
 end
