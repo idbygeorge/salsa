@@ -6,4 +6,5 @@ class Organization < ActiveRecord::Base
 
   default_scope order('lft, rgt')
   validates :slug, presence: true
+  validates :name, presence: true
 end

@@ -33,9 +33,9 @@ class OrganizationsController < AdminController
 
   # commit actions
   def create
-    Organization.create organization_params
+    @organization = Organization.create organization_params
 
-    redirect_to organizations_path
+    redirect_to organization_path(slug: @organization[:slug])
   end
 
   def update
@@ -45,7 +45,11 @@ class OrganizationsController < AdminController
     redirect_to organization_path(slug: @organization[:slug])
   end
 
-  def delete
+  def destroy
+    @organization = Organization.find_by slug:params[:slug]
+    @organization.destroy
+
+    redirect_to organizations_path
   end
 
   def import
