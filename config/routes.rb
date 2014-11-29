@@ -8,8 +8,8 @@ Salsa::Application.routes.draw do
 
   scope 'admin' do
     get "search", to: 'admin#search', as: 'admin_search'
-    get "users", to: 'admin#users', as: 'admin_users'
 
+    resources :users, as: 'admin_users', controller: 'admin_users'
     resources :documents, as: 'admin_document', controller: 'admin_documents'
 
     post "organizations/documents"
