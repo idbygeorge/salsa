@@ -16,9 +16,10 @@ group :development do
   gem 'capistrano-rails'
 end
 
+gem 'pg'
+
 group :production do
   #postgresql for production db
-  gem 'pg'
 
   gem 'rails_12factor'
 

@@ -13,6 +13,9 @@
 
 ActiveRecord::Schema.define(version: 20141028192115) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "components", force: true do |t|
     t.string   "name"
     t.string   "slug"
@@ -37,9 +40,9 @@ ActiveRecord::Schema.define(version: 20141028192115) do
     t.datetime "updated_at"
   end
 
-  add_index "components", ["category"], name: "index_components_on_category"
-  add_index "components", ["organization_id"], name: "index_components_on_organization_id"
-  add_index "components", ["slug", "organization_id"], name: "index_components_on_slug_and_organization_id", unique: true
+  add_index "components", ["category"], name: "index_components_on_category", using: :btree
+  add_index "components", ["organization_id"], name: "index_components_on_organization_id", using: :btree
+  add_index "components", ["slug", "organization_id"], name: "index_components_on_slug_and_organization_id", unique: true, using: :btree
 
   create_table "documents", force: true do |t|
     t.string   "name"
@@ -57,13 +60,13 @@ ActiveRecord::Schema.define(version: 20141028192115) do
     t.string   "term_id"
   end
 
-  add_index "documents", ["component_id"], name: "index_documents_on_component_id"
-  add_index "documents", ["edit_id"], name: "index_documents_on_edit_id", unique: true
-  add_index "documents", ["lms_course_id"], name: "index_documents_on_lms_course_id"
-  add_index "documents", ["organization_id"], name: "index_documents_on_organization_id"
-  add_index "documents", ["template_id"], name: "index_documents_on_template_id", unique: true
-  add_index "documents", ["term_id"], name: "index_documents_on_term_id"
-  add_index "documents", ["view_id"], name: "index_documents_on_view_id", unique: true
+  add_index "documents", ["component_id"], name: "index_documents_on_component_id", using: :btree
+  add_index "documents", ["edit_id"], name: "index_documents_on_edit_id", unique: true, using: :btree
+  add_index "documents", ["lms_course_id"], name: "index_documents_on_lms_course_id", using: :btree
+  add_index "documents", ["organization_id"], name: "index_documents_on_organization_id", using: :btree
+  add_index "documents", ["template_id"], name: "index_documents_on_template_id", unique: true, using: :btree
+  add_index "documents", ["term_id"], name: "index_documents_on_term_id", using: :btree
+  add_index "documents", ["view_id"], name: "index_documents_on_view_id", unique: true, using: :btree
 
   create_table "organizations", force: true do |t|
     t.string   "name"
@@ -81,12 +84,12 @@ ActiveRecord::Schema.define(version: 20141028192115) do
     t.string   "lms_id"
   end
 
-  add_index "organizations", ["depth"], name: "index_organizations_on_depth"
-  add_index "organizations", ["lft"], name: "index_organizations_on_lft"
-  add_index "organizations", ["lms_id"], name: "index_organizations_on_lms_id"
-  add_index "organizations", ["parent_id"], name: "index_organizations_on_parent_id"
-  add_index "organizations", ["rgt"], name: "index_organizations_on_rgt"
-  add_index "organizations", ["slug", "parent_id"], name: "index_organizations_on_slug_and_parent_id", unique: true
+  add_index "organizations", ["depth"], name: "index_organizations_on_depth", using: :btree
+  add_index "organizations", ["lft"], name: "index_organizations_on_lft", using: :btree
+  add_index "organizations", ["lms_id"], name: "index_organizations_on_lms_id", using: :btree
+  add_index "organizations", ["parent_id"], name: "index_organizations_on_parent_id", using: :btree
+  add_index "organizations", ["rgt"], name: "index_organizations_on_rgt", using: :btree
+  add_index "organizations", ["slug", "parent_id"], name: "index_organizations_on_slug_and_parent_id", unique: true, using: :btree
 
   create_table "templates", force: true do |t|
     t.string   "slug"
@@ -96,7 +99,7 @@ ActiveRecord::Schema.define(version: 20141028192115) do
     t.datetime "updated_at"
   end
 
-  add_index "templates", ["slug", "organization_id"], name: "index_templates_on_slug_and_organization_id", unique: true
+  add_index "templates", ["slug", "organization_id"], name: "index_templates_on_slug_and_organization_id", unique: true, using: :btree
 
   create_table "terms", force: true do |t|
     t.string   "slug"
@@ -111,7 +114,7 @@ ActiveRecord::Schema.define(version: 20141028192115) do
     t.datetime "updated_at"
   end
 
-  add_index "terms", ["slug", "organization_id"], name: "index_terms_on_slug_and_organization_id", unique: true
+  add_index "terms", ["slug", "organization_id"], name: "index_terms_on_slug_and_organization_id", unique: true, using: :btree
 
   create_table "user_assignments", force: true do |t|
     t.integer "user_id"
@@ -121,7 +124,7 @@ ActiveRecord::Schema.define(version: 20141028192115) do
     t.string  "role"
   end
 
-  add_index "user_assignments", ["username", "organization_id"], name: "index_user_assignments_on_username_and_organization_id", unique: true
+  add_index "user_assignments", ["username", "organization_id"], name: "index_user_assignments_on_username_and_organization_id", unique: true, using: :btree
 
   create_table "users", force: true do |t|
     t.string   "name"
@@ -143,11 +146,11 @@ ActiveRecord::Schema.define(version: 20141028192115) do
     t.datetime "updated_at"
   end
 
-  add_index "versions", ["created_at"], name: "index_versions_on_created_at"
-  add_index "versions", ["number"], name: "index_versions_on_number"
-  add_index "versions", ["tag"], name: "index_versions_on_tag"
-  add_index "versions", ["user_id", "user_type"], name: "index_versions_on_user_id_and_user_type"
-  add_index "versions", ["user_name"], name: "index_versions_on_user_name"
-  add_index "versions", ["versioned_id", "versioned_type"], name: "index_versions_on_versioned_id_and_versioned_type"
+  add_index "versions", ["created_at"], name: "index_versions_on_created_at", using: :btree
+  add_index "versions", ["number"], name: "index_versions_on_number", using: :btree
+  add_index "versions", ["tag"], name: "index_versions_on_tag", using: :btree
+  add_index "versions", ["user_id", "user_type"], name: "index_versions_on_user_id_and_user_type", using: :btree
+  add_index "versions", ["user_name"], name: "index_versions_on_user_name", using: :btree
+  add_index "versions", ["versioned_id", "versioned_type"], name: "index_versions_on_versioned_id_and_versioned_type", using: :btree
 
 end
