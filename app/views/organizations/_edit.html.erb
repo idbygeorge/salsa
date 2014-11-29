@@ -1,6 +1,6 @@
 <div class="row">
   <% if @organization[:slug] %>
-    <% form_action = organization_path slug: @organization[:slug] %>
+    <% form_action = organization_path slug: full_org_path(@organization) %>
   <% else %>
     <% form_action = organization_path slug: '' %>
   <% end %>
@@ -33,7 +33,7 @@
 
     <fieldset>
       <legend>LMS Information</legend>
-      
+
       <div class="form-group">
         <%= f.label :lms_authentication_source, class: "control-label" %>
         <div class="controls">

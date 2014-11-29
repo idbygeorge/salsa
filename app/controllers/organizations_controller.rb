@@ -39,14 +39,14 @@ class OrganizationsController < AdminController
   end
 
   def update
-    @organization = Organization.find_by slug:params[:slug]
+    @organization = find_org_by_path params[:slug]
     @organization.update organization_params
 
-    redirect_to organization_path(slug: @organization[:slug])
+    redirect_to organization_path(slug: full_org_path(@organization))
   end
 
   def destroy
-    @organization = Organization.find_by slug:params[:slug]
+    @organization = find_org_by_path params[:slug]
     @organization.destroy
 
     redirect_to organizations_path
