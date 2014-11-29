@@ -35,7 +35,7 @@ class OrganizationsController < AdminController
   def create
     @organization = Organization.create organization_params
 
-    redirect_to organization_path(slug: @organization[:slug])
+    redirect_to organization_path(slug: full_org_path(@organization))
   end
 
   def update
