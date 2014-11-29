@@ -1,25 +1,8 @@
+<%= link_to 'Add User', new_admin_user_path, class: 'btn btn-success' %>
 <ul>
   <% @users.each do |user| %>
     <li>
-      <%= user.name %>
-
-      <ul>
-      <% user.user_assignments.each do |ua| %>
-        <li>
-          <strong><%= ua.username %></strong>
-
-          ::
-
-          <%= ua.role %>
-
-          <% if ua.cascades %>
-            for <em><%= ua.organization.name %></em> and all sub organizations
-          <% else %>
-            for <em><%= ua.organization.name %></em> only
-          <% end %>
-        </li>
-      <% end %>
-      </ul>
+      <%= link_to user.name, admin_user_path(id: user[:id])%>
     </li>
   <% end %>
 </ul>

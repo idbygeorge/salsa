@@ -1,0 +1,40 @@
+<h1 class="page-header">
+  <%= @user[:name] %>
+</h1>
+
+<div id="adminUserControl row">
+  <p>
+  <a class="btn btn-default" href="<%= edit_admin_user_path(id: @user[:id]) %>">
+      Edit User
+    </a>
+    
+    <a class="btn btn-success pull-right" href="">
+      <span class="glyphicon glyphicon-plus"></span>
+      Manage Permissions
+    </a>
+
+  </p>
+  <hr>
+</div>
+
+<div class="row">
+  <ul>
+      <% user.user_assignments.each do |ua| %>
+        <li>
+          <strong><%= ua.username %></strong>
+
+          ::
+
+          <%= ua.role %>
+
+          <% if ua.cascades %>
+            for <em><%= ua.organization.name %></em> and all sub organizations
+          <% else %>
+            for <em><%= ua.organization.name %></em> only
+          <% end %>
+        </li>
+      <% end %>
+      </ul>
+</div>
+
+

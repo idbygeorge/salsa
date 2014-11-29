@@ -19,13 +19,14 @@ class AdminUsersController < AdminController
   end
 
   def create
-    # params... save
-    redirect user_path(id: @user[:id])
+    @user = User.create user_params
+    redirect_to admin_user_path(id: @user[:id])
   end
 
   def update
-    # params... save
-    redirect user_path(id: @user[:id])
+    @user = find params[:id]
+    @user.update user_params
+    redirect_user_path(id: @user[:id])
   end
 
   def destroy
@@ -33,5 +34,9 @@ class AdminUsersController < AdminController
     @user.destroy
 
     redirect users_path
+  end
+
+  def user_params
+    params.require(:user).permit(:name, :id)
   end
 end

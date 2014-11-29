@@ -1,0 +1,17 @@
+<div class="row">
+  <%= form_for(@user, url: admin_user_path(@user), :html => { :class => "form-horizontal col-md-9" } ) do |f| %>
+
+    <div class="form-group">
+      <%= f.label :name, class: "control-label" %>
+      <div class="controls">
+        <%= f.text_field :name, class: 'form-control input-xxlarge' %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.submit class: 'btn btn-default' %>
+      <%= link_to 'cancel', (@user[:id] ? admin_user_path(id: @user[:id]) : admin_users_path) %>
+    </div>
+
+  <% end %><!-- form -->
+</div><!-- .row -->
