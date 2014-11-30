@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141028192115) do
+ActiveRecord::Schema.define(version: 20141130033111) do
 
   create_table "components", force: true do |t|
     t.string   "name"
@@ -41,6 +41,15 @@ ActiveRecord::Schema.define(version: 20141028192115) do
   add_index "components", ["organization_id"], name: "index_components_on_organization_id"
   add_index "components", ["slug", "organization_id"], name: "index_components_on_slug_and_organization_id", unique: true
 
+  create_table "document_meta", force: true do |t|
+    t.integer "document_id"
+    t.string  "key"
+    t.string  "value"
+    t.integer "lms_organization_id"
+    t.integer "lms_course_id"
+    t.integer "root_organization_id"
+  end
+
   create_table "documents", force: true do |t|
     t.string   "name"
     t.string   "edit_id"
@@ -64,6 +73,14 @@ ActiveRecord::Schema.define(version: 20141028192115) do
   add_index "documents", ["template_id"], name: "index_documents_on_template_id", unique: true
   add_index "documents", ["term_id"], name: "index_documents_on_term_id"
   add_index "documents", ["view_id"], name: "index_documents_on_view_id", unique: true
+
+  create_table "organization_meta", force: true do |t|
+    t.integer "organization_id"
+    t.string  "key"
+    t.string  "value"
+    t.integer "lms_organization_id"
+    t.integer "root_id"
+  end
 
   create_table "organizations", force: true do |t|
     t.string   "name"
