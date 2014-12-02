@@ -1,0 +1,29 @@
+<tr>
+  <td>
+    <%= role.username %>
+  </td>
+
+  <td><%= role.role %></td>
+  <td>
+    <% if role.organization %>
+      <em><%= role.organization.name %></em>
+      <div class="nowrap">
+        <%= link_to full_org_path(role.organization), organization_path(full_org_path role.organization) %>
+      </div>
+    <% else %>
+      no org yet...
+    <% end %>
+  </td>
+
+  <td>
+  <% if role.cascades %>
+    yes
+  <% else %>
+    no
+  <% end %>
+  </td>
+
+  <td class="text-right">
+    <%= link_to '<span class="glyphicon glyphicon-trash"></span>'.html_safe, admin_user_path(removePermission: role.id), class: 'btn-xs text-danger' %>
+  </td>
+</tr>

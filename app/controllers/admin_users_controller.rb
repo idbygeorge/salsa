@@ -24,16 +24,16 @@ class AdminUsersController < AdminController
   end
 
   def update
-    @user = find params[:id]
+    @user = User.find params[:id]
     @user.update user_params
-    redirect_user_path(id: @user[:id])
+    redirect_to admin_user_path(id: @user[:id])
   end
 
   def destroy
     @user = User.find params[:id]
     @user.destroy
 
-    redirect users_path
+    redirect_to admi_users_path
   end
 
   def user_params
