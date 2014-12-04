@@ -127,13 +127,13 @@ module ApplicationHelper
 
   def find_org_by_path path
     unless path.include? '/'
-      organization = Organization.find_by! slug:path
+      organization = Organization.find_by slug:path
     else
       path.split('/').each do |slug|
         unless organization
-          organization = Organization.find_by! slug: slug, depth: 0
+          organization = Organization.find_by slug: slug, depth: 0
         else
-          organization = organization.children.find_by! slug: "/" + slug
+          organization = organization.children.find_by slug: "/" + slug
         end
       end
     end
