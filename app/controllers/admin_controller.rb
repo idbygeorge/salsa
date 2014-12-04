@@ -5,7 +5,7 @@ class AdminController < ApplicationController
   	@organization = find_org_by_path params[:slug]
 
   	if @organization and @organization[:lms_authentication_source]
-  		@callback_url = organizations_path
+  		@callback_url = organizations_url
 
   		canvas_connection_information
 
