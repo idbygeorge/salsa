@@ -9,6 +9,14 @@ class CanvasController < ApplicationController
     }
   end
 
+  def butler_courses
+    @document = Document.find_by_edit_id(params[:id])
+    @courses = fetch_course_list
+    render json: {
+        'html' => render_to_string(partial: 'butler_courses.html', locals: { courses: @courses, document: @document })
+    }
+  end
+
   protected
 
   def fetch_course_list
