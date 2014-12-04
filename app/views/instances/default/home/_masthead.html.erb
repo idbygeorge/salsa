@@ -1,6 +1,9 @@
 <!-- Carousel
 ================================================== -->
-<div id="myCarousel" class="carousel slide" data-ride="carousel">
+<head>
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
+</head>
+  <div id="myCarousel" class="carousel slide" data-ride="carousel">
   <div class="carousel-inner">
     <div class="item active">
       <h1>
@@ -14,7 +17,7 @@
             <br>
             Service Agreements
           </p>
-          <a class="btn btn-lg btn-primary" href="<% if params[:sub_organization_slugs] %><%= new_sub_org_document_path params[:sub_organization_slugs] %><% else %><%= new_document_path %><% end %>" role="button">Create your <abbr title="Styled and accessible learning service agreement">SALSA</abbr></a>
+          <a class="btn btn-lg btn-primary" href="<% if params[:sub_organization_slugs] %><%= new_sub_org_document_path params[:sub_organization_slugs] %><% else %><%= new_document_path %><% end %>" role="button">No signup <span class="fa fa-hand-o-right"></span> click & create</a>
         </div>
       </div>
     </div>
