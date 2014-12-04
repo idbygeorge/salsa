@@ -9,6 +9,8 @@ Salsa::Application.routes.draw do
   scope 'admin' do
     get "search", to: 'admin#search', as: 'admin_search'
 
+    get "login/:slug", to: 'admin#login', as: 'admin_login', constraints: { slug: /.*/ }
+
     resources :users, as: 'admin_users', controller: 'admin_users'
     resources :documents, as: 'admin_document', controller: 'admin_documents'
 

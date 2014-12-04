@@ -61,7 +61,7 @@ module ApplicationHelper
     end
 
     if !has_role 'admin'
-      redirect_to root_path
+      redirect_to admin_login_path
     end
   end
 
