@@ -7,7 +7,7 @@ $(function() {
     menubar : false,
 
     plugins : "autoresize,link,autolink,paste",
-    
+
     autoresize_max_height: editorMaxHeight,
 
     content_css : "/stylesheets/content.css",
@@ -101,6 +101,52 @@ $(function() {
     }
   });
 
+  $('#choose_course_prompt').on('change', '#replace_course_id',  function(){
+    var coursePrompt = $(this).closest("#choose_course_prompt");
+    coursePrompt.find('.message').remove();
+
+    if($(this).val()) {
+      var courseData = courses[$(this).val()];
+
+      $('#editor_view').data('lmsCourse', courseData);
+
+      $("#tb_save_canvas").data('originaltext', $("#tb_save_canvas").text()).html('<img src="https://lms.instructure.com/favicon.ico" height="16" alt="Canvas"> &nbsp;' + courseData.name.slice(0, 15) + (courseData.name.length > 15 ? '...' : '')).removeClass('highlight');
+
+      if(courseData.syllabus_body && courseData.syllabus_body.length) {
+        // store syllabus_body content in the clipboard
+
+        // don't do this. IDs are duplicated, messed up js for control panel if there are any duplicate IDs for controlled elements
+        //$("#compilation_tabs #CanvasImport_tab .editableHtml").html(courseData.syllabus_body);
+        $("#compilation_tabs #CanvasImport_tab .editableHtml").html('');
+
+        // generate message
+        var newMessage = $('<div class="courseSyllabusRetrieved"/>').html('This SALSA is now connected to <em><b>' + courseData.name + '</em></b>');
+
+        // put message in message queue
+        $("#messages").prepend(newMessage);
+
+        newMessage.delay(8000).fadeOut(1000, function(){
+          $(this).remove();
+        });
+      } else {
+        $("#compilation_tabs #CanvasImport_tab .editableHtml").html('');
+        $(this).closest('label').after($('<div class="message warning">No syllabus information for <b><em>' + courseData.name + '</em></b> detected in the LMS.</div>'));
+      }
+
+      // update the course selection link to show the currently selected course's title
+      syncPublishButton(courseData);
+
+      // close the dialog
+      //$('#choose_course_prompt').dialog('close');
+      var replaceLink = $('#replace_course_email_link', '#choose_course_prompt');
+console.log(replaceLink);
+      replaceLink.attr('href', replaceLink.attr('href') + $(this).val() + ' (' + courses[$(this).val()]['name'] + ')');
+    } else {
+      $("#tb_save_canvas").text($("#tb_save_canvas").data('originaltext'));
+      $("#compilation_tabs #CanvasImport_tab .editableHtml").html('');
+    }
+  });
+
   $('#tb_save_canvas').on('ajax:success', function(event, xhr, settings) {
     $("#choose_course_prompt").html(xhr.html);
 
@@ -114,7 +160,7 @@ $(function() {
 
     course_id = $('#editor_view').data('lmsCourse').id;
     settings.url = settings.url + "&canvas_course_id=" + course_id;
-    
+
     var salsaDocument = $('#page-data').clone();
 
     // fix styling on div elements inside of headers (title looks terrible in canvas otherwise)
@@ -133,7 +179,7 @@ $(function() {
 
     if (typeof(html_share_link_text) == 'undefined'){
       html_share_link_text = 'SALSA HTML';
-    } 
+    }
 
     var htmlLink = $("#html_share_link a").clone().text(html_share_link_text).attr({ 'id': 'salsa_document_view_link' });
 

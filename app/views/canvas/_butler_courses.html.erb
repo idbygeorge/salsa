@@ -2,14 +2,15 @@
   <% if @courses %>
 	<label>
     Select your Canvas course to link this SALSA to:<br><br>
-        <!-- <strong>List 1:</strong> Canvas courses without a linked SALSA<br><br>  --> 
-        <%= select_tag(:course_id, options_for_select( @courses.collect {|c| [ c['name'], c['id'] ] }, @document[:lms_course_id]), :include_blank => true ) %><br><br><br>
-<!--         <span style="font-size: 1.25em; color: orange; padding-left: 2em;">Please use <strong>List 2</strong> if you have already<br><br>clicked&nbsp;
+        <strong>List 1:</strong> Canvas courses without a linked SALSA<br><br>
+        <%= select_tag(:course_id, options_for_select( @unlinked_courses.collect {|c| [ c['name'], c['id'] ] }, @document[:lms_course_id]), :include_blank => true ) %><br><br><br>
+      </label>
+         <span style="font-size: 1.25em; color: orange; padding-left: 2em;">Please use <strong>List 2</strong> if you have already<br><br>clicked&nbsp;
         <img src="https://s3-us-west-2.amazonaws.com/salsabutler/canvas_edit_button.png" style="width: 230px; height: 30px;">&nbsp;
         in Canvas.</span><br><br><br>
-        <strong>List 2:</strong> Canvas courses with a linked SALSA<br><br>
-    <%= select_tag(:course_id, options_for_select( @courses.collect {|c| [ c['name'], c['id'] ] }, @document[:lms_course_id]), :include_blank => true ) %><br><br><br>    -->     
-    If your course is not listed, or you experience any problems<!-- cannot find your course in either list -->, please send an email to Salsa support: <a href="mailto:salsa@usu.edu?subject=Link or Relink this SALSA to my Canvas course&body=I want to link this SALSA [sub] to this Canvas course _________." onclick="this.href = this.href.replace('[sub]',window.location)">salsa@usu.edu</a>.</em>
+        <label><strong>List 2:</strong> Canvas courses with a linked SALSA<br><br>
+    <%= select_tag(:course_id, options_for_select( @linked_courses.collect {|c| [ c['name'], c['id'] ] }, @document[:lms_course_id]), :include_blank => true, id: 'replace_course_id' ) %><br><br><br>
+    If your course is not listed, or you experience any problems cannot find your course in either list, please send an email to Salsa support: <a href="mailto:salsa@usu.edu?subject=Link or Relink this SALSA to my Canvas course&body=I want to link this SALSA [sub] to this Canvas course " onclick="this.href = this.href.replace('[sub]',window.location)" id="replace_course_email_link">salsa@usu.edu</a>.</em>
 	</label>
   <p>
     <!-- <br>
@@ -35,5 +36,5 @@
 	});
 }(jQuery));
 
-var courses = <%= raw(@courses.to_json) %>;
+var courses = <%= raw(courses.to_json) %>;
 </script>
