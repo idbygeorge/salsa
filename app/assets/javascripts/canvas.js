@@ -62,8 +62,10 @@ $(function() {
     var coursePrompt = $(this).closest("#choose_course_prompt");
     coursePrompt.find('.message').remove();
 
-    if($(this).val()) {
-      var courseData = courses[this.selectedIndex-1];
+    var courseID = $(this).val();
+
+    if(courseID) {
+      var courseData = courses[courseID];
 
       $('#editor_view').data('lmsCourse', courseData);
 
@@ -139,7 +141,7 @@ $(function() {
       // close the dialog
       //$('#choose_course_prompt').dialog('close');
       var replaceLink = $('#replace_course_email_link', '#choose_course_prompt');
-console.log(replaceLink);
+
       replaceLink.attr('href', replaceLink.attr('href') + $(this).val() + ' (' + courses[$(this).val()]['name'] + ')');
     } else {
       $("#tb_save_canvas").text($("#tb_save_canvas").data('originaltext'));

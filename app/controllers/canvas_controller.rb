@@ -2,14 +2,14 @@ class CanvasController < ApplicationController
   before_filter :init_view_folder, :only => [:list_courses]
 
   def list_courses
-    @document = Document.find_by_edit_id(params[:id])
-    @courses = fetch_course_list
-    render json: {
-        'html' => render_to_string(partial: 'list_courses.html', locals: { courses: @courses, document: @document })
-    }
+    select_course_dialog 'list_courses'
   end
 
   def butler_courses
+    select_course_dialog 'butler_courses'
+  end
+
+  def select_course_dialog partial
     @document = Document.find_by_edit_id(params[:id])
     @courses = fetch_course_list
 
@@ -27,11 +27,13 @@ class CanvasController < ApplicationController
     @linked_courses = @courses.select { |c| linked_courses_salsa.find_by(lms_course_id: c['id']) != nil }
     @unlinked_courses = @courses.select { |c| linked_courses_salsa.find_by(lms_course_id: c['id']) == nil }
 
+    courses = Hash[@courses.map { |c| [c['id'], c] }]
+
     render json: {
       'html' => render_to_string(
-        partial: 'butler_courses.html',
+        partial: partial,
         locals: {
-          courses: Hash[@courses.map { |c| [c['id'], c] }],
+          courses: courses,
           linked_courses: @linked_courses,
           unlinked_courses: @unlinked_courses,
           document: @document
