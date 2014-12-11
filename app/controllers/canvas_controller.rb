@@ -21,25 +21,25 @@ class CanvasController < ApplicationController
 
     # find all documents in org tree that match on the @courses.id
     linked_courses_salsa = Document.where organization_id: org_tree, lms_course_id: lms_course_ids
-    # get past lazy loading issue...
-    linked_courses_salsa[0]
 
-    @linked_courses = @courses.select { |c| linked_courses_salsa.find_by(lms_course_id: c['id']) != nil }
-    @unlinked_courses = @courses.select { |c| linked_courses_salsa.find_by(lms_course_id: c['id']) == nil }
+    if linked_courses_salsa.size
+      @linked_courses = @courses.select { |c| linked_courses_salsa.find_by(lms_course_id: c['id']) != nil }
+      @unlinked_courses = @courses.select { |c| linked_courses_salsa.find_by(lms_course_id: c['id']) == nil }
 
-    courses = Hash[@courses.map { |c| [c['id'], c] }]
+      courses = Hash[@courses.map { |c| [c['id'], c] }]
 
-    render json: {
-      'html' => render_to_string(
-        partial: partial,
-        locals: {
-          courses: courses,
-          linked_courses: @linked_courses,
-          unlinked_courses: @unlinked_courses,
-          document: @document
-        }
-      )
-    }
+      render json: {
+        'html' => render_to_string(
+          partial: partial,
+          locals: {
+            courses: courses,
+            linked_courses: @linked_courses,
+            unlinked_courses: @unlinked_courses,
+            document: @document
+          }
+        )
+      }
+    end
   end
 
   protected
