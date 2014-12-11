@@ -14,7 +14,7 @@ class CanvasController < ApplicationController
     @courses = fetch_course_list
 
     # gather the course IDs from canvas result
-    lms_course_ids = @courses.map{|c| c['id']}
+    lms_course_ids = @courses.map{|c| c['id'].to_s }
 
     # find all organizations in this branch of the org tree
     org_tree = @document.organization.root.self_and_descendants.pluck :id
