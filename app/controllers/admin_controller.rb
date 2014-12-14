@@ -11,10 +11,45 @@ class AdminController < ApplicationController
 
   		redirect_to @redirect_url if @redirect_url
 
-		redirect_to @callback_url if @lms_user
-	else
+		  redirect_to @callback_url if @lms_user
+	  else
   		render action: :login, layout: false
   	end
+  end
+
+  def canvas
+    render 'canvas', layout: '../admin/report_layout'
+  end
+
+  def canvasData
+    render 'canvasData', layout: false
+  end
+
+  def collegeDetails
+    render 'collegeDetails', layout: false
+  end
+
+  def canvas_admin
+    canvas_access_token = 'SOME_TOKEN'
+    canvas_endpoint = 'https://example.test.instructure.com'
+
+    @org = Organization.find_by lms_authentication_source: canvas_endpoint
+    if @org
+      canvas_client = Canvas::API.new(:host => canvas_endpoint, :token => canvas_access_token)
+
+      if canvas_client
+        @root = canvas_client.get("/api/v1/accounts")[0]
+        @root_courses = canvas_client.get("/api/v1/accounts/#{@root['id']}/courses?per_page=50")
+
+
+        OrganizationMeta.create root_id: @org[:id], lms_organization_id: @root['id']
+
+        @level1 = canvas_client.get("/api/v1/accounts/#{@root['id']}/sub_accounts?per_page=50")
+      end
+    else
+      debugger
+      false
+    end
   end
 
   def logout
@@ -37,7 +72,7 @@ class AdminController < ApplicationController
       @lms_client_id = @organization[:lms_authentication_id] unless @organization[:lms_authentication_id] == ''
       @lms_secret = @organization[:lms_authentication_key] unless @organization[:lms_authentication_key] == ''
     end
-    
+
     if canvas_access_token && canvas_access_token != ''
       @lms_client = Canvas::API.new(:host => @oauth_endpoint, :token => canvas_access_token)
 

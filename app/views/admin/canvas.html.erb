@@ -1,0 +1,134 @@
+<% if report_data|length > 0 %>
+<div class="row">
+  <div class="col-lg-6 col-md-6 well">
+    <div class="row">
+      <div class="col-lg-6 col-md-6">
+        <div id="canvasUse" style="height: 300px;"></div>
+      </div>
+      <div class="col-lg-6 col-md-6">
+        <a href="#" class="btn btn-default btn-block usingCanvasBtn">
+          Students Can Access Course<br>
+          <span class="label label-primary"><span class="usingCanvasTotal">0</span> / <span class="grandTotal">0</span></span>
+          <span class="label label-primary usingCanvasPer">0%</span>
+        </a>
+        <a href="#" class="btn btn-default btn-block notUsingCanvasBtn">
+          Not Using Canvas<br>
+          <span class="label label-default"><span class="notUsingCanvasTotal">0</span> / <span class="grandTotal">0</span></span>
+          <span class="label label-default notUsingCanvasPer">0%</span>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6 col-md-6 well">
+    <div class="row">
+      <div class="col-lg-6 col-md-6">
+        <div id="syllabusState" style="height: 300px;"></div>
+      </div>
+      <div class="col-lg-6 col-md-6">
+        <a href="#" class="btn btn-default btn-block hasSyllabusBtn">
+          Content in Syllabus Page<br>
+          <span class="label label-success"><span class="hasSyllabusTotal">0</span> / <span class="usingCanvasTotal">0</span></span>
+          <span class="label label-success hasSyllabusPer">0%</span>
+        </a>
+        <a href="#" class="btn btn-default btn-block noSyllabusBtn">
+          No Content in Syllabus Page<br>
+          <span class="label label-danger"><span class="noSyllabusTotal">0</span> / <span class="usingCanvasTotal">0</span></span>
+          <span class="label label-danger noSyllabusPer">0%</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div id="collegeCount" class="well" style="height:800px;"></div>
+</div>
+<% else %>
+<div class="alert alert-warning" role="alert">No data for the selected term</div>
+<% end %>
+<div class="row">
+  <div class="panel-group courses" id="accordion">
+    {% set account = '' %}
+    {% set parent_account = '' %}
+    {% set course_id = '' %}
+    {% set user_icon = '' %}
+    {% for record in report_data %}
+    {% if (course_id != record.canvas_course_id) and (loop.index > 1) %}
+    {% if teacher_array|length > 1 %}
+    {% set user_icon = 'fa-users' %}
+    {% else %}
+    {% set user_icon = 'fa-user' %}
+    {% endif %}
+    {% set teachers = '' %}
+    {% for teacher in teacher_array %}
+    {% set teachers = teachers ~ teacher ~ '<br>' %}
+    {% endfor %}
+    <a href="#" data-toggle="tooltip" data-original-title="{{ teachers }}"><i class="fa {{ user_icon }}"></i></a>
+  </li>
+  <% end %>
+  <% if account != record.canvas_account_id %>
+  <%# End of Department Loop %>
+  <% if loop.index > 1 %>
+</ul></div>
+<% end %>
+<% if parent_account != record.canvas_parent_id %>
+<% set parent_account = record.canvas_parent_id %>
+<%# End of College Loop %>
+<% if loop.index > 1 %>
+</div>
+</div>
+</div>
+<% end %>
+
+<div class="panel panel-default college-list">
+  <div class="panel-heading">
+    <h2 class="panel-title">
+      <a data-toggle="collapse" data-parent="#accordion" href="#collapse_{{ record.canvas_parent_id }}">
+        {{ record.parent_account_name }}
+      </a>
+    </h2>
+  </div>
+  <div id="collapse_{{ record.canvas_parent_id }}" class="panel-collapse collapse in">
+    <div class="panel-body">
+      {% endif %}
+      {% set account = record.canvas_account_id %}
+
+      <div class="department">
+        <h3>{{ record.account_name }}</h3>
+        <ul class="course-list">
+          {% endif %}
+
+          {% if course_id != record.canvas_course_id %}
+          {% set course_id = record.canvas_course_id %}
+          {% set li_classes, status_icon, syllabus_link = '', '', false %}
+          {% if record.course_status == 'unpublished' %}
+          {% set li_classes = li_classes ~ 'not-using-canvas' %}
+          {% set status_icon = 'fa-times-circle' %}
+          {% set li_classes = li_classes ~ 'using-canvas has-syllabus' %}
+          {% elseif record.meta_value != NULL %}
+          {% set status_icon = 'fa-check-circle' %}
+          {% set syllabus_link = true %}
+          {% else %}
+          {% set li_classes = li_classes ~ 'using-canvas unknown-syllabus' %}
+          {% set status_icon = 'fa-question-circle' %}
+          {% endif %}
+          <li class="{{ li_classes }}">
+            <i class="fa {{ status_icon }}"></i>
+            <a href="https://{{ institution.api_domain }}/courses/{{ record.canvas_course_id }}/users" target="_blank" data-toggle="tooltip" title="Open course in Canvas"> <i class="fa fa-share"></i><span class="screenreader-only">View course in Canvas</span></a>
+            <span class="label label-default enrollment-count">{{ record.enrollments }}</span>
+            {% if syllabus_link %}
+            <a href="{{ constant('URL') }}syllabus/{{ institution.id }}/{{ record.canvas_course_id }}" target="_blank">{{ record.course_long_name }}</a>
+            {% else %}
+            {{ record.course_long_name }}
+            {% endif %}
+            {% set teacher_array = [ record.teacher_first_name ~ " " ~ record.teacher_last_name ] %}
+            {% else %}
+            {% set teacher_array = teacher_array|merge([ record.teacher_first_name ~ " " ~ record.teacher_last_name ]) %}
+            {% endif %}
+
+            {# {% endif %} #}
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
