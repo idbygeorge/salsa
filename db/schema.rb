@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141130033111) do
+ActiveRecord::Schema.define(version: 20141217045806) do
 
   create_table "components", force: true do |t|
     t.string   "name"
@@ -42,12 +42,14 @@ ActiveRecord::Schema.define(version: 20141130033111) do
   add_index "components", ["slug", "organization_id"], name: "index_components_on_slug_and_organization_id", unique: true
 
   create_table "document_meta", force: true do |t|
-    t.integer "document_id"
-    t.string  "key"
-    t.string  "value"
-    t.integer "lms_organization_id"
-    t.integer "lms_course_id"
-    t.integer "root_organization_id"
+    t.integer  "document_id"
+    t.string   "key"
+    t.string   "value"
+    t.integer  "lms_organization_id"
+    t.integer  "lms_course_id"
+    t.integer  "root_organization_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "documents", force: true do |t|
@@ -75,11 +77,13 @@ ActiveRecord::Schema.define(version: 20141130033111) do
   add_index "documents", ["view_id"], name: "index_documents_on_view_id", unique: true
 
   create_table "organization_meta", force: true do |t|
-    t.integer "organization_id"
-    t.string  "key"
-    t.string  "value"
-    t.integer "lms_organization_id"
-    t.integer "root_id"
+    t.integer  "organization_id"
+    t.string   "key"
+    t.string   "value"
+    t.integer  "lms_organization_id"
+    t.integer  "root_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
   end
 
   create_table "organizations", force: true do |t|

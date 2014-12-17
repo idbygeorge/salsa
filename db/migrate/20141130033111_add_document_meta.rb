@@ -7,6 +7,6 @@ class AddDocumentMeta < ActiveRecord::Migration
   		t.integer :lms_organization_id
   		t.integer :lms_course_id
   		t.integer :root_organization_id
-	end
+	   end
   end
 end
