@@ -6,6 +6,6 @@ class AddOrganizationMeta < ActiveRecord::Migration
   		t.string :value
   		t.integer :lms_organization_id
   		t.integer :root_id
-	end
+	   end
   end
 end

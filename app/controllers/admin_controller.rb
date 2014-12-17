@@ -19,36 +19,69 @@ class AdminController < ApplicationController
 
   def canvas
     render 'canvas', layout: '../admin/report_layout'
+
+    @report_data = DocumentMeta.all
   end
 
-  def canvasData
-    render 'canvasData', layout: false
-  end
+  def canvas_sync
+    org_slug = request.env['SERVER_NAME']
+    @org = Organization.find_by slug: org_slug
 
-  def collegeDetails
-    render 'collegeDetails', layout: false
+    @org_meta = OrganizationMeta.where root_id: @org['id']
+
+    render 'admin/canvas/sync'
   end
 
   def canvas_admin
-    canvas_access_token = 'SOME_TOKEN'
-    canvas_endpoint = 'https://example.test.instructure.com'
+    @canvas_access_token = params[:canvas_token]
 
-    @org = Organization.find_by lms_authentication_source: canvas_endpoint
+    org_slug = request.env['SERVER_NAME']
+
+    @org = Organization.find_by slug: org_slug
+
     if @org
-      canvas_client = Canvas::API.new(:host => canvas_endpoint, :token => canvas_access_token)
+      @canvas_endpoint = @org[:lms_authentication_source]
 
-      if canvas_client
-        @root = canvas_client.get("/api/v1/accounts")[0]
-        @root_courses = canvas_client.get("/api/v1/accounts/#{@root['id']}/courses?per_page=50")
+      @canvas_client = Canvas::API.new(:host => @canvas_endpoint, :token => @canvas_access_token)
 
+      if @canvas_client
+        canvas_root_accounts = @canvas_client.get("/api/v1/accounts")
 
-        OrganizationMeta.create root_id: @org[:id], lms_organization_id: @root['id']
-
-        @level1 = canvas_client.get("/api/v1/accounts/#{@root['id']}/sub_accounts?per_page=50")
+        canvas_root_accounts.each do |canvas_root_account|
+          sync_canvas_accounts canvas_root_account, @org[:id]
+        end
+      else
+        debugger
+        false
       end
     else
       debugger
       false
+    end
+
+    redirect_to admin_canvas_sync_path
+  end
+
+  def sync_canvas_accounts account, org_id = nil
+    #@canvas_root_courses = @canvas_client.get("/api/v1/accounts/#{@account['id']}/courses?per_page=50")
+
+    # store each piece of data into the organization meta model
+    account.each do |key, value|
+      meta = OrganizationMeta.find_or_initialize_by organization_id: org_id,
+      key: key,
+      root_id: @org[:id],
+      lms_organization_id: account['id']
+
+      meta[:value] = value.to_s
+
+      meta.save
+    end
+
+    @child_accounts = @canvas_client.get("/api/v1/accounts/#{account['id']}/sub_accounts?per_page=50")
+    @child_accounts.next_page! while @child_accounts.more?
+
+    @child_accounts.each do |child_account|
+      sync_canvas_accounts child_account
     end
   end
 
