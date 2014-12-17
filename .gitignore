@@ -18,6 +18,7 @@ salsa_development
 salsa_production
 salsa_test
 /**/.DS_Store
+*_mock_*
 
 # Ignore instance configuration files
 /workers/pdf/iron.json
