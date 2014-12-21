@@ -1,4 +1,4 @@
-<% if @report_data %>
+<% if @report_data or true %>
   <div class="row">
     <div class="col-lg-6 col-md-6 well">
       <div class="row">
@@ -45,20 +45,24 @@
 
   <div class="row">
     <div class="panel-group courses" id="accordion">
-      <% @report_data.each do |record| %>
-        <% if (course_id != record.canvas_course_id) and (loop.index > 1) %>
+      <% course_id = ''%>
+      <% account = ''%>
+      <% parent_account = ''%>
+
+      <% @report_data.each_with_index do |record, i| %>
+        <% if (course_id != record[:lms_course_id]) and (i > 1) %>
           <a href="#" data-toggle="tooltip" data-original-title="<%= teachers.to_s %>"><i class="fa <% if teachers.size %>fa-users<% else %>fa-user<% end %>"></i></a></li>
         <% end %>
 
-        <% if account != record.canvas_account_id %>
+        <% if account != record[:lms_organization_id] %>
           <%# End of Department Loop %>
-          <% if loop.index > 1 %>
+          <% if i > 1 %>
             </ul></div>
           <% end %>
           <% if parent_account != record.canvas_parent_id %>
             <% parent_account = record.canvas_parent_id %>
             <%# End of College Loop %>
-            <% if loop.index > 1 %>
+            <% if i > 1 %>
               </div>
               </div>
               </div>
@@ -75,7 +79,7 @@
               <div id="collapse_<%= record.canvas_parent_id %>" class="panel-collapse collapse in">
                 <div class="panel-body">
           <% end %>
-          <% account = record.canvas_account_id %>
+          <% account = record.lms_ %>
 
           <div class="department">
             <h3><%= record.account_name %></h3>

@@ -1,4 +1,4 @@
-<%= form_tag admin_canvas_token_path, class: 'form form-horizontal' do %>
+<%= form_tag canvas_courses_sync_path, class: 'form form-horizontal' do %>
   <div class="form-group">
     <%= label_tag :canvas_token, 'Canvas Admin Token' %>
     <%= text_field_tag :canvas_token, '', class: 'form-control' %>
@@ -7,17 +7,17 @@
   <%= submit_tag 'Sync', class: 'btn btn-default' %>
 <% end %>
 
-<% if @org_meta[0] %>
+<% if @document_meta[0] %>
   <table class="table table-responsive table-striped">
     <thead>
       <tr>
-        <% @org_meta[0].attributes.each do |key, value| %>
-        <th><%= key %></th>
+        <% @document_meta[0].attributes.each do |key, value| %>
+          <th><%= key %></th>
         <% end %>
       </tr>
     </thead>
     <tbody>
-      <% @org_meta.each do |meta| %>
+      <% @document_meta.each do |meta| %>
       <tr>
         <% meta.attributes.each do |key, value| %>
         <th><%= value %></th>
@@ -28,6 +28,6 @@
   </table>
 <% else %>
   <div class="alert alert-warning">
-    No accounts have been synced to Salsa.
+    No courses have been synced to Salsa for this canvas account.
   </div>
 <% end %>
