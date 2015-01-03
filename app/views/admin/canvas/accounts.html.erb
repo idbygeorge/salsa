@@ -7,20 +7,20 @@
   <%= submit_tag 'Sync', class: 'btn btn-default' %>
 <% end %>
 
-<% if @org_meta[0] %>
+<% if @org_meta.rows.length %>
   <table class="table table-responsive table-striped">
     <thead>
       <tr>
-        <% @org_meta[0].attributes.each do |key, value| %>
-        <th><%= key %></th>
+        <% @org_meta.column_headers.each do |key, value| %>
+          <th><%= key %></th>
         <% end %>
       </tr>
     </thead>
     <tbody>
-      <% @org_meta.each do |meta| %>
+      <% @org_meta.rows.each do |pivot_object| %>
       <tr>
-        <% meta.attributes.each do |key, value| %>
-        <th><%= value %></th>
+        <% pivot_object.data.each do |meta| %>
+          <td><%= meta[:value] if meta %></td>
         <% end %>
       </tr>
       <% end %>

@@ -7,20 +7,46 @@
   <%= submit_tag 'Sync', class: 'btn btn-default' %>
 <% end %>
 
-<% if @document_meta[0] %>
+<% if @document_meta.count %>
+<table class="table table-responsive table-striped">
+  <thead>
+    <tr>
+      <% @document_meta[0].attributes.each do |key, value| %>
+      <th><%= key %></th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <% @document_meta.each do |pivot_object| %>
+    <tr>
+      <% pivot_object.attributes.each do |key, value| %>
+      <td><%= value if value %></td>
+      <% end %>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<% else %>
+<div class="alert alert-warning">
+  No courses have been synced to Salsa for this canvas account.
+</div>
+<% end %>
+
+
+<% if false and @document_meta.rows.length %>
   <table class="table table-responsive table-striped">
     <thead>
       <tr>
-        <% @document_meta[0].attributes.each do |key, value| %>
+        <% @document_meta.column_headers.each do |key, value| %>
           <th><%= key %></th>
         <% end %>
       </tr>
     </thead>
     <tbody>
-      <% @document_meta.each do |meta| %>
+      <% @document_meta.rows.each do |pivot_object| %>
       <tr>
-        <% meta.attributes.each do |key, value| %>
-        <th><%= value %></th>
+        <% pivot_object.data.each do |meta| %>
+          <td><%= meta[:value] if meta %></td>
         <% end %>
       </tr>
       <% end %>
