@@ -68,6 +68,7 @@ class AdminController < ApplicationController
         sis.value as 'sis_course_id',
         start.value as 'start_at',
         p.value as 'parent_id',
+        pn.value as 'parent_account_name',
         end.value as 'end_at',
         ws.value as 'workflow_state'
 
@@ -96,6 +97,14 @@ class AdminController < ApplicationController
           acn.lms_organization_id = p.lms_organization_id
           AND acn.root_id = p.root_id
           AND p.key = 'parent_account_id'
+        )
+
+        -- join the account parent id
+      JOIN
+        organization_meta as pn ON (
+          p.value = pn.lms_organization_id
+          AND acn.root_id = pn.root_id
+          AND pn.key = 'name'
         )
 
       -- join the course code meta infromation
@@ -150,7 +159,7 @@ class AdminController < ApplicationController
         a.root_organization_id = :root_organization_id
         AND a.key = 'account_id'
 
-      -- ORDER BY p_am.lft, p_am.rght, p_a.name, am.lft, am.rght, a.name, a.canvas_account_id, c.long_name, c.canvas_course_id, u.last_name
+      ORDER BY pn.value, acn.value, n.value, a.lms_course_id
     SQL
 
     @document_meta = DocumentMeta.find_by_sql query_string, { root_organization_id: @org[:id]}
