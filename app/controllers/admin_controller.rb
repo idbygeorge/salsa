@@ -55,107 +55,105 @@ class AdminController < ApplicationController
     org_slug = request.env['SERVER_NAME']
     @org = Organization.find_by slug: org_slug
 
-query_string =
-<<SQL
-  SELECT DISTINCT a.course_id as 'id', account_id, name, course_code, enrollment_term_id, sis_course_id, start_at, end_at, workflow_state
-  FROM (
-    SELECT
-      dm.value as 'account_id',
-      dm.lms_course_id as 'course_id'
-    FROM document_meta as dm
-    WHERE
-    root_organization_id = :root_organization_id
-    AND dm.key = 'account_id'
-  ) as a
-  LEFT JOIN (
-    SELECT
-      dm.lms_course_id as 'course_id',
-      dm.value as 'name'
-    FROM document_meta as dm
-    WHERE
-    root_organization_id = :root_organization_id
-    AND dm.key = 'name'
-  ) as n ON (a.course_id = n.course_id)
-  LEFT JOIN (
-    SELECT
-      dm.lms_course_id as 'course_id',
-      dm.value as 'course_code'
-    FROM document_meta as dm
-    WHERE
-    root_organization_id = :root_organization_id
-    AND dm.key = 'course_code'
-  ) as cc ON (a.course_id = cc.course_id)
-  LEFT JOIN (
-    SELECT
-      dm.lms_course_id as 'course_id',
-      dm.value as 'enrollment_term_id'
-    FROM document_meta as dm
-    WHERE
-    root_organization_id = :root_organization_id
-    AND dm.key = 'enrollment_term_id'
-  ) as et ON (a.course_id = et.course_id)
-  LEFT JOIN (
-    SELECT
-      dm.lms_course_id as 'course_id',
-      dm.value as 'sis_course_id'
-    FROM document_meta as dm
-    WHERE
-    root_organization_id = :root_organization_id
-    AND dm.key = 'sis_course_id'
-  ) as sis ON (a.course_id = sis.course_id)
-  LEFT JOIN (
-    SELECT
-      dm.lms_course_id as 'course_id',
-      dm.value as 'start_at'
-    FROM document_meta as dm
-    WHERE
-    root_organization_id = :root_organization_id
-    AND dm.key = 'start_at'
-  ) as start ON (a.course_id = start.course_id)
-  LEFT JOIN (
-    SELECT
-      dm.lms_course_id as 'course_id',
-      dm.value as 'end_at'
-    FROM document_meta as dm
-    WHERE
-    root_organization_id = :root_organization_id
-    AND dm.key = 'end_at'
-  ) as end ON (a.course_id = end.course_id)
-  LEFT JOIN (
-    SELECT
-      dm.lms_course_id as 'course_id',
-      dm.value as 'workflow_state'
-    FROM document_meta as dm
-    WHERE
-    root_organization_id = :root_organization_id
-    AND dm.key = 'workflow_state'
-  ) as ws ON (a.course_id = ws.course_id)
-SQL
+    query_string =
+    <<-SQL.gsub(/^ {4}/, '')
+      SELECT DISTINCT a.lms_course_id as 'id',
+        a.value as 'account_id',
+        acn.value as 'account',
+        p.value as 'parent_id',
+        a.document_id as 'document_id',
+        n.value as 'name',
+        cc.value as 'course_code',
+        et.value as 'enrollment_term_id',
+        sis.value as 'sis_course_id',
+        start.value as 'start_at',
+        p.value as 'parent_id',
+        end.value as 'end_at',
+        ws.value as 'workflow_state'
+
+      -- prefilter the account id and course id meta information so joins will be faster (maybe...?)
+      FROM document_meta as a
+
+      -- join the name meta information
+      JOIN
+        document_meta as n ON (
+          a.lms_course_id = n.lms_course_id
+          AND a.root_organization_id = n.root_organization_id
+          AND n.key = 'name'
+        )
+
+      -- join the account name
+      JOIN
+        organization_meta as acn ON (
+          a.value = acn.lms_organization_id
+          AND a.root_organization_id = acn.root_id
+          AND acn.key = 'name'
+        )
+
+      -- join the account parent id
+      JOIN
+        organization_meta as p ON (
+          acn.lms_organization_id = p.lms_organization_id
+          AND acn.root_id = p.root_id
+          AND p.key = 'parent_account_id'
+        )
+
+      -- join the course code meta infromation
+      LEFT JOIN
+        document_meta as cc ON (
+          a.lms_course_id = cc.lms_course_id
+          AND a.root_organization_id = cc.root_organization_id
+          AND cc.key = 'course_code'
+        )
+
+      -- join the enrollment term meta information
+      LEFT JOIN
+        document_meta as et ON (
+          a.lms_course_id = et.lms_course_id
+          AND a.root_organization_id = et.root_organization_id
+          AND et.key = 'enrollment_term_id'
+        )
+
+      -- join the sis course id meta information
+      LEFT JOIN
+        document_meta as sis ON (
+          a.lms_course_id = sis.lms_course_id
+          AND a.root_organization_id = sis.root_organization_id
+          AND sis.key = 'sis_course_id'
+        )
+
+      -- join the start date meta information
+      LEFT JOIN
+        document_meta as start ON (
+          a.lms_course_id = start.lms_course_id
+          AND a.root_organization_id = start.root_organization_id
+          AND start.key = 'start_at'
+        )
+
+      -- join the end date meta information
+      LEFT JOIN
+        document_meta as end ON (
+          a.lms_course_id = end.lms_course_id
+          AND a.root_organization_id = end.root_organization_id
+          AND end.key = 'end_at'
+        )
+
+      -- join the workflow state meta information
+      LEFT JOIN
+        document_meta as ws ON (
+          a.lms_course_id = ws.lms_course_id
+          AND a.root_organization_id = ws.root_organization_id
+          AND ws.key = 'workflow_state'
+        )
+
+      WHERE
+        a.root_organization_id = :root_organization_id
+        AND a.key = 'account_id'
+
+      -- ORDER BY p_am.lft, p_am.rght, p_a.name, am.lft, am.rght, a.name, a.canvas_account_id, c.long_name, c.canvas_course_id, u.last_name
+    SQL
 
     @document_meta = DocumentMeta.find_by_sql query_string, { root_organization_id: @org[:id]}
-
-    # document_meta = DocumentMeta.where(
-    #   root_organization_id: @org['id'],
-    #   key: [
-    #     'account_id',
-    #     'course_code',
-    #     'end_at',
-    #     'enrollment_term_id',
-    #     'id',
-    #     'name',
-    #     'sis_course_id',
-    #     'start_at',
-    #     'workflow_state'
-    #   ]
-    # )
-
-    # @document_meta = PivotTable::Grid.new do |g|
-    #   g.source_data = document_meta
-    #   g.column_name = :key
-    #   g.row_name = :lms_course_id
-    # end
-    #
-    # @document_meta.build
 
     render 'admin/canvas/courses'
   end
