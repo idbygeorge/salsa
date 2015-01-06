@@ -19,7 +19,7 @@ class AdminController < ApplicationController
   end
 
   def canvas
-    @report_data = DocumentMeta.where key: [:name, :id, :enrollment_term_id, :workflow_state, :account_id, :course_id]
+    @report_data = get_document_meta
 
     render 'canvas', layout: '../admin/report_layout'
   end
@@ -51,13 +51,13 @@ class AdminController < ApplicationController
     render 'admin/canvas/accounts'
   end
 
-  def canvas_courses
+  def get_document_meta
     org_slug = request.env['SERVER_NAME']
     @org = Organization.find_by slug: org_slug
 
     query_string =
     <<-SQL.gsub(/^ {4}/, '')
-      SELECT DISTINCT a.lms_course_id as 'id',
+      SELECT DISTINCT a.lms_course_id as 'course_id',
         a.value as 'account_id',
         acn.value as 'account',
         p.value as 'parent_id',
@@ -76,7 +76,7 @@ class AdminController < ApplicationController
       FROM document_meta as a
 
       -- join the name meta information
-      JOIN
+      LEFT JOIN
         document_meta as n ON (
           a.lms_course_id = n.lms_course_id
           AND a.root_organization_id = n.root_organization_id
@@ -84,7 +84,7 @@ class AdminController < ApplicationController
         )
 
       -- join the account name
-      JOIN
+      LEFT JOIN
         organization_meta as acn ON (
           a.value = acn.lms_organization_id
           AND a.root_organization_id = acn.root_id
@@ -92,7 +92,7 @@ class AdminController < ApplicationController
         )
 
       -- join the account parent id
-      JOIN
+      LEFT JOIN
         organization_meta as p ON (
           acn.lms_organization_id = p.lms_organization_id
           AND acn.root_id = p.root_id
@@ -100,7 +100,7 @@ class AdminController < ApplicationController
         )
 
         -- join the account parent id
-      JOIN
+      LEFT JOIN
         organization_meta as pn ON (
           p.value = pn.lms_organization_id
           AND acn.root_id = pn.root_id
@@ -162,7 +162,11 @@ class AdminController < ApplicationController
       ORDER BY pn.value, acn.value, n.value, a.lms_course_id
     SQL
 
-    @document_meta = DocumentMeta.find_by_sql query_string, { root_organization_id: @org[:id]}
+    DocumentMeta.find_by_sql query_string, { root_organization_id: @org[:id]}
+  end
+
+  def canvas_courses
+    @document_meta = get_document_meta
 
     render 'admin/canvas/courses'
   end
