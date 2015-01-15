@@ -52,6 +52,9 @@ gem 'kaminari'
 # active record version control
 gem 'vestal_versions', :git => 'git://github.com/laserlemon/vestal_versions'
 
+# processing meta data for orgs and accounts
+gem 'pivot_table'
+
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
 gem 'turbolinks'
 

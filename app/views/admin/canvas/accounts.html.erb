@@ -1,4 +1,4 @@
-<%= form_tag admin_canvas_token_path, class: 'form form-horizontal' do %>
+<%= form_tag canvas_accounts_sync_path, class: 'form form-horizontal' do %>
   <div class="form-group">
     <%= label_tag :canvas_token, 'Canvas Admin Token' %>
     <%= text_field_tag :canvas_token, '', class: 'form-control' %>
@@ -7,20 +7,20 @@
   <%= submit_tag 'Sync', class: 'btn btn-default' %>
 <% end %>
 
-<% if @org_meta[0] %>
+<% if @org_meta.rows.length %>
   <table class="table table-responsive table-striped">
     <thead>
       <tr>
-        <% @org_meta[0].attributes.each do |key, value| %>
-        <th><%= key %></th>
+        <% @org_meta.column_headers.each do |key, value| %>
+          <th><%= key %></th>
         <% end %>
       </tr>
     </thead>
     <tbody>
-      <% @org_meta.each do |meta| %>
+      <% @org_meta.rows.each do |pivot_object| %>
       <tr>
-        <% meta.attributes.each do |key, value| %>
-        <th><%= value %></th>
+        <% pivot_object.data.each do |meta| %>
+          <td><%= meta[:value] if meta %></td>
         <% end %>
       </tr>
       <% end %>

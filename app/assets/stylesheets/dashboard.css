@@ -121,7 +121,7 @@ h2 {
 .not-using-canvas, i.fa-times-circle {
 	color: #9e9e9e;
 }
-.courses ul {
+.courses ul ul {
 	list-style-type: none;
 	column-count: 3;
 	-moz-column-count: 3;
@@ -163,3 +163,30 @@ footer .logo img {
 		padding-right: 20px;
 	}
 }
+
+@media (max-width: 1024px) {
+	.courses ul ul {
+		column-count: auto;
+		-moz-column-count: auto;
+		-webkit-column-count: auto;
+	}
+}
+
+@media (max-width: 1420px) {
+	.courses ul ul {
+		column-count: 2;
+		-moz-column-count: 2;
+		-webkit-column-count: 2;
+	}
+}
+
+@media (max-width: 1920px) {
+	.courses ul ul {
+		column-count: 4;
+		-moz-column-count: 4;
+		-webkit-column-count: 4;
+	}
+}
+
+
+.container { width: auto !important; }
