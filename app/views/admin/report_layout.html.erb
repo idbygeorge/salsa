@@ -7,7 +7,7 @@
 	<meta name="description" content="">
 	<meta name="author" content="">
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.css">
-	<link rel="stylesheet" href="///maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+	<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 
 	<title>
 		LMS Status - Salsa
@@ -29,8 +29,8 @@
 	<div class="heading">
 		<div class="container">
 			<h1><i class="fa fa-compass"></i> <%= @organization.name if @organization %> Syllabus Tracker</h1>
-		</div>
-	</div>
+		</div><!-- .container  -->
+	</div><!-- .heading -->
 
 
 	<% if @messages %>
@@ -38,20 +38,17 @@
 		<% if messages.error %>
 		<div class="alert alert-danger">
 			<%= messages.error %>
-		</div>
+		</div><!-- .alert-danger -->
 		<% end %>
-	</div>
+	</div> <!-- #messages -->
 	<% end %>
 
 	<%= render 'masthead' %>
 
 	<div class="container" role="main">
 		<%= yield %>
-	</div>
-
-	<div class="container" role="main">
 		<footer>
-			<a class="logo" href="https://{{ institution.api_domain }}/" target="_blank" title="{{ institution.name }}">
+			<a class="logo" href="<%= @org[:lms_authentication_source] %>" target="_blank" title="<%= @org[:name] %>">
 				<% if @organization %>
 					<% if @organization.logo %>
 						<img src="<%= @organization.logo %>">
@@ -63,7 +60,7 @@
 				<% end %>
 			</a>
 		</footer>
-	</div>
+	</div><!-- .container[main] -->
 	<!-- Bootstrap core JavaScript
 	================================================== -->
 	<!-- Placed at the end of the document so the pages load faster -->
