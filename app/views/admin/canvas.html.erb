@@ -6,15 +6,15 @@
           <div id="canvasUse" style="height: 300px;"></div>
         </div><!-- .col-XXX-6 -->
         <div class="col-lg-6 col-md-6">
-          <a href="#" class="btn btn-default btn-block usingCanvasBtn">
-            Students Can Access Course<br>
-            <span class="label label-primary"><span class="usingCanvasTotal">0</span> / <span class="grandTotal">0</span></span>
-            <span class="label label-primary usingCanvasPer">0%</span>
+          <a href="#" class="btn btn-default btn-block usingSalsaBtn">
+            Using Salsa<br>
+            <span class="label label-primary"><span class="usingSalsaTotal">0</span> / <span class="grandTotal">0</span></span>
+            <span class="label label-primary notUsingCanvasPer">0%</span>
           </a>
-          <a href="#" class="btn btn-default btn-block notUsingCanvasBtn">
-            Not Using Canvas<br>
-            <span class="label label-default"><span class="notUsingCanvasTotal">0</span> / <span class="grandTotal">0</span></span>
-            <span class="label label-default notUsingCanvasPer">0%</span>
+          <a href="#" class="btn btn-default btn-block notUsingSalsaBtn">
+            Not Using Salsa<br>
+            <span class="label label-default"><span class="notUsingSalsaTotal">0</span> / <span class="grandTotal">0</span></span>
+            <span class="label label-default usingCanvasPer">0%</span>
           </a>
         </div><!-- .col-XXX-6 -->
       </div><!-- .row -->
@@ -26,13 +26,13 @@
         </div><!-- .col-XXX-6 -->
         <div class="col-lg-6 col-md-6">
           <a href="#" class="btn btn-default btn-block hasSyllabusBtn">
-            Content in Syllabus Page<br>
-            <span class="label label-success"><span class="hasSyllabusTotal">0</span> / <span class="usingCanvasTotal">0</span></span>
+            Published to Canvas<br>
+            <span class="label label-success"><span class="hasSyllabusTotal">0</span> / <span class="usingSalsaTotal">0</span></span>
             <span class="label label-success hasSyllabusPer">0%</span>
           </a>
           <a href="#" class="btn btn-default btn-block noSyllabusBtn">
-            No Content in Syllabus Page<br>
-            <span class="label label-danger"><span class="noSyllabusTotal">0</span> / <span class="usingCanvasTotal">0</span></span>
+            Not Published to Canvas<br>
+            <span class="label label-danger"><span class="noSyllabusTotal">0</span> / <span class="usingSalsaTotal">0</span></span>
             <span class="label label-danger noSyllabusPer">0%</span>
           </a>
         </div><!-- .col-XXX-6 -->
@@ -51,7 +51,8 @@
 
       <% @report_data.each_with_index do |record, i| %>
         <% if (course_id != record[:course_id]) and (i > 1) %>
-          <a href="#" data-toggle="tooltip" data-original-title="<%= 'teachers.to_s' %>"><i class="fa <% if true or teachers.size %>fa-users<% else %>fa-user<% end %>"></i></a></li>
+        <%# <a href="#" data-toggle="tooltip" data-original-title="{{ teachers.to_s }}"><i class="fa {{ if true or teachers.size }}fa-users{{ else }}fa-user{{ end }}"></i></a>%>
+        </li>
         <% end %>
 
         <% if account != record[:account_id] %>
@@ -72,7 +73,7 @@
               <div class="panel-heading">
                 <h2 class="panel-title">
                   <a data-toggle="collapse" data-parent="#accordion" href="#collapse_<%= parent_account %>">
-                    <% if record[:parent_account_ncoursesame] %>
+                    <% if record[:parent_account_name] %>
                       <%= record[:parent_account_name] %>
                     <% else %>
                       Root Account
@@ -93,24 +94,27 @@
         <% if course_id != record[:course_id] %>
           <% course_id = record[:course_id] %>
           <% li_classes, status_icon, syllabus_link = '', '', false %>
-          <% if record[:course_status] == 'unpublished' %>
-            <% li_classes = li_classes ~ 'not-using-canvas' %>
+          <% if record[:edit_id] and !record[:published_at] %>
+            <% li_classes = li_classes + 'using-salsa no-syllabus' %>
             <% status_icon = 'fa-times-circle' %>
-            <% li_classes = li_classes ~ 'using-canvas has-syllabus' %>
+            <% syllabus_link = true %>
           <%# syllabus check %>
-          <% elsif true %>
+          <% elsif record[:published_at] %>
+            <% li_classes = li_classes + 'using-salsa has-syllabus' %>
             <% status_icon = 'fa-check-circle' %>
             <% syllabus_link = true %>
           <% else %>
-            <% li_classes = li_classes + 'using-canvas unknown-syllabus' %>
+            <% li_classes = li_classes + 'not-using-salsa no-syllabus' %>
             <% status_icon = 'fa-question-circle' %>
           <% end %>
           <li class="<%= li_classes %>">
             <i class="fa <%= status_icon %>"></i>
             <a href="<%= @org[:lms_authentication_source] %>/courses/<%= record[:course_id] %>/assignments/syllabus" target="_blank" data-toggle="tooltip" title="Open course in Canvas"> <i class="fa fa-share"></i><span class="screenreader-only">View course in Canvas</span></a>
-            <span class="label label-default enrollment-count">7</span>
+            <!-- <span class="label label-default enrollment-count">7</span> -->
             <% if syllabus_link %>
-              <a href="<%= 'URL' %>account/<%= record[:account_id] %>/course/<%= record[:course_id] %>" target="_blank"><%= record[:name] %></a>
+              <!-- <a href="<%= 'URL' %>salsa/<%= record[:account_id] %>/course/<%= record[:course_id] %>" target="_blank"><%= record[:name] %></a> -->
+              <%= link_to record[:name], document_path(record[:view_id]), target:"_blank" %>
+              <%= link_to '', document_path(record[:edit_id]), {target:"_blank", class:'fa-pencil fa'} %>
             <% else %>
               <%= record[:name] %>
             <% end %>
@@ -121,7 +125,8 @@
             <%# teacher_array = teacher_array.merge([ record.teacher_first_name + " " + record.teacher_last_name ]) %>
           <% end %>
           <% if i == @report_data.count - 1 %>
-                    <a href="#" data-toggle="tooltip" data-original-title="<%= 'teachers.to_s' %>"><i class="fa <% if true or teachers.size %>fa-users<% else %>fa-user<% end %>"></i></a></li>
+                    <%# <a href="#" data-toggle="tooltip" data-original-title="{{ teachers.to_s }}"><i class="fa {{ if true or teachers.size }}fa-users{{ else }}fa-user{{ end }}"></i></a>%>
+                    </li>
                   </ul></div><!-- .department -->
                 </div><!-- #collapse_<%= parent_account %> -->
               </div><!-- .panel-body -->

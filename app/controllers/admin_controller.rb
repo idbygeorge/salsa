@@ -70,7 +70,11 @@ class AdminController < ApplicationController
         p.value as 'parent_id',
         pn.value as 'parent_account_name',
         end.value as 'end_at',
-        ws.value as 'workflow_state'
+        ws.value as 'workflow_state',
+        d.edit_id as 'edit_id',
+        d.view_id as 'view_id',
+        d.lms_published_at as 'published_at'
+
 
       -- prefilter the account id and course id meta information so joins will be faster (maybe...?)
       FROM document_meta as a
@@ -154,6 +158,17 @@ class AdminController < ApplicationController
           AND a.root_organization_id = ws.root_organization_id
           AND ws.key = 'workflow_state'
         )
+
+      -- join the workflow state meta information
+      LEFT JOIN
+        documents as d ON (
+          a.lms_course_id = d.lms_course_id
+          --TODO: docuemnts need root organization tracked to make this possible
+          --AND a.root_organization_id = d.root_organization_id
+          AND ws.key = 'workflow_state'
+        )
+
+
 
       WHERE
         a.root_organization_id = :root_organization_id
@@ -242,6 +257,7 @@ class AdminController < ApplicationController
     end
 
     @child_accounts = @canvas_client.get("/api/v1/accounts/#{account['id']}/sub_accounts?per_page=50")
+    debugger
     @child_accounts.next_page! while @child_accounts.more?
 
     @child_accounts.each do |child_account|

@@ -12,10 +12,10 @@ var BASE_URL = "";
 }(jQuery));
 
 var grandTotal = 0,
-notUsingCanvasTotal = 0,
-notUsingCanvasPer = 0,
-usingCanvasTotal = 0,
-usingCanvasPer = 0,
+usingSalsaTotal = 0,
+salsaUsagePercent = 0,
+notUsingSalsaTotal = 0,
+notUsingSalsaPercent = 0,
 noSyllabusTotal = 0,
 noSyllabusPer = 0,
 hasSyllabusTotal = 0,
@@ -26,22 +26,22 @@ usedWizardPer = 0;
 function checkTotals() {
   'use strict';
   grandTotal = $(".courses li:visible").length;
-  notUsingCanvasTotal = $(".courses .fa-times-circle:visible").length;
-  notUsingCanvasPer = Math.floor((notUsingCanvasTotal / grandTotal) * 100);
-  usingCanvasTotal = grandTotal - notUsingCanvasTotal;
-  usingCanvasPer = Math.floor((usingCanvasTotal / grandTotal) * 100);
-  noSyllabusTotal = $(".courses .fa-question-circle:visible").length;
-  noSyllabusPer = Math.floor((noSyllabusTotal / usingCanvasTotal) * 100);
+  usingSalsaTotal = $(".courses .using-salsa:visible").length;
+  salsaUsagePercent = Math.floor((usingSalsaTotal / grandTotal) * 100);
+  notUsingSalsaTotal = grandTotal - usingSalsaTotal;
+  notUsingSalsaPercent = Math.floor((notUsingSalsaTotal / grandTotal) * 100);
   hasSyllabusTotal = $(".courses .fa-check-circle:visible").length;
-  hasSyllabusPer = Math.floor((hasSyllabusTotal / usingCanvasTotal) * 100);
+  noSyllabusTotal = usingSalsaTotal - hasSyllabusTotal;
+  noSyllabusPer = Math.floor((noSyllabusTotal / usingSalsaTotal) * 100);
+  hasSyllabusPer = Math.floor((hasSyllabusTotal / usingSalsaTotal) * 100);
   usedWizardTotal = $(".courses .icon-magic:visible").length;
-  usedWizardPer = Math.floor((usedWizardTotal / usingCanvasTotal) * 100);
+  usedWizardPer = Math.floor((usedWizardTotal / notUsingSalsaTotal) * 100);
 
   $('.grandTotal').html(grandTotal);
-  $('.notUsingCanvasTotal').html(notUsingCanvasTotal);
-  $('.notUsingCanvasPer').html(notUsingCanvasPer + '%');
-  $('.usingCanvasTotal').html(usingCanvasTotal);
-  $('.usingCanvasPer').html(usingCanvasPer + '%');
+  $('.usingSalsaTotal').html(usingSalsaTotal);
+  $('.salsaUsagePercent').html(salsaUsagePercent + '%');
+  $('.notUsingSalsaTotal').html(notUsingSalsaTotal);
+  $('.notUsingSalsaPercent').html(notUsingSalsaPercent + '%');
   $('.noSyllabusTotal').html(noSyllabusTotal);
   $('.noSyllabusPer').html(noSyllabusPer + '%');
   $('.hasSyllabusTotal').html(hasSyllabusTotal);
@@ -52,11 +52,11 @@ function checkTotals() {
   $('#canvasUse').highcharts({
     chart: {type: 'column'},
     colors: [
-    '#999999',
-    '#428bca'
+    '#428bca',
+    '#999999'
     ],
     title: {text: null },
-    xAxis: {categories: ['Canvas Usage'] },
+    xAxis: {categories: ['Salsa Usage'] },
     yAxis: {
       min: 0,
       title: {text: 'Course Percentage'}
@@ -69,11 +69,11 @@ function checkTotals() {
       column: {stacking: 'percent'}
     },
     series: [{
-      name: 'Not In Canvas',
-      data: [notUsingCanvasTotal]
+      name: 'Using Salsa',
+      data: [usingSalsaTotal]
     }, {
-      name: 'In Canvas',
-      data: [usingCanvasTotal]
+      name: 'Not Using Salsa',
+      data: [notUsingSalsaTotal]
     }]
   });
   $('#syllabusState').highcharts({
@@ -83,10 +83,10 @@ function checkTotals() {
     '#468847'
     ],
     title: {text: null },
-    xAxis: {categories: ['Syllabus Usage'] },
+    xAxis: {categories: ['Published Salsas'] },
     yAxis: {
       min: 0,
-      title: {text: '% Courses Using Canvas'}
+      title: {text: '% Published'}
     },
     tooltip: {
       pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.y}</b> ({point.percentage:.0f}%)<br/>',
@@ -96,27 +96,27 @@ function checkTotals() {
       column: {stacking: 'percent'}
     },
     series: [{
-      name: 'No Content in Syllabus Page',
+      name: 'Not Published in Canvas',
       data: [noSyllabusTotal]
     }, {
-      name: 'Content in Syllabus Page',
+      name: 'Publuished in Canvas',
       data: [hasSyllabusTotal]
     }]
   });
   // Data specific to "All USU Courses"
   var collegeList = [],
   collegeTotalCourses = [],
-  collegePublished = [],
-  collegeUnpublished = [],
+  collegeUsingSalsa = [],
+  collegeNotUsingSalsa = [],
   collegeUsingSyllabus = [],
   collegeNotUsingSyllabus = [];
   $('h2').each(function () {
     collegeList.push($(this).text());
     collegeTotalCourses.push($(this).parents(".college-list").find('li:visible').length);
-    collegePublished.push($(this).parents(".college-list").find('.using-canvas:visible').length);
-    collegeUnpublished.push($(this).parents(".college-list").find('.not-using-canvas:visible').length);
-    collegeUsingSyllabus.push($(this).parents(".college-list").find('.fa-check-circle:visible').length);
-    collegeNotUsingSyllabus.push($(this).parents(".college-list").find('.fa-question-circle:visible').length);
+    collegeUsingSalsa.push($(this).parents(".college-list").find('.using-salsa:visible').length);
+    collegeNotUsingSalsa.push($(this).parents(".college-list").find('.not-using-salsa:visible').length);
+    collegeUsingSyllabus.push($(this).parents(".college-list").find('.using-salsa.has-syllabus:visible').length);
+    collegeNotUsingSyllabus.push($(this).parents(".college-list").find('.using-salsa.no-syllabus:visible').length);
     var myClass = $(this).index();
 
     $(this).before('<a name="' + myClass + '"></a>');
@@ -170,17 +170,17 @@ function checkTotals() {
       enabled: false
     },
     series: [{
-      name: 'No Content in Syllabus Page',
+      name: 'Unpublished SALSAs',
       data: collegeNotUsingSyllabus
     }, {
-      name: 'Content in Syllabus Page',
+      name: 'Published SALSAs',
       data: collegeUsingSyllabus
     }, {
-      name: 'Courses Published',
-      data: collegePublished
+      name: 'Using Salsa',
+      data: collegeUsingSalsa
     }, {
-      name: 'Courses UnPublished',
-      data: collegeUnpublished
+      name: 'Not Using Salsa',
+      data: collegeNotUsingSalsa
     }, {
       name: 'Total Courses',
       data: collegeTotalCourses
