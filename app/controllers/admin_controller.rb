@@ -77,7 +77,7 @@ class AdminController < ApplicationController
         start.value as start_at,
         p.value as parent_id,
         pn.value as parent_account_name,
-        [end].value as end_at,
+        end_date.value as end_at,
         ws.value as workflow_state,
         d.edit_id as edit_id,
         d.view_id as view_id,
@@ -151,12 +151,12 @@ class AdminController < ApplicationController
           AND start.key = 'start_at'
         )
 
-      -- join the end date meta information
+      -- join the end_date date meta information
       LEFT JOIN
-        document_meta as end ON (
-          a.lms_course_id = end.lms_course_id
-          AND a.root_organization_id = end.root_organization_id
-          AND end.key = 'end_at'
+        document_meta as end_date ON (
+          a.lms_course_id = end_date.lms_course_id
+          AND a.root_organization_id = end_date.root_organization_id
+          AND end_date.key = 'end_at'
         )
 
       -- join the workflow state meta information
