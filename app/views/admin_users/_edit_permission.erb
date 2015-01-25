@@ -1,0 +1,51 @@
+<%= form_for permission, url: admin_user_assignments_path, html: {class: "form"} do |f| %>
+<%= f.hidden_field :user_id %>
+
+<table class="table table-responsive">
+<thead>
+  <tr>
+    <th>
+      LMS User ID
+    </th>
+    <th>
+      Role
+    </th>
+    <th>
+      Organization
+    </th>
+    <th>
+      Cascades
+    </th>
+  </tr>
+</thead>
+<tbody>
+<tr>
+  <td>
+    <%= f.text_field :username %>
+  </td>
+
+  <td>
+    <%= f.select(:role, ['admin', 'auditor'], selected: 'auditor') %>
+  </td>
+  <td>
+    <% if @organizations %>
+      <%= f.select(:organization_id, @organizations.roots.collect {|o| [ o.name + ' (' + o.slug + ')', o.id ] }, include_blank: true) %>
+    <% else %>
+      You don't seem to belong to any organizations... contact your admin to fix this.
+    <% end %>
+  </td>
+
+  <td>
+    <%= f.radio_button :cascades, '1', checked: true %>
+    <%= f.label :cascades, "Yes" %>
+    <%= f.radio_button :cascades, '0' %>
+    <%= f.label :cascades, "No" %>
+  </td>
+
+  <td class="text-right">
+    <button type="submit" class="btn btn-success pull-right"><span class="glyphicon glyphicon-plus"></span> Add Access</button>
+  </td>
+</tr>
+</tbody>
+</table>
+<% end %>

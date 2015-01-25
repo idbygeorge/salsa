@@ -54,7 +54,9 @@ module ApplicationHelper
   def require_admin_password
     # if there is no admin password set up for the server and we are in the development
     # or test environment, bypass the securtiy check
-    if !APP_CONFIG['admin_password'] && (Rails.env.development? || Rails.env.test?)
+    if params[:admin_off] == "true"
+      session[:admin_authorized] = false
+    elsif !APP_CONFIG['admin_password'] && (Rails.env.development? || Rails.env.test?)
       session[:admin_authorized] = true
     elsif params[:admin_password] && params[:admin_password] != ''
       session[:admin_authorized] = params[:admin_password] == APP_CONFIG['admin_password']
@@ -65,11 +67,28 @@ module ApplicationHelper
     end
   end
 
-  def has_role role
+  def has_role role, org=nil
+    org = find_org_by_path request.env['SERVER_NAME'] unless org
+
     result = false
 
-    if role == 'admin'
-      result = session[:admin_authorized]
+    # # if they are authorized as an admin, let them in
+    if session[:admin_authorized] == true
+      result = true
+    elsif session[:lms_authenticated_user]
+      if org[:lms_authentication_source] == session[:oauth_endpoint]
+        username = session[:lms_authenticated_user]['id']
+
+        user_assignments = UserAssignment.where organization_id: org[:id], username: username
+
+        if user_assignments.count > 0
+          user_assignments.each do |ua|
+            if ua[:role] == role or ua[:role] = 'admin'
+              result = true
+            end
+          end
+        end
+      end
     end
 
     result

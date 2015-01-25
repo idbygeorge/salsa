@@ -33,6 +33,7 @@ class Oauth2Controller < ApplicationController
 
       flash[:notice] = 'You are connected to Canvas. Please Select a Course.'
       session[:authenticated_institution] = session[:institution]
+      session[:lms_authenticated_user] = session[:canvas_access_token]['user']
     else
       flash[:error] = params[:error]
     end

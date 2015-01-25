@@ -99,7 +99,7 @@ function checkTotals() {
       name: 'Not Published in Canvas',
       data: [noSyllabusTotal]
     }, {
-      name: 'Publuished in Canvas',
+      name: 'Published in Canvas',
       data: [hasSyllabusTotal]
     }]
   });

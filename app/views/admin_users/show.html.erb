@@ -1,5 +1,6 @@
 <h1 class="page-header">
   <%= @user[:name] %>
+  <br><small><%= @user[:email] %></span>
 </h1>
 
 <div id="adminUserControl row">
@@ -7,17 +8,13 @@
   <a class="btn btn-default" href="<%= edit_admin_user_path(id: @user[:id]) %>">
       Edit User
     </a>
-
-    <a class="btn btn-success pull-right" href="">
-      <span class="glyphicon glyphicon-plus"></span>
-      Add Access
-    </a>
-
   </p>
   <hr>
 </div>
 
 <div class="row">
+  <%= render partial: 'edit_permission', locals: {permission:@new_permission} %>
+
   <table class="table table-striped table-responive">
     <thead>
       <tr>
@@ -29,8 +26,8 @@
       </tr>
     </thead>
 
-    <% @user.user_assignments.each do |ua| %>
-      <%= render partial: 'role', locals: {role:ua} %>
+    <%= render(partial: 'role', collection: @user_assignments) || content_tag('tr') do %>
+      <td colspan='5'>This user has not been assigned any access to Salsa</td>
     <% end %>
   </table>
 </div>

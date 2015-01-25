@@ -4,5 +4,19 @@
   </div>
 <% end %>
 
-<h1>Edit Organization</h1>
+<h1>Update Organization</h1>
+
+<div class="pull-right">
+
+  <a class="btn btn-info" href="<%= canvas_accounts_path %>">
+    <span class="glyphicon glyphicon-refresh"></span>
+    LMS Accounts
+  </a>
+
+  <a class="btn btn-info" href="<%= canvas_courses_path %>">
+    <span class="glyphicon glyphicon-refresh"></span>
+    LMS Courses
+  </a>
+</div>
+
 <%= render 'edit' %>

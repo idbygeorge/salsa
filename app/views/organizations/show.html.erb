@@ -14,23 +14,24 @@
 </h1>
 
 <div id="organizationControl row">
+  <div class="pull-right">
+    <a target="_blank" class="btn btn-success" href="//<%= "#{org_slug_parts(@organization)[0]}#{redirect_port}" %><% if @organization.depth > 0 %>/<%= org_slug_parts(@organization)[1] %><% end %>/SALSA/new">
+      <span class="glyphicon glyphicon-plus"></span>
+      SALSA
+    </a>
+  </div>
+
   <p>
     <a class="btn btn-default" href="<%= edit_organization_path(id: @organization[:id]) %>">
-      Edit Organization
+      Update Organization
     </a>
 
     <a class="btn btn-default" href="<%= components_path(organization_slug: @organization[:slug]) %>">
       Manage Components
     </a>
 
-    <a target="_blank" class="btn btn-success pull-right" href="//<%= "#{org_slug_parts(@organization)[0]}#{redirect_port}" %><% if @organization.depth > 0 %>/<%= org_slug_parts(@organization)[1] %><% end %>/SALSA/new">
-      <span class="glyphicon glyphicon-plus"></span>
-      SALSA
-    </a>
-
-    <a class="btn btn-info pull-right" href="">
-      <span class="glyphicon glyphicon-refresh"></span>
-      Sync with LMS
+    <a class="btn btn-default" href="<%= admin_canvas_path %>">
+      View Dashboard
     </a>
   </p>
   <hr>

@@ -66,6 +66,9 @@
 
       <div class="form-group">
         <%= f.submit class: 'btn btn-default' %>
+        &nbsp;
+        &nbsp;
+        &nbsp;
         <%= link_to 'cancel', (@organization[:id] ? organization_path(id: @organization[:id]) : organizations_path) %>
       </div>
     </fieldset>

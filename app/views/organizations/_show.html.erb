@@ -26,7 +26,7 @@
         <% @documents.each do |document| %>
           <li class="nav-header form-group">
             <div class='pull-right text-right'>
-              <% if document.lms_published_at %>
+              <% if document.lms_published_at.is_a?(Time) %>
                   <div>Published <%= time_ago_in_words document.lms_published_at %> ago</div>
               <% end %>
 

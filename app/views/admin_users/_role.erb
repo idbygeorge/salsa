@@ -1,3 +1,4 @@
+<% if role.id %>
 <tr>
   <td>
     <%= role.username %>
@@ -11,7 +12,7 @@
         <%= link_to full_org_path(role.organization), organization_path(full_org_path role.organization) %>
       </div>
     <% else %>
-      no org yet...
+      no org yet... <%= role[:id] %>
     <% end %>
   </td>
 
@@ -24,6 +25,7 @@
   </td>
 
   <td class="text-right">
-    <%= link_to '<span class="glyphicon glyphicon-trash"></span>'.html_safe, admin_user_path(removePermission: role.id), class: 'btn-xs text-danger' %>
+    <%= link_to '<span class="glyphicon glyphicon-trash"></span>'.html_safe, admin_remove_assignment_path(role[:id]), class: 'btn-xs text-danger' %>
   </td>
 </tr>
+<% end %>

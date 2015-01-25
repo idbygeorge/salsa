@@ -1,6 +1,8 @@
 class AdminController < ApplicationController
-  before_filter :require_admin_password
-  before_filter :get_organizations, only: [:search]
+  before_filter :require_admin_password, except: [:canvas]
+  before_filter :require_audit_role, only: [:canvas]
+  before_filter :get_organizations, only: [:search,:canvas_accounts,:canvas_courses]
+  before_filter :require_audit_role, only: [:canvas]
 
   def login
   	@organization = find_org_by_path params[:slug]
@@ -16,6 +18,12 @@ class AdminController < ApplicationController
 	  else
   		render action: :login, layout: false
   	end
+  end
+
+  def require_audit_role
+    unless has_role 'auditor' == true
+      redirect_to admin_login_path
+    end
   end
 
   def canvas
@@ -257,7 +265,7 @@ class AdminController < ApplicationController
     end
 
     @child_accounts = @canvas_client.get("/api/v1/accounts/#{account['id']}/sub_accounts?per_page=50")
-    debugger
+
     @child_accounts.next_page! while @child_accounts.more?
 
     @child_accounts.each do |child_account|
