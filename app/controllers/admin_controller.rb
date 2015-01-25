@@ -65,23 +65,23 @@ class AdminController < ApplicationController
 
     query_string =
     <<-SQL.gsub(/^ {4}/, '')
-      SELECT DISTINCT a.lms_course_id as 'course_id',
-        a.value as 'account_id',
-        acn.value as 'account',
-        p.value as 'parent_id',
-        a.document_id as 'document_id',
-        n.value as 'name',
-        cc.value as 'course_code',
-        et.value as 'enrollment_term_id',
-        sis.value as 'sis_course_id',
-        start.value as 'start_at',
-        p.value as 'parent_id',
-        pn.value as 'parent_account_name',
-        end.value as 'end_at',
-        ws.value as 'workflow_state',
-        d.edit_id as 'edit_id',
-        d.view_id as 'view_id',
-        d.lms_published_at as 'published_at'
+      SELECT DISTINCT a.lms_course_id as course_id,
+        a.value as account_id,
+        acn.value as account,
+        p.value as parent_id,
+        a.document_id as document_id,
+        n.value as name,
+        cc.value as course_code,
+        et.value as enrollment_term_id,
+        sis.value as sis_course_id,
+        start.value as start_at,
+        p.value as parent_id,
+        pn.value as parent_account_name,
+        end.value as end_at,
+        ws.value as workflow_state,
+        d.edit_id as edit_id,
+        d.view_id as view_id,
+        d.lms_published_at as published_at
 
 
       -- prefilter the account id and course id meta information so joins will be faster (maybe...?)
