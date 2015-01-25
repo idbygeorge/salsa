@@ -77,7 +77,7 @@ class AdminController < ApplicationController
         start.value as start_at,
         p.value as parent_id,
         pn.value as parent_account_name,
-        end.value as end_at,
+        [end].value as end_at,
         ws.value as workflow_state,
         d.edit_id as edit_id,
         d.view_id as view_id,
