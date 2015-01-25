@@ -99,7 +99,7 @@ module ApplicationHelper
     unless session[:admin_authorized]
       # load all orgs that the user has a cascade == true assignment
       user = UserAssignment.find_by_username(
-        session['canvas_access_token']['user']['id']
+        session[:lms_authenticated_user]['id'].to_s
       ).user
 
       cascade_permissions = user.user_assignments.where(cascades: true)

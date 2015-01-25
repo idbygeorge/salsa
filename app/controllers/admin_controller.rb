@@ -179,7 +179,7 @@ class AdminController < ApplicationController
 
 
       WHERE
-        a.root_organization_id = '#{@org[:id].to_s}'
+        a.root_organization_id = #{@org[:id].to_s}
         AND a.key = 'account_id'
 
       ORDER BY pn.value, acn.value, n.value, a.lms_course_id
