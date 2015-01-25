@@ -179,13 +179,13 @@ class AdminController < ApplicationController
 
 
       WHERE
-        a.root_organization_id = :root_organization_id
+        a.root_organization_id = #{@org[:id].to_i}
         AND a.key = 'account_id'
 
       ORDER BY pn.value, acn.value, n.value, a.lms_course_id
     SQL
 
-    DocumentMeta.find_by_sql query_string, { root_organization_id: @org[:id]}
+    DocumentMeta.find_by_sql query_string
   end
 
   def canvas_courses
