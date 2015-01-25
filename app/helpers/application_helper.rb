@@ -77,7 +77,7 @@ module ApplicationHelper
       result = true
     elsif session[:lms_authenticated_user]
       if org[:lms_authentication_source] == session[:oauth_endpoint]
-        username = session[:lms_authenticated_user]['id']
+        username = session[:lms_authenticated_user]['id'].to_s
 
         user_assignments = UserAssignment.where organization_id: org[:id], username: username
 
