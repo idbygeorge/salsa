@@ -63,7 +63,7 @@ module ApplicationHelper
     end
 
     if !has_role 'admin'
-      redirect_to admin_login_path
+      redirect_to admin_login_path, status: 401
     end
   end
 
@@ -146,7 +146,7 @@ module ApplicationHelper
 
   def find_org_by_path path
     path = request.env['SERVER_NAME'] unless path
-    
+
     unless path.include? '/'
       organization = Organization.find_by slug:path
     else

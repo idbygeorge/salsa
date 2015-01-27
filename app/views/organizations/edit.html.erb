@@ -1,7 +1,9 @@
+<% if session[:admin_authorized] %>
 <%= form_for @organization, url: organization_path, method: :delete, html: { class: 'pull-right' } do |f| %>
   <div class="form-group">
     <%= f.submit "Delete #{@organization[:name]}", class: 'btn btn-danger' %>
   </div>
+<% end %>
 <% end %>
 
 <h1>Update Organization</h1>

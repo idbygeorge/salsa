@@ -1,14 +1,41 @@
-<%= link_to 'Add User', new_admin_user_path, class: 'btn btn-success' %>
-<ul>
-  <% @users.each do |user| %>
-    <li>
-      <%= link_to user.name, admin_user_path(id: user[:id])%>
-    </li>
-  <% end %>
-</ul>
+<%= link_to 'Add User', new_admin_user_path, class: 'btn btn-success pull-right' %>
 
-<pre>
-  <% if @session['canvas_access_token'] %>
-    <%= @session['canvas_access_token']['user'].to_json %>
+<h1>System Users</h1>
+
+<table class="table table-responsive table-striped">
+  <thead>
+    <th>
+      Contact
+    </th>
+    <th>
+      Permissions
+    </th>
+  </thead>
+
+  <tbody>
+  <% @users.each do |user| %>
+    <tr>
+      <td>
+        <address>
+          <strong class="text-large"><%= link_to user.name, admin_user_path(id: user[:id]) %></strong><br>
+          <%= link_to user.email, "mailto:${user.email}" %>
+        </address>
+      </td>
+
+      <td>
+        <ul class="list-group">
+          <% user.user_assignments.each do |ua| %>
+            <li class="list-group-item">
+              <% if ua.cascades %>
+                <span class="badge xs-badge">cascades</span>
+              <% end %>
+
+              <%= ua.organization.name %> - <%= ua.role %>
+            </li>
+          <% end %>
+        </ul>
+      </td>
+    </tr>
   <% end %>
-</pre>
+  </tbody>
+</table>

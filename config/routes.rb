@@ -6,7 +6,7 @@ Salsa::Application.routes.draw do
   get '/:alias/:document', to: redirect('/SALSA/%{document}'), constraints: { alias: /(syllabuses|salsas?)/ }
   get '/:alias/:document/:action', to: redirect('/SALSA/%{document}/%{action}'), constraints: { alias: /(syllabuses|salsas?)/, action: /(edit|template)?/ }
 
-  get '/admin', to: redirect('/admin/organizations')
+  get '/admin', to: redirect('/admin/organizations'), as: 'admin'
 
   scope 'admin' do
     get "search", to: 'admin#search', as: 'admin_search'
@@ -21,8 +21,14 @@ Salsa::Application.routes.draw do
     get "login/(:slug)", to: 'admin#login', as: 'admin_login', constraints: { slug: /.*/ }
 
     resources :users, as: 'admin_users', controller: 'admin_users'
+
+    # user assignment routes
     post 'user/assignment', as: 'admin_user_assignments', to: 'admin_users#assign'
+    patch 'user/assignment/:id', as: 'admin_update_user_assignments', to: 'admin_users#update_assignment'
+
     get 'user/remove_assignment/:id', as: 'admin_remove_assignment', to: 'admin_users#remove_assignment'
+    get 'user/edit_assignment/:id', as: 'admin_edit_assignment', to: 'admin_users#edit_assignment'
+
     resources :documents, as: 'admin_document', controller: 'admin_documents'
 
     post "organizations/documents"

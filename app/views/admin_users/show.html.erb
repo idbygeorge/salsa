@@ -1,19 +1,14 @@
+<a class="btn btn-default pull-right" href="<%= edit_admin_user_path(id: @user[:id]) %>">
+  Edit User
+</a>
+
 <h1 class="page-header">
   <%= @user[:name] %>
   <br><small><%= @user[:email] %></span>
 </h1>
 
-<div id="adminUserControl row">
-  <p>
-  <a class="btn btn-default" href="<%= edit_admin_user_path(id: @user[:id]) %>">
-      Edit User
-    </a>
-  </p>
-  <hr>
-</div>
-
 <div class="row">
-  <%= render partial: 'edit_permission', locals: {permission:@new_permission} %>
+  <%= render 'edit_permission', permission: @new_permission, action: 'Add' %>
 
   <table class="table table-striped table-responive">
     <thead>

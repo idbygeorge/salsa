@@ -23,20 +23,24 @@
       <div class="row">
 
         <div class="col-sm-4 col-md-3 sidebar">
-          <div class="pull-right text-right">
-            <%= Document.where('documents.updated_at != documents.created_at').count %> documents<br>
-            <%= Document.where('documents.updated_at = documents.created_at').count %> abandoned
-          </div>
+          <% if session[:admin_authorized] %>
+            <div class="pull-right text-right">
+              <%= Document.where('documents.updated_at != documents.created_at').count %> documents<br>
+              <%= Document.where('documents.updated_at = documents.created_at').count %> abandoned
+            </div>
 
-          <%= link_to 'Add Organization', new_organization_path, class: 'btn btn-success' %>
+            <%= link_to 'Add Organization', new_organization_path, class: 'btn btn-success' %>
 
-          <hr>
+            <hr>
+          <% end %>
 
           <% if @organizations %>
             <ul class="nav nav-sidebar">
+              <% if session[:admin_authorized] %>
               <li class="nav-header clearfix">
                 <%= link_to 'Orphaned SALSAs', organizations_path %>
               </li>
+              <% end %>
 
               <% @organizations.each do |org| %>
                 <li class="depth-<%= org.depth %> <% if !org.slug? or (org.slug.include? '/' and (org.slug.index('/') > 0)) %>alert-danger<% end %>">

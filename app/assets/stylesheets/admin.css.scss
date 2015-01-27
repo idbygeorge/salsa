@@ -19,7 +19,7 @@ body { padding-top: 50px; }
 #salsaDocuments {
   time { display: block; }
 
-  li.nav-header { 
+  li.nav-header {
     margin-top: 1em;
     padding-top: 1em;
     border-top: solid 1px #ddd;
@@ -5157,4 +5157,8 @@ body {
 .placeholder img {
   display: inline-block;
   border-radius: 50%;
+}
+
+.text-large {
+  font-size: 1.5em;
 }

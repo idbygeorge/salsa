@@ -7,17 +7,7 @@ class AdminController < ApplicationController
   	@organization = find_org_by_path params[:slug]
 
   	if @organization and @organization[:lms_authentication_source]
-  		@callback_url = organizations_url
-
-  		canvas_connection_information
-
-      if @redirect_url
-  		  redirect_to @redirect_url
-      elsif @lms_user
-        redirect_to @callback_url
-      else
-        render_text 'error... canvas authentication procedure seems to be misconfigured for this account. Contact support@syllabustool.com to resolve this issue'
-      end
+  		redirect_to oauth2_login_path
 	  else
   		render action: :login, layout: false
   	end

@@ -6,8 +6,10 @@
   <% end %>
 
   <%= form_for(@organization, url: form_action, :html => { :class => "form-horizontal col-md-9" } ) do |f| %>
+    <% if session[:admin_authorized] %>
     <fieldset>
       <legend>Organization</legend>
+    <% end %>
 
       <div class="form-group">
         <%= f.label :name, class: "control-label" %>
@@ -16,6 +18,7 @@
         </div>
       </div>
 
+    <% if session[:admin_authorized] %>
       <div class="form-group">
         <%= f.label :slug, class: "control-label" %>
         <div class="controls">
@@ -26,7 +29,7 @@
       <div class="form-group">
         <%= f.label :parent_id, class: "control-label" %>
 
-          <%= f.select :parent_id, Organization.where.not(id: params[:id]).collect { |org| [ org.slug + ' - ' + org.name, org.id ] }, { include_blank: '-- top level organization --'}, { class: 'form-control' } %>
+          <%= f.select :parent_id, @organizations.where.not(id: params[:id]).collect { |org| [ org.slug + ' - ' + org.name, org.id ] }, { include_blank: '-- top level organization --'}, { class: 'form-control' } %>
 
       </div>
     </fieldset>
@@ -63,15 +66,16 @@
           Canvas expects the format: <code>pages/_edit_gui_salsa</code> for the wiki pages (note use of pages, not wiki).
         </div>
       </div>
-
-      <div class="form-group">
-        <%= f.submit class: 'btn btn-default' %>
-        &nbsp;
-        &nbsp;
-        &nbsp;
-        <%= link_to 'cancel', (@organization[:id] ? organization_path(id: @organization[:id]) : organizations_path) %>
-      </div>
     </fieldset>
+    <% end %>
+
+    <div class="form-group">
+      <%= f.submit class: 'btn btn-default' %>
+      &nbsp;
+      &nbsp;
+      &nbsp;
+      <%= link_to 'cancel', (@organization[:id] ? organization_path(id: @organization[:id]) : organizations_path) %>
+    </div>
 
   <% end %><!-- form -->
 </div><!-- .row -->

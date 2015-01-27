@@ -28,7 +28,10 @@
 
 	<div class="heading">
 		<div class="container">
-			<h1><i class="fa fa-compass"></i> <%= @organization.name if @organization %> Syllabus Tracker</h1>
+			<h1 class="navbar-header"><i class="fa fa-compass"></i> <%= @organization.name if @organization %> Syllabus Tracker</h1>
+			<ul class="nav navbar-nav navbar-right">
+				<li><%= link_to 'Admin', admin_path, class: "btn btn-default" %></li>
+			</ul>
 		</div><!-- .container  -->
 	</div><!-- .heading -->
 
@@ -47,19 +50,6 @@
 
 	<div class="container" role="main">
 		<%= yield %>
-		<footer>
-			<a class="logo" href="<%= @org[:lms_authentication_source] %>" target="_blank" title="<%= @org[:name] %>">
-				<% if @organization %>
-					<% if @organization.logo %>
-						<img src="<%= @organization.logo %>">
-					<% else %>
-						<%= @organization.name %>
-					<% end %>
-				<% else %>
-					Salsa Report
-				<% end %>
-			</a>
-		</footer>
 	</div><!-- .container[main] -->
 	<!-- Bootstrap core JavaScript
 	================================================== -->

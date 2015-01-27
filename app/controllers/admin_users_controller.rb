@@ -1,5 +1,5 @@
 class AdminUsersController < AdminController
-  before_filter :get_organizations, only: [:index, :new, :edit, :show]
+  before_filter :get_organizations, only: [:index, :new, :edit, :show, :edit_assignment]
 
   def index
     @users = User.all
@@ -29,6 +29,17 @@ class AdminUsersController < AdminController
     @user_assignment.destroy
 
     redirect_to admin_user_path @user_assignment[:user_id]
+  end
+
+  def edit_assignment
+    @user_assignment = UserAssignment.find params[:id]
+  end
+
+  def update_assignment
+    @user = User.find params[:user_assignment][:user_id]
+
+    @user_assignment = UserAssignment.update params[:id], user_assignment_params
+    redirect_to admin_user_path id: @user[:id]
   end
 
   def new

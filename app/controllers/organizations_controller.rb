@@ -3,6 +3,12 @@ class OrganizationsController < AdminController
   layout 'admin'
   def index
     get_documents
+
+    @roots = @organizations.roots
+
+    if @roots.count == 1
+      redirect_to organization_path(slug: full_org_path(@roots[0]))
+    end
   end
 
   def new

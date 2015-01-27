@@ -1,4 +1,10 @@
-<%= form_for permission, url: admin_user_assignments_path, html: {class: "form"} do |f| %>
+<% if action == 'Update' %>
+  <% path = admin_update_user_assignments_path %>
+<% else %>
+  <% path = admin_user_assignments_path %>
+<% end %>
+
+<%= form_for permission, url: path, html: {class: "form"} do |f| %>
 <%= f.hidden_field :user_id %>
 
 <table class="table table-responsive">
@@ -25,7 +31,11 @@
   </td>
 
   <td>
-    <%= f.select(:role, ['admin', 'auditor'], selected: 'auditor') %>
+    <% if !permission[:role] %>
+      <% permission[:role] = 'auditor' %>
+    <% end %>
+
+    <%= f.select(:role, ['admin', 'auditor']) %>
   </td>
   <td>
     <% if @organizations %>
@@ -36,14 +46,19 @@
   </td>
 
   <td>
-    <%= f.radio_button :cascades, '1', checked: true %>
+    <% if permission[:cascades] == nil %>
+      <%= f.radio_button :cascades, true, checked: true %>
+    <% else %>
+      <%= f.radio_button :cascades, true %>
+    <% end %>
+
     <%= f.label :cascades, "Yes" %>
-    <%= f.radio_button :cascades, '0' %>
+    <%= f.radio_button :cascades, false %>
     <%= f.label :cascades, "No" %>
   </td>
 
   <td class="text-right">
-    <button type="submit" class="btn btn-success pull-right"><span class="glyphicon glyphicon-plus"></span> Add Access</button>
+    <button type="submit" class="btn btn-success pull-right"><span class="glyphicon glyphicon-plus"></span> <%= action %> Access</button>
   </td>
 </tr>
 </tbody>

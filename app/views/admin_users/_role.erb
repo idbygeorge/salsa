@@ -25,6 +25,7 @@
   </td>
 
   <td class="text-right">
+    <%= link_to '<span class="glyphicon glyphicon-edit"></span>'.html_safe, admin_edit_assignment_path(role[:id]), class: 'btn-xs' %>
     <%= link_to '<span class="glyphicon glyphicon-trash"></span>'.html_safe, admin_remove_assignment_path(role[:id]), class: 'btn-xs text-danger' %>
   </td>
 </tr>
