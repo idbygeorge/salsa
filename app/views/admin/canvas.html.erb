@@ -121,7 +121,7 @@
 
             <%# teacher_array = [ record.teacher_first_name + " " + record.teacher_last_name ] %>
           <% else %>
-            <%= course_id %> != <%= record[:course_id] %>
+            <%# course_id != record[:course_id] %>
             <%# teacher_array = teacher_array.merge([ record.teacher_first_name + " " + record.teacher_last_name ]) %>
           <% end %>
           <% if i == @report_data.count - 1 %>
