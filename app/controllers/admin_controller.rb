@@ -257,7 +257,7 @@ class AdminController < ApplicationController
       meta = OrganizationMeta.find_or_initialize_by organization_id: org_id,
         key: key,
         root_id: @org[:id],
-        lms_organization_id: account['id']
+        lms_organization_id: account['id'].to_s
 
       meta[:value] = value.to_s
 
@@ -293,7 +293,7 @@ class AdminController < ApplicationController
               key: key,
               root_organization_id: @org[:id],
               lms_organization_id: account,
-              lms_course_id: course['id']
+              lms_course_id: course['id'].to_s
 
             meta[:value] = value.to_s
 

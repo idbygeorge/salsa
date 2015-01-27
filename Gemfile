@@ -16,10 +16,10 @@ group :development do
   gem 'capistrano-rails'
 end
 
-group :production do
-  #postgresql for production db
-  gem 'pg'
+#postgresql for db
+gem 'pg'
 
+group :production do
   gem 'rails_12factor'
 
   # Use unicorn as the app server

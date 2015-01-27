@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150125000759) do
+ActiveRecord::Schema.define(version: 20150127032218) do
 
   create_table "components", force: true do |t|
     t.string   "name"
@@ -45,8 +45,8 @@ ActiveRecord::Schema.define(version: 20150125000759) do
     t.integer  "document_id"
     t.string   "key"
     t.string   "value"
-    t.integer  "lms_organization_id"
-    t.integer  "lms_course_id"
+    t.string   "lms_organization_id"
+    t.string   "lms_course_id"
     t.integer  "root_organization_id"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -80,7 +80,7 @@ ActiveRecord::Schema.define(version: 20150125000759) do
     t.integer  "organization_id"
     t.string   "key"
     t.string   "value"
-    t.integer  "lms_organization_id"
+    t.string   "lms_organization_id"
     t.integer  "root_id"
     t.datetime "created_at"
     t.datetime "updated_at"
