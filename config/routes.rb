@@ -18,7 +18,7 @@ Salsa::Application.routes.draw do
     get "canvas/courses", to: 'admin#canvas_courses', as: 'canvas_courses'
     post "canvas/courses/sync", to: 'admin#canvas_courses_sync', as: 'canvas_courses_sync'
 
-    get "login/:slug", to: 'admin#login', as: 'admin_login', constraints: { slug: /.*/ }
+    get "login/(:slug)", to: 'admin#login', as: 'admin_login', constraints: { slug: /.*/ }
 
     resources :users, as: 'admin_users', controller: 'admin_users'
     post 'user/assignment', as: 'admin_user_assignments', to: 'admin_users#assign'
