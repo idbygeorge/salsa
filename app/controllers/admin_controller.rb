@@ -11,9 +11,13 @@ class AdminController < ApplicationController
 
   		canvas_connection_information
 
-  		redirect_to @redirect_url if @redirect_url
-
-		  redirect_to @callback_url if @lms_user
+      if @redirect_url
+  		  redirect_to @redirect_url
+      elsif @lms_user
+        redirect_to @callback_url
+      else
+        render_text 'error... canvas authentication procedure seems to be misconfigured for this account. Contact support@syllabustool.com to resolve this issue'
+      end
 	  else
   		render action: :login, layout: false
   	end
