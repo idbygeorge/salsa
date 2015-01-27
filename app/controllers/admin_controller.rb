@@ -1,8 +1,7 @@
 class AdminController < ApplicationController
-  before_filter :require_admin_password, except: [:canvas]
+  before_filter :require_admin_password, except: [:canvas,:login,:logout]
   before_filter :require_audit_role, only: [:canvas]
   before_filter :get_organizations, only: [:search,:canvas_accounts,:canvas_courses]
-  before_filter :require_audit_role, only: [:canvas]
 
   def login
   	@organization = find_org_by_path params[:slug]
