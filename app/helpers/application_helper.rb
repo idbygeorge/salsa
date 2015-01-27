@@ -145,6 +145,8 @@ module ApplicationHelper
   end
 
   def find_org_by_path path
+    path = request.env['SERVER_NAME'] unless path
+    
     unless path.include? '/'
       organization = Organization.find_by slug:path
     else
