@@ -4,6 +4,11 @@
     <%= password_field_tag :canvas_token, '', class: 'form-control' %>
   </div>
 
+  <div class="form-group">
+    <%= label_tag :canvas_term, 'Canvas Term' %>
+    <%= text_field_tag :canvas_term, '', class: 'form-control' %>
+  </div>
+
   <%= submit_tag 'Sync', class: 'btn btn-default' %>
 <% end %>
 

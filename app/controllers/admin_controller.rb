@@ -277,7 +277,7 @@ class AdminController < ApplicationController
       if account_meta.key == 'id' then
         # get all courses for the current acocunt
         begin
-          canvas_courses = @canvas_client.get("/api/v1/accounts/#{account}/courses?per_page=50&with_enrollments=true")
+          canvas_courses = @canvas_client.get("/api/v1/accounts/#{account}/courses?per_page=50&with_enrollments=true&enrollment_term_id=#{params[:canvas_term]}")
           canvas_courses.next_page! while canvas_courses.more?
 
           # store each piece of data into the organization meta model
@@ -295,7 +295,7 @@ class AdminController < ApplicationController
             end
           end
         rescue
-          puts "Canvas sync failed on #{accounts}"
+          puts "Canvas sync failed on #{accounts.to_json}"
         end
       end
     end
