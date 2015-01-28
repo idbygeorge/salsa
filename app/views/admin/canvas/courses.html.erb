@@ -1,7 +1,7 @@
 <%= form_tag canvas_courses_sync_path, class: 'form form-horizontal' do %>
   <div class="form-group">
     <%= label_tag :canvas_token, 'Canvas Admin Token' %>
-    <%= text_field_tag :canvas_token, '', class: 'form-control' %>
+    <%= password_field_tag :canvas_token, '', class: 'form-control' %>
   </div>
 
   <%= submit_tag 'Sync', class: 'btn btn-default' %>
