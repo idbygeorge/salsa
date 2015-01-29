@@ -14,6 +14,8 @@ group :development do
   gem 'capistrano'
   gem 'capistrano-bundler'
   gem 'capistrano-rails'
+  gem 'better_errors'
+  gem 'binding_of_caller'
 end
 
 #postgresql for db
