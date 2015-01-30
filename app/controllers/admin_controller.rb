@@ -176,7 +176,6 @@ class AdminController < ApplicationController
 
       -- whitelist for enrollment term id | replace with cool array  
         AND et.value = '5437'
-        OR et.value = '5451'
 
       ORDER BY pn.value, acn.value, n.value, a.lms_course_id
     SQL
