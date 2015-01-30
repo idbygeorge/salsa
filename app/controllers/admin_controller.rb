@@ -79,6 +79,7 @@ class AdminController < ApplicationController
 
       -- prefilter the account id and course id meta information so joins will be faster (maybe...?)
       FROM document_meta as a
+     
 
       -- join the name meta information
       LEFT JOIN
@@ -169,11 +170,13 @@ class AdminController < ApplicationController
           AND ws.key = 'workflow_state'
         )
 
-
-
       WHERE
         a.root_organization_id = #{@org[:id].to_s}
         AND a.key = 'account_id'
+
+      -- whitelist for enrollment term id | replace with cool array  
+        AND et.value = '5437'
+        OR et.value = '5451'
 
       ORDER BY pn.value, acn.value, n.value, a.lms_course_id
     SQL
