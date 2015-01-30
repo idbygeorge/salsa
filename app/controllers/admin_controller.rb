@@ -274,14 +274,23 @@ class AdminController < ApplicationController
         account_parent = account_meta[:value]
       end
 
-      if account_meta.key == 'id' then
+      # need a way to deal with huge accounts... later
+      if account_meta.key == 'id' && account != '90334' then
         # get all courses for the current acocunt
         begin
           canvas_courses = @canvas_client.get("/api/v1/accounts/#{account}/courses?per_page=50&with_enrollments=true")
-          canvas_courses.next_page! while canvas_courses.more?
+
+          pg = 0
+          while canvas_courses.more?
+            pg+=1
+            puts "getting account #{account} courses (page #{pg})"
+            canvas_courses.next_page!
+          end
 
           # store each piece of data into the organization meta model
           canvas_courses.each do |course|
+            puts "getting course #{course['id']} data"
+
             course.each do |key, value|
               meta = DocumentMeta.find_or_initialize_by lms_course_id: course['id'],
                 key: key,
@@ -294,8 +303,8 @@ class AdminController < ApplicationController
               meta.save
             end
           end
-        rescue
-          puts "Canvas sync failed on #{accounts}"
+        rescue Exception => e
+          throw "Canvas sync failed on #{account}"
         end
       end
     end
