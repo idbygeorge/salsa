@@ -79,7 +79,7 @@ class AdminController < ApplicationController
 
       -- prefilter the account id and course id meta information so joins will be faster (maybe...?)
       FROM document_meta as a
-     
+
 
       -- join the name meta information
       LEFT JOIN
@@ -127,6 +127,10 @@ class AdminController < ApplicationController
           a.lms_course_id = et.lms_course_id
           AND a.root_organization_id = et.root_organization_id
           AND et.key = 'enrollment_term_id'
+          AND
+          -- whitelist for enrollment term id
+          -- TODO: (move this to a filter option...)
+          AND et.value IN ('4399', '4459', '5314', '5437', '5451', '5447', '5448')
         )
 
       -- join the sis course id meta information
@@ -173,9 +177,6 @@ class AdminController < ApplicationController
       WHERE
         a.root_organization_id = #{@org[:id].to_s}
         AND a.key = 'account_id'
-
-      -- whitelist for enrollment term id | replace with cool array  
-        AND et.value = '5437'
 
       ORDER BY pn.value, acn.value, n.value, a.lms_course_id
     SQL
