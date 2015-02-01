@@ -127,7 +127,6 @@ class AdminController < ApplicationController
           a.lms_course_id = et.lms_course_id
           AND a.root_organization_id = et.root_organization_id
           AND et.key = 'enrollment_term_id'
-          AND
           -- whitelist for enrollment term id
           -- TODO: (move this to a filter option...)
           AND et.value IN ('4399', '4459', '5314', '5437', '5451', '5447', '5448')
