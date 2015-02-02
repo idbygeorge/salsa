@@ -168,9 +168,8 @@ class AdminController < ApplicationController
       LEFT JOIN
         documents as d ON (
           a.lms_course_id = d.lms_course_id
-          --TODO: docuemnts need root organization tracked to make this possible
-          --AND a.root_organization_id = d.root_organization_id
-          AND ws.key = 'workflow_state'
+          --TODO: docuemnts need root organization tracked to make this faster
+          AND d.organization_id IN (#{@org.self_and_descendants.pluck(:id).join(',')})
         )
 
       WHERE
