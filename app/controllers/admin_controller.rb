@@ -58,11 +58,13 @@ class AdminController < ApplicationController
 
     start_filter = ''
 
-    start = params[:start] = params[:start].gsub(/[^\d-]/, '')
-    if start != ''
-      start_filter = "AND (start.value IS NULL OR CAST(start.value AS DATE) >= '#{start}')"
+    if params[:start]
+      start = params[:start] = params[:start].gsub(/[^\d-]/, '')
+      if start != ''
+        start_filter = "AND (start.value IS NULL OR CAST(start.value AS DATE) >= '#{start}')"
+      end
     end
-
+    
     query_string =
     <<-SQL.gsub(/^ {4}/, '')
       SELECT DISTINCT a.lms_course_id as course_id,
