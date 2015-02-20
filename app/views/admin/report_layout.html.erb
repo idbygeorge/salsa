@@ -30,6 +30,7 @@
 		<div class="container">
 			<h1 class="navbar-header"><i class="fa fa-compass"></i> <%= @organization.name if @organization %> Syllabus Tracker</h1>
 
+			<% if false %>
 			<div class="col-sm-3 col-md-3">
 				<br>
 				<%= form_tag(admin_canvas_path, method: 'get', class: "form-horizontal col-md-9 navbar-form", role: "search" ) do |f| %>
@@ -42,6 +43,7 @@
 				</div>
 				<% end %>
 			</div>
+			<% end %>
 
 			<ul class="nav navbar-nav navbar-right">
 				<li><%= link_to 'Admin', admin_path, class: "btn btn-default" %></li>
