@@ -56,6 +56,13 @@ class AdminController < ApplicationController
     org_slug = request.env['SERVER_NAME']
     @org = Organization.find_by slug: org_slug
 
+    start_filter = ''
+
+    start = params[:start] = params[:start].gsub(/[^\d-]/, '')
+    if start != ''
+      start_filter = "AND (start.value IS NULL OR CAST(start.value AS DATE) >= '#{start}')"
+    end
+
     query_string =
     <<-SQL.gsub(/^ {4}/, '')
       SELECT DISTINCT a.lms_course_id as course_id,
@@ -146,6 +153,7 @@ class AdminController < ApplicationController
           a.lms_course_id = start.lms_course_id
           AND a.root_organization_id = start.root_organization_id
           AND start.key = 'start_at'
+          #{start_filter}
         )
 
       -- join the end_date date meta information
