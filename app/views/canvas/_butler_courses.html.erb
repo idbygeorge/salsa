@@ -8,12 +8,12 @@
      <strong>---OR---</strong><br><br>
      Select your LINKED Canvas course and click on "Send relink request":<br><br>
     <%= select_tag(:course_id, options_for_select( @linked_courses.collect {|c| [ c['name'], c['id'] ] }, @document[:lms_course_id]), :prompt => "Canvas courses LINKED to a SALSA", id: 'replace_course_id' ) %><br><br>
-    <a href="mailto:salsa@usu.edu?subject=Relink this SALSA to my Canvas course&body=I want to link this SALSA [sub] to this Canvas course " onclick="this.href = this.href.replace('[sub]',window.location)" id="replace_course_email_link">Send relink request</a><br><br><br>
+    <a href="mailto:bdye@butlercc.edu?subject=Relink this SALSA to my Canvas course&body=I want to link this SALSA [sub] to this Canvas course " onclick="this.href = this.href.replace('[sub]',window.location)" id="replace_course_email_link">Send relink request</a><br><br><br>
     </em>
 	</label>
   <strong>---OR---</strong><br><br>
   Click on "Send support request" and provide a short description of how we can assist you:<br><br>
-  <a href="mailto:salsa@usu.edu?subject=Link or Support needed for my SALSA&body=I want to link this SALSA [sub] to this Canvas course " onclick="this.href = this.href.replace('[sub]',window.location)">Send support request</a>
+  <a href="mailto:bdye@butlercc.edu?subject=Link or Support needed for my SALSA&body=I want to link this SALSA [sub] to this Canvas course " onclick="this.href = this.href.replace('[sub]',window.location)">Send support request</a>
   <p>
     <!-- <br>
     or
