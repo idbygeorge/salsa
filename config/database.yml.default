@@ -15,7 +15,7 @@
 # gem 'pg'
 #
 development:
-  adapter: sqlite3
+  adapter: postgres
   encoding: unicode
   database: salsa_development
   pool: 5
