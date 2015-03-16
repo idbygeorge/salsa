@@ -23,7 +23,7 @@ Installing Ruby
 
 Now that we have Homebrew installed, we can use it to install Ruby.
 
-We're going to use rbenv to install and manage our Ruby versions.
+We're going to use rbenv to install and manage our Ruby versions. https://github.com/sstephenson/rbenv
 
 To do this, run the following commands in your Terminal:
 
@@ -40,7 +40,7 @@ To do this, run the following commands in your Terminal:
 
 Configuring Git
 
-We'll be using Git for our version control system so we're going to set it up to match our Github account. If you don't already have a Github account, make sure to register. It will come in handy for the future.
+We'll be using Git for our version control system so we're going to set it up to match our Github account. If you don't already have a Github account, register for free here: https://github.com/
 
 Replace the example name and email address in the following steps with the ones you used for your Github account.
 
@@ -48,6 +48,12 @@ Replace the example name and email address in the following steps with the ones 
 	git config --global user.name "YOUR NAME"
 	git config --global user.email "YOUR@EMAIL.com"
 	ssh-keygen -t rsa -C "YOUR@EMAIL.com"
+
+	#example
+	git config --global color.ui true
+	git config --global user.name "idbygeorge"
+	git config --global user.email "fakeuser@syllabustool.com"
+	ssh-keygen -t rsa -C "fakeuser@syllabustool.com"
 
 The next step is to take the newly generated SSH key and add it to your Github account. You want to copy and paste the output of the following command:
 
@@ -118,11 +124,38 @@ Install postgres database using Homebrew
 
 Copy `config/database.yml.default` paste to `config/database.yml`, change as necessary.
 
+Should look like:
+
+	development:
+	  adapter: postgresql
+	  encoding: unicode
+	  database: salsa_development
+	  pool: 5
+	  username: [by default OS X username]
+	  password:
+	  host: localhost
+
+	test:
+	  adapter: sqlite3
+	  encoding: unicode
+	  database: salsa_test
+	  pool: 5
+	  username: salsa
+	  password:
+	  host: localhost
+
+	production:
+	  adapter: postgresql
+	  encoding: unicode
+	  database: salsa_production
+	  pool: 5
+	  username: [by default OS X username]
+	  password:
+
 Copy `config/config.yml.default` paste to `config/config.yml`, change as necessary.
 
     bundle install
-    rake db:create
-    rake db:migrate
+    bundle exec rake db:create db:migrate
 
 To run the server, from the project root type:
 
@@ -141,4 +174,4 @@ Deploy through Capistrano
 
 Copy `config/deploy/production.rb.default` paste to `config/deploy/production.rb`, change as necessary.
 
-    $ cap production deploy
+    cap production deploy

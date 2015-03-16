@@ -12,9 +12,7 @@
 //
 //= require jquery
 //= require jquery_ujs
-//= require jquery.ui.dialog
-//= require jquery.ui.tabs
-//= require jquery.ui.sortable
+//= require jquery.ui.all
 
 //= require jquery.tablednd.0.7.min
 
