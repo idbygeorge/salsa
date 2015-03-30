@@ -393,6 +393,7 @@ $(document).ready(function() {
     	  {
 	    	  //alert("if");
 	    	  $("#"+calEvent.id).show();
+	    	  $("#"+calEvent.id+"_time").html("30 minutes");
 	    	  calendar.fullCalendar('removeEvents', calEvent.id);
 	      }
 	      else
@@ -510,12 +511,20 @@ $(document).ready(function() {
         } else if(!$(jsEvent.currentTarget).is('.scheduled')){
           var eventTitleElement = '<strong>' + eventTitle + '</strong>';
 
+          if(calEvent.notes == undefined)
+          {
+          	calEvent.notes = "";
+          }
           if($(jsEvent.currentTarget).is('.user,.admin,.global-events') || calEvent.title == "New Required") {
             //alert("title");
-            eventTitleElement = '<label>Title: <input type="text" name="title" value="' + calEvent.title + '">';
+            eventTitleElement = '<label>Title: <input type="text" name="title" value="' + calEvent.title + '"></br></br><label>Notes: <input name="notes" value="' + calEvent.notes + '"></label>';
+          }
+          else
+          {
+          	eventTitleElement = '<label>Notes: <input name="notes" value="' + calEvent.notes + '"></label>';
           }
 		
-          $('<div>').html(eventTitleElement + '<br>' + eventTime.format('MMMM Do, YYYY[<br>]h:mm') + '-' + eventEnd.format('h:mma') + '<br><br><label>Room: <input name="location" value="' + (calEvent.room || connections_classroom) + '"></label><br><br><label>Notes: <input name="notes" value="' + (calEvent.notes || connections_classroom) + '"></label><br><small>Specify the room that you will be using for this activity.</small>').dialog({
+          $('<div>').html(eventTitleElement + '<br>' + eventTime.format('MMMM Do, YYYY[<br>]h:mm') + '-' + eventEnd.format('h:mma') + '<br><br><label>Room: <input name="location" value="' + (calEvent.room || connections_classroom) + '"></label><br><br><small>Specify the room that you will be using for this activity.</small>').dialog({
             modal: true,
             width: 550,
             title: 'Schedule activity',
