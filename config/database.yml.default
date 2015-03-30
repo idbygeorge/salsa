@@ -15,14 +15,12 @@
 # gem 'pg'
 #
 development:
-  adapter: postgresql
+  adapter: postgres
   encoding: unicode
   database: salsa_development
   pool: 5
-# by default this is the same as your OS X user  
-  username: dbusername
+  username: salsa
   password:
-  host: localhost
 
   # Connect on a TCP socket. Omitted by default since the client uses a
   # domain socket that doesn't need configuration. Windows does not have
@@ -52,13 +50,11 @@ test:
   pool: 5
   username: salsa
   password:
-  host: localhost
 
 production:
   adapter: postgresql
   encoding: unicode
   database: salsa_production
   pool: 5
-# by default this is the same as your OS X user  
-  username: dbusername
+  username: salsa
   password:
