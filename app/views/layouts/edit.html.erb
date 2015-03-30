@@ -1,0 +1,60 @@
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+<meta charset="utf-8">
+
+<title>My SALSA</title>
+<meta name="description" content="">
+
+<meta name="viewport" content="width=device-width">
+<%= stylesheet_link_tag 'gui' %>
+<%= stylesheet_link_tag 'application', media: "all" %>
+<%= javascript_include_tag 'application' %>
+
+<%#
+<script src="//tinymce.cachefly.net/4.1/tinymce.min.js"></script>
+#%>
+<script src="//cdn.ckeditor.com/4.4.1/full-all/ckeditor.js"></script>
+
+<%= csrf_meta_tag %>
+</head>
+<body id="edit_syllabus" data-lms-login-id="<%= @lms_user['login_id'] if @lms_user %>">
+  <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome </a> to experience this site.</p><![endif]-->
+
+<div id="editor_view" data-lms-course="<% if @lms_course %><%= @lms_course.to_json %><% elsif @document[:lms_course_id] %>{&quot;id&quot;:<%= @document[:lms_course_id] %>, &quot;name&quot;: &quot;Course: <%= @document[:lms_course_id] %>&quot;}<% end %>" <% if @document.component %>data-org-config="<%= "{\"css\":\"https://s3-us-west-2.amazonaws.com/salsa.assets/#{@organization.slug}/#{@document.component.slug}/css/salsa-#{@document.component_version}.css\"}" %>"<% end %>>
+    <%= salsa_partial 'toolbar' %>
+
+    <div id="messages">
+        <% flash.each do |name, msg| -%>
+          <%= content_tag :div, msg, class: name %>
+        <% end -%>
+    </div>
+
+    <div id="wrapper">
+
+        <%= salsa_partial 'section_nav' %>
+        <%= salsa_partial 'control_panel' %>
+
+        <div role="main" id="container">
+            <div id="page" class="editor_controls">
+                <div id="page-data" data-view-id="<%= @document.view_id %>">
+                    <%= yield.force_encoding("utf-8") %>
+                </div>
+            </div>
+        </div>
+
+        <%= salsa_partial 'content_toolbar' %>
+    </div>
+
+    <%= salsa_partial 'footer' %>
+</div>
+
+<%= salsa_partial 'example' %>
+<%= salsa_partial 'help' %>
+<%= salsa_partial "analytics" %>
+
+</body>
+</html>

@@ -1,0 +1,66 @@
+<% if action == 'Update' %>
+  <% path = admin_update_user_assignments_path %>
+<% else %>
+  <% path = admin_user_assignments_path %>
+<% end %>
+
+<%= form_for permission, url: path, html: {class: "form"} do |f| %>
+<%= f.hidden_field :user_id %>
+
+<table class="table table-responsive">
+<thead>
+  <tr>
+    <th>
+      LMS User ID
+    </th>
+    <th>
+      Role
+    </th>
+    <th>
+      Organization
+    </th>
+    <th>
+      Cascades
+    </th>
+  </tr>
+</thead>
+<tbody>
+<tr>
+  <td>
+    <%= f.text_field :username %>
+  </td>
+
+  <td>
+    <% if !permission[:role] %>
+      <% permission[:role] = 'auditor' %>
+    <% end %>
+
+    <%= f.select(:role, ['admin', 'auditor']) %>
+  </td>
+  <td>
+    <% if @organizations %>
+      <%= f.select(:organization_id, @organizations.roots.collect {|o| [ o.name + ' (' + o.slug + ')', o.id ] }, include_blank: true) %>
+    <% else %>
+      You don't seem to belong to any organizations... contact your admin to fix this.
+    <% end %>
+  </td>
+
+  <td>
+    <% if permission[:cascades] == nil %>
+      <%= f.radio_button :cascades, true, checked: true %>
+    <% else %>
+      <%= f.radio_button :cascades, true %>
+    <% end %>
+
+    <%= f.label :cascades, "Yes" %>
+    <%= f.radio_button :cascades, false %>
+    <%= f.label :cascades, "No" %>
+  </td>
+
+  <td class="text-right">
+    <button type="submit" class="btn btn-success pull-right"><span class="glyphicon glyphicon-plus"></span> <%= action %> Access</button>
+  </td>
+</tr>
+</tbody>
+</table>
+<% end %>

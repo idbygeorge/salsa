@@ -1,0 +1,120 @@
+<% if @documents.length > 0 %>
+  <%= paginate @documents %>
+  <span class="badge"><%= @documents.total_count %> documents</span>
+
+  <% other_orgs = @organizations.where.not(id: params[:id]).order('lft', 'rgt') %>
+
+  <%= form_tag('/admin/organizations/documents', :html => { :class => "form-vertical" } ) do |f| %>
+    <div class="row">
+
+      <% if other_orgs.count > 0 %>
+      <div class="form-group col-sm-4">
+        <%= label_tag :id, 'Move selected documents: ', class: "control-label" %>
+        <div class="controls">
+          <%= select('organization', 'id', other_orgs.collect { |org| [ (org.parent && org.parent.parent ? org.parent.parent.name + ' » ' : '') + (org.parent ? org.parent.name + ' » ' : '') + org.name, org.id ] }, {include_blank: true}, {class: 'form-control'}) %></p>
+        </div>
+      </div>
+
+      <div class="form-group pull-right text-right">
+        <br>
+        <%= submit_tag 'submit', {class: 'btn btn-default'}%>
+      </div>
+      <% end %>
+    </div>
+
+    <div class="row">
+      <% if other_orgs.count > 0 %>
+      <a id="toggleChecked" href="#toggleChecked">
+        select all/none
+      </a>
+      <% end %>
+
+      <ul class="nav" id="salsaDocuments">
+        <% @documents.each do |document| %>
+          <li class="nav-header form-group">
+            <div class='pull-right text-right'>
+              <% if document.lms_published_at.is_a?(Time) %>
+                  <div>Published <%= time_ago_in_words document.lms_published_at %> ago</div>
+              <% end %>
+
+              <div class="info pull-right">
+                Version: <%= document.version %>
+              </div>
+            </div>
+
+            <% if other_orgs.count > 0 %>
+            <%= check_box_tag "document_ids[]", document.id, false, id: "document_#{document.id}" %>
+            <% end %>
+
+            <label for="<%= "document_#{document.id}" %>"><%= document.name %></label>
+
+            <%= link_to 'edit', edit_admin_document_path(document) %>
+
+            <time datetime="<%= document.created_at %>">Created <%= time_ago_in_words document.created_at %> ago</time>
+
+            <% if time_ago_in_words(document.created_at) != time_ago_in_words(document.updated_at) %>
+              <time datetime="<%= document.created_at %>">Updated <%= time_ago_in_words document.updated_at %> ago</time>
+            <% end %>
+          </li>
+
+          <li id="<%= "document_#{document.id}_wrapper" %>">
+            <% org = @organization if @organization %>
+            <% org = document.organization unless org %>
+
+            <% if org %>
+              <% org_base = "//#{org_slug_parts(org)[0]}#{redirect_port}" %>
+              <% if org.depth > 0 %>
+                <% org_base += "/#{org_slug_parts(org)[1]}"%>
+              <% end %>
+            <% else %>
+              <% org_base = '' %>
+            <% end %>
+
+            <% if document.lms_published_at %>
+              <div>
+                Published to:
+
+                <% if document.lms_course_id %>
+                  <% if document.organization && document.organization[:lms_authentication_source] %>
+                    <a href="<%= document.organization[:lms_authentication_source] + '/courses/' + document.lms_course_id + '/assignments/syllabus' %>" target="_blank">
+                      <%= document.organization[:lms_authentication_source] + '/courses/' + document.lms_course_id + '/assignments/syllabus' %>
+                    </a>
+                  <% end %>
+
+                  <div>
+                    Course Edit Link: <%= link_to "#{org_base}#{lms_course_document_path(lms_course_id: document.lms_course_id)}", "#{org_base}#{lms_course_document_path(lms_course_id: document.lms_course_id)}", target: "_blank" %>
+                  </div>
+                <% end %>
+              </div>
+            <% elsif document.lms_course_id %>
+              <div>
+                LMS Course ID: <%= document.lms_course_id %>
+                <div class="badge alert-warning">
+                  manually set, unpublished
+                </div>
+              </div>
+            <% end %>
+
+
+          	<div>
+              View: <%= link_to "#{org_base}#{document_path(id: document.view_id)}", "#{org_base}#{document_path(id: document.view_id)}", target: "_blank" %>
+              <br>
+              Edit: <%= link_to "#{org_base}#{document_path(id: document.edit_id)}", "#{org_base}#{document_path(id: document.edit_id)}", target: "_blank" %>
+
+              <% if document.template_id %>
+                <br>
+                Template: <%= link_to "#{org_base}#{document_path(id: document.template_id)}", "#{org_base}#{document_path(id: document.template_id)}", target: "_blank" %>
+              <% end %>
+          	</div>
+          </li>
+        <% end %>
+      </ul>
+
+    </div><!-- .row -->
+  <% end %><!-- form -->
+  <%= paginate @documents %>
+<% else %>
+  <p>
+    No <acronym title"Styled, accessibly layered, service applications">SALSAs</acronym> were found.
+  </p>
+<% end %>

@@ -1,0 +1,150 @@
+<header class="masthead">
+    <nav id="toolbar">
+    <ul>
+        <li>
+        <%= link_to "Save", document_path(@document.edit_id), :authenticity_token => form_authenticity_token(), :method => :put, :remote => true, :id => 'tb_save' %>
+        </li>
+        <li><a href="#" id='tb_link'><i class="fi-plus"></i>My SALSA</a></li>
+        <li><%= link_to '<i class="fi-check"></i>Preview'.html_safe, @view_url, :target => '_blank', :id => "tb_preview" %></li>
+        <li>
+        <%= link_to '<i class="general fi-arrow-right"></i>Publish'.html_safe, document_path(@document.edit_id, :publish => true), :authenticity_token => form_authenticity_token(), :method => :put, :remote => true, :id => 'tb_share' %>
+        </li>
+    </ul>
+        <ul style="float:right">
+            <!-- <li><a href="#example" id="tb_example"><i class="general foundicon-star"></i>Example</a></li>
+            <li><a href="/help.html" target="_blank" id="tb_help"><i class="general foundicon-question"></i>Help</a></li>
+            -->
+
+            <% if session[:authenticated_institution] && session[:authenticated_institution] != '' %>
+                <li>
+                    <% if @document[:lms_course_id] %>
+                        <a href="<%= @organization[:lms_authentication_source] %>/courses/<%= @document[:lms_course_id] %>/assignments/syllabus" target="_blank"><% if @lms_course %><%= @lms_course['name'] %><% else %>Course: <%= @document[:lms_course_id] %><% end %></a>
+                    <% else %>
+                        <%= link_to "Select Course...", canvas_list_courses_path(id: @document.edit_id), :authenticity_token => form_authenticity_token(), :remote => true, :id => 'tb_save_canvas', :class => 'highlight' %>
+                    <% end %>
+                </li>
+               
+            <% else %>
+                <li>
+                    <% if @organization && @organization[:lms_authentication_source] != '' %>
+                        <%= link_to "Connect to LMS", oauth2_login_path(document_id: @document.edit_id) %>
+                    <% else %>
+                        <%= link_to "Connect to LMS", oauth2_login_path(document_id: @document.edit_id), :authenticity_token => form_authenticity_token(), :id => 'tb_login_lms' %>
+                    <% end %>
+                </li>
+            <% end %> 
+
+            <li>
+                <%= link_to "Resources", '#/resources', :id => 'tb_resources' %>
+            </li>
+
+            <% if @document.component && @document.component.version != @document.component.versions.count + 1 %>
+                <li>
+                    using: <%= @document.component.version - @document.component.versions.count - 1 %>
+                </li>
+            <% end %>
+        </ul>
+    </nav>
+</header>
+
+<div id="previewWrapper">
+    <div id="preview"></div>
+</div>
+
+<div id="save_prompt" class="hidden">
+    <p><%= image_tag 'busy.gif' %> <span id="saving_msg">Saving SALSA. Just a moment...</span></p>
+</div>
+
+<div id="share_prompt" style="display:none; cursor: default">
+    <p>HTML link:</p>
+    <p id="html_share_link"><%= link_to @view_url, @view_url, :target => '_blank', :id => "view_url" %></p>
+
+    <div style="padding: 20px 0px 10px;">
+        <p id="send_canvas" <% if !@document[:lms_course_id] %>class="hidden"<% end %>>
+         <%= link_to "Send to Canvas", document_path(@document.edit_id, canvas: true), :authenticity_token => form_authenticity_token(), :method => :put, :remote => true, :id => 'tb_send_canvas', :class => 'button' %>
+         <br>
+        </p>
+    </div>
+</div>
+
+<div id="loading_courses_dialog" class="hidden">
+    <p style="padding: 40px 0px 0px 20px;">
+        <%= image_tag 'busy.gif' %>
+        Your course list is being loaded from canvas...
+    </p>
+</div>
+
+<div id="help_viewer" class="hidden">
+    <div id="compilation_tabs">
+      <ul>
+        <li><a href="#example_tab">Example</a></li>
+        <li><a href="#CanvasImport_tab">Canvas Import</a></li>
+      </ul>
+      <div id="example_tab">
+        <%= salsa_partial 'example' %>
+      </div>
+      <div id="CanvasImport_tab">
+        <div class="editableHtml">
+          Select a course to load your syllabus into the clipboard.
+        </div>
+      </div>
+    </div>
+</div>
+
+<div id="choose_course_prompt" style="display:none; cursor: default"></div>
+
+<div id="choose_institution_prompt" style="display:none; cursor: default">
+    <div id="institution_list">
+        <form action="/oauth2/login">
+            <input type="hidden" name="document_id" value="<%= @document.edit_id %>">
+
+            <label for="institution_login_select" style="display: block; margin: 15px;">
+                Select your institution:
+            </label>
+      
+            <select name="institution" id="institution_login_select" style="margin: 15px;">
+                <option></option>
+
+                <optgroup label="Nevada">
+                    <option value="nsc">Nevada State College</option>
+                </optgroup>
+
+                <optgroup label="Utah">
+                    <option value="dixie">Dixie College</option>
+                    <option value="slcc">Salt Lake Community College</option>
+                    <option value="snow">Snow College</option>
+                    <option value="suu">Southern Utah University</option>
+                    <option value="utah">University of Utah</option>
+                    <option selected value="usu">Utah State University</option>
+                    <option value="uvu">Utah Valley University</option>
+                    <option value="weber">Weber State University</option>
+                </optgroup>
+            </select>
+            <button type="submit" id="listed">Login</button>
+        </form>
+    </div>
+
+    <form action="/oauth2/login" style="display: none;">
+         <label for="document_id" style="display: block; margin: 15px;">
+                Type in your institution:
+         </label>
+        <input type="hidden" name="document_id" value="<%= @document.edit_id %>">
+        
+        <input type="text" name="institution" id="institution_login_other" style="margin: 15px 0 14px 15px; text-align: right; ">.instructure.com/login&nbsp;&nbsp;
+        <button type="submit">Login</button>
+    </form>
+
+     <a href="#togglenext" style="float: right; padding-bottom: 10px;">manual login</a>  
+
+</div>
+
+<div id="mySalsa">
+    <p style="padding: 10px;">The <strong>Edit Link</strong> is a unique, randomly-generated URL for your SALSA:</p>
+    <p id="custom-url" style="text-decoration: underline;"></p>
+    <div style="color: #666; font-style: italic;">
+        <p>If your browser’s bookmarks are visible, drag and drop the “My SALSA” link to create a bookmark.</p>
+        <p>Or, create a bookmark with the following keyboard shortcuts: Ctrl+D (Windows and Chrome OS) or ⌘-D (Mac).</p>
+    </div>
+    <p style="padding: 10px;">The <strong>Template Link</strong> generates a <em>new</em> SALSA pre-populated with the information from your SALSA:</p>
+    <p id="custom-url"><%= link_to @template_url, @template_url, :target => '_blank', :id => "view_url" %></p>
+</div>
