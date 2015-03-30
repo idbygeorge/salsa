@@ -1,0 +1,539 @@
+<style>
+nav { max-width: 1119px; }
+
+#wrapper { width: 1119px; }
+#container { width: 835px;}
+#controlPanel { width: 155px; }
+
+#controlPanel .schedule .admin { display: none; }
+.content_toolbar { right: 190px; }
+</style>
+
+<script>
+
+$(document).ready(function() {
+                  alert("1");
+                  $('#controlPanel .admin a[href="#resetDocument"]').on('click', function() {
+      $('#page-data').html('');
+
+      $('#tb_save').trigger('click');
+
+      window.location.reload();
+    });
+
+    var user = $('body').data('lmsLoginId');
+
+//Show Admin tools in Control Panel if the User is listed.
+
+    if(user.search(/^(a00288946|a00015084|a01388517)$/i) === 0) {
+      $('#controlPanel .schedule .admin').show();
+    }
+
+    if(typeof(instructor_name) == 'undefined' || typeof(connections_classroom) == 'undefined') {
+      instructor_name = '';
+      connections_classroom = '';
+    }
+
+//Dialog for Instructor name and Connections Week Room input; displays on initial load
+
+    var schedule_information_dialog = $('<div>').addClass('connections_init_dialog').html(
+        '<div class="form-group"><label>Instructor name: <input id="instructor_name_input" value="' + instructor_name + '"></label></div>' +
+        '<div class="form-group"><label>Connections week classroom: <input id="connections_classroom_input" value="' + connections_classroom + '"></label></div>'
+    ).dialog({
+      title: 'Schedule Information',
+      autoOpen: false,
+      modal: true,
+      buttons: {
+        'Save': function() {
+          instructor_name = $('#instructor_name_input').val() || 'Instructor';
+          connections_classroom = $('#connections_classroom_input').val() || 'Room';
+
+          $('#connection_info_link').text(instructor_name + " | " + connections_classroom);
+
+          $('#tb_save').trigger('click');
+
+          $(this).dialog('close');
+        }
+      }
+    });
+
+    $('#connection_info_link').on('click', function(e) {
+      $(schedule_information_dialog).dialog('open');
+
+      e.stopPropagation();
+      return false;
+    });
+
+    $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-state-default").focus();
+
+    if(instructor_name == '' || connections_classroom == '') {
+      schedule_information_dialog.dialog('open');
+    }
+    
+
+    $('table.outcomes').on('click', '.editableRequired td:not(.time)', function(){
+      $(this).toggleClass('required');
+
+      if($(this).hasClass('required')) {
+        $(this).append('<span class="fi-star large" aria-label="required"></span>');
+      } else {
+        $('span', this).remove();
+      }
+    });
+
+    $('#tabs a[href="#schedule"]').on('click', function() {
+      if(calendar) {
+        calendar.fullCalendar('render');
+      }
+    }).trigger('click');
+
+    $('#tb_save,#tb_share').on('click', function(e){
+      $('#tabs a:first').trigger('click');
+
+      if(!$('.fc-content', calendar).has('.fc-event').length) {
+        if(calendar.is('.fc')) {
+          calendar.fullCalendar('render');
+        } else {
+          calendar.fullCalendar(calendarSettings);
+        }
+
+        calendar.addClass('recovering');
+
+        e.stopPropagation();
+
+        return false;
+      }
+
+      $('#controlPanel .scheduling').trigger('click');
+      calendar.fullCalendar('removeEventSource', globalEventsCalendarURL);
+
+      var events = calendar.fullCalendar('clientEvents');
+      calendar.fullCalendar('destroy');
+      $('#calendar #calendarEventData').remove();
+
+      var simpleEvents = $.map(events, function(item){
+        item.calendar = item.calendar || undefined;
+        
+        return {
+          start: item.start,
+          end: item.end,
+          title: item.title,
+          className: item.className,
+          id: item.id,
+          calendar: item.calendar,
+          editable: item.editable,
+          room: item.room || '',
+          notes: item.notes ? item.notes : ''
+        };
+      });
+
+      jsonEvents = JSON.stringify(simpleEvents);
+
+      calendar.append($('<scri'+'pt/>').attr('id', 'calendarEventData').html('var instructor_name = "' + instructor_name + '"; var connections_classroom = "' + connections_classroom + '"; var documentEvents = ' + jsonEvents));
+      calendarSettings.events = simpleEvents;
+    }).on('ajax:success', function(event, xhr, settings) {
+      calendar.fullCalendar(calendarSettings);
+    });
+
+    /* initialize the external events
+    -----------------------------------------------------------------*/
+    $('#controlPanel .schedule dd').each(function() {
+      // create an Event Object (http://arshaw.com/fullcalendar/docs/event_data/Event_Object/)
+      // it doesn't need to have a start or end
+      var eventObject = {
+        title: $.trim($(this).text()) // use the element's text as the event title
+      };
+
+      // store the Event Object in the DOM element so we can get to it later
+      $(this).data('eventObject', eventObject);
+
+      var eventData = $(this).data('calendar');
+
+      if(eventData && eventData.url) {
+          $(this).on('click', function(){
+
+          if($(this).hasClass('.scheduled')) {
+            return false;
+          }
+
+          // shut down other helper calendars
+          $('.scheduling', $(this).closest('.schedule')).not(this).each(function(){
+            var calendarSource = $(this).removeClass('scheduling').data('calendar').url;
+
+            calendar.fullCalendar('removeEventSource', calendarSource);
+          });
+
+          $(this).toggleClass('scheduling');
+
+          if($(this).hasClass('scheduling')) {
+            var subType = $(this).prevAll('dt:last').attr('class');
+
+            eventData['className'] = $(this).closest('div').attr('class');
+
+            if (subType) {
+              eventData['className'] += " " + subType;
+            }
+
+            eventData['className'] += " scheduling";
+
+            eventData['editable'] = false;
+
+            calendar.fullCalendar('addEventSource', eventData);
+          } else {
+            calendar.fullCalendar('removeEventSource', eventData.url);
+          }
+        });
+
+        try {
+          $(this).draggable('destroy');
+        } catch (e) {}
+      }
+      // make the event draggable using jQuery UI
+      $(this).draggable({
+        zIndex: 999999,
+        revert: true,      // will cause the event to go back to its
+        revertDuration: 0,  //  original position after the drag
+        start: function(e, ui){
+          if($(this).css('cursor') != 'move') {
+            return false;
+          }
+        }
+      });
+    });
+
+    
+
+    var syncControlPanel = function() {
+      var events = calendar.fullCalendar('clientEvents');
+      $('#controlPanel aside.schedule dd').removeClass('scheduled');
+
+      $.each(events, function(item) {
+        if(!this.url) {
+          if(!this.calendar) {
+            $('dd[data-calendar="{\"id\": ' + this.id + '}"],dd[data-calendar="{\"id\": \"' + this.id + '\"}"]', '#controlPanel aside.schedule').addClass('scheduled');
+          } else {
+            $('dd[data-calendar*="'+ this.calendar + '"]', '#controlPanel aside.schedule').addClass('scheduled');
+          }
+        }
+
+
+        if ($.grep(this.className, function(value){ return value == 'admin'; }).length && !this.adminSync) {
+          this.adminSync = true;
+
+          if ($('#controlPanel .schedule .admin').is(':hidden')) {
+            this.editable = false;
+          } else {
+            this.editable = true;
+
+          }
+
+          calendar.fullCalendar('updateEvent', this);
+        } 
+      });
+    }
+
+    /* initialize the calendar
+    -----------------------------------------------------------------*/
+    var calendarSettings = {
+      header: {
+        left: 'title',
+        center: '',
+        right: '',
+      },
+      eventAfterAllRender: function() {
+        if(calendar.is('.recovering')) {
+          calendar.removeClass('recovering');
+          $('body').removeClass('disable-save');
+
+          $('#tb_save').click();
+        }
+
+        syncControlPanel();
+      },
+      loading: function(isLoading, view) {
+        if(isLoading) {
+          var animation = $('<div class="bubblingG">Loading<br><span id="bubblingG_1"></span><span id="bubblingG_2"></span><span id="bubblingG_3"></span></div>');
+
+          $('body').append($('<div/>').addClass('overlay').append(animation).fadeTo(400, .8)).addClass('disable-save');
+        } else {
+          $('body').removeClass('disable-save');
+          $('.overlay').delay(200).fadeOut('fast', function(){
+            $(this).remove();
+          });
+        }
+      },
+      height: 1300,
+      events: documentEvents,
+      eventSources: globalEventsCalendarSettings,
+
+      eventClick: function(calEvent, jsEvent, view) {
+        
+
+        if(calEvent.source.url && calEvent.title.search(/^available$/i) < 0) {
+          return false;
+        }
+
+        // not logged in
+        if($(jsEvent.currentTarget).is('.admin') && $('#controlPanel .schedule .admin').is(':hidden')) {
+          return false;
+        }
+
+        var eventTitle = calEvent.title;
+        
+        calEvent.location;
+        calEvent.description;
+
+        var what = $('#controlPanel .scheduling').text();
+
+        if(!what) {
+          what = calEvent.title;
+        }
+
+        var eventTime = calEvent.start;
+        var eventEnd = calEvent.end;
+
+        if (!eventEnd) {
+          eventEnd = eventTime.add('m', 30);
+        }
+
+        var course_id = '';
+
+        var courseData = $('#editor_view').data('lmsCourse');
+
+        if(courseData) {
+          course_id = courseData.id;
+        }
+
+        //var notes = '(notes)';
+
+        var formURL = 'https://docs.google.com/forms/d/1oaWmw2meVp-XceqNokNgNKOZe1F2TYXSKVpLVd3P04c/viewform';
+        var extra_buttonSet = "";
+
+        //extra_buttonSet = '<div class="extra_button_text">I am sure I want this time slot</div>';
+
+        var reservationForm = $('<form id="activity_schedule_request" action="' + formURL + '" target="_blank">' +
+          '<input type="hidden" name="entry.678085083" value="' + what +'">' +
+          '<input type="hidden" name="entry.6740286" value="' + instructor_name +'">' +
+          '<input type="hidden" name="entry.1019320750" value="' + course_id + '">' +
+          '<input type="hidden" name="entry.510281424" value="' + eventTime.format('YYYY-MM-DD+HH:mm') + '">' +
+          '<input type="hidden" name="entry.1973077123" value="' + eventEnd.format('YYYY-MM-DD+HH:mm') + '">' +
+          '<input type="hidden" name="entry.1746162059" value="' + calEvent.id + '">' +
+          '<button type="submit" class="reserve" name="entry.971761259" value="Reserve">Reserve</button>' +
+          what + '</strong><br>' + eventTime.format('MMMM Do, YYYY[<br>]h:mm') + '-' + eventEnd.format('h:mma') + '</p>' +
+          '<label>Room: <input type="text" id="event_scheduled_room" name="entry.639022760" value="' + (calEvent.room || '') + '"></label>' +
+          extra_buttonSet +
+        '</form>');
+
+        if($(jsEvent.target).hasClass('remove')) {
+          if(!calEvent.id) {
+            calEvent.id = 'remove this please';
+          }
+
+          calendar.fullCalendar('removeEvents', calEvent.id);
+
+          var actionInputName = $('button', reservationForm).remove().attr('name');
+          reservationForm.append($('<input>').attr({ name: actionInputName }).val('Cancel'));
+
+          var formData = reservationForm.serialize();
+          var docURL = formURL.replace(/\/viewform$/, '/formResponse');
+
+          /*
+          $('body').append($('<iframe/>').attr('name', 'ajaxSimulator'));
+          reservationForm.attr({ method: 'POST', target: 'ajaxSimulator', action: docURL }).appendTo('body');
+          reservationForm.trigger('submit');
+          */
+
+          $.ajax({
+            url: docURL,
+            type: 'post',
+            data: formData,
+            success: function(data){/* doesn't ever get here, jsonp is not xml*/},
+            error: function(){/* always gets here with a parse error, jsonp is not xml*/},
+            dataType: "jsonp" // hack to get around same origin policy header being set on google's servers
+          });
+
+          $('#tb_save').trigger('click');
+
+          syncControlPanel();
+
+          return false;
+        }
+
+        if($(jsEvent.currentTarget).is('.pending') || eventTitle.search(/^\s*available\s*$/gi) == 0) {
+
+
+          var handleRegistration = function(e, data) {
+            var dialogElement = $('.schedule_dialog');
+            dialogElement.dialog('close');
+
+            var classNames = calEvent.source.className || [];
+
+            calEvent.room = $('#event_scheduled_room', this).val();
+            
+            classNames.push('scheduled');
+
+            // remove scheduling
+            classNames = $.grep(classNames, function(value){
+              return value != 'scheduling';
+            });
+
+            calendar.fullCalendar('renderEvent', {title: what, start: eventTime.format('YYYY-MM-DD[T]HH:mm:00.000[Z]'), end: eventEnd.format('YYYY-MM-DD[T]HH:mm:00.000[Z]'),className: classNames, id: calEvent.id, editable:false, calendar: calEvent.source.url, room: calEvent.room }, true);
+
+            $('#controlPanel .scheduling').addClass('scheduled').trigger('click');
+
+            var actionInputName = $('button', reservationForm).remove().attr('name');
+            reservationForm.append($('<input>').attr({ name: actionInputName }).val('Reserve'));
+
+            var formData = reservationForm.serialize();
+            var docURL = formURL.replace(/\/viewform$/, '/formResponse');
+
+            $.ajax({
+              url: docURL,
+              type: 'post',
+              data: formData,
+              success: function(data){/* doesn't ever get here, jsonp is not xml*/},
+              error: function(){/* always gets here with a parse error, jsonp is not xml*/},
+              dataType: "jsonp" // hack to get around same origin policy header being set on google's servers
+            });
+
+            $('#tb_save').trigger('click');
+
+            e.stopPropagation();
+
+            return false;
+          };
+
+
+          var dialogContent = $('<div>').addClass('schedule_dialog').html('').append(reservationForm).dialog({
+            modal: true,
+            width: 350,
+            title: 'Reserve this time slot',
+            close: function() {
+              $(this).dialog('destroy');
+            }
+          });
+
+          reservationForm.on('submit', handleRegistration);
+
+          if($(jsEvent.currentTarget).is('.pending')) {
+            $(dialogContent).closest('.ui-dialog').find('.ui-dialog-buttonset button').css({ 'visibility': 'hidden'});
+          }
+        } else if(!$(jsEvent.currentTarget).is('.scheduled')){
+          var eventTitleElement = '<strong>' + eventTitle + '</strong>';
+
+          if($(jsEvent.currentTarget).is('.user,.admin')) {
+            eventTitleElement = '<label>Title: <input type="text" name="title" value="' + calEvent.title + '">';
+          }
+
+          $('<div>').html(eventTitleElement + '<br>' + eventTime.format('MMMM Do, YYYY[<br>]h:mm') + '-' + eventEnd.format('h:mma') + '<br><br><label>Room: <input name="location" value="' + (calEvent.room || connections_classroom) + '"></label><br><br><small>Specify the room that you will be using for this activity.</small>').dialog({
+            modal: true,
+            width: 550,
+            title: 'Schedule activity',
+            buttons: {
+              'Save': function() {
+                calEvent.room = $('[name=location]', this).val();
+
+                if ($('[name=title]', this).val()) {
+                  calEvent.title = $('[name=title]', this).val();
+                }
+
+                calendar.fullCalendar('updateEvent', calEvent);
+                
+                $(this).dialog('close');
+              }
+            }
+          });
+        }
+
+        $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-state-default").focus();
+
+        jsEvent.stopPropagation();
+        return false;
+      },
+
+      defaultDate: '2014-08-20',
+      defaultView: 'agendaWeek',
+      timezone: '-06:00',
+      minTime: '09:00:00',
+      maxTime: '23:30:00',
+      slotDuration: '00:15:00',
+      allDaySlot: false,
+      defaultTimedEventDuration: '00:30:00',
+      hiddenDays: [0,1,2],
+
+      editable: true,
+      droppable: true, // this allows things to be dropped onto the calendar !!!
+
+      eventMouseover: function(calEvent) {
+        if(!$(this).is('.admin') || $('#controlPanel .schedule .admin').is(':visible')) {
+          $(this).not('.scheduling, .global-events').append('<div class="fi-x remove"></div>');
+        }
+      },
+
+      eventMouseout: function() {
+        $('.remove', this).remove();
+      },
+
+      drop: function(date) { // this function is called when something is dropped
+        // retrieve the dropped element's stored Event Object
+        var eventData = $(this).data('calendar');
+        
+        var originalEventObject = $(this).data('eventObject');
+        var subType = $(this).prevAll('dt:last').attr('class');
+
+        originalEventObject['className'] = $(this).closest('div').attr('class');
+
+        if (subType) {
+          originalEventObject['className'] += " " + subType;
+        }
+
+        if(eventData && eventData.url) {
+          //$('#calendar').fullCalendar('removeEventSource', eventData.url);
+          originalEventObject['editable'] = false;
+        }
+        
+        // we need to copy it, so that multiple events don't have a reference to the same object
+        var copiedEventObject = $.extend({}, originalEventObject);
+
+        if (!copiedEventObject.id) {
+            if(eventData && eventData.id) {
+              copiedEventObject.id = eventData.id;
+            } else {
+              // uniqueify the event ID: http://stackoverflow.com/a/2117523
+              copiedEventObject.id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&0x3|0x8;return v.toString(16);});
+            }
+        }
+
+        // assign it the date that was reported
+        copiedEventObject.start = date;
+        copiedEventObject.end = moment(date).add('m', 30);
+
+        copiedEventObject.room = copiedEventObject.room || connections_classroom;
+        
+        // render the event on the calendar
+        // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+        $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
+
+        // is the "remove after drop" checkbox checked?
+        if ($('#drop-remove').is(':checked')) {
+          // if so, remove the element from the "Draggable Events" list
+          $(this).remove();
+        }
+
+        syncControlPanel();
+      },
+      eventRender: function(calEvent, element) {
+        var roomElement = $('<div/>').addClass('event-room').text(calEvent.room);
+
+        if(!element.is('.scheduling')) {
+          $('.fc-event-time', element).before(roomElement);
+        }
+      }
+    };
+
+    // init the calendar
+    calendar = $('#calendar').fullCalendar(calendarSettings);
+
+
+  });
+</script>

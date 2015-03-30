@@ -1,0 +1,869 @@
+<%= render partial: "#{@view_folder}/extend_document" %>
+<%= render partial: "#{@view_folder}/extend_document_temp" %>
+
+<!-- spacer for preview modal -->
+<div id="spacer">&nbsp;</div>
+<!-- each tab is represented by a section with an ID that identifies it -->
+
+<section id="schedule">
+    <div class="content">
+        <h2><a href="<%= @view_url %>" target="_blank">Connections Schedule</a></h2>
+    </div>
+
+    <div class="content dynamic-component">
+
+        <div id="section1S" class="section1">
+            <a href="#information" id="connection_info_link">Instructor | Room</a>
+            
+             <div id="calendar">
+                <script id="calendarEventData">
+                    var documentEvents = [
+                        {title: 'Lunch', start: '2014-08-20T12:00:00.000Z', end: '2014-08-20T13:00:00.000Z', className: ['global-events']},
+                        {title: 'Lunch', start: '2014-08-21T12:00:00.000Z', end: '2014-08-21T13:00:00.000Z', className: ['global-events']},
+                        {title: 'Lunch', start: '2014-08-22T12:00:00.000Z', end: '2014-08-22T13:00:00.000Z', className: ['global-events']}
+                    ]
+                </script>
+            </div>
+            
+            <div class="verticalSpacer"></div>
+            <h2 class="editable">Follow-up Activities</h2>
+            <div id="calendarFollowUpActivity">
+                <script id="calendarEventDataFollowUpActivity">
+                    var documentEvents = [
+                        {title: 'Lunch', start: '2014-08-20T12:00:00.000Z', end: '2014-08-20T13:00:00.000Z', className: ['global-events']},
+                        {title: 'Lunch', start: '2014-08-21T12:00:00.000Z', end: '2014-08-21T13:00:00.000Z', className: ['global-events']},
+                        {title: 'Lunch', start: '2014-08-22T12:00:00.000Z', end: '2014-08-22T13:00:00.000Z', className: ['global-events']}
+                    ]
+                </script>
+            </div>
+      
+            
+        </div><!-- #section1S-->
+
+        <div id="section2S" class="section2 hide"> 
+            <div class="editableHtml">Detailed Schedule information here.</div>
+        </div><!-- #section2S--> 
+
+
+        <!--<div id="section3S" class="section3">
+            <h2 class="editable">Follow-up Activities</h2>
+            <table id="followup" class="components" border="1">
+                <caption class="editable">August 25 - November 5, 2014</caption>
+                <thead>
+                    <tr><th>Date</th><th>Description</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td header="col-left" class="col-left left"><div class="editableHtml">Date</div></td>
+                        <td header="col-right" class="col-right left"><div class="editableHtml">Text</div></td>
+                    </tr>
+                    <tr>
+                        <td header="col-left" class="col-left left"><div class="editableHtml">Date</div></td>
+                        <td header="col-right" class="col-right left"><div class="editableHtml">Text</div></td>
+                    </tr>
+                    <tr>
+                        <td header="col-left" class="col-left left"><div class="editableHtml">Date</div></td>
+                        <td header="col-right" class="col-right left"><div class="editableHtml">Text</div></td>
+                    </tr>
+                    <tr>
+                        <td header="col-left" class="col-left left"><div class="editableHtml">Date</div></td>
+                        <td header="col-right" class="col-right left"><div class="editableHtml">Text</div></td>
+                    </tr>
+                    <tr>
+                        <td header="col-left" class="col-left left"><div class="editableHtml">Wed 11/5, 11:30 am</div></td>
+                        <td header="col-right" class="col-right left">
+                            <div class="editableHtml">ESLC 130<br>
+                                <ul>
+                                    <li>Registration Reminders</li>
+                                    <li>Mid-Semester Info</li>
+                                </ul>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>--><!-- #section2S-->
+        <div class="page_break divspace">&nbsp;</div>
+    </div><!-- .content -->
+</section><!-- #schedule -->
+
+
+<section id="information">
+    <!-- content class is the initial content for the tab -->
+    <div class="content">
+        <header id="title1I">
+                <h1>
+                    <div>Connections Course Syllabus</div>
+                    <div>USU 1010 | Fall 2014</div>
+                </h1>
+        </header>
+
+        
+        <div id="section1I" class="section1">
+            <h2 class="editable">Contact Information</h2>
+
+            <div id="contacts1I" class="contacts">
+                <div class="contact">
+                    <h3 class="editable" data-can-delete="true">Contact Title</h3>
+                    <div class="editableHtml">
+                        <ul class="none">
+                            <li>name</li>
+                            <li>email</li>
+                            <li>phone</li>
+                            <li>other1</li>
+                            <li>other2</li>
+                        </ul>
+                    </div>
+                        
+                </div>
+            </div>
+
+
+        </div><!-- .section1 -->
+
+        <div id="section2I" class="section2">
+            <h2>COURSE DATES</h2>
+                <div class="details">
+                    <div class="description">
+                        <div class="editableHtml">
+                            <ul>
+                                <li>Pre-semester session: August 20-23<br>
+                                    Follow-up sessions: First two or three weeks of fall semester (graded attendance)</li>
+                                <li>Coursework completed by: October 1</li>
+                                <li>Follow-up session held the week of October 6, scheduled by instructor</li>
+                                <li>Follow-up session held Wednesday, November 5, 11:30am-12:30pm in ESLC 130</li>
+                            </ul>
+                        </div>
+                    </div>                                                            
+                </div>                                                                                                
+        </div><!-- .section2--> 
+
+        <div id="section3I" class="section3">
+            <h2>REQUIRED TEXTS</h2>
+                <div class="details">
+                    <div class="description">
+                        <div>
+                            <ul>
+                                <li><em>Frankenstein</em> 1818 edition by Mary Shelley</li>
+                                <li><em>USU General Catalog</em> (online at <a href="http://catalog.usu.edu" target="_blank">http://catalog.usu.edu</a>)</li>
+                                <li><em>USU Student Handbook and Planner</em> (given at SOAR)</li>
+                                <li><em>Becoming a Learner</em> by Dr. Matthew Sanders (given at SOAR)</li>
+                            </ul>
+                        </div>
+                    </div>                                                            
+                </div>                                                                                                  
+        </div><!-- .section3--> 
+
+        <div id="section4I" class="section4">
+            <h2>COURSE FEE</h2>
+                <div class="details">
+                    <div class="description">
+                        <div>
+                            $50.00 (paid as part of course registration) - Fee provides students with a t-shirt, USU handbook, convocation speakers, class and evening activities, refreshments, and supplies.
+                        </div>
+                    </div>                                                              
+                </div>                                                                                                
+        </div><!-- .section4--> 
+
+    </div><!-- .content -->
+
+</section><!-- #information -->
+
+<section id="outcomes">
+    <div class="content">
+        <div id="section1O" class="section1">
+            <h2>CONNECTIONS OBJECTIVES</h2>
+            <div>Throughout the Connections course, you should think about the reason you are engaging in the college experience. The objective of Connections is that at the end of the course you can comfortably answer all three of the big questions below, and that you better understand the university and your place within it. Each activity, assignment, workshop, and discussion at Connections is designed to help answer one of the three big questions.</div>
+                <!-- bullets should be visible in this list -->
+            <div id="headings1O" class="headings">
+                <div class="details">
+                    <div class="description">
+                        <h3>Big Question 1: Why am I here?</h3>
+                        <div>
+                            <ol type="A">
+                                <li>What is an educated person? How does an educated person contribute to his or her community?</li>
+                                <li>What role does general education play in educating a person?</li>
+                                <li>What role does the major play in educating a person?</li>
+                            </ol>
+                        </div>
+                    </div> 
+                    <div class="description">
+                        <h3>Big Question 2: How do I best engage myself in the process of becoming an educated person?</h3>
+                        <div>
+                            <ol type="A">
+                                <li>What does an intentional student look like?</li>
+                                <li>What competencies do I need to develop in order to succeed?</li>
+                                <li>What resources are available to help me succeed?</li>
+                            </ol>
+                        </div>
+                    </div> 
+                    <div class="description">
+                        <h3>Big Question 3: How do I become a fully engaged member of the university community?</h3>
+                        <div>
+                            <ol type="A">
+                                <li>What opportunities are there for me to have fun and to become more invested in the university community? (clubs and organizations)</li>
+                                <li>What is a learning community, and how do I go about building one?</li>
+                                <li>What are the benefits of a common literature experience?</li>
+                            </ol>
+                        </div>
+                    </div>                                                                                             
+                </div>
+            </div>      
+        </div><!-- .section1 -->
+
+       <div id="section2O" class="section2">
+            <h2>TOPICS & BIG QUESTIONS</h2>
+            <div><p>The table below presents the <strong>Topics</strong> Connections will cover, arranged in order they will be addressed in your section. Each <strong>Topic</strong> is connected to between two to five <strong>Objectives</strong>. There are nine <strong>Objectives</strong>--one for points A, B & C from each of the three Big Questions.</p>
+            <p><em>For example, the Topic "Literature Experience" focuses on points B and C from Big Question 3.</em></p>
+            </div>
+            <div class="details">
+                    <div class="description">
+                        <table id="topics" border="1">
+                                <caption>Fall 2014</caption>
+                                <thead>
+                                    <tr class="header_text">
+                                        <th id="colTopics" class="colTopics">Topics</th>
+                                        <th id="colTime" class="colTime">Time</th>
+                                        <th id="colObjective1a" class="colObjective1header">1.A</th>
+                                        <th id="colObjective1b" class="colObjective1header">1.B</th>
+                                        <th id="colObjective1c" class="colObjective1header">1.C</th>
+                                        <th id="colObjective2a" class="colObjective2">2.A</th>
+                                        <th id="colObjective2b" class="colObjective2">2.B</th>
+                                        <th id="colObjective2c" class="colObjective2">2.C</th>
+                                        <th id="colObjective3a" class="colObjective3">3.A</th>
+                                        <th id="colObjective3b" class="colObjective3">3.B</th>
+                                        <th id="colObjective3c" class="colObjective3">3.C</th>
+                                    </tr>
+                                </thead>
+                                <tbody >
+                                    <tr>
+                                        <th class="colTopicsRight"><div class="editable">Purpose of College</div></th>
+                                        <td class="time"><div class="editable minutes" id="purpose_required_time">30 minutes</div></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="colObjective2"></td>
+                                        <td class="colObjective2"></td>
+                                        <td class="colObjective3"></td>
+                                        <td class="colObjective3"></td>
+                                        <td class="colObjective3"></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="colTopicsRight"><div class="editable">Literature Experience</div></th>
+                                        <td class="time"><div class="editable minutes" id="literature_required_time">30 minutes</div></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="colObjective2"></td>
+                                        <td class="colObjective2"></td>
+                                        <td class="colObjective2"></td>
+                                        <td class="colObjective3"></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="colTopicsRight"><div class="editable">College Writing Expectations</div></th>
+                                        <td class="time"><div class="editable minutes" id="writing_required_time">30 minutes</div></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="colObjective3"></td>
+                                        <td class="colObjective3"></td>
+                                        <td class="colObjective3"></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="colTopicsRight"><div class="editable">Overcoming Challenges</div></th>
+                                        <td class="time"><div class="editable minutes" id="overcoming_required_time">30 minutes</div></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="colObjective3"></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="colTopicsRight"><div class="editable">Academic Strategies</div></th>
+                                        <td class="time"><div class="editable minutes" id="strategies_required_time">30 minutes</div></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="colObjective3"></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="colObjective3"></td>
+                                    </tr>
+                                    <tr> 
+                                        <th class="colTopicsRight"><div class="editable">Academic Planning</div></th>
+                                        <td class="time"><div class="editable minutes" id="planning_required_time">30 minutes</div></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="colObjective2"></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="colObjective2"></td>
+                                        <td class="colObjective3"></td>
+                                        <td class="colObjective3"></td>
+                                        <td class="colObjective3"></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="colTopicsRight"><div class="editable">Student Resources</div></th>
+                                        <td class="time"><div class="editable minutes" id="resources_required_time">30 minutes</div></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="colObjective3"></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="colObjective3"></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="colTopicsRight"><div class="editable">Campus Technology</div></th>
+                                        <td class="time"><div class="editable minutes">30 minutes</div></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="colObjective2"></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="colObjective3"></td>
+                                        <td class="colObjective3"></td>
+                                        <td class="colObjective3"></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="colTopicsRight"><div class="editable">Using the Library</div></th>
+                                        <td class="time"><div class="editable minutes">30 minutes</div></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="colObjective2"></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="colObjective3"></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="colObjective3"></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="colTopicsRight"><div class="editable"> Connecting to Campus</div></th>
+                                        <td class="time"><div class="editable minutes" id="connecting_required_time">30 minutes</div></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="colObjective2"></td>
+                                        <td class="colObjective2"></td>
+                                        <td class="colObjective2"></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="colObjective3"></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="colTopicsRight"><div class="editable">Building a Learning Community</div></th>
+                                        <td class="time"><div class="editable minutes" id="community_required_time">30 minutes</div></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="colObjective2"></td>
+                                        <td class="colObjective2"></td>
+                                        <td class="colObjective3"></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="colObjective3"></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="colTopicsRight"><div class="editable">Bystander Intervention</div></th>
+                                        <td class="time"><div class="editable minutes" id="bystander_required_time">30 minutes</div></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="colObjective2"></td>
+                                        <td class="colObjective2"></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="colObjective3"></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="colObjective3"></td>
+                                    </tr>
+                                    <tr>
+                                        <th class="colTopicsRight"><div class="editable">Time Management</div></th>
+                                        <td class="time"><div class="editable minutes" id="time_required_time">30 minutes</div></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="required"><span class="fi-star large" aria-label="required"></span></td>
+                                        <td class="colObjective3"></td>
+                                        <td class="colObjective3"></td>
+                                        <td class="colObjective3"></td>
+                                    </tr>
+                                    <!--<tr>
+                                        <th class="colTopicsRight"><div class="editable" id="newRequiredActivity">New Required</div></th>
+                                        <td class="time"><span class="editable minutes" id="newRequiredActivity">minutes</span></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="colObjective1"></td>
+                                        <td class="colObjective1"></td>
+                                    </tr>-->
+                                                                  
+                                </tbody>
+                            </table><!-- #table1 --> 
+                        </div><!-- .details -->
+                    </div><!-- .description -->                                                 
+        </div><!-- .section2--> 
+
+        <div id="section3O" class="section3 hide">
+            <div id="headings3O" class="headings">
+                <div class="details">
+                    <div class="description">
+                        <h3 class="editable" data-can-delete="true">Heading</h3>
+                        <div class="editableHtml">
+                            Text
+                        </div>
+                    </div>                                                                                             
+                </div>
+            </div>                                                                                                    
+        </div><!-- .section3--> 
+    </div><!-- .content -->
+
+</section><!-- #outcomes -->
+
+<section id="activities">
+    <div class="content">
+
+        <div id="section1A" class="section1">
+            <h2>CONNECTIONS ASSIGNMENTS</h2>
+            <div>
+                <div>
+                    <p>All classes have a common core syllabus and assignments. With 60 different Connections sections, there are a variety of teaching styles and personalities among the faculty, which is true of the university at large. The curriculum allows for a degree of instructor creativity, making each section unique.</p>
+                    <p>All Connections sections include the following assignments, workshops, and discussions:</p>
+                </div>
+            </div>
+
+             <div class="details">
+                <div class="description">
+                    <h3>Purpose of College Education</h3>
+                    <div>
+                        <p>Assignment: In the Purpose of a College Education paper, you will write a short paper (2-3 pages) explaining your own understanding of the "why" or purpose of college education. As part of this paper, you will articulate and explain three reasons why you are enrolled in higher education classes with at least two reasons not primarily focusing on job skills and professional training. You will also explain the three major components of a university degree (general education, depth education, major courses) and describe the importance and interconnection of all three. (1A,B,C; 2A)</p>
+                    </div>
+                </div><!-- .description --> 
+                <div class="description">
+                    <h3>Common Literature Experience</h3>
+                    <div>
+                        <p>Assignment: You will prepare an assignment focused around the book <em>Frankenstein</em> before arriving on campus. This will give you a sampling of academic writing expectations and help you build a learning community around the common literature selection.</p>
+                        <p>Workshop: The Literature Convocation allows students the opportunity to share, discuss, and analyze the themes of the book with classmates. (3B,C)</p>
+                    </div>
+                </div><!-- .description --> 
+                <div class="description">
+                    <h3>College Writing Expectations</h3>
+                    <div>
+                        <p>Assignment: The College Writing Expectations assignment requires you to watch some writing tutorials and participate in online discussions related to the expectations of college-level writing. (2B,C)</p>
+                    </div>
+                </div><!-- .description -->   
+                <div class="description">
+                    <h3>Overcoming Challenges</h3>
+                    <div>
+                        <p>Assignment: In Connections, students are exposed to the "whys" and “hows" of college education. In the Overcoming Challenges assignment, you will explain the key “hows” of successfully completing your educational goals. Specifically, you will identify potential challenges you expect to face, along with the resources that are available and an immediate action plan to overcome each challenge. (2A,B,C; 3B)</p>
+                    </div>
+                </div><!-- .description -->   
+                <div class="description">
+                    <h3 class="editable">Academic Strategies</h3>
+                    <div class="editableHtml">
+                        <p>Assignment: The Academic Strategies assignment is meant to give you a broad range of study tools to supplement skills you already have. (2A,B,C; 3B)</p>
+                    </div>
+                </div><!-- .description -->   
+                <div class="description">
+                    <h3>Academic and Career Planning</h3>
+                    <div>
+                        <p>Assignment: The Academic and Career Planning Assignment introduces you to the degree finder website, the General Catalog, and Degree Works program, which is used to chart your course toward your degree. (2A,C; 1B,C)</p>
+                    </div>
+                </div><!-- .description -->   
+                <div class="description">
+                    <h3>Student Resources</h3>
+                    <div>
+                        <p>Assignment: In the Student Resources Assignment, you will navigate the Student Handbook, student service websites, and the online General Catalog to find answers to questions related to policies, procedures, and student resources. This gives you the framework needed to answer questions and solve issues. (2A,B,C; 3B)</p>
+                    </div>
+                </div><!-- .description -->   
+                <div class="description">
+                    <h3>Campus Technology</h3>
+                    <div>
+                        <p>Workshop: In the Campus Technology Workshop, you are introduced to the IT computer labs and campus technologies, including the student portal, Canvas, Banner, Aggiemail, USU Identity, and how to reserve group rooms in the library. (2B,C)</p>
+                    </div>
+                </div><!-- .description -->   
+                <div class="description">
+                    <h3>Using the Library</h3>
+                    <div>
+                        <p>Workshop: In the Library Workshop, you are introduced to the USU Library basics such as the BARN, building policies, resources, and resource librarians. (2B,C; 3B)</p>
+                    </div>
+                </div><!-- .description -->   
+                <div class="description">
+                    <h3>Connecting to Campus</h3>
+                    <div>
+                        <p>Assignment: The Connecting to Campus assignment requires you to attend the Day on the Quad, an Aggie Passport event, and write a brief response identifying at least three clubs or organizations you are interested in joining. (3A,B)</p>
+                    </div>
+                </div><!-- .description -->   
+                <div class="description">
+                    <h3>Building a Learning Community</h3>
+                    <div>
+                        <p>Discussion and Exercise: Students sometimes encounter obstacles that prevent them from fully engaging in a learning community. Classes discuss some of these obstacles and identify ways to overcome these challenges. (1A; 2A; 3B)</p>
+                        <p>Workshop: The Faculty Panel allows you to meet and hear faculty talk about first-year students' opportunities for academic success. Three faculty members from various disciplines will answer student questions and give tips for succeeding in your first year at USU. (3B,C)</p>
+                    </div>
+                </div><!-- .description -->   
+                <div class="description">
+                    <h3>Bystander Intervention</h3>
+                    <div>
+                        <p>Discussion: You will learn the  basic principles of bystander intervention, and learn how you can contribute to a safe learning environment for yourself and others by exhibiting pro-social behavior. (1A; 2C; 3B) </p>
+                    </div>
+                </div><!-- .description -->   
+                <div class="description">
+                    <h3>Time Management</h3>
+                    <div>
+                        <p>Assignment: The Time Management Assignment lets you estimate your out-of-class study time, design an ideal schedule based on that estimate, and then practice following it for a couple of days. You will also plot your semester assignments and due dates on a calendar. (2A,B,C)</p>
+                    </div>
+                </div><!-- .description -->
+            </div><!-- .details --> 
+        </div><!-- .section1 -->
+    </div><!-- .content -->
+
+</section><!-- #activities -->
+
+<section id="policies">
+    <div class="content">
+
+        <div id="section1P" class="section1">
+            <h2>HONOR PLEDGE</h2>
+                <div class="details">
+                    <div class="description">
+                        <div>
+                            <p>Upon admission to the University, students agree to abide by the Utah State University Honor System by signing the Honor Pledge, which reads: "I pledge, on my honor, to conduct myself with the foremost level of academic integrity."</p>
+                            <p>A student who lives by the Honor Pledge is a student who does more than not cheat, falsify, or plagiarize. He or she espouses academic integrity as an underlying and essential principle of the Utah State University community. (1A; 2A)</p>
+                        </div>
+                    </div><!-- .description -->                                                          
+                </div><!-- .details -->   
+        </div><!-- .section1 -->
+
+        <div id="section2P" class="section2">
+            <h2>CLASSROOM CIVILITY</h2>
+                <div class="details">
+                    <div class="description">
+                        <div class="editableHtml">
+                            <p>Regardless of intent, careless or ignorant remarks can be very offensive and detrimental to others. If you feel uncomfortable in a classroom due to offensive language or actions by an instructor or student(s) regarding ethnicity, gender, or sexual orientation, immediately contact: James Morales, Vice President of Student Services, (435) 797-1712, <a href="mailto:james.morales@usu.edu">james.morales@usu.edu</a>. Learn your student rights by visiting: <a href="http://www.usu.edu/studentservices/studentcode/" target="_blank"><u>http://www.usu.edu/studentservices/studentcode</u></a>. (1A; 2A; 3B)</p>
+                        </div>
+                    </div><!-- .description -->                                                            
+                </div><!-- .details -->  
+        </div><!-- .section2 -->
+
+        <div id="section3P" class="section3">
+            <h2>ACCOMMODATIONS</h2>
+                <div class="details">
+                    <div class="description">
+                        <div>
+                            <p>Students with ADA-documented physical, sensory, emotional or medical impairments may be eligible for reasonable academic accommodations. Veterans may also be eligible for services. All accommodations are coordinated through the Disability Resource Center (DRC) in Room 101 of the University Inn, (435)797-2444 voice, (435) 797-0740 TTY, (435) 797-2444 VP, or toll free at 1-800-259-2966. Please contact the DRC as early in the semester as possible. Alternate format materials (Braille, large print, digital, or audio) are available with advance notice. (2C; 3B)</p>
+                        </div>
+                    </div><!-- .description -->                                    
+                </div><!-- .details --> 
+        </div><!-- .section3 -->
+
+        <div id="section4P" class="section4">
+            <h2>ATTENDANCE</h2>
+                <div class="details">
+                    <div class="description">
+                        <div class="editableHtml">
+                            <p>Class sessions will start promptly, and students are expected to participate during the entire class period. Early departure, as well as anticipated absences, will only be excused in cases of extenuating circumstances. Please, as a courtesy to all, turn off all cell phones before coming to class. If you have a situation requiring an adjustment to this policy, please discuss this with the instructor. (1A; 2A)</p>
+                        </div>
+                    </div><!-- .description -->
+                </div><!-- .details --> 
+        </div><!-- .section4 -->
+
+        <div id="section5P" class="section5">
+            <h2>PARTICIPATION</h2>
+                <div class="details">
+                    <div class="description">
+                        <div class="editableHtml">
+                            <p>Frequently students will ask: "Do I have to attend the entire class?" The answer is simply yes. Much of your learning will occur as a result of your attendance and participation, and your grade is dependent upon it as well. Class participation includes asking appropriate questions and sharing comments with the class, bringing materials for in-class work, and attending the lectures. (1A; 2A; 3B)</p>
+                        </div>
+                    </div><!-- .description -->                                                       
+                </div><!-- .details --> 
+        </div><!-- .section5 -->
+
+        <div id="section6P" class="section6">
+            <h2>LATE WORK</h2>
+            <div id="headings6P" class="headings">
+                <div class="details">
+                    <div class="description">
+                        <div class="editableHtml">
+                            <p>Missed class activities may only be made up in extremely extenuating circumstances at the discretion of the instructor. Late assignments are only accepted under unusual circumstances and are reduced for each day late. (1A; 2A)</p>
+                        </div>
+                    </div><!-- .description -->
+                </div><!-- .details --> 
+            </div><!-- .headings6 -->     
+        </div><!-- .section6 -->
+       
+        <div id="section7P" class="section7">
+            <h2>COURSE EVALUATION</h2>
+            <div id="headings7P" class="headings">
+                <div class="details">
+                    <div class="description">
+                        <div class="editableHtml">
+                        <p>At the end of this course, you will complete a course evaluation. The Connections evaluation is slightly different than the evaluations you will complete in your other courses at USU.  In most of your courses, you will complete something called IDEA Student Ratings of Instruction (IDEA Evaluations).</p>
+
+                        <p>You will be expected to complete an evaluation for each of your classes, and in each class your instructors will explain how their selected IDEA “learning objectives” link to the course activities and objectives you are pursing. Towards the end of each semester, you will be able to complete your IDEA Evaluations online, at your convenience, by clicking on an evaluation link sent to you by email for each of your classes.</p>
+
+                        <p>Students sometimes wonder why the IDEA evaluations are a part of USU courses, and why it’s so important to complete them for each class.</p>
+<ul>
+<li>IDEA evaluation results are available to all students who participate in the process: <a href="http://www.usu.edu/aaa/evaluations_all.cfm">http://www.usu.edu/aaa/evaluations_all.cfm</a></li>
+<li>IDEA evaluations are used by faculty members to improve their courses. There are many examples where instructors have changed materials, changed course structure and delivery, or changed student instruction as a direct result of IDEA evaluation results.</li>
+<li>IDEA evaluations are used by departments and colleges to make strategic choices about course offerings and content.</li>
+<li>IDEA evaluations are used to inform decisions about faculty hiring, promotion and merit.</li>
+</ul>
+                        </div>
+                    </div>                                                                                             
+                </div>
+            </div>    
+        </div><!-- .section7 -->
+
+        <div id="section8P" class="section8 hide">
+            <h2 class="editable">POLICY 8</h2>
+            <div id="headings8P" class="headings">
+                <div class="details">
+                    <div class="description">
+                        <div class="editableHtml">Text
+                        </div>
+                    </div>                                                                                             
+                </div>
+            </div>    
+        </div><!-- .section8 -->
+
+        <div id="section9P" class="section9 hide">
+            <h2 class="editable">POLICY 9</h2>
+            <div id="headings9P" class="headings">
+                <div class="details">
+                    <div class="description">
+                        <div class="editableHtml">Text
+                        </div>
+                    </div>                                                                                             
+                </div>
+            </div>    
+        </div><!-- .section9 -->
+
+        <div id="section10P" class="section10 hide">
+            <h2 class="editable">POLICY 10</h2>
+            <div id="headings10P" class="headings">
+                <div class="details">
+                    <div class="description">
+                        <div class="editableHtml">Text
+                        </div>
+                    </div>                                                                                             
+                </div>
+            </div>    
+        </div><!-- .section10 -->
+      
+    </div><!-- .content -->
+</section><!-- #policies -->
+
+<section id="grades">
+    <div class="content">
+ <%#       <div id="section_break_P" class="section_break_P">
+            <div class="editableHtml page_break">
+                <div align="center">
+                    ----Please see next page for Grades information----
+                </div>
+            </div>
+        </div><!-- .section5--> %>
+
+        <div id="section1G" class="section1">
+           <h2>GRADING SCALE</h2>
+           <div>
+                    <p>Connections is a graded course worth two credits. The grading scale that is used by all of the classes is as follows:</p>
+           </div>
+            <div class="details">
+                <div class="description">
+                    <div>
+                        <table id="grade_components" class="components" border="1">
+                            <caption>Items</caption>
+                            <thead>
+                                <tr><th>Assignments</th><th>Points</th></tr>
+                            </thead>
+                            <tfoot>
+                                <tr class="total nodrag"><td>Total Points</td><td class="right">500</td></tr>
+                            </tfoot>
+                            <tbody>
+                                    <tr><td >Purpose of College</td><td class="right">75</td></tr>
+                                    <tr><td >Common Literature Experience</td><td class="right">25</td></tr>
+                                    <tr><td >College Writing Expectations</td><td class="right">25</td></tr>
+                                    <tr><td >Overcoming Challenges</td><td class="right">25</td></tr>
+                                    <tr><td ><div class="editable">Academic Strategies</div></td><td class="right">75</td></tr>
+                                    <tr><td >Academic and Career Planning</td><td class="right">25</td></tr>
+                                    <tr><td >Student Resources</td><td class="right">25</td></tr>
+                                    <tr><td >Connecting to Campus</td><td class="right">25</td></tr>
+                                    <tr><td >Time Management</td><td class="right">50</td></tr>
+                                    <tr><td >Course Evaluation</td><td class="right">25</td></tr>
+                                    <tr><td class="editable nodrag">Attendance and Participation</td><td class="editable right">125</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div><!-- .section1 -->
+        
+        <div id="section2G" class="section2 hide"> 
+            <div class="editableHtml">Detailed item information here.</div>
+        </div><!-- .section2--> 
+
+        <div id="section3G" class="section3">
+            <div>
+                <br>Your grade will be calculated with this scale:
+            </div>
+            <div class="details">
+                <div class="description">
+                    <div>
+                        <table id="grade_scale" class="components inactive" border="1">
+                                <caption>Scale</caption>
+                                <thead>
+                                    <tr><th>Grade</th><th>Percentage</th><th>Points</th></tr>
+                                </thead>
+                                <tbody class="center">
+                                    <tr>
+                                        <td>A</td>
+                                        <td>
+                                            <span class="minRange">93</span>
+                                            -
+                                            <span class="maxRange">100</span>
+                                        </td>
+                                        <td>-</td>
+                                    </tr>
+
+                                    <tr class="even">
+                                        <td>A-</td>
+                                        <td>
+                                            <span class="minRange">90</span>
+                                            -
+                                            <span class="maxRange">92</span>
+                                        </td>
+                                        <td>-</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>B+</td>
+                                        <td>
+                                            <span class="minRange">86</span>
+                                            -
+                                            <span class="maxRange">89</span>
+                                        </td>
+                                        <td>-</td>
+                                    </tr>
+
+                                    <tr class="even">
+                                        <td>B</td>
+                                        <td>
+                                            <span class="minRange">83</span>
+                                            -
+                                            <span class="maxRange">85</span>
+                                        </td>
+                                        <td>-</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>B-</td>
+                                        <td>
+                                            <span class="minRange">80</span>
+                                            -
+                                            <span class="maxRange">82</span>
+                                        </td>
+                                        <td>-</td>
+                                    </tr>
+
+                                    <tr class="even">
+                                        <td>C+</td>
+                                        <td>
+                                            <span class="minRange">76</span>
+                                            -
+                                            <span class="maxRange">79</span>
+                                        </td>
+                                        <td>-</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>C</td>
+                                        <td>
+                                            <span class="minRange">73</span>
+                                            -
+                                            <span class="maxRange">75</span>
+                                        </td>
+                                        <td>-</td>
+                                    </tr>
+
+                                    <tr class="even">
+                                        <td>C-</td>
+                                        <td>
+                                            <span class="minRange">70</span>
+                                            -
+                                            <span class="maxRange">72</span>
+                                        </td>
+                                        <td>-</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>D+</td>
+                                        <td>
+                                            <span class="minRange">66</span>
+                                            -
+                                            <span class="maxRange">69</span>
+                                        </td>
+                                        <td>-</td>
+                                    </tr>
+
+                                    <tr class="even">
+                                        <td>D</td>
+                                        <td>
+                                            <span class="minRange">63</span>
+                                            -
+                                            <span class="maxRange">65</span>
+                                        </td>
+                                        <td>-</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td>F</td>
+                                        <td>
+                                            <span class="minRange">0</span>
+                                            -
+                                            <span class="maxRange">62</span>
+                                        </td>
+                                        <td>-</td>
+                                    </tr>
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div><!-- .section3 -->
+    </div><!-- .content -->
+
+</section><!-- #grades --> 
+
+<!-- Google Analytics -->
+<script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-44858100-1', 'auto');
+  ga('send', 'pageview');
+
+</script>
+
