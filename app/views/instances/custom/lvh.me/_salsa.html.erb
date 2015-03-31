@@ -5,9 +5,11 @@
 <div id="spacer">&nbsp;</div>
 <!-- each tab is represented by a section with an ID that identifies it -->
 
+
 <section id="schedule">
     <div class="content">
         <h2><a href="<%= @view_url %>" target="_blank">Connections Schedule</a></h2>
+        <p style="text-align: right; margin: -40px 25px 30px 0px;"><a href="<%= @view_url %>" target="_blank">print calendars<i class="fi-print large" style="padding-left: 10px;"></i></a></p>
     </div>
 
     <div class="content dynamic-component">
@@ -27,6 +29,19 @@
             
             <div class="verticalSpacer"></div>
             <h2 class="editable">Follow-up Activities</h2>
+            <table id="followup" class="components" border="1" style="width: 696px; margin-left: 47px;">
+                <caption class="editable">August 25 - November 5, 2014</caption>
+                <thead>
+                    <tr> 
+                        <th style="width: 170px;"><div style="width: 170px;" class="editable">Day 1</div></th>
+                        <th style="width: 170px;"><div style="width: 170px;" class="editable">Day 2</div></th>
+                        <th style="width: 170px;"><div style="width: 170px;" class="editable">Day 3</div></th>
+                        <th style="width: 170px;"><div style="width: 170px;" class="editable">Day 4</div></th>
+                    </tr>
+                </thead>
+                <tbody>
+
+            </table>
             <div id="calendarFollowUpActivity">
                 <script id="calendarEventDataFollowUpActivity">
                     var documentEvents = [
@@ -36,56 +51,11 @@
                     ]
                 </script>
             </div>
-      
             
         </div><!-- #section1S-->
-
-        <div id="section2S" class="section2 hide"> 
-            <div class="editableHtml">Detailed Schedule information here.</div>
-        </div><!-- #section2S--> 
-
-
-        <!--<div id="section3S" class="section3">
-            <h2 class="editable">Follow-up Activities</h2>
-            <table id="followup" class="components" border="1">
-                <caption class="editable">August 25 - November 5, 2014</caption>
-                <thead>
-                    <tr><th>Date</th><th>Description</th></tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td header="col-left" class="col-left left"><div class="editableHtml">Date</div></td>
-                        <td header="col-right" class="col-right left"><div class="editableHtml">Text</div></td>
-                    </tr>
-                    <tr>
-                        <td header="col-left" class="col-left left"><div class="editableHtml">Date</div></td>
-                        <td header="col-right" class="col-right left"><div class="editableHtml">Text</div></td>
-                    </tr>
-                    <tr>
-                        <td header="col-left" class="col-left left"><div class="editableHtml">Date</div></td>
-                        <td header="col-right" class="col-right left"><div class="editableHtml">Text</div></td>
-                    </tr>
-                    <tr>
-                        <td header="col-left" class="col-left left"><div class="editableHtml">Date</div></td>
-                        <td header="col-right" class="col-right left"><div class="editableHtml">Text</div></td>
-                    </tr>
-                    <tr>
-                        <td header="col-left" class="col-left left"><div class="editableHtml">Wed 11/5, 11:30 am</div></td>
-                        <td header="col-right" class="col-right left">
-                            <div class="editableHtml">ESLC 130<br>
-                                <ul>
-                                    <li>Registration Reminders</li>
-                                    <li>Mid-Semester Info</li>
-                                </ul>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>--><!-- #section2S-->
-        <div class="page_break divspace">&nbsp;</div>
     </div><!-- .content -->
 </section><!-- #schedule -->
+
 
 
 <section id="information">
@@ -238,7 +208,7 @@
                                 <tbody >
                                     <tr>
                                         <th class="colTopicsRight"><div class="editable">Purpose of College</div></th>
-                                        <td class="time"><div class="editable minutes" id="purpose_required_time">30 minutes</div></td>
+                                        <td class="time"><div class="editable minutes" id="purpose_required_time">minutes</div></td>
                                         <td class="required"><span class="fi-star large" aria-label="required"></span></td>
                                         <td class="required"><span class="fi-star large" aria-label="required"></span></td>
                                         <td class="required"><span class="fi-star large" aria-label="required"></span></td>
@@ -251,7 +221,7 @@
                                     </tr>
                                     <tr>
                                         <th class="colTopicsRight"><div class="editable">Literature Experience</div></th>
-                                        <td class="time"><div class="editable minutes" id="literature_required_time">30 minutes</div></td>
+                                        <td class="time"><div class="editable minutes" id="literature_required_time">minutes</div></td>
                                         <td class="colObjective1"></td>
                                         <td class="colObjective1"></td>
                                         <td class="colObjective1"></td>
@@ -264,7 +234,7 @@
                                     </tr>
                                     <tr>
                                         <th class="colTopicsRight"><div class="editable">College Writing Expectations</div></th>
-                                        <td class="time"><div class="editable minutes" id="writing_required_time">30 minutes</div></td>
+                                        <td class="time"><div class="editable minutes" id="writing_required_time">minutes</div></td>
                                         <td class="required"><span class="fi-star large" aria-label="required"></span></td>
                                         <td class="colObjective1"></td>
                                         <td class="colObjective1"></td>
@@ -277,7 +247,7 @@
                                     </tr>
                                     <tr>
                                         <th class="colTopicsRight"><div class="editable">Overcoming Challenges</div></th>
-                                        <td class="time"><div class="editable minutes" id="overcoming_required_time">30 minutes</div></td>
+                                        <td class="time"><div class="editable minutes" id="overcoming_required_time">minutes</div></td>
                                         <td class="colObjective1"></td>
                                         <td class="colObjective1"></td>
                                         <td class="colObjective1"></td>
@@ -290,7 +260,7 @@
                                     </tr>
                                     <tr>
                                         <th class="colTopicsRight"><div class="editable">Academic Strategies</div></th>
-                                        <td class="time"><div class="editable minutes" id="strategies_required_time">30 minutes</div></td>
+                                        <td class="time"><div class="editable minutes" id="strategies_required_time">minutes</div></td>
                                         <td class="colObjective1"></td>
                                         <td class="colObjective1"></td>
                                         <td class="colObjective1"></td>
@@ -303,7 +273,7 @@
                                     </tr>
                                     <tr> 
                                         <th class="colTopicsRight"><div class="editable">Academic Planning</div></th>
-                                        <td class="time"><div class="editable minutes" id="planning_required_time">30 minutes</div></td>
+                                        <td class="time"><div class="editable minutes" id="planning_required_time">minutes</div></td>
                                         <td class="required"><span class="fi-star large" aria-label="required"></span></td>
                                         <td class="required"><span class="fi-star large" aria-label="required"></span></td>
                                         <td class="required"><span class="fi-star large" aria-label="required"></span></td>
@@ -316,7 +286,7 @@
                                     </tr>
                                     <tr>
                                         <th class="colTopicsRight"><div class="editable">Student Resources</div></th>
-                                        <td class="time"><div class="editable minutes" id="resources_required_time">30 minutes</div></td>
+                                        <td class="time"><div class="editable minutes" id="resources_required_time">minutes</div></td>
                                         <td class="colObjective1"></td>
                                         <td class="colObjective1"></td>
                                         <td class="colObjective1"></td>
@@ -329,7 +299,7 @@
                                     </tr>
                                     <tr>
                                         <th class="colTopicsRight"><div class="editable">Campus Technology</div></th>
-                                        <td class="time"><div class="editable minutes">30 minutes</div></td>
+                                        <td class="time"><div class="editable minutes">minutes</div></td>
                                         <td class="colObjective1"></td>
                                         <td class="colObjective1"></td>
                                         <td class="colObjective1"></td>
@@ -342,7 +312,7 @@
                                     </tr>
                                     <tr>
                                         <th class="colTopicsRight"><div class="editable">Using the Library</div></th>
-                                        <td class="time"><div class="editable minutes">30 minutes</div></td>
+                                        <td class="time"><div class="editable minutes">minutes</div></td>
                                         <td class="colObjective1"></td>
                                         <td class="colObjective1"></td>
                                         <td class="colObjective1"></td>
@@ -355,7 +325,7 @@
                                     </tr>
                                     <tr>
                                         <th class="colTopicsRight"><div class="editable"> Connecting to Campus</div></th>
-                                        <td class="time"><div class="editable minutes" id="connecting_required_time">30 minutes</div></td>
+                                        <td class="time"><div class="editable minutes" id="connecting_required_time">minutes</div></td>
                                         <td class="colObjective1"></td>
                                         <td class="colObjective1"></td>
                                         <td class="colObjective1"></td>
@@ -368,7 +338,7 @@
                                     </tr>
                                     <tr>
                                         <th class="colTopicsRight"><div class="editable">Building a Learning Community</div></th>
-                                        <td class="time"><div class="editable minutes" id="community_required_time">30 minutes</div></td>
+                                        <td class="time"><div class="editable minutes" id="community_required_time">minutes</div></td>
                                         <td class="required"><span class="fi-star large" aria-label="required"></span></td>
                                         <td class="colObjective1"></td>
                                         <td class="colObjective1"></td>
@@ -381,7 +351,7 @@
                                     </tr>
                                     <tr>
                                         <th class="colTopicsRight"><div class="editable">Bystander Intervention</div></th>
-                                        <td class="time"><div class="editable minutes" id="bystander_required_time">30 minutes</div></td>
+                                        <td class="time"><div class="editable minutes" id="bystander_required_time">minutes</div></td>
                                         <td class="required"><span class="fi-star large" aria-label="required"></span></td>
                                         <td class="colObjective1"></td>
                                         <td class="colObjective1"></td>
@@ -394,7 +364,7 @@
                                     </tr>
                                     <tr>
                                         <th class="colTopicsRight"><div class="editable">Time Management</div></th>
-                                        <td class="time"><div class="editable minutes" id="time_required_time">30 minutes</div></td>
+                                        <td class="time"><div class="editable minutes" id="time_required_time">minutes</div></td>
                                         <td class="colObjective1"></td>
                                         <td class="colObjective1"></td>
                                         <td class="colObjective1"></td>

@@ -20,8 +20,14 @@ section #calendar div { padding: 0; margin: 0; }
 section #calendar div.fc-event-time, section #calendar div.fc-event-title { padding: 1px 4px; z-index: 999999;
  }
  
- div div#calendarFollowUpActivity { max-width: 760px; margin-left: 0;}
- section #calendarFollowUpActivity div { padding: 0; margin: 0; }
+/** Hide the FullCalendar table header **/
+div div#calendarFollowUpActivity table thead { display: none;}
+/** Hide the FullCalendar tools header **/
+div div#calendarFollowUpActivity .fc-toolbar { display: none;}
+div div#calendarFollowUpActivity { max-width: 760px; margin-left: 0;}
+#calendarFollowUpActivity .event-room { float: right; margin-right: 3px;}
+#calendarFollowUpActivity .event-notes { font-size: .8em;}
+section #calendarFollowUpActivity div { padding: 0; margin: 0; }
 section #calendarFollowUpActivity div.fc-event-time, section #calendar div.fc-event-title { padding: 1px 4px; z-index: 999999;
  }
  
@@ -34,6 +40,7 @@ section #calendarFollowUpActivity div.fc-event-time, section #calendar div.fc-ev
 #calendar .supplemental.workshops, #controlPanel .supplemental .workshops ~ dd.scheduled { background-color: #CCFF66; color: #000; }
 #calendar .supplemental.service, #controlPanel .supplemental .service ~ dd.scheduled { background-color: #CC66FF; color: #000; }
 #calendar .event-room { float: right; margin-right: 3px;}
+#calendar .event-notes {font-size: .8em; }
 #calendar .fc-event.pending:before { content: 'reservation required'; text-transform: uppercase; position: absolute; background: #FF851B; color: #fff; padding: 0px 0px; bottom: 0; right: 0; left: 0;text-align: center; font-size: .6em; letter-spacing: 3px; }
 #calendar .fc-event.pending { }
 .calendar { background-image: url('https://raw.githubusercontent.com/idbygeorge/salsa/master/public/img/schedule.png') no-repeat fixed center; }
@@ -277,6 +284,8 @@ if(typeof(documentEvents) == 'undefined') {
 
 (function($){
   $(function(){
+  	
+    
     if(!$('#controlPanel').length) {
       $('body').on('click', '.fc-event', function() {
         return false;
@@ -304,7 +313,7 @@ if(typeof(documentEvents) == 'undefined') {
           var roomElement = $('<div/>').addClass('event-room').text(calEvent.room);
 
           element.removeAttr('href')
-          $('.fc-event-time', element).before(roomElement);
+          $('.fc-time', element).append(roomElement);
         }
       });
       

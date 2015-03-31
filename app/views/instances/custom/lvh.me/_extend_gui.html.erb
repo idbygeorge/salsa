@@ -13,6 +13,7 @@ nav { max-width: 1119px; }
 
 $(document).ready(function() {
     newTopicArrayCollection = new Array();
+    
     $('#controlPanel .admin a[href="#resetDocument"]').on('click', function() {
       //alert("controlPanel .admin a[href=");
       $('#page-data').html('');
@@ -23,6 +24,377 @@ $(document).ready(function() {
     });
 
     var user = $('body').data('lmsLoginId');
+    var calendarrenderEventImplementation = function(calEvent, element){
+    	var roomElement = $('<div/>').addClass('event-room').text(calEvent.room);
+        var notesElement = $('<div/>').addClass('event-notes').text(calEvent.notes);
+        if(!element.is('.scheduling')) {
+          $('.fc-time', element).append(roomElement);
+          $('.fc-content', element).append(notesElement);
+          
+        }
+    }
+    var calendarClickEventImplementation = function(calEvent, jsEvent, view, calendarObj, obj, type){
+    	
+    	if(calEvent.source.url && calEvent.url) {
+          //return;
+        }
+        if(calEvent.source.url && calEvent.title.search(/^available$/i) < 0) {
+          return false;
+        }
+
+        // not logged in
+        if($(jsEvent.currentTarget).is('.admin') && $('#controlPanel .schedule .admin').is(':hidden')) {
+          //alert("retun 2");
+          return false;
+        }
+
+        var eventTitle = calEvent.title;
+        
+        calEvent.location;
+        calEvent.description;
+
+        var what = $('#controlPanel .scheduling').text();
+
+        if(!what) {
+          what = calEvent.title;
+        }
+
+        var eventTime = calEvent.start;
+        var eventEnd = calEvent.end;
+
+        if (!eventEnd) {
+          eventEnd = eventTime.add('m', 30);
+        }
+
+        var course_id = '';
+
+        var courseData = $('#editor_view').data('lmsCourse');
+
+        if(courseData) {
+          course_id = courseData.id;
+        }
+
+        //var notes = '(notes)';
+
+        var formURL = 'https://docs.google.com/forms/d/1oaWmw2meVp-XceqNokNgNKOZe1F2TYXSKVpLVd3P04c/viewform';
+        var extra_buttonSet = "";
+
+        //extra_buttonSet = '<div class="extra_button_text">I am sure I want this time slot</div>';
+//alert("reservation");
+        var reservationForm = $('<form id="activity_schedule_request" action="' + formURL + '" target="_blank">' +
+          '<input type="hidden" name="entry.678085083" value="' + what +'">' +
+          '<input type="hidden" name="entry.6740286" value="' + instructor_name +'">' +
+          '<input type="hidden" name="entry.1019320750" value="' + course_id + '">' +
+          '<input type="hidden" name="entry.510281424" value="' + eventTime.format('YYYY-MM-DD+HH:mm') + '">' +
+          '<input type="hidden" name="entry.1973077123" value="' + eventEnd.format('YYYY-MM-DD+HH:mm') + '">' +
+          '<input type="hidden" name="entry.1746162059" value="' + calEvent.id + '">' +
+          '<button type="submit" class="reserve" name="entry.971761259" value="Reserve">Reserve</button>' +
+          what + '</strong><br>' + eventTime.format('MMMM Do, YYYY[<br>]h:mm') + '-' + eventEnd.format('h:mma') + '</p>' +
+          '<label>Room: <input type="text" id="event_scheduled_room" name="entry.639022760" value="' + (calEvent.room || '') + '"></label></br>' +
+          extra_buttonSet +
+        '</form>');
+//alert("go");
+        //alert(reservationForm);
+        if($(jsEvent.target).hasClass('remove')) {
+          //alert("remove");
+          if(!calEvent.id) {
+            //alert("remove this please");
+            calEvent.id = 'remove this please';
+          }
+
+          //------------------
+          //remove New Topic From Calendar as well as from Metrics Table 
+	      //------------------
+	      //alert(calEvent.namespace)
+	      if(calEvent.className == "required" && calEvent.namespace != "New Required")
+    	  {
+	    	  //alert("if");
+	    	  $("#"+calEvent.id).show();
+	    	  $("#"+calEvent.id+"_time").html("minutes");
+	    	  calendarObj.fullCalendar('removeEvents', calEvent.id);
+	      }
+	      else
+	      {
+	      	  //alert("else")
+	      	  for(var newTopicCount = 0 ; newTopicCount < newTopicArrayCollection.length ; newTopicCount++)
+		      {
+		      	  //alert(newTopicArrayCollection[newTopicCount][0] +" : "+ calEvent.newTopicId);
+		      	  if(newTopicArrayCollection[newTopicCount][0] == calEvent.id)
+		      	  {
+		      	  		
+		      	  		calendarObj.fullCalendar('removeEvents', calEvent.id);
+		      	  		$("#"+newTopicArrayCollection[newTopicCount][1]).remove();
+		      	  		newTopicArrayCollection.splice(newTopicCount, 1);
+		      	  		break;
+		      	  }
+		      }
+	      }
+	      
+
+          var actionInputName = $('button', reservationForm).remove().attr('name');
+          reservationForm.append($('<input>').attr({ name: actionInputName }).val('Cancel'));
+
+          var formData = reservationForm.serialize();
+          var docURL = formURL.replace(/\/viewform$/, '/formResponse');
+          //console.log(calEvent);
+          
+	      
+
+          /*
+          $('body').append($('<iframe/>').attr('name', 'ajaxSimulator'));
+          reservationForm.attr({ method: 'POST', target: 'ajaxSimulator', action: docURL }).appendTo('body');
+          reservationForm.trigger('submit');
+          */
+//alert("docURL : "+docURL);
+
+          $.ajax({
+            url: docURL,
+            type: 'post',
+            data: formData,
+            success: function(data){alert("success12");/* doesn't ever get here, jsonp is not xml*/},
+            error: function(){/* always gets here with a parse error, jsonp is not xml*/},
+            dataType: "jsonp" // hack to get around same origin policy header being set on google's servers
+          });
+
+          $('#tb_save').trigger('click');
+		  //alert("tb_save");
+          syncControlPanel();
+//alert("return false;")
+          return false;
+        }
+
+        if($(jsEvent.currentTarget).is('.pending') || eventTitle.search(/^\s*available\s*$/gi) == 0) {
+
+
+          var handleRegistration = function(e, data) {
+            var dialogElement = $('.schedule_dialog');
+            //alert("dialogElement.dialog_close");
+            dialogElement.dialog('close');
+
+            var classNames = calEvent.source.className || [];
+
+            calEvent.room = $('#event_scheduled_room', obj).val();
+            
+            classNames.push('scheduled');
+
+            // remove scheduling
+            classNames = $.grep(classNames, function(value){
+              return value != 'scheduling';
+            });
+
+            if(type == "calendar")
+            {
+            	calendarObj.fullCalendar('renderEvent', {title: what, start: eventTime.format('YYYY-MM-DD[T]HH:mm:00.000[Z]'), end: eventEnd.format('YYYY-MM-DD[T]HH:mm:00.000[Z]'),className: classNames, id: calEvent.id, editable:false, calendar: calEvent.source.url, room: calEvent.room }, true);
+            }
+            else
+            {
+            	calendarObj.fullCalendar('renderEvent', {title: what, start: eventTime.format('YYYY-MM-DD[T]HH:mm:00.000[Z]'), end: eventEnd.format('YYYY-MM-DD[T]HH:mm:00.000[Z]'),className: classNames, id: calEvent.id, editable:false, calendarFollowUpActivity: calEvent.source.url, room: calEvent.room }, true);
+            }
+            
+
+            $('#controlPanel .scheduling').addClass('scheduled').trigger('click');
+
+            var actionInputName = $('button', reservationForm).remove().attr('name');
+            reservationForm.append($('<input>').attr({ name: actionInputName }).val('Reserve'));
+
+            var formData = reservationForm.serialize();
+            var docURL = formURL.replace(/\/viewform$/, '/formResponse');
+
+            $.ajax({
+              url: docURL,
+              type: 'post',
+              data: formData,
+              success: function(data){alert("success123");/* doesn't ever get here, jsonp is not xml*/},
+              error: function(){alert("error123");/* always gets here with a parse error, jsonp is not xml*/},
+              dataType: "jsonp" // hack to get around same origin policy header being set on google's servers
+            });
+//alert("go2");
+            $('#tb_save').trigger('click');
+
+            e.stopPropagation();
+
+            return false;
+          };
+
+
+          var dialogContent = $('<div>').addClass('schedule_dialog').html('').append(reservationForm).dialog({
+            modal: true,
+            width: 350,
+            title: 'Reserve this time slot',
+            close: function() {
+            	//alert("close");
+              $(this).dialog('destroy');
+            }
+          });
+
+          reservationForm.on('submit', handleRegistration);
+
+          if($(jsEvent.currentTarget).is('.pending')) {
+          	//alert("visibility hidden");
+            $(dialogContent).closest('.ui-dialog').find('.ui-dialog-buttonset button').css({ 'visibility': 'hidden'});
+          }
+        } else if(!$(jsEvent.currentTarget).is('.scheduled')){
+          var eventTitleElement = '<strong>' + eventTitle + '</strong>';
+
+          if(calEvent.notes == undefined)
+          {
+          	calEvent.notes = "";
+          }
+          if($(jsEvent.currentTarget).is('.user,.admin,.global-events') || calEvent.title == "New Required") {
+            //alert("title");
+            eventTitleElement = '<label>Title: <input type="text" name="title" value="' + calEvent.title + '"></br></br><label>Notes: <input name="notes" value="' + calEvent.notes + '"></label>';
+          }
+          else
+          {
+          	eventTitleElement = '<label>Notes: <input name="notes" value="' + calEvent.notes + '"></label>';
+          }
+		
+          $('<div>').html(eventTitleElement + '<br>' + eventTime.format('MMMM Do, YYYY[<br>]h:mm') + '-' + eventEnd.format('h:mma') + '<br><br><label>Room: <input name="location" value="' + (calEvent.room || connections_classroom) + '"></label><br><br><small>Specify the room that you will be using for this activity.</small>').dialog({
+            modal: true,
+            width: 550,
+            title: 'Schedule activity',
+            buttons: {
+              'Save': function() {
+                  calEvent.room = $('[name=location]', this).val();
+                  calEvent.notes = $('[name=notes]', this).val();
+				  if ($('[name=title]', this).val()) {
+                  	
+	                  //alert(calEvent.className +" : "+ calEvent.title)
+	                  if((calEvent.className == "user") || (calEvent.className == "global-events"))
+			    	  {
+				    	  //alert("if");
+				    	  calEvent.title = $('[name=title]', this).val();
+				      }
+				      else if(calEvent.className == "required" && calEvent.title == "New Required")
+				      {
+				      	  //alert("else");
+				      	  calEvent.title = $('[name=title]', this).val();
+				    	  for(var newTopicCount = 0 ; newTopicCount < newTopicArrayCollection.length ; newTopicCount++)
+					      {
+					      	  //alert(newTopicArrayCollection[newTopicCount][0] +" == "+ calEvent.id)
+					      	  if(newTopicArrayCollection[newTopicCount][0] == calEvent.id)
+					      	  {
+					      	  		$("#newTopicName"+calEvent.id).html(calEvent.title);
+					      	  		break;
+					      	  }
+					      }
+				      }
+				      
+				      
+				  } 
+                calendarObj.fullCalendar('updateEvent', calEvent);
+                //alert("dialog close111;");
+                $(this).dialog('close');
+              }
+            }
+          });
+        }
+
+        $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-state-default").focus();
+//alert(".ui-dialog-titlebar-close");
+        jsEvent.stopPropagation();
+        return false;
+    	
+    }
+    var calendarDropEventImplementation = function(obj, date, calendarObj){
+    	var eventData = $(obj).data('calendar');
+        
+        var originalEventObject = $(obj).data('eventObject');
+        console.log(originalEventObject);
+        var subType = $(obj).prevAll('dt:last').attr('class');
+
+        originalEventObject['className'] = $(obj).closest('div').attr('class');
+
+        if (subType) {
+          originalEventObject['className'] += " " + subType;
+        }
+
+        if(eventData && eventData.url) {
+          //$('#calendar').fullCalendar('removeEventSource', eventData.url);
+          originalEventObject['editable'] = false;
+        }
+        
+        // we need to copy it, so that multiple events don't have a reference to the same object
+        var copiedEventObject = $.extend({}, originalEventObject);
+        
+        //alert(copiedEventObject.title+" : "+copiedEventObject.start+" : "+copiedEventObject.start)
+        //console.log(copiedEventObject);
+        if (!copiedEventObject.id) {
+            if(eventData && eventData.id) {
+              copiedEventObject.id = eventData.id;
+            } else {
+              // uniqueify the event ID: http://stackoverflow.com/a/2117523
+              copiedEventObject.id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&0x3|0x8;return v.toString(16);});
+            }
+        }
+        //alert(copiedEventObject.id)
+        // assign it the date that was reported
+        copiedEventObject.start = date;
+        //alert(copiedEventObject.start);
+        copiedEventObject.end = moment(date).add(30, 'm');
+        //alert(copiedEventObject.end);
+        copiedEventObject.room = copiedEventObject.room || connections_classroom;
+        
+        //Add New required Topic to metrics field
+        copiedEventObject.namespace = "";
+        if(copiedEventObject.title == "New Required")
+        {
+        	var currentTimeStamp = new Date().getTime();
+        	var newTopicId = "newTopic"+currentTimeStamp;
+        	var newTopicName = "newTopicName"+currentTimeStamp;
+        	var newTopicTime = "newTopicTime"+currentTimeStamp;
+        	copiedEventObject.id = currentTimeStamp;
+        	copiedEventObject.namespace = "New Required";
+        	var newTopic="<tr id='"+newTopicId+"'>";
+	        newTopic += "<th class='colTopicsRight'><div class='editable' id='"+newTopicName+"'>New Required</div></th>";
+			newTopic += "<td class='time'><span class='editable minutes' id='"+newTopicTime+"'>30 minutes</span></td>";
+			newTopic += "<td class='colObjective1'></td>";
+			newTopic += "<td class='colObjective1'></td>";
+			newTopic += "<td class='colObjective1'></td>";
+			newTopic += "<td class='colObjective1'></td>";
+			newTopic += "<td class='colObjective1'></td>";
+			newTopic += "<td class='colObjective1'></td>";
+			newTopic += "<td class='colObjective1'></td>";
+			newTopic += "<td class='colObjective1'></td>";
+			newTopic += "<td class='colObjective1'></td>";
+	        newTopic += "</tr>";
+	        $("#topics").append(newTopic);
+	        var newTopicArray = new Array();
+	        newTopicArray.push(currentTimeStamp);
+	        newTopicArray.push(newTopicId);
+	        
+	        newTopicArrayCollection.push(newTopicArray);
+        }
+        else if(copiedEventObject.className == "required")
+    	{
+    		$("#"+copiedEventObject.id).hide();
+    		
+    	}
+        
+        //console.log(copiedEventObject);
+        
+        
+        //console.log(copiedEventObject);
+        //alert("drop1");
+        //alert(copiedEventObject.room);
+        // render the event on the calendar
+        // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
+        calendarObj.fullCalendar('renderEvent', copiedEventObject, true);
+        
+        
+		
+        // is the "remove after drop" checkbox checked?
+        //alert("drop3");
+        //alert($('#drop-remove').is(':checked'));
+        //alert("drop4");
+        if ($('#drop-remove').is(':checked')) {
+          // if so, remove the element from the "Draggable Events" list
+          //alert("remove");
+          $(obj).remove();
+        }
+
+        syncControlPanel();
+    }
     var updateTimeSlot = function(calEvent){
     	//alert("update");
     	var newFormattedStartDate = moment(calEvent.start).subtract(330, 'm');
@@ -316,261 +688,9 @@ $(document).ready(function() {
 
       eventClick: function(calEvent, jsEvent, view) {
         
-		console.log(calEvent);
-		//alert("eventClick:");
-        if(calEvent.source.url && calEvent.url) {
-          //return;
-        }
-        if(calEvent.source.url && calEvent.title.search(/^available$/i) < 0) {
-          return false;
-        }
-
-        // not logged in
-        if($(jsEvent.currentTarget).is('.admin') && $('#controlPanel .schedule .admin').is(':hidden')) {
-          //alert("retun 2");
-          return false;
-        }
-
-        var eventTitle = calEvent.title;
-        
-        calEvent.location;
-        calEvent.description;
-
-        var what = $('#controlPanel .scheduling').text();
-
-        if(!what) {
-          what = calEvent.title;
-        }
-
-        var eventTime = calEvent.start;
-        var eventEnd = calEvent.end;
-
-        if (!eventEnd) {
-          eventEnd = eventTime.add('m', 30);
-        }
-
-        var course_id = '';
-
-        var courseData = $('#editor_view').data('lmsCourse');
-
-        if(courseData) {
-          course_id = courseData.id;
-        }
-
-        //var notes = '(notes)';
-
-        var formURL = 'https://docs.google.com/forms/d/1oaWmw2meVp-XceqNokNgNKOZe1F2TYXSKVpLVd3P04c/viewform';
-        var extra_buttonSet = "";
-
-        //extra_buttonSet = '<div class="extra_button_text">I am sure I want this time slot</div>';
-//alert("reservation");
-        var reservationForm = $('<form id="activity_schedule_request" action="' + formURL + '" target="_blank">' +
-          '<input type="hidden" name="entry.678085083" value="' + what +'">' +
-          '<input type="hidden" name="entry.6740286" value="' + instructor_name +'">' +
-          '<input type="hidden" name="entry.1019320750" value="' + course_id + '">' +
-          '<input type="hidden" name="entry.510281424" value="' + eventTime.format('YYYY-MM-DD+HH:mm') + '">' +
-          '<input type="hidden" name="entry.1973077123" value="' + eventEnd.format('YYYY-MM-DD+HH:mm') + '">' +
-          '<input type="hidden" name="entry.1746162059" value="' + calEvent.id + '">' +
-          '<button type="submit" class="reserve" name="entry.971761259" value="Reserve">Reserve</button>' +
-          what + '</strong><br>' + eventTime.format('MMMM Do, YYYY[<br>]h:mm') + '-' + eventEnd.format('h:mma') + '</p>' +
-          '<label>Room: <input type="text" id="event_scheduled_room" name="entry.639022760" value="' + (calEvent.room || '') + '"></label></br>' +
-          extra_buttonSet +
-        '</form>');
-//alert("go");
-        //alert(reservationForm);
-        if($(jsEvent.target).hasClass('remove')) {
-          //alert("remove");
-          if(!calEvent.id) {
-            //alert("remove this please");
-            calEvent.id = 'remove this please';
-          }
-
-          //------------------
-          //remove New Topic From Calendar as well as from Metrics Table 
-	      //------------------
-	      //alert(calEvent.namespace)
-	      if(calEvent.className == "required" && calEvent.namespace != "New Required")
-    	  {
-	    	  //alert("if");
-	    	  $("#"+calEvent.id).show();
-	    	  $("#"+calEvent.id+"_time").html("30 minutes");
-	    	  calendar.fullCalendar('removeEvents', calEvent.id);
-	      }
-	      else
-	      {
-	      	  //alert("else")
-	      	  for(var newTopicCount = 0 ; newTopicCount < newTopicArrayCollection.length ; newTopicCount++)
-		      {
-		      	  //alert(newTopicArrayCollection[newTopicCount][0] +" : "+ calEvent.newTopicId);
-		      	  if(newTopicArrayCollection[newTopicCount][0] == calEvent.id)
-		      	  {
-		      	  		
-		      	  		calendar.fullCalendar('removeEvents', calEvent.id);
-		      	  		$("#"+newTopicArrayCollection[newTopicCount][1]).remove();
-		      	  		newTopicArrayCollection.splice(newTopicCount, 1);
-		      	  		break;
-		      	  }
-		      }
-	      }
-	      
-
-          var actionInputName = $('button', reservationForm).remove().attr('name');
-          reservationForm.append($('<input>').attr({ name: actionInputName }).val('Cancel'));
-
-          var formData = reservationForm.serialize();
-          var docURL = formURL.replace(/\/viewform$/, '/formResponse');
-          //console.log(calEvent);
-          
-	      
-
-          /*
-          $('body').append($('<iframe/>').attr('name', 'ajaxSimulator'));
-          reservationForm.attr({ method: 'POST', target: 'ajaxSimulator', action: docURL }).appendTo('body');
-          reservationForm.trigger('submit');
-          */
-//alert("docURL : "+docURL);
-
-          $.ajax({
-            url: docURL,
-            type: 'post',
-            data: formData,
-            success: function(data){alert("success12");/* doesn't ever get here, jsonp is not xml*/},
-            error: function(){/* always gets here with a parse error, jsonp is not xml*/},
-            dataType: "jsonp" // hack to get around same origin policy header being set on google's servers
-          });
-
-          $('#tb_save').trigger('click');
-		  //alert("tb_save");
-          syncControlPanel();
-//alert("return false;")
-          return false;
-        }
-
-        if($(jsEvent.currentTarget).is('.pending') || eventTitle.search(/^\s*available\s*$/gi) == 0) {
-
-
-          var handleRegistration = function(e, data) {
-            var dialogElement = $('.schedule_dialog');
-            //alert("dialogElement.dialog_close");
-            dialogElement.dialog('close');
-
-            var classNames = calEvent.source.className || [];
-
-            calEvent.room = $('#event_scheduled_room', this).val();
-            
-            classNames.push('scheduled');
-
-            // remove scheduling
-            classNames = $.grep(classNames, function(value){
-              return value != 'scheduling';
-            });
-
-            calendar.fullCalendar('renderEvent', {title: what, start: eventTime.format('YYYY-MM-DD[T]HH:mm:00.000[Z]'), end: eventEnd.format('YYYY-MM-DD[T]HH:mm:00.000[Z]'),className: classNames, id: calEvent.id, editable:false, calendar: calEvent.source.url, room: calEvent.room }, true);
-
-            $('#controlPanel .scheduling').addClass('scheduled').trigger('click');
-
-            var actionInputName = $('button', reservationForm).remove().attr('name');
-            reservationForm.append($('<input>').attr({ name: actionInputName }).val('Reserve'));
-
-            var formData = reservationForm.serialize();
-            var docURL = formURL.replace(/\/viewform$/, '/formResponse');
-
-            $.ajax({
-              url: docURL,
-              type: 'post',
-              data: formData,
-              success: function(data){alert("success123");/* doesn't ever get here, jsonp is not xml*/},
-              error: function(){alert("error123");/* always gets here with a parse error, jsonp is not xml*/},
-              dataType: "jsonp" // hack to get around same origin policy header being set on google's servers
-            });
-//alert("go2");
-            $('#tb_save').trigger('click');
-
-            e.stopPropagation();
-
-            return false;
-          };
-
-
-          var dialogContent = $('<div>').addClass('schedule_dialog').html('').append(reservationForm).dialog({
-            modal: true,
-            width: 350,
-            title: 'Reserve this time slot',
-            close: function() {
-            	//alert("close");
-              $(this).dialog('destroy');
-            }
-          });
-
-          reservationForm.on('submit', handleRegistration);
-
-          if($(jsEvent.currentTarget).is('.pending')) {
-          	//alert("visibility hidden");
-            $(dialogContent).closest('.ui-dialog').find('.ui-dialog-buttonset button').css({ 'visibility': 'hidden'});
-          }
-        } else if(!$(jsEvent.currentTarget).is('.scheduled')){
-          var eventTitleElement = '<strong>' + eventTitle + '</strong>';
-
-          if(calEvent.notes == undefined)
-          {
-          	calEvent.notes = "";
-          }
-          if($(jsEvent.currentTarget).is('.user,.admin,.global-events') || calEvent.title == "New Required") {
-            //alert("title");
-            eventTitleElement = '<label>Title: <input type="text" name="title" value="' + calEvent.title + '"></br></br><label>Notes: <input name="notes" value="' + calEvent.notes + '"></label>';
-          }
-          else
-          {
-          	eventTitleElement = '<label>Notes: <input name="notes" value="' + calEvent.notes + '"></label>';
-          }
+		calendarClickEventImplementation(calEvent, jsEvent, view, calendar, this, "calendar");
 		
-          $('<div>').html(eventTitleElement + '<br>' + eventTime.format('MMMM Do, YYYY[<br>]h:mm') + '-' + eventEnd.format('h:mma') + '<br><br><label>Room: <input name="location" value="' + (calEvent.room || connections_classroom) + '"></label><br><br><small>Specify the room that you will be using for this activity.</small>').dialog({
-            modal: true,
-            width: 550,
-            title: 'Schedule activity',
-            buttons: {
-              'Save': function() {
-                  calEvent.room = $('[name=location]', this).val();
-                  calEvent.notes = $('[name=notes]', this).val();
-				  //alert(calEvent.room)
-				  //alert(calEvent.className);
-				  if ($('[name=title]', this).val()) {
-                  	
-	                  //alert(calEvent.className +" : "+ calEvent.title)
-	                  if((calEvent.className == "user") || (calEvent.className == "global-events"))
-			    	  {
-				    	  //alert("if");
-				    	  calEvent.title = $('[name=title]', this).val();
-				      }
-				      else if(calEvent.className == "required" && calEvent.title == "New Required")
-				      {
-				      	  //alert("else");
-				      	  calEvent.title = $('[name=title]', this).val();
-				    	  for(var newTopicCount = 0 ; newTopicCount < newTopicArrayCollection.length ; newTopicCount++)
-					      {
-					      	  //alert(newTopicArrayCollection[newTopicCount][0] +" == "+ calEvent.id)
-					      	  if(newTopicArrayCollection[newTopicCount][0] == calEvent.id)
-					      	  {
-					      	  		$("#newTopicName"+calEvent.id).html(calEvent.title);
-					      	  		break;
-					      	  }
-					      }
-				      }
-				      
-				      
-				  } 
-                calendar.fullCalendar('updateEvent', calEvent);
-                //alert("dialog close111;");
-                $(this).dialog('close');
-              }
-            }
-          });
-        }
-
-        $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-state-default").focus();
-//alert(".ui-dialog-titlebar-close");
-        jsEvent.stopPropagation();
-        return false;
+        
       },
 
       defaultDate: '2014-08-20',
@@ -599,110 +719,12 @@ $(document).ready(function() {
       drop: function(date) { // this function is called when something is dropped
         // retrieve the dropped element's stored Event Object
         //alert("drop");
-       
-        var eventData = $(this).data('calendar');
+        calendarDropEventImplementation(this, date, calendar);
         
-        var originalEventObject = $(this).data('eventObject');
-        var subType = $(this).prevAll('dt:last').attr('class');
-
-        originalEventObject['className'] = $(this).closest('div').attr('class');
-
-        if (subType) {
-          originalEventObject['className'] += " " + subType;
-        }
-
-        if(eventData && eventData.url) {
-          //$('#calendar').fullCalendar('removeEventSource', eventData.url);
-          originalEventObject['editable'] = false;
-        }
-        
-        // we need to copy it, so that multiple events don't have a reference to the same object
-        var copiedEventObject = $.extend({}, originalEventObject);
-        //alert(copiedEventObject.title+" : "+copiedEventObject.start+" : "+copiedEventObject.start)
-        
-        if (!copiedEventObject.id) {
-            if(eventData && eventData.id) {
-              copiedEventObject.id = eventData.id;
-            } else {
-              // uniqueify the event ID: http://stackoverflow.com/a/2117523
-              copiedEventObject.id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&0x3|0x8;return v.toString(16);});
-            }
-        }
-        //alert(copiedEventObject.id)
-        // assign it the date that was reported
-        copiedEventObject.start = date;
-        //alert(copiedEventObject.start);
-        copiedEventObject.end = moment(date).add(30, 'm');
-        //alert(copiedEventObject.end);
-        copiedEventObject.room = copiedEventObject.room || connections_classroom;
-        
-        
-        //Add New required Topic to metrics field
-        //console.log(copiedEventObject)
-        copiedEventObject.namespace = "";
-        if(copiedEventObject.title == "New Required")
-        {
-        	var currentTimeStamp = new Date().getTime();
-        	var newTopicId = "newTopic"+currentTimeStamp;
-        	var newTopicName = "newTopicName"+currentTimeStamp;
-        	var newTopicTime = "newTopicTime"+currentTimeStamp;
-        	copiedEventObject.id = currentTimeStamp;
-        	copiedEventObject.namespace = "New Required";
-        	var newTopic="<tr id='"+newTopicId+"'>";
-	        newTopic += "<th class='colTopicsRight'><div class='editable' id='"+newTopicName+"'>New Required</div></th>";
-			newTopic += "<td class='time'><span class='editable minutes' id='"+newTopicTime+"'>30 minutes</span></td>";
-			newTopic += "<td class='colObjective1'></td>";
-			newTopic += "<td class='colObjective1'></td>";
-			newTopic += "<td class='colObjective1'></td>";
-			newTopic += "<td class='colObjective1'></td>";
-			newTopic += "<td class='colObjective1'></td>";
-			newTopic += "<td class='colObjective1'></td>";
-			newTopic += "<td class='colObjective1'></td>";
-			newTopic += "<td class='colObjective1'></td>";
-			newTopic += "<td class='colObjective1'></td>";
-	        newTopic += "</tr>";
-	        $("#topics").append(newTopic);
-	        var newTopicArray = new Array();
-	        newTopicArray.push(currentTimeStamp);
-	        newTopicArray.push(newTopicId);
-	        
-	        newTopicArrayCollection.push(newTopicArray);
-        }
-        else if(copiedEventObject.className == "required")
-    	{
-    		$("#"+copiedEventObject.id).hide();
-    		
-    	}
-        
-        //console.log(copiedEventObject);
-        
-        
-        //console.log(copiedEventObject);
-        //alert("drop1");
-        //alert(copiedEventObject.room);
-        // render the event on the calendar
-        // the last `true` argument determines if the event "sticks" (http://arshaw.com/fullcalendar/docs/event_rendering/renderEvent/)
-        $('#calendar').fullCalendar('renderEvent', copiedEventObject, true);
-		
-        // is the "remove after drop" checkbox checked?
-        //alert("drop3");
-        //alert($('#drop-remove').is(':checked'));
-        //alert("drop4");
-        if ($('#drop-remove').is(':checked')) {
-          // if so, remove the element from the "Draggable Events" list
-          //alert("remove");
-          $(this).remove();
-        }
-
-        syncControlPanel();
       },
       eventRender: function(calEvent, element) {
-        //alert("eventRender:");
-        var roomElement = $('<div/>').addClass('event-room').text(calEvent.room);
-
-        if(!element.is('.scheduling')) {
-          $('.fc-event-time', element).before(roomElement);
-        }
+      	calendarrenderEventImplementation(calEvent, element);
+        
       },
       eventResize: function (calEvent, jsEvent, ui, view) {
         updateTimeSlot(calEvent);
@@ -729,7 +751,7 @@ $(document).ready(function() {
         //syncControlPanel();
       },
       loading: function(isLoading, view) {
-        //alert("loading");
+        alert("loading");
         
       },
       height: 1070,
@@ -739,6 +761,7 @@ $(document).ready(function() {
       eventClick: function(calEvent, jsEvent, view) {
        //console.log(calEvent);
 //alert("eventClick:");
+calendarClickEventImplementation(calEvent, jsEvent, view, calendarFollowUpActivity, this, "calendarFollowUpActivity");
         
       },
 
@@ -756,74 +779,28 @@ $(document).ready(function() {
       droppable: true, // this allows things to be dropped onto the calendar !!!
 		
       eventMouseover: function(calEvent) {
-        
+        if(!$(this).is('.admin') || $('#controlPanel .schedule .admin').is(':visible')) {
+          $(this).not('.scheduling, .global-events').append('<div class="fi-x remove"></div>');
+        }
       },
 
       eventMouseout: function() {
+      	$('.remove', this).remove();
       },
 
       drop: function(date) { // this function is called when something is dropped
         // retrieve the dropped element's stored Event Object
         //alert("drop");
-        var eventData = $(this).data('calendarFollowUpActivity');
-        
-        var originalEventObject = $(this).data('eventObject');
-        if(originalEventObject.className == "user")
-        {
-        	//alert("return");
-        	return;
-        }
-        var subType = $(this).prevAll('dt:last').attr('class');
-
-        originalEventObject['className'] = $(this).closest('div').attr('class');
-
-        if (subType) {
-          originalEventObject['className'] += " " + subType;
-        }
-
-        if(eventData && eventData.url) {
-          //$('#calendar').fullCalendar('removeEventSource', eventData.url);
-          originalEventObject['editable'] = false;
-        }
-        
-        // we need to copy it, so that multiple events don't have a reference to the same object
-        var copiedEventObject = $.extend({}, originalEventObject);
-        //alert(copiedEventObject.title+" : "+copiedEventObject.start+" : "+copiedEventObject.start)
-        
-        if (!copiedEventObject.id) {
-            if(eventData && eventData.id) {
-              copiedEventObject.id = eventData.id;
-            } else {
-              // uniqueify the event ID: http://stackoverflow.com/a/2117523
-              copiedEventObject.id = 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {var r = Math.random()*16|0,v=c=='x'?r:r&0x3|0x8;return v.toString(16);});
-            }
-        }
-        //alert(copiedEventObject.id)
-        // assign it the date that was reported
-        copiedEventObject.start = date;
-        //alert(copiedEventObject.start);
-        copiedEventObject.end = moment(date).add('m', 30);
-        //alert(copiedEventObject.end);
-        copiedEventObject.room = copiedEventObject.room || connections_classroom;
-        
-        
-        //Add New required Topic to metrics field
-        //console.log(copiedEventObject)
-        copiedEventObject.namespace = "";
-        
-        
-        
-        
-        $('#calendarFollowUpActivity').fullCalendar('renderEvent', copiedEventObject, true);
+        calendarDropEventImplementation(this, date, calendarFollowUpActivity);
 		
         
       },
       eventRender: function(calEvent, element) {
-        //alert("eventRender:");
+        calendarrenderEventImplementation(calEvent, element);
         
       },
       eventResize: function (calEvent, jsEvent, ui, view) {
-        //updateTimeSlot(calEvent);
+        updateTimeSlot(calEvent);
       },
       eventDrop: function (event, dayDelta, minuteDelta, allDay, revertFunc) { //alert("event drop");
       //updateTimeSlot(event);
