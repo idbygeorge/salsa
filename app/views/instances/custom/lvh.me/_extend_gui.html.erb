@@ -24,7 +24,7 @@ $(document).ready(function() {
     });
 
     var user = $('body').data('lmsLoginId');
-    var calendarrenderEventImplementation = function(calEvent, element){
+    var calendarRenderEventImplementation = function(calEvent, element){
     	var roomElement = $('<div/>').addClass('event-room').text(calEvent.room);
         var notesElement = $('<div/>').addClass('event-notes').text(calEvent.notes);
         if(!element.is('.scheduling')) {
@@ -401,7 +401,7 @@ $(document).ready(function() {
         var startDate = new Date(newFormattedStartDate);
         var startMinutes = (startDate.getHours()*60)+startDate.getMinutes();
         
-        var newFormattedEndDate = moment(calEvent.end).subtract(330, 'm')
+        var newFormattedEndDate = moment(calEvent.end).subtract(330, 'm');
         var endDate = new Date(newFormattedEndDate);
         var endMinutes = (endDate.getHours()*60)+endDate.getMinutes();
         var minutesDiffernce =endMinutes - startMinutes;
@@ -429,7 +429,7 @@ $(document).ready(function() {
 			  	 	}
 			  }
 			  
-			  
+			  alert(minutesDiffernce);
 		  }
     }
 
@@ -723,7 +723,7 @@ $(document).ready(function() {
         
       },
       eventRender: function(calEvent, element) {
-      	calendarrenderEventImplementation(calEvent, element);
+      	calendarRenderEventImplementation(calEvent, element);
         
       },
       eventResize: function (calEvent, jsEvent, ui, view) {
@@ -731,6 +731,7 @@ $(document).ready(function() {
       },
       eventDrop: function (event, dayDelta, minuteDelta, allDay, revertFunc) { //alert("event drop");
       //updateTimeSlot(event);
+      //alert("eventDrop:")
       }
     };
     
@@ -796,7 +797,7 @@ calendarClickEventImplementation(calEvent, jsEvent, view, calendarFollowUpActivi
         
       },
       eventRender: function(calEvent, element) {
-        calendarrenderEventImplementation(calEvent, element);
+        calendarRenderEventImplementation(calEvent, element);
         
       },
       eventResize: function (calEvent, jsEvent, ui, view) {

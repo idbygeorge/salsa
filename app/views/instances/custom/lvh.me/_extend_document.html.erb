@@ -270,6 +270,7 @@ div .verticalSpacer{
 
 <script>
 var calendar;
+var claendarFollowUpActivity;
 
 var globalEventsCalendarURL = 'https://www.google.com/calendar/feeds/usuconnections%40gmail.com/public/basic';
 
@@ -286,7 +287,6 @@ if(typeof(documentEvents) == 'undefined') {
 (function($){
   $(function(){
   	
-    
     if(!$('#controlPanel').length) {
       $('body').on('click', '.fc-event', function() {
         return false;
@@ -298,7 +298,7 @@ if(typeof(documentEvents) == 'undefined') {
           center: '',
           right: '',
         },
-        height: 1300,
+        height: 1280,
         events: documentEvents,
         eventSources: globalEventsCalendarSettings,
         defaultDate: '2014-08-20',
@@ -318,6 +318,32 @@ if(typeof(documentEvents) == 'undefined') {
         }
       });
       
+      
+      claendarFollowUpActivity = $("#calendarFollowUpActivity").fullCalendar({
+        header: {
+          left: 'title',
+          center: '',
+          right: '',
+        },
+        height: 1070,
+        events: documentEvents,
+        eventSources: globalEventsCalendarSettings,
+        defaultDate: '2014-08-20',
+      	defaultView: 'agendaWeek',
+      	minTime: '08:00:00',
+      	maxTime: '20:30:00',
+      	slotDuration: '00:15:00',
+        allDaySlot: false,
+        defaultTimedEventDuration: '00:30:00',
+        hiddenDays: [0,1,2],
+        editable: false,
+        eventRender: function(calEvent, element) {
+          var roomElement = $('<div/>').addClass('event-room').text(calEvent.room);
+
+          element.removeAttr('href')
+          $('.fc-time', element).append(roomElement);
+        }
+      });
       
     }
   });
