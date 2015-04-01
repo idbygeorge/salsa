@@ -13,7 +13,7 @@ nav { max-width: 1119px; }
 
 $(document).ready(function() {
     newTopicArrayCollection = new Array();
-    
+    $('.nonPrintableContent').show();
     $('#controlPanel .admin a[href="#resetDocument"]').on('click', function() {
       //alert("controlPanel .admin a[href=");
       $('#page-data').html('');
