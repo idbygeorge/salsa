@@ -270,7 +270,7 @@ div .verticalSpacer{
 
 <script>
 var calendar;
-var claendarFollowUpActivity;
+var calendarFollowUpActivity;
 
 var globalEventsCalendarURL = 'https://www.google.com/calendar/feeds/usuconnections%40gmail.com/public/basic';
 
@@ -286,12 +286,11 @@ if(typeof(documentEvents) == 'undefined') {
 
 (function($){
   $(function(){
-  	
     if(!$('#controlPanel').length) {
       $('body').on('click', '.fc-event', function() {
         return false;
       });
-
+	
       calendar = $("#calendar").fullCalendar({
         header: {
           left: 'title',
@@ -319,7 +318,7 @@ if(typeof(documentEvents) == 'undefined') {
       });
       
       
-      claendarFollowUpActivity = $("#calendarFollowUpActivity").fullCalendar({
+      calendarFollowUpActivity = $("#calendarFollowUpActivity").fullCalendar({
         header: {
           left: 'title',
           center: '',

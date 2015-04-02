@@ -397,15 +397,36 @@ $(document).ready(function() {
     }
     var updateTimeSlot = function(calEvent){
     	//alert("update");
-    	var newFormattedStartDate = moment(calEvent.start).subtract(330, 'm');
-        var startDate = new Date(newFormattedStartDate);
-        var startMinutes = (startDate.getHours()*60)+startDate.getMinutes();
+    	
+    	var newFormattedStartDate = moment(calEvent.start);
+    	var meridiemFormatStartDate = newFormattedStartDate.format('a');
+    	var startHours;
+    	if(meridiemFormatStartDate == "am")
+    	{
+    		startHours = Number(newFormattedStartDate.format('h'));
+    	}
+    	else
+    	{
+    		startHours = Number(newFormattedStartDate.format('h'))+Number(12);
+    	}
+        var startMinutes = (startHours*60)+Number(newFormattedStartDate.format('mm'));
         
-        var newFormattedEndDate = moment(calEvent.end).subtract(330, 'm');
-        var endDate = new Date(newFormattedEndDate);
-        var endMinutes = (endDate.getHours()*60)+endDate.getMinutes();
-        var minutesDiffernce =endMinutes - startMinutes;
         
+        var newFormattedEndDate = moment(calEvent.end);
+        var meridiemFormatEndDate = newFormattedEndDate.format('a');
+    	var endHours;
+    	if(meridiemFormatEndDate == "am")
+    	{
+    		endHours = Number(newFormattedEndDate.format('h'));
+    	}
+    	else
+    	{
+    		endHours = Number(newFormattedEndDate.format('h'))+Number(12);
+    	}
+        var endMinutes = (endHours*60)+Number(newFormattedEndDate.format('mm'));
+        
+        var minutesDiffernce = endMinutes - startMinutes;
+        //alert(startDate.getHours()+" : "+endDate.getHours());
         
 	      if(calEvent.className == "required")
 		  {
@@ -429,7 +450,6 @@ $(document).ready(function() {
 			  	 	}
 			  }
 			  
-			  alert(minutesDiffernce);
 		  }
     }
 
