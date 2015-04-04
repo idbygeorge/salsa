@@ -522,8 +522,9 @@ $(document).ready(function() {
       //alert("#tb_save,#tb_share");
       $('#tabs a:first').trigger('click');
 
-      if(!$('.fc-content', calendar).has('.fc-event').length) {
-        
+// fullcalendar changed rendering order of elements, use fc-event directly... for now
+//      if(!$('.fc-content', calendar).has('.fc-event').length) {
+      if(!$('.fc-event', calendar).length) {  
         if(calendar.is('.fc')) {
           //alert("calendar render1");
           calendar.fullCalendar('render');
