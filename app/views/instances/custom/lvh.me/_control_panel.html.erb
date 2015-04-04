@@ -88,32 +88,6 @@
                 </dl>
             </div> 
 
-        <section data-target=".section2" class="ui-state-default">
-            <header data-method="toggleContent" onmouseover="liteOn(section2S,'#F5F5F5')" onmouseout="liteOff(section2S)">
-                <input type="button" value="Schedule Notes">
-            </header>
-            <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
-                <legend>spacing</legend>
-                <label for="2S_Add">Add spacing to Schedule View</label>
-                <input type="button" name="2S_Add" id="2S_Add" value="+">
-                <label for="2S_Remove">Remove spacing from Schedule View</label>
-                <input type="button" name="2S_Remove" id="2S_Remove" value="-">
-            </fieldset>
-        </section>
-
-        <section data-target=".section3" onmouseover="liteOn(section3S,'#F5F5F5')" onmouseout="liteOff(section3S)">
-            <header>
-            Follow-up
-            </header>
-            <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px">
-                <legend>spacing</legend>
-                <label for="3S_Add">Add spacing to Follow-up section</label>
-                <input type="button" name="3S_Add" id="3S_Add" value="+">
-                <label for="informationContentSpacingRemove">Remove spacing from Follow-up section</label>
-                <input type="button" name="3S_Remove" id="3S_Remove" value="-">
-            </fieldset>
-        </section>
-
     </aside> <!-- .schedule -->
 
     <aside class="information" data-target="#information .content">
@@ -212,33 +186,6 @@
                 <input type="button" name="2O_Add" id="2O_Add" value="+">
                 <label for="2O_Remove">Remove spacing from Objectives h2</label>
                 <input type="button" name="2O_Remove" id="2O_Remove" value="-">
-            </fieldset>
-     
-            <fieldset data-method="toggleContent" data-template="#topics_template tr:last" data-element="tbody tr" data-max="20" data-min="13" data-target=".outcomes" data-callback="reapplyTableDnD"onmouseover="liteOn('#outcomes tbody','#E6F7FF')" onmouseout="liteOff('#outcomes tbody')">
-                <legend>topics</legend>
-                <label for="gradesAdd">Add new tr to Objectives table</label>
-                <input type="button" name="gradesAdd" id="gradesAdd" value="+">
-                <label for="gradesRemove">Remove tr from Objectives table</label>
-                <input type="button" name="gradesRemove" id="gradesRemove" value="-">
-            </fieldset>
-        </section>
-        <section data-target=".section3" class="ui-state-default">
-            <header data-method="toggleContent" onmouseover="liteOn(section3O,'#E6F7FF')" onmouseout="liteOff(section3O)">
-                <input type="button" value="Add Headings">
-            </header>
-                <fieldset data-method="scaleCss" data-property="padding-top" data-max="12" data-min="0" data-step="12px" onmouseover="liteOn(section3O,'#E6F7FF')" onmouseout="liteOff(section3O)">
-                <legend>spacing</legend>
-                <label for="3O_Add">Add spacing after Topics table</label>
-                <input type="button" name="3O_Add" id="3O_Add" value="+">
-                <label for="3O_Remove">Remove spacing after Topics table</label>
-                <input type="button" name="3O_Remove" id="3O_Remove" value="-">
-            </fieldset>
-            <fieldset data-method="toggleContent" data-template=".description" data-element=".description" data-max="20" data-min="1" data-target=".details" onmouseover="liteOn(section3O,'#E6F7FF')" onmouseout="liteOff(section3O)">
-                <legend>headings</legend>
-                <label for="3O_Add">Add h3 to Objectives h2</label>
-                <input type="button" name="3O_Add" id="3O_Add" value="+">
-                <label for="3O_Remove">Remove h3 from Objectives h2</label>
-                <input type="button" name="3O_Remove" id="3O_Remove" value="-">
             </fieldset>
         </section>
 
