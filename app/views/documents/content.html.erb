@@ -1,0 +1,5 @@
+<% if @document.payload %>
+  <%= @document.payload.html_safe %>
+<% else %>
+  <%= salsa_partial("salsa") %>
+<% end %>

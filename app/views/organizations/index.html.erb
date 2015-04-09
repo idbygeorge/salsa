@@ -1,0 +1,28 @@
+<% if session[:admin_authorized] %>
+<div class="row">
+  <div class="pull-right text-right">
+    <%= link_to Document.where('documents.organization_id IS NULL AND documents.updated_at != documents.created_at').count.to_s + ' documents', organizations_path %><br>
+    <%= link_to Document.where('documents.organization_id IS NULL AND documents.updated_at = documents.created_at').count.to_s + ' abandoned', organizations_path( key: 'abandoned') %>
+  </div>
+
+  <h1>
+    <% if params[:key] == 'abandoned' %>
+      <strong>Abandoned</strong>
+    <% end %>
+
+    Orphaned SALSAs
+  </h1>
+</div>
+
+<%= render 'show' %>
+<% else %>
+
+<div class="row">
+  <h1>
+    Salsa Admin
+  </h1>
+
+  Select the organization on you want to manage. The root organizations are where you access the dashboard from.
+</div>
+
+<% end %>

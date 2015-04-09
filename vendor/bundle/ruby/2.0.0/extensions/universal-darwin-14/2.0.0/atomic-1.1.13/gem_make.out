@@ -1,0 +1,20 @@
+/System/Library/Frameworks/Ruby.framework/Versions/2.0/usr/bin/ruby -r ./siteconf20150316-3807-roqnnt.rb extconf.rb 
+creating Makefile
+
+make "DESTDIR=" clean
+
+make "DESTDIR="
+compiling atomic_reference.c
+atomic_reference.c:50:9: warning: implicit declaration of function 'OSAtomicCompareAndSwap64' is invalid in C99 [-Wimplicit-function-declaration]
+    if (OSAtomicCompareAndSwap64(expect_value, new_value, &DATA_PTR(self))) {
+        ^
+1 warning generated.
+atomic_reference.c:50:9: warning: implicit declaration of function 'OSAtomicCompareAndSwap64' is invalid in C99 [-Wimplicit-function-declaration]
+    if (OSAtomicCompareAndSwap64(expect_value, new_value, &DATA_PTR(self))) {
+        ^
+1 warning generated.
+linking shared-object atomic_reference.bundle
+
+make "DESTDIR=" install
+/usr/bin/install -c -m 0755 atomic_reference.bundle ./.gem.20150316-3807-1mmi64w
+installing default atomic_reference libraries

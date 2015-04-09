@@ -1,0 +1,33 @@
+<%= form_tag canvas_courses_sync_path, class: 'form form-horizontal' do %>
+  <div class="form-group">
+    <%= label_tag :canvas_token, 'Canvas Admin Token' %>
+    <%= password_field_tag :canvas_token, '', class: 'form-control' %>
+  </div>
+
+  <%= submit_tag 'Sync', class: 'btn btn-default' %>
+<% end %>
+
+<% if @document_meta.count > 0 %>
+<table class="table table-responsive table-striped">
+  <thead>
+    <tr>
+      <% @document_meta[0].attributes.each do |key, value| %>
+      <th><%= key %></th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <% @document_meta.each do |pivot_object| %>
+    <tr>
+      <% pivot_object.attributes.each do |key, value| %>
+      <td><%= value if value %></td>
+      <% end %>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<% else %>
+<div class="alert alert-warning">
+  No courses have been synced to Salsa for this canvas account.
+</div>
+<% end %>

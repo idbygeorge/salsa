@@ -1,0 +1,46 @@
+<%= link_to 'Add Component', new_component_path, class: 'btn btn-success pull-right' %>
+<h1>
+  <small><%= @organization.name %></small>
+  <br>
+  Components
+</h1>
+
+<ul class="nav nav-pills">
+  <li <% if current_page? components_path category: 'document' %>class="active"<% end %>>
+    <%= link_to 'Documents', components_path(category: 'document') %>
+  </li>
+  <li <% if current_page? components_path category: 'section' %>class="active"<% end %>>
+    <%= link_to 'Sections', components_path(category: 'section') %>
+  </li>
+  <li <% if current_page? components_path category: 'element' %>class="active"<% end %>>
+    <%= link_to 'Elements', components_path(category: 'element') %>
+  </li>
+  <li <% if !params[:category] %>class="active"<% end %>>
+    <%= link_to 'All Components', components_path %>
+  </li>
+</ul>
+
+<% if @components.count > 0 %>
+  <ul class="media-list">
+    <% @components.each do |component| %>
+      <li class="media">
+        <a class="pull-left" href="<%= edit_component_path @organization[:slug], component.slug %>">
+          <img data-src="holder.js/64x64" class="media-object">
+        </a>
+
+        <h2><%= link_to component.name, edit_component_path(@organization[:slug], component.slug, category: component.category) %></h2>
+        <p><%= component.description %></p>
+        <em>
+          /<%= component.slug %>
+        </em>
+        <%= component.category %>
+        <%= component.format %>
+      </li>
+    <% end %>
+  </ul>
+
+<% else %>
+  <div class="alert alert-warning">
+    There are no <code><%= params[:category] %></code> components at this layer.
+  </div>
+<% end %>
