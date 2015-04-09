@@ -273,9 +273,10 @@ var calendar;
 var calendarFollowUpActivity;
 
 var globalEventsCalendarURL = 'https://www.google.com/calendar/feeds/usuconnections%40gmail.com/public/basic';
-
+var googleCalendarId = 'usuconnections@gmail.com';
 var globalEventsCalendarSettings = {
   url: globalEventsCalendarURL,
+  googleCalendarId: googleCalendarId,
   className: 'global-events',
   editable: false
 };
@@ -325,12 +326,10 @@ if(typeof(documentEvents) == 'undefined') {
           right: '',
         },
         height: 1070,
-        events: documentEvents,
-        eventSources: globalEventsCalendarSettings,
         defaultDate: '2014-08-20',
       	defaultView: 'agendaWeek',
       	minTime: '08:00:00',
-      	maxTime: '20:30:00',
+      	maxTime: '20:00:00',
       	slotDuration: '00:15:00',
         allDaySlot: false,
         defaultTimedEventDuration: '00:30:00',

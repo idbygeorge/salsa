@@ -14,6 +14,7 @@ nav { max-width: 1119px; }
 $(document).ready(function() {
     newTopicArrayCollection = new Array();
     $('.nonPrintableContent').show();
+    
     $('#controlPanel .admin a[href="#resetDocument"]').on('click', function() {
       //alert("controlPanel .admin a[href=");
       $('#page-data').html('');
@@ -44,10 +45,8 @@ $(document).ready(function() {
 
         // not logged in
         if($(jsEvent.currentTarget).is('.admin') && $('#controlPanel .schedule .admin').is(':hidden')) {
-          //alert("retun 2");
           return false;
         }
-
         var eventTitle = calEvent.title;
         
         calEvent.location;
@@ -407,7 +406,12 @@ $(document).ready(function() {
     	}
     	else
     	{
-    		startHours = Number(newFormattedStartDate.format('h'))+Number(12);
+    		var noOfStartHours = Number(newFormattedStartDate.format('h'));
+    		if(noOfStartHours == 12)
+    		{
+    			noOfStartHours = 0;
+    		}
+    		startHours = noOfStartHours+Number(12);
     	}
         var startMinutes = (startHours*60)+Number(newFormattedStartDate.format('mm'));
         
@@ -421,10 +425,15 @@ $(document).ready(function() {
     	}
     	else
     	{
-    		endHours = Number(newFormattedEndDate.format('h'))+Number(12);
+    		var noOfEndHours = Number(newFormattedEndDate.format('h'));
+    		if(noOfEndHours == 12)
+    		{
+    			noOfEndHours = 0;
+    		}
+    		
+    		endHours = noOfEndHours+Number(12);
     	}
         var endMinutes = (endHours*60)+Number(newFormattedEndDate.format('mm'));
-        
         var minutesDiffernce = endMinutes - startMinutes;
         //alert(startDate.getHours()+" : "+endDate.getHours());
         
@@ -518,18 +527,13 @@ $(document).ready(function() {
     }).trigger('click');
 
     $('#tb_save,#tb_share').on('click', function(e){
-      //alert("#tb_save,#tb_share");
       $('#tabs a:first').trigger('click');
-
       if(!$('.fc-content', calendar).has('.fc-event').length) {
-        
         if(calendar.is('.fc')) {
-          //alert("calendar render1");
           calendar.fullCalendar('render');
         } else {
           calendar.fullCalendar(calendarSettings);
         }
-
         calendar.addClass('recovering');
 
         e.stopPropagation();
@@ -537,10 +541,12 @@ $(document).ready(function() {
         return false;
       }
       $('#controlPanel .scheduling').trigger('click');
-      calendar.fullCalendar('removeEventSource', globalEventsCalendarURL);
-
+      
+	  calendar.fullCalendar('removeEventSource', globalEventsCalendarSettings);
       var events = calendar.fullCalendar('clientEvents');
+      
       calendar.fullCalendar('destroy');
+      
       $('#calendar #calendarEventData').remove();
       var simpleEvents = $.map(events, function(item){
         item.calendar = item.calendar || undefined;
@@ -558,11 +564,12 @@ $(document).ready(function() {
         };
       });
       jsonEvents = JSON.stringify(simpleEvents);
-
+	  alert("Success");
       calendar.append($('<scri'+'pt/>').attr('id', 'calendarEventData').html('var instructor_name = "' + instructor_name + '"; var connections_classroom = "' + connections_classroom + '"; var documentEvents = ' + jsonEvents));
+      
       calendarSettings.events = simpleEvents;
     }).on('ajax:success', function(event, xhr, settings) {
-      //alert("ajax:success")
+      alert("ajax:success")
       calendar.fullCalendar(calendarSettings);
     });
     /* initialize the external events
@@ -588,7 +595,7 @@ $(document).ready(function() {
 
           // shut down other helper calendars
           $('.scheduling', $(this).closest('.schedule')).not(this).each(function(){
-            var calendarSource = $(this).removeClass('scheduling').data('calendar').url;
+            var calendarSource = $(this).removeClass('scheduling').data('calendar');
 
             calendar.fullCalendar('removeEventSource', calendarSource);
           });
@@ -607,10 +614,9 @@ $(document).ready(function() {
             eventData['className'] += " scheduling";
 
             eventData['editable'] = false;
-
             calendar.fullCalendar('addEventSource', eventData);
           } else {
-            calendar.fullCalendar('removeEventSource', eventData.url);
+            calendar.fullCalendar('removeEventSource', eventData); 
           }
         });
 
@@ -790,7 +796,7 @@ calendarClickEventImplementation(calEvent, jsEvent, view, calendarFollowUpActivi
       defaultView: 'agendaWeek',
       timezone: '-06:00',
       minTime: '08:00:00',
-      maxTime: '20:30:00',
+      maxTime: '20:00:00',
       slotDuration: '00:15:00',
       allDaySlot: false,
       defaultTimedEventDuration: '00:30:00',
