@@ -1,5 +1,0 @@
-role :web, %w{username@example.com}
-role :app, %w{username@example.com}
-role :db,  %w{username@example.com}
-
-set :rails_env, 'production'
