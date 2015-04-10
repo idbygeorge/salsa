@@ -11,7 +11,6 @@ nav { max-width: 1125px; }
 </style>
 
 <script>
-
 $(document).ready(function() {
     newTopicArrayCollection = new Array();
     $('.nonPrintableContent').show();
@@ -152,7 +151,7 @@ $(document).ready(function() {
             type: 'post',
             data: formData,
             success: function(data){alert("success12");/* doesn't ever get here, jsonp is not xml*/},
-            error: function(){/* always gets here with a parse error, jsonp is not xml*/},
+            error: function(){alert("error12");/* always gets here with a parse error, jsonp is not xml*/},
             dataType: "jsonp" // hack to get around same origin policy header being set on google's servers
           });
 
@@ -298,13 +297,15 @@ $(document).ready(function() {
     }
     var calendarDropEventImplementation = function(obj, date, calendarObj){
     	var eventData = $(obj).data('calendar');
-        
         var originalEventObject = $(obj).data('eventObject');
-        console.log(originalEventObject);
+        
         var subType = $(obj).prevAll('dt:last').attr('class');
-
+        
         originalEventObject['className'] = $(obj).closest('div').attr('class');
-
+		if(originalEventObject.className == "supplemental")
+		{
+			return;
+		}
         if (subType) {
           originalEventObject['className'] += " " + subType;
         }
@@ -316,7 +317,6 @@ $(document).ready(function() {
         
         // we need to copy it, so that multiple events don't have a reference to the same object
         var copiedEventObject = $.extend({}, originalEventObject);
-        
         //alert(copiedEventObject.title+" : "+copiedEventObject.start+" : "+copiedEventObject.start)
         //console.log(copiedEventObject);
         if (!copiedEventObject.id) {
@@ -547,8 +547,11 @@ $(document).ready(function() {
       
 	  calendar.fullCalendar('removeEventSource', globalEventsCalendarSettings);
       var events = calendar.fullCalendar('clientEvents');
+      var calendarFollowUpActivityEvents = calendarFollowUpActivity.fullCalendar('clientEvents');
+      
       
       calendar.fullCalendar('destroy');
+      calendarFollowUpActivity.fullCalendar('destroy');
       
       $('#calendar #calendarEventData').remove();
       var simpleEvents = $.map(events, function(item){
@@ -566,12 +569,32 @@ $(document).ready(function() {
           notes: item.notes ? item.notes : ''
         };
       });
+      var simpleEventsFollowUpActivity = $.map(calendarFollowUpActivityEvents, function(item){
+        item.calendar = item.calendar || undefined;
+        
+        return {
+          start: item.start,
+          end: item.end,
+          title: item.title,
+          className: item.className,
+          id: item.id,
+          calendar: item.calendar,
+          editable: item.editable,
+          room: item.room || '',
+          notes: item.notes ? item.notes : ''
+        };
+      });
       jsonEvents = JSON.stringify(simpleEvents);
+      jsonEventsFollowUpActivity = JSON.stringify(simpleEventsFollowUpActivity);
       calendar.append($('<scri'+'pt/>').attr('id', 'calendarEventData').html('var instructor_name = "' + instructor_name + '"; var connections_classroom = "' + connections_classroom + '"; var documentEvents = ' + jsonEvents));
+      calendarFollowUpActivity.append($('<scri'+'pt/>').attr('id', 'calendarEventDataFollowUpActivity').html('var documentEventsFollowUpActivity = ' + jsonEventsFollowUpActivity));
       
       calendarSettings.events = simpleEvents;
+      calendarSettingsFollowUpActivity.events = simpleEventsFollowUpActivity;
+      
     }).on('ajax:success', function(event, xhr, settings) {
       calendar.fullCalendar(calendarSettings);
+      calendarFollowUpActivity.fullCalendar(calendarSettingsFollowUpActivity);
     });
     /* initialize the external events
     -----------------------------------------------------------------*/
@@ -783,8 +806,8 @@ $(document).ready(function() {
         
       },
       height: 1070,
-      /*events: documentEvents,
-      eventSources: globalEventsCalendarSettings,*/
+      events: documentEventsFollowUpActivity,
+      /*eventSources: globalEventsCalendarSettings,*/
 
       eventClick: function(calEvent, jsEvent, view) {
        //console.log(calEvent);

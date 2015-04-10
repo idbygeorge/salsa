@@ -283,6 +283,7 @@ var globalEventsCalendarSettings = {
 
 if(typeof(documentEvents) == 'undefined') {
   documentEvents = [];
+  documentEventsFollowUpActivity = [];
 }
 
 (function($){
@@ -326,6 +327,7 @@ if(typeof(documentEvents) == 'undefined') {
           right: '',
         },
         height: 1070,
+        events: documentEventsFollowUpActivity,
         defaultDate: '2014-08-20',
       	defaultView: 'agendaWeek',
       	minTime: '08:00:00',
