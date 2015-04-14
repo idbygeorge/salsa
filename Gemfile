@@ -69,6 +69,8 @@ gem 'uber-s3'
 # instructure canvas api
 gem 'canvas-api'
 
+gem 'nokogiri'
+
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
