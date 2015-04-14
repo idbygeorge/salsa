@@ -24,6 +24,6 @@
 //= require script
 //= require canvas
 
-//= require moment.min.js
-//= require fullcalendar.min.js
-//= require gcal.js
+//= require moment.min
+//= require fullcalendar.min
+//= require gcal
