@@ -49,6 +49,8 @@ class DocumentsController < ApplicationController
       return
     end
 
+    @calendar_only = params[:calendar_only] ? true : false
+
     @action = 'show'
 
     respond_to do |format|
