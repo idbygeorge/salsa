@@ -1,6 +1,7 @@
 The MIT License (MIT)
 
 Copyright (c) 2014 - Jan. 31, 2015 | Utah State University
+
 Copyright (c) Feb. 1, 2015 | Oasis4H3, L3C
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
