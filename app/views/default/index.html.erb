@@ -11,7 +11,10 @@
         <li>meet requirements for web accessibility</li>
         <li>provide responsive layouts for mobile devices</li>
       </ul>
-    </div><!-- /.col-sm-6 -->
+      <a href="<% if params[:sub_organization_slugs] %><%= new_sub_org_document_path params[:sub_organization_slugs] %><% else %><%= new_document_path %><% end %>" role="button">Teaching Online?&nbsp;&nbsp;<span class="fa fa-desktop"></span>&nbsp;&nbsp;click & create</a>
+    </div><!-- /.col-sm-12 -->
+
+    
     
 <!--    <div class="col-sm-6 right">
        <h2>Who is developing Salsa?</h2>
@@ -23,8 +26,18 @@
     <div class="col-sm-12">
       <h2>How does Salsa work?</h2>
       <p>When you click on "Create your Salsa", a <a href="http://salsa.usu.edu/SALSA/new" target="_blank">secure link</a> to your new document is opened. As you add information, click "Save" to update your <abbr title="Styled and accessible learning service agreements">SALSA</abbr>. Use the "Edit" link to return and make changes to your saved version. Click "Publish" and link to your <abbr title="Styled and accessible learning service agreements">SALSA</abbr> in <a href="http://salsa.usu.edu/SALSA/lfgqjomdzxtsyksekfvserucebgusq" target="_blank">web accessible <abbr title="Hypertext markup language">HTML</abbr> format</a>.</p>
+      <a href="<% if params[:sub_organization_slugs] %><%= new_sub_org_document_path params[:sub_organization_slugs] %><% else %><%= new_document_path %><% end %>" role="button">Ready to Start?&nbsp;&nbsp;<span class="fa fa-arrow-circle-right"></span>&nbsp;&nbsp;click & create</a>
+      </div><!-- .col-sm-12 -->
+
+
+
+      <div class="col-sm-12">
+      <h2>No Signup? No Accounts?</h2>
+      <p>We don't collect your personal information or require you to create an account. When you create a SALSA, you are assigned a URL (web address) with a unique, randomized 30-digit key. By using Salsa, you agree to our <a href="http://syllabustool.com/default/tos" target="_blank">Terms of Service</a>.</p>
+      <a href="<% if params[:sub_organization_slugs] %><%= new_sub_org_document_path params[:sub_organization_slugs] %><% else %><%= new_document_path %><% end %>" role="button">No account required&nbsp;&nbsp;<span class="fa fa-smile-o"></span>&nbsp;&nbsp;click & create</a>
       </div><!-- .col-sm-12 -->
   </div><!-- /.row -->
+   
 
 
 <%#    <div class="col-sm-4">
