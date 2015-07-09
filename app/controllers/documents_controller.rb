@@ -128,6 +128,15 @@ class DocumentsController < ApplicationController
       # publishing to canvas should not save in the Document model, the canvas version has been modified
       update_course_document(canvas_course_id, request.raw_post, @organization[:lms_info_slug]) if params[:canvas] && canvas_course_id
     else
+      if(params[:canvas_relink_course_id])
+        #find old document in this org with this id, set to null
+        old_document = Document.find_by lms_course_id: params[:canvas_relink_course_id], organization: @organization
+        old_document.update(lms_published_at: nil, lms_course_id: nil)
+
+        #set this document's canvas_course_id
+        @document.lms_course_id = params[:canvas_relink_course_id]
+      end
+
       @document.payload = request.raw_post
 
       @document.payload = nil if @document.payload == ''

@@ -121,15 +121,36 @@ $(function() {
         //$("#compilation_tabs #CanvasImport_tab .editableHtml").html(courseData.syllabus_body);
         $("#compilation_tabs #CanvasImport_tab .editableHtml").html('');
 
-        // generate message
-        var newMessage = $('<div class="courseSyllabusRetrieved"/>').html('This SALSA is now connected to <em><b>' + courseData.name + '</em></b>');
+        var modal = $("<div>Relinking this course to the current SALSA cannot be undone. Are you sure?</div>").dialog({
+          modal: true,
+          title: "Relinking your SALSA",
+          buttons: {
+            Relink: function() {
+              $('#editor_view').data('lmsCourse', courseData);
+              var originalUrl = $('#tb_save').attr('href');
+              $('#tb_save').attr('href', originalUrl + "?canvas_relink_course_id=" + courseData.id).trigger("click");
+              $('#tb_save').attr('href', originalUrl);
 
-        // put message in message queue
-        $("#messages").prepend(newMessage);
+              // generate message
+              var newMessage = $('<div class="courseSyllabusRetrieved"/>').html('This SALSA is being connected to <em><b>' + courseData.name + '</em>...</b>');
 
-        newMessage.delay(8000).fadeOut(1000, function(){
-          $(this).remove();
+              // put message in message queue
+              $("#messages").prepend(newMessage);
+
+              newMessage.delay(5000).fadeOut(1000, function(){
+                $(this).remove();
+              });
+
+              modal.dialog( "close" ).remove();
+              coursePrompt.dialog("close");
+            },
+            Cancel: function() {
+              modal.dialog( "close" ).remove();
+            }
+          }
         });
+
+        $('.ui-dialog-titlebar-close').html('close | x').removeClass('ui-state-default').focus();
       } else {
         $("#compilation_tabs #CanvasImport_tab .editableHtml").html('');
         $(this).closest('label').after($('<div class="message warning">No syllabus information for <b><em>' + courseData.name + '</em></b> detected in the LMS.</div>'));
