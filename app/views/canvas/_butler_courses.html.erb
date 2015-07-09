@@ -3,16 +3,13 @@
 	<label>
     Select your UNLINKED Canvas course to link this SALSA to:<br><br>
         <%= select_tag(:course_id, options_for_select( @unlinked_courses.collect {|c| [ c['name'], c['id'] ] }, @document[:lms_course_id]), :prompt => "Canvas courses NOT linked to a SALSA" ) %><br><br><br>
-      </label>
-        <label>
-     <strong>---OR---</strong><br><br>
+  </label>
+  <label>
+     <strong>---OR---</strong><br><br><br>
      Select your LINKED Canvas course to link this SALSA to:<br><br>
-    <%= select_tag(:course_id, options_for_select( @linked_courses.collect {|c| [ c['name'], c['id'] ] }, @document[:lms_course_id]), :prompt => "Canvas courses LINKED to a SALSA", id: 'replace_course_id' ) %><br><br>
-    <a href="mailto:bdye@butlercc.edu?subject=Relink this SALSA to my Canvas course&body=I want to link this SALSA [sub] to this Canvas course " onclick="this.href = this.href.replace('[sub]',window.location)" id="replace_course_email_link">Send relink request</a><br><br><br>
-    </em>
+    <%= select_tag(:course_id, options_for_select( @linked_courses.collect {|c| [ c['name'], c['id'] ] }, @document[:lms_course_id]), :prompt => "Canvas courses LINKED to a SALSA", id: 'replace_course_id' ) %><br><br><br>
 	</label>
-  <p>
-    <!-- <br>
+  <!-- <br>
     or
   </p>
   <label>
