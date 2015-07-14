@@ -32,8 +32,8 @@ function checkTotals() {
   notUsingSalsaPercent = Math.floor((notUsingSalsaTotal / grandTotal) * 100);
   hasSyllabusTotal = $(".courses .fa-check-circle:visible").length;
   noSyllabusTotal = usingSalsaTotal - hasSyllabusTotal;
-  noSyllabusPer = Math.floor((noSyllabusTotal / usingSalsaTotal) * 100);
-  hasSyllabusPer = Math.floor((hasSyllabusTotal / usingSalsaTotal) * 100);
+  noSyllabusPer = usingSalsaTotal>0?Math.floor((noSyllabusTotal / usingSalsaTotal) * 100):0;
+  hasSyllabusPer = usingSalsaTotal>0?Math.floor((hasSyllabusTotal / usingSalsaTotal) * 100):0;
   usedWizardTotal = $(".courses .icon-magic:visible").length;
   usedWizardPer = Math.floor((usedWizardTotal / notUsingSalsaTotal) * 100);
 

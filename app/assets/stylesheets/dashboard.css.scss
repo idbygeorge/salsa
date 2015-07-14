@@ -54,8 +54,16 @@ li.exclude ol {
 }
 .department {
 	clear: both;
-	margin-top: 5px;
-	min-height: 100px;
+	margin-top: 0px;
+	min-height: 0px;
+
+	ul, h3 {
+		margin: 0;
+	}
+
+	h3 {
+		line-height: 2;
+	}
 }
 .department li {
 	padding: 0 10px;
