@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150127032218) do
+ActiveRecord::Schema.define(version: 20150712005345) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -103,6 +103,8 @@ ActiveRecord::Schema.define(version: 20150127032218) do
     t.string   "lms_authentication_key"
     t.string   "lms_info_slug"
     t.string   "lms_id"
+    t.datetime "dashboard_start_at"
+    t.datetime "dashboard_end_at"
   end
 
   add_index "organizations", ["depth"], name: "index_organizations_on_depth", using: :btree
