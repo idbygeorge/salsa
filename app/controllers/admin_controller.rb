@@ -185,7 +185,7 @@ class AdminController < ApplicationController
       WHERE
         a.root_organization_id = #{@org[:id].to_s}
         AND a.key = 'account_id'
-        AND n.value LIKE '%SP15%' OR n.value LIKE '%- MC%'
+        AND n.value LIKE '%SP15%' OR n.value LIKE '%- MC%' OR n.value LIKE '%FL15%'
 
 
       ORDER BY pn.value, acn.value, n.value, a.lms_course_id
