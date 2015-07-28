@@ -64,9 +64,24 @@ class AdminController < ApplicationController
         start_filter = "AND (start.value IS NULL OR CAST(start.value AS DATE) >= '#{start}')"
       end
     end
-    
+
+    if params[:account]
+      account = params[:account]
+      if account != ''
+        account_filter = "AND account = '#{account}'"
+      end
+    end
+
+    if params[:user]
+      user = params[:user]
+      if user != ''
+        user_filter = "AND lms_user_id = '#{user}'"
+      end
+    end
+
     query_string =
     <<-SQL.gsub(/^ {4}/, '')
+    SELECT * FROM (
       SELECT DISTINCT a.lms_course_id as course_id,
         a.value as account_id,
         acn.value as account,
@@ -81,6 +96,7 @@ class AdminController < ApplicationController
         pn.value as parent_account_name,
         end_date.value as end_at,
         ws.value as workflow_state,
+        u.value as lms_user_id,
         d.edit_id as edit_id,
         d.view_id as view_id,
         d.lms_published_at as published_at
@@ -114,7 +130,7 @@ class AdminController < ApplicationController
           AND p.key = 'parent_account_id'
         )
 
-        -- join the account parent id
+      -- join the account parent name
       LEFT JOIN
         organization_meta as pn ON (
           p.value = pn.lms_organization_id
@@ -174,6 +190,14 @@ class AdminController < ApplicationController
           AND ws.key = 'workflow_state'
         )
 
+      -- join the lms_user_id meta information
+      LEFT JOIN
+        document_meta as u ON (
+          a.lms_course_id = u.lms_course_id
+          AND a.root_organization_id = u.root_organization_id
+          AND u.key = 'lms_user_id'
+        )
+
       -- join the workflow state meta information
       LEFT JOIN
         documents as d ON (
@@ -189,6 +213,12 @@ class AdminController < ApplicationController
 
 
       ORDER BY pn.value, acn.value, n.value, a.lms_course_id
+    ) as results
+    WHERE 1=1
+
+    #{account_filter}
+    #{user_filter}
+
     SQL
 
     DocumentMeta.find_by_sql query_string

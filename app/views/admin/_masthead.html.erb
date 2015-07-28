@@ -1,0 +1,10 @@
+<form>
+  <%= label_tag(:account, "Account") %>
+  <%= select_tag(:account, options_for_select(@report_data.map(&:account).uniq), include_blank: true) %>
+
+  <%= label_tag(:user, "Account") %>
+  <%= text_field_tag(:user) %>
+
+
+  <input type="submit">
+</form>
