@@ -182,12 +182,6 @@ class AdminController < ApplicationController
           AND d.organization_id IN (#{@org.self_and_descendants.pluck(:id).join(',')})
         )
 
-      WHERE
-        a.root_organization_id = #{@org[:id].to_s}
-        AND a.key = 'account_id'
-        AND n.value LIKE '%SP15%' OR n.value LIKE '%- MC%'
-
-
       ORDER BY pn.value, acn.value, n.value, a.lms_course_id
     SQL
 
