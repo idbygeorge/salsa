@@ -5162,3 +5162,10 @@ body {
 .text-large {
   font-size: 1.5em;
 }
+
+/* Hide all of the bad slugs in the Dashboard */
+.nav-sidebar {
+  .alert-danger {
+    display: none;
+  }
+}
