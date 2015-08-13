@@ -64,7 +64,7 @@ class AdminController < ApplicationController
         start_filter = "AND (start.value IS NULL OR CAST(start.value AS DATE) >= '#{start}')"
       end
     end
-    
+
     query_string =
     <<-SQL.gsub(/^ {4}/, '')
       SELECT DISTINCT a.lms_course_id as course_id,
@@ -179,7 +179,7 @@ class AdminController < ApplicationController
         documents as d ON (
           a.lms_course_id = d.lms_course_id
           --TODO: docuemnts need root organization tracked to make this faster
-          AND d.organization_id IN (#{@org.self_and_descendants.pluck(:id).join(',')})
+          AND d.organization_id IN (#{@org[:id]})
         )
 
       WHERE

@@ -7,7 +7,7 @@ listen "/tmp/unicorn.salsa.socket", :backlog => 64
 
 preload_app true # Preload our app for more speed
 
-# timeout 30 # nuke workers after 30 seconds instead of 60 seconds (the default)
+timeout 300 # nuke workers after 30 seconds instead of 60 seconds (the default)
 
 pid "/tmp/unicorn.salsa.pid"
 
