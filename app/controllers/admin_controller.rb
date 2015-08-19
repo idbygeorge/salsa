@@ -23,7 +23,7 @@ class AdminController < ApplicationController
     rebuild = params[:rebuild]
     flush = params[:flush]
 
-    @stale_difference = 1
+    @stale_difference = 15
     stale_limit = Time.now - @stale_difference.minutes
 
     @report_stale = nil
