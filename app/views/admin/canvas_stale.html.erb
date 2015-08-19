@@ -1,0 +1,16 @@
+<h1>Report generation in progress</h1>
+
+<p>A report was started <%= time_ago_in_words @report_check.updated_at %> ago. Reports generally take 1-5 minutes to be created.</p>
+
+<blockquote>
+  Report started at: <%= @report_check.updated_at %>
+  <% if @report_stale %>
+    <br><a href="/admin/canvas?flush=true">cancel report</a>
+  <% end %>
+</blockquote>
+
+<% if !@report_stale %>
+  <p>Please wait <strong><%= time_ago_in_words @report_check.generating_at + @stale_difference.minutes %></strong></p>
+<% else %>
+  <p>This report can safely be canceled</p>
+<% end %>

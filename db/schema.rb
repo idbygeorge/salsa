@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150712005345) do
+ActiveRecord::Schema.define(version: 20150819023700) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -113,6 +113,16 @@ ActiveRecord::Schema.define(version: 20150712005345) do
   add_index "organizations", ["parent_id"], name: "index_organizations_on_parent_id", using: :btree
   add_index "organizations", ["rgt"], name: "index_organizations_on_rgt", using: :btree
   add_index "organizations", ["slug", "parent_id"], name: "index_organizations_on_slug_and_parent_id", unique: true, using: :btree
+
+  create_table "report_archives", force: true do |t|
+    t.text     "payload"
+    t.datetime "generating_at"
+    t.integer  "organization_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "report_archives", ["organization_id"], name: "index_report_archives_on_organization_id", using: :btree
 
   create_table "templates", force: true do |t|
     t.string   "slug"

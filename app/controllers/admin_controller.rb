@@ -20,9 +20,55 @@ class AdminController < ApplicationController
   end
 
   def canvas
-    @report_data = get_document_meta
+    rebuild = params[:rebuild]
+    flush = params[:flush]
 
-    render 'canvas', layout: '../admin/report_layout'
+    @stale_difference = 1
+    stale_limit = Time.now - @stale_difference.minutes
+
+    @report_stale = nil
+
+    #start by saving the report (add check to see if there is a report)
+    @org = get_org
+    @report = ReportArchive.where(organization_id: @org.id).first_or_create
+
+    if stale_limit > @report.updated_at
+      @report_stale = true
+    end
+
+    if @report.generating_at && flush && stale_limit > @report.generating_at
+      @report.generating_at = nil
+      @report.save!
+
+      redirect_to '/admin/canvas'
+      return
+    end
+
+    if !@report.payload || rebuild
+      @report_check = ReportArchive.where('generating_at IS NOT NULL').first
+
+      # if a report is being generated already on this server, don't proceed
+      if @report_check
+        return render 'canvas_stale', layout: '../admin/report_layout'
+      end
+
+      @report.generating_at = Time.now
+      @report.save!
+
+      # get the report data (slow process... only should run one at a time)
+      @report_data = get_document_meta
+
+      #store it
+      @report.generating_at = nil
+      @report.payload = @report_data.to_json
+      @report.save!
+
+      redirect_to '/admin/canvas'
+    else
+      @report_data = JSON.parse(@report.payload)
+
+      render 'canvas', layout: '../admin/report_layout'
+    end
   end
 
   def canvas_accounts
@@ -50,6 +96,14 @@ class AdminController < ApplicationController
     @org_meta.build
 
     render 'admin/canvas/accounts'
+  end
+
+  def get_org_slug
+    request.env['SERVER_NAME']
+  end
+
+  def get_org
+    Organization.find_by slug: get_org_slug
   end
 
   def get_document_meta
