@@ -30,7 +30,11 @@
                 <span class="badge xs-badge">cascades</span>
               <% end %>
 
-              <%= ua.organization.name %> - <%= ua.role %>
+              <% if ua.organization %>
+                <%= ua.organization.name %> - <%= ua.role %>
+              <% else %>
+                <span class="alert alert-danger">No organization!</span>
+              <% end %>
             </li>
           <% end %>
         </ul>
