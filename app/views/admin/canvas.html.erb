@@ -145,7 +145,7 @@
             <% if syllabus_link %>
               <!-- <a href="<%= 'URL' %>salsa/<%= record['account_id'] %>/course/<%= record['course_id'] %>" target="_blank"><%= record['name'] %></a> -->
               <%= link_to record['name'], document_path(record['view_id']), target:"_blank" %>
-              <%= link_to '', document_path(record['edit_id']), {target:"_blank", class:'fa-pencil fa'} %>
+              <%#= link_to '', document_path(record['edit_id']), {target:"_blank", class:'fa-pencil fa'} %>
             <% else %>
               <%= record['name'] %>
             <% end %>
