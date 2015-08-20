@@ -9,12 +9,23 @@
       <% end %>
     <% else %>
       <a href="/admin/canvas?rebuild=true">Rebuild this report</a><br>
-      <em class="small">Takes 5-15 minutes</em>
+      <em class="small">Takes 1-<%= @stale_difference %> minutes</em>
     <% end %>
   </div>
 
   Report Generated <%= time_ago_in_words @report.updated_at %> ago.<br>
   <em class="small"><%= @report.updated_at %></em>
+</div>
+
+<div class="alert alert-default clearfix">
+  <div class="form-group col-sm-4">
+    <label for="account_filter">
+      Account
+    </label>
+    <select id="account_filters" class="form-control">
+      <option value="">Select an account</option>
+    </select>
+  </div>
 </div>
 
 <% if @report_data %>
@@ -68,7 +79,7 @@
       <% account = ''%>
       <% parent_account = 0 %>
 
-      <% @report_data.each_with_index do |record, i| %>'
+      <% @report_data.each_with_index do |record, i| %>
 
         <% if (course_id != record['course_id']) and (i > 1) %>
         <%# <a href="#" data-toggle="tooltip" data-original-title="{{ teachers.to_s }}"><i class="fa {{ if true or teachers.size }}fa-users{{ else }}fa-user{{ end }}"></i></a>%>
@@ -89,9 +100,9 @@
             </div><!-- .college-list -->
             <% end %>
 
-            <div class="panel panel-default college-list">
+            <div class="panel panel-default college-list" id="account_<%= parent_account %>">
               <div class="panel-heading">
-                <h2 class="panel-title">
+                <h2 class="panel-title" data-account="{&quot;id&quot;:<%= parent_account %>, &quot;name&quot;:&quot;<%= record['parent_account_name'] %>&quot;}">
                   <a data-toggle="collapse" data-parent="#accordion" href="#collapse_<%= parent_account %>">
                     <% if record['parent_account_name'] %>
                       <%= record['parent_account_name'] %>
@@ -106,8 +117,8 @@
           <% end %>
           <% account = record['account_id'] %>
 
-          <div class="department">
-            <h3><%= record['account'] %></h3>
+          <div class="department" id="account_<%= record['account'] %>">
+            <h3 data-account="{&quot;id&quot;:&quot;<%= record['account'] %>&quot;, &quot;name&quot;:&quot;<%= record['account'] %>&quot;}"><%= record['account'] %></h3>
             <ul class="course-list" data-account="<%= record['account'] %>">
         <% end %>
 

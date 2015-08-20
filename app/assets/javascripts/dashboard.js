@@ -110,7 +110,8 @@ function checkTotals() {
   collegeNotUsingSalsa = [],
   collegeUsingSyllabus = [],
   collegeNotUsingSyllabus = [];
-  $('h2').each(function () {
+  $('h2:visible').each(function () {
+    $('.topLink', this).remove();
     collegeList.push($(this).text());
     collegeTotalCourses.push($(this).parents(".college-list").find('li:visible').length);
     collegeUsingSalsa.push($(this).parents(".college-list").find('.using-salsa:visible').length);
@@ -119,8 +120,10 @@ function checkTotals() {
     collegeNotUsingSyllabus.push($(this).parents(".college-list").find('.using-salsa.no-syllabus:visible').length);
     var myClass = $(this).index();
 
-    $(this).before('<a name="' + myClass + '"></a>');
-    $(this).append('<a class="topLink" href="#top"><i class="icon-circle-arrow-up"></i> Top</a>');
+    if(!$(this).has('.topLink').length) {
+      $(this).before('<a name="' + myClass + '"></a>');
+      $(this).append('<a class="topLink" href="#top"><i class="icon-circle-arrow-up"></i></a>');
+    }
   });
   $('#collegeCount').highcharts({
     chart: {type: 'bar'},
@@ -208,3 +211,45 @@ $(function () {
     });
   });
 });
+
+(function($){
+  var accountFilter = $('#account_filters').on('change', function(){
+    var activeAccount = $('#account_'+this.value);
+
+    if(activeAccount.closest('.department').length) {
+      var department = activeAccount;
+      activeAccount = department.closest('.college-list');
+
+      if(department.length) {
+        $('.department', activeAccount).not(department).hide();
+        department.show();
+      } else {
+        $('.department', activeAccount).show();
+      }
+    } else {
+      $('.department').show();
+    }
+
+    if(activeAccount.length) {
+      $('.college-list').not(activeAccount).hide();
+      activeAccount.show();
+    } else {
+      $('.college-list').show();
+    }
+
+    checkTotals();
+  });
+  var accountElms = $('h2,h3','.college-list');
+
+  accountElms.each(function(accountElm){
+    var account = $(this).data('account');
+    var styling = '';
+
+    if($(this).closest('.department').length) {
+      styling = '&nbsp; &nbsp;';
+    }
+
+    accountFilter.append('<option value="' + account.id + '">' + styling + account.name + '</option>');
+  });
+
+}(jQuery));
