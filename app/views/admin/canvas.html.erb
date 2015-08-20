@@ -127,7 +127,7 @@
           <% li_classes, status_icon, syllabus_link = '', '', false %>
           <% if record['edit_id'] and !record['published_at'] %>
             <% li_classes = li_classes + 'using-salsa no-syllabus' %>
-            <% status_icon = 'fa-times-circle' %>
+            <% status_icon = 'fa-question-circle' %>
             <% syllabus_link = true %>
           <%# syllabus check %>
           <% elsif record['published_at'] %>
@@ -136,7 +136,7 @@
             <% syllabus_link = true %>
           <% else %>
             <% li_classes = li_classes + 'not-using-salsa no-syllabus' %>
-            <% status_icon = 'fa-question-circle' %>
+            <% status_icon = 'fa-times-circle' %>
           <% end %>
           <li class="<%= li_classes %>">
             <i class="fa <%= status_icon %>"></i>
