@@ -59,6 +59,13 @@ body {
   }
 }
 
+.logo-right {
+  float: right;
+  margin-right: 3em;
+  width: 150px;
+  height: 150px;
+}
+
 /* Declare heights because of positioning of img element */
 .carousel-inner { overflow: visible; }
 .carousel-inner > .item > h1 {
