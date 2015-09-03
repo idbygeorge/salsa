@@ -65,8 +65,12 @@ li.exclude ol {
 		line-height: 2;
 	}
 }
+.department ul {
+	padding: 0;
+}
 .department li {
-	padding: 0 10px;
+	padding: 0;
+	list-style: none;
 }
 h1 {
 	margin: 20px 0;
