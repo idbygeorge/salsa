@@ -5,6 +5,7 @@ development:
   aws_secret_access_key: 'AMAZON SECRET ACCESS KEY'
   aws_bucket: 'AMAZON BUCKET'
   aws_region: 'AMAZON REGION'
+  allow_erb_components: true
 
 production:
   domain: 'http://example.com'
@@ -14,3 +15,4 @@ production:
   aws_bucket: 'AMAZON BUCKET'
   aws_region: 'AMAZON REGION'
   google_analytics_id: 'UA-XXXXXXX-XX'
+  allow_erb_components: false

@@ -18,7 +18,13 @@ module ApplicationHelper
 
     # if this document is using a configuration and that configuration has the partial being requested, use it
     if org && org.components && org.components.find_by(slug: name)
-      output = org.components.find_by(slug: name).layout
+      component = org.components.find_by(slug: name)
+      output = component.layout
+
+      if APP_CONFIG['allow_erb_components'] && component.format == 'erb'
+        output = ERB.new(output).result(binding)
+      end
+
     # if there is a customized partial for this organization, use that
     elsif view_folder && File.exists?("app/views/#{view_folder}/#{path}_#{partial}.html.erb")
       output = render partial: "#{view_folder}/#{path}#{partial}"
