@@ -7,7 +7,7 @@ class DefaultController < ApplicationController
     root_org_slug = request.env['SERVER_NAME']
     org = Organization.find_by slug: root_org_slug
 
-    if org.home_page_redirect?
+    if org and org.home_page_redirect?
       redirect_to org.home_page_redirect
     else
       render layout: 'home'
