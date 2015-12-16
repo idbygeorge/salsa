@@ -52,7 +52,7 @@ Salsa::Application.routes.draw do
 
 
   get "canvas/list_courses"
-  get "canvas/butler_courses"
+  get "canvas/relink_courses"
   get "oauth2/login"
   get "oauth2/logout"
   get "oauth2/callback"

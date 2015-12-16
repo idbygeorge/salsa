@@ -5,8 +5,8 @@ class CanvasController < ApplicationController
     select_course_dialog 'list_courses'
   end
 
-  def butler_courses
-    select_course_dialog 'butler_courses'
+  def relink_courses
+    select_course_dialog 'relink_courses'
   end
 
   def select_course_dialog partial
