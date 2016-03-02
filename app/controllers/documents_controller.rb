@@ -88,17 +88,19 @@ class DocumentsController < ApplicationController
         if params[:document_token]
           @document = Document.find_by view_id: params[:document_token], organization: @organization
 
-          # we need to setup the course and associate it with canvas
-          if params[:canvas] && params[:canvas_course_id]
-            @document = Document.new(name: @lms_course['name'], lms_course_id: params[:lms_course_id], organization: @organization, payload: @document[:payload])
-            @document.save!
+          if @document
+            # we need to setup the course and associate it with canvas
+            if params[:canvas]
+              @document = Document.new(name: @lms_course['name'], lms_course_id: params[:lms_course_id], organization: @organization, payload: @document[:payload])
+              @document.save!
 
-            return redirect_to lms_course_document_path(lms_course_id: params[:lms_course_id])
-          else
-            # show options to user (make child, make new)
-            @template_url = template_url
+              return redirect_to lms_course_document_path(lms_course_id: params[:lms_course_id])
+            else
+              # show options to user (make child, make new)
+              @template_url = template_url
 
-            return render :layout => 'relink', :template => '/documents/relink'
+              return render :layout => 'relink', :template => '/documents/relink'
+            end
           end
         end
 
