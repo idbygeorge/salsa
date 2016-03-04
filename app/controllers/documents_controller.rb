@@ -84,6 +84,26 @@ class DocumentsController < ApplicationController
       @document = Document.find_by lms_course_id: params[:lms_course_id], organization: @organization
 
       unless @document
+        # if they have a document token (read only token for now) then see if it exists
+        if params[:document_token]
+          @document = Document.find_by view_id: params[:document_token], organization: @organization
+
+          if @document
+            # we need to setup the course and associate it with canvas
+            if params[:canvas]
+              @document = Document.new(name: @lms_course['name'], lms_course_id: params[:lms_course_id], organization: @organization, payload: @document[:payload])
+              @document.save!
+
+              return redirect_to lms_course_document_path(lms_course_id: params[:lms_course_id])
+            else
+              # show options to user (make child, make new)
+              @template_url = template_url
+
+              return render :layout => 'relink', :template => '/documents/relink'
+            end
+          end
+        end
+
         @document = Document.new(name: @lms_course['name'], lms_course_id: params[:lms_course_id], organization: @organization)
         @document.save!
       end

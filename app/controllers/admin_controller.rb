@@ -288,24 +288,7 @@ class AdminController < ApplicationController
 
     org_slug = request.env['SERVER_NAME']
 
-    @org = Organization.find_by slug: org_slug
-
-    if @org
-      @canvas_endpoint = @org[:lms_authentication_source]
-
-      @canvas_client = Canvas::API.new(:host => @canvas_endpoint, :token => @canvas_access_token)
-
-      if @canvas_client
-        canvas_accounts = OrganizationMeta.where(root_id: @org['id'], key: ['id', 'parent_id']).order :key
-        sync_canvas_courses canvas_accounts, @org[:id]
-      else
-        debugger
-        false
-      end
-    else
-      debugger
-      false
-    end
+    CanvasHelper.courses_sync org_slug, @canvas_access_token
 
     redirect_to canvas_courses_path
   end
@@ -329,50 +312,6 @@ class AdminController < ApplicationController
 
     @child_accounts.each do |child_account|
       sync_canvas_accounts child_account
-    end
-  end
-
-  def sync_canvas_courses accounts, root_org_id
-    accounts.each do |account_meta|
-      if account_meta.key == 'id' then
-        account = account_meta[:value]
-      elsif account_meta.key == 'parent_id'
-        account_parent = account_meta[:value]
-      end
-
-      # need a way to deal with huge accounts... later
-      if account_meta.key == 'id' && account != '90334' then
-        # get all courses for the current acocunt
-        begin
-          canvas_courses = @canvas_client.get("/api/v1/accounts/#{account}/courses?per_page=50&with_enrollments=true")
-
-          pg = 0
-          while canvas_courses.more?
-            pg+=1
-            puts "getting account #{account} courses (page #{pg})"
-            canvas_courses.next_page!
-          end
-
-          # store each piece of data into the organization meta model
-          canvas_courses.each do |course|
-            puts "getting course #{course['id']} data"
-
-            course.each do |key, value|
-              meta = DocumentMeta.find_or_initialize_by lms_course_id: course['id'],
-                key: key,
-                root_organization_id: @org[:id],
-                lms_organization_id: account,
-                lms_course_id: course['id'].to_s
-
-              meta[:value] = value.to_s
-
-              meta.save
-            end
-          end
-        rescue Exception => e
-          throw "Canvas sync failed on #{account}"
-        end
-      end
     end
   end
 

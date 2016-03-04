@@ -1,0 +1,10 @@
+
+
+
+<div class="btn-horizontal">
+  <%= link_to 'Use this SALSA syllabus as my template', params.merge({ canvas_course_id: @document[:lms_course_id], canvas: true }), {class: 'btn btn-primary'} %>
+</div>
+
+<div class="btn-horizontal">
+  <%= link_to 'Create a new SALSA syllabus', lms_course_document_path(lms_course_id: params[:lms_course_id]), {class: 'btn btn-default'} %>
+</div>
