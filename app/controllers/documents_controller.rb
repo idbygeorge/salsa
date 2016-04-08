@@ -83,7 +83,20 @@ class DocumentsController < ApplicationController
     if @lms_course
       @document = Document.find_by lms_course_id: params[:lms_course_id], organization: @organization
 
-      unless @document
+      # flag to see if there is a match on the token id
+      token_matches = false
+
+      if params[:document_token]
+        # check if the supplied token token_matches the document view_id
+        if @document && @document[:view_id] == params[:document_token]
+          token_matches = true
+        end
+      else
+        # no token, proceed as normal
+        token_matches = true
+      end
+
+      unless @document && token_matches
         # if they have a document token (read only token for now) then see if it exists
         if params[:document_token]
           @document = Document.find_by view_id: params[:document_token], organization: @organization
