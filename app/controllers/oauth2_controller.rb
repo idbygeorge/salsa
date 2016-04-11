@@ -39,7 +39,11 @@ class Oauth2Controller < ApplicationController
     end
 
     if params[:lms_course_id]
-      redirect_to lms_course_document_path(params[:lms_course_id])
+      if params[:document_token]
+        redirect_to lms_course_document_path(params[:lms_course_id], document_token: params[:document_token])
+      else
+        redirect_to lms_course_document_path(params[:lms_course_id])
+      end
     elsif params[:document_id] != ''
       redirect_to document_path(params[:document_id]) + '#/select/course'
     else
