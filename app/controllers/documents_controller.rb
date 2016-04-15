@@ -104,7 +104,7 @@ class DocumentsController < ApplicationController
       unless @document && token_matches
         # if they have a document token (read only token for now) then see if it exists
         if params[:document_token]
-          @document = Document.find_by view_id: params[:document_token], organization: @organization
+          @document = Document.find_by view_id: params[:document_token]
 
           if @document
             # we need to setup the course and associate it with canvas
