@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.0.0'
+gem 'rails', '4.2'
 
 group :development, :test do
   gem 'sqlite3'
@@ -32,12 +32,13 @@ group :production do
 end
 
 # preprocessors
-gem 'sass-rails', '~> 4.0.0'
+gem 'sass-rails'
 gem 'compass-rails'
-gem 'coffee-rails', '~> 4.0.0'
-gem 'uglifier', '>= 1.3.0'
+gem 'coffee-rails'
+gem 'uglifier'
 
 # bootstrap
+gem 'sprockets-rails'
 gem 'bootstrap-sass'
 
 # Use jquery as the JavaScript library
@@ -52,7 +53,7 @@ gem 'awesome_nested_set', '~> 3.0.0.rc.3'
 # pagination
 gem 'kaminari'
 # active record version control
-gem 'vestal_versions', :git => 'git://github.com/laserlemon/vestal_versions'
+gem 'vestal_versions', :git => 'git://github.com/safetypins/vestal_versions'
 
 # processing meta data for orgs and accounts
 gem 'pivot_table'

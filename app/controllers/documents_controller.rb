@@ -250,15 +250,18 @@ class DocumentsController < ApplicationController
 
   def verify_org
     document_slug = request.env['SERVER_NAME']
-    @salsa_link = document_path(@document[:edit_id])
 
-    if params[:sub_organization_slugs]
-      document_slug += '/' + params[:sub_organization_slugs]
+    if @document[:edit_id]
+      @salsa_link = document_path(@document[:edit_id])
 
-      if @document[:edit_id]
-        @salsa_link = sub_org_document_path @document[:edit_id], sub_organization_slugs: params[:sub_organization_slugs]
-      else
-        @salsa_link = new_sub_org_document_path sub_organization_slugs: params[:sub_organization_slugs]
+      if params[:sub_organization_slugs]
+        document_slug += '/' + params[:sub_organization_slugs]
+
+        if @document[:edit_id]
+          @salsa_link = sub_org_document_path @document[:edit_id], sub_organization_slugs: params[:sub_organization_slugs]
+        else
+          @salsa_link = new_sub_org_document_path sub_organization_slugs: params[:sub_organization_slugs]
+        end
       end
     end
 

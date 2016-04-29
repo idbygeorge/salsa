@@ -4,7 +4,7 @@ class Organization < ActiveRecord::Base
   has_many :documents
   has_many :components
 
-  default_scope order('lft, rgt')
+  default_scope { order('lft, rgt') }
   validates :slug, presence: true
   validates :name, presence: true
 end

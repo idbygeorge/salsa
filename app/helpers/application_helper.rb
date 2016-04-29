@@ -45,7 +45,7 @@ module ApplicationHelper
       end
     end
 
-    if output == '' && has_role('admin')
+    if output == '' && has_role('admin') && partial != 'analytics'
       output = "#{path}#{partial} does not exist"
     end
 

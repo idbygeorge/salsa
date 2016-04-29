@@ -22,7 +22,7 @@ function liteOff(x){
             change: function(e, ui) {
                 var tabLink = $('a', ui.item);
                 var movedSection = $(tabLink.attr('href'));
-                
+
                 var index = ui.placeholder.index();
 
                 // move all of the sections to the tempElement
@@ -46,7 +46,7 @@ function liteOff(x){
             beforeStop: function(e, ui) {
                 var tabLink = $('a', ui.item);
                 var section = $(tabLink.attr('href'));
-                
+
                 tabLink.trigger('click');
             }
         });
@@ -55,13 +55,13 @@ function liteOff(x){
             $(this).remove();
         });
 
-        $("a[href=#togglenext]").on("click", function(e){
+        $("a[href='#togglenext']").on("click", function(e){
             $(this).siblings().toggle();
-            
+
             e.preventDefault();
         });
 
-        $("a.click_on_init").not('[href^=#]').on('click', function(){
+        $("a.click_on_init").not('[href^="#"]').on('click', function(){
             window.location = $(this).attr('href');
         });
 
@@ -87,7 +87,7 @@ function liteOff(x){
 
                 // find the control for this section
                 var sectionToggleControl = $("aside." + sectionName).find("[data-target='." + subSectionClassName + "']");
-                
+
                 // sync the controls state for this section with the document
                 if($(this).hasClass("hide")){
                     sectionToggleControl.removeClass("ui-state-active").addClass("ui-state-default");
@@ -267,7 +267,7 @@ function liteOff(x){
         $("section").on("blur", ".editing input", function(){
             var element = $(this).closest(".editing");
             var text = $(this).val();
-            
+
             if(text == '' && $(this).parent().hasClass('right') == true){
                 text = '-';
             }
@@ -287,7 +287,7 @@ function liteOff(x){
                 // blur triggers twice when the window loses focus so we need to explicitly add and remove the needed classes
                 element.html(text).removeClass("editing");
                 element.html(text).addClass("editable");
-                
+
                 if ($('#grades').has(element)) {
                     updateGradesPage(element);
                 }
@@ -392,7 +392,7 @@ function liteOff(x){
                 position: 'center ',
                 open: function() {
                     $('#compilation_tabs').tabs();
-                    
+
                     $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-state-default");
                 }
             });
@@ -437,7 +437,7 @@ function liteOff(x){
 
         // save
         var publishing = false;
-        
+
         $('#tb_save').on('ajax:beforeSend', function(event, xhr, settings) {
             if($('body').hasClass('disable-save')) {
                 xhr.abort();
@@ -445,7 +445,7 @@ function liteOff(x){
             }
 
             settings.data = cleanupDocument($('#page-data').html());
-            
+
             $('#save_prompt').stop().removeAttr('style').removeClass('hidden').css({display: 'block', zIndex: 999999999, top: 30, position: 'fixed', width: '100%', textAlign: 'center', backgroundColor: '#ffe', borderBottom: 'solid 1px #ddd'}).html('Saving...');
         });
 
@@ -515,13 +515,13 @@ function liteOff(x){
         // publish
         $("#share_prompt").dialog({ modal:true, width:600, title:'Publish', autoOpen:false });
         $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-state-default").focus();
-        
+
         $('#tb_share').on('ajax:beforeSend', function(event, xhr, settings) {
             if($('body').hasClass('disable-save')) {
                 xhr.abort();
                 return false;
             }
-            
+
             settings.data = cleanupDocument($('#page-data').html());
 
             $('#save_message').show();
@@ -570,7 +570,7 @@ function liteOff(x){
             } else if(window.location.hash == '#/select/course') {
                 $("#tb_save_canvas").trigger('click');
             } else if (window.location.hash.search(/^#[a-z]+$/) === 0) {
-                $('#tabs a[href=' + window.location.hash + ']').trigger('click');
+                $('#tabs a[href="' + window.location.hash + '"]').trigger('click');
             }
         }).trigger('hashchange');
 
@@ -840,7 +840,7 @@ function liteOff(x){
 
             var topBar = $("<div id='topBar'><ul class='inner'/></div>");
             topBar.prepend($("<h2/>").text(args.source.text()));
-            
+
             args.source.nextUntil("dt").each(function(){
                 var newItem = $("<li><a href='#'/></li>");
                 $("a", newItem).text($(this).text());
@@ -859,7 +859,7 @@ function liteOff(x){
                 $('th:last', args.target).text('Points');
                 $('tr.total td:first-child', args.target).text('Total Points');
                 $('th:last-child,td:last-child', '#grade_scale').show();
-            } 
+            }
             else if(args.action === 'percent') {
                 $('th:last', args.target).text('Percentage');
                 $('tr.total td:first-child', args.target).text('Total');
