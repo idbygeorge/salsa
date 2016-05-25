@@ -8,7 +8,7 @@ class CanvasSyncCourseMeta < Que::Job
   def run(org_slug, canvas_token)
     ActiveRecord::Base.transaction do
 
-      CanvasHelper.courses_sync_as_job org_slug, canvas_token
+      CanvasHelper.courses_sync org_slug, canvas_token
 
       destroy
     end
