@@ -1,4 +1,4 @@
-<% if @queued_count %>
+<% if @queued.count %>
     <div class="alert alert-info">
         Currently syncing courses. This may take a few hours.
         <hr><%= Que.worker_states %>
