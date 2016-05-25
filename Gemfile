@@ -71,6 +71,8 @@ gem 'canvas-api'
 
 gem 'nokogiri'
 
+# background gem for long runnning tasks
+gem 'que'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
