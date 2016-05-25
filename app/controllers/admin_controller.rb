@@ -248,7 +248,9 @@ class AdminController < ApplicationController
   end
 
   def canvas_courses
-    @document_meta = get_document_meta
+    if params[:show_course_meta]
+        @document_meta = get_document_meta
+    end
 
     @queued = Que.execute("select run_at, job_id, error_count, last_error, queue from que_jobs where job_class = 'CanvasSyncCourseMeta'")
     @queued_count = @queued.count
