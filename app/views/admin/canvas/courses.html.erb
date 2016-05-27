@@ -1,8 +1,10 @@
 <% if @queued.count > 0 %>
     <div class="alert alert-info">
         Currently syncing courses. This may take a few hours.
-        <hr><%= Que.worker_states %> <%= @queued.count %>
         <div class="hide">
+            <hr>
+            <%= Que.worker_states %>
+            <br><br>
             <%= @queued %>
         </div>
     </div>
