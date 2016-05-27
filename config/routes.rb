@@ -1,8 +1,5 @@
 Salsa::Application.routes.draw do
 
-  require "que/web"
-  mount Que::Web => "/que"
-
   root 'default#index'
 
   resources :documents, path: 'SALSA', constraints: { slug: /.*/ }
