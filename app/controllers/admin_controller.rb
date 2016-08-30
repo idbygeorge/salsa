@@ -248,7 +248,12 @@ class AdminController < ApplicationController
   end
 
   def canvas_courses
-    @document_meta = get_document_meta
+    if params[:show_course_meta]
+        @document_meta = get_document_meta
+    end
+
+    @queued = Que.execute("select run_at, job_id, error_count, last_error, queue from que_jobs where job_class = 'CanvasSyncCourseMeta'")
+    @queued_count = @queued.count
 
     render 'admin/canvas/courses'
   end
@@ -288,7 +293,7 @@ class AdminController < ApplicationController
 
     org_slug = request.env['SERVER_NAME']
 
-    CanvasHelper.courses_sync org_slug, @canvas_access_token
+    CanvasHelper.courses_sync_as_job org_slug, @canvas_access_token
 
     redirect_to canvas_courses_path
   end
