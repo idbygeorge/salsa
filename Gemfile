@@ -73,7 +73,6 @@ gem 'nokogiri'
 
 # background gem for long runnning tasks
 gem 'que'
-gem 'que-web'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
