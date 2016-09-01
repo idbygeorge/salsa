@@ -36,7 +36,7 @@ module CanvasHelper
       if account_meta.key == 'id' && account != '90334' then
         # get all courses for the current acocunt
         begin
-          canvas_courses = @canvas_client.get("/api/v1/accounts/#{account}/courses?per_page=50&with_enrollments=true&include[]=total_students&include[]=syllabus_body")
+          canvas_courses = @canvas_client.get("/api/v1/accounts/#{account}/courses?per_page=50&with_enrollments=true")
 
           pg = 0
           while canvas_courses.more?
