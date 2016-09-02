@@ -6,11 +6,7 @@ class CanvasSyncCourseMeta < Que::Job
   # @run_at = proc { 1.minute.from_now }
 
   def run(org_slug, canvas_token)
-    ActiveRecord::Base.transaction do
-
-      CanvasHelper.courses_sync org_slug, canvas_token
-
-      destroy
-    end
+    Que.mode = :async
+    CanvasHelper.courses_sync org_slug, canvas_token
   end
 end
