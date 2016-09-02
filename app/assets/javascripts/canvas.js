@@ -201,11 +201,7 @@ $(function() {
     $('.hide, #page_break, .page-break, .content:has(#grade_scale.inactive), .disabled, #spacer, [style*="display: none;"], .dynamic-component, script', salsaDocument).remove();
 
     // remove hidden table cells
-    $('th, td', salsaDocument).each(function(){
-      if($(this).css('display') == 'none') {
-        $(this).remove();
-      }
-    });
+    $('.col2 tr > :nth-child(2),.col3 tr > :nth-child(3),.col4 tr > :nth-child(4),.col5 tr > :nth-child(5)').nextAll().remove();
 
     if (typeof(html_share_link_text) == 'undefined'){
       html_share_link_text = 'SALSA HTML';
