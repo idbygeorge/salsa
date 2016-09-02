@@ -135,6 +135,7 @@ class AdminController < ApplicationController
         pn.value as parent_account_name,
         end_date.value as end_at,
         ws.value as workflow_state,
+        ts.value as total_students,
         d.edit_id as edit_id,
         d.view_id as view_id,
         d.lms_published_at as published_at
@@ -228,7 +229,15 @@ class AdminController < ApplicationController
           AND ws.key = 'workflow_state'
         )
 
-      -- join the workflow state meta information
+      -- join the total_students meta information
+      LEFT JOIN
+        document_meta as ts ON (
+          a.lms_course_id = ts.lms_course_id
+          AND a.root_organization_id = ts.root_organization_id
+          AND ts.key = 'total_students'
+        )
+
+      -- join the SALSA document
       LEFT JOIN
         documents as d ON (
           a.lms_course_id = d.lms_course_id
@@ -240,6 +249,7 @@ class AdminController < ApplicationController
         a.root_organization_id = #{@org[:id].to_s}
         AND a.key = 'account_id'
         AND n.value LIKE '%FL16%'
+        AND ts.value != '0'
 
       ORDER BY pn.value, acn.value, n.value, a.lms_course_id
     SQL
