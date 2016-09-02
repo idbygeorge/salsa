@@ -200,6 +200,13 @@ $(function() {
     // remove all hidden content, canvas doesn't like our CSS
     $('.hide, #page_break, .page-break, .content:has(#grade_scale.inactive), .disabled, #spacer, [style*="display: none;"], .dynamic-component, script', salsaDocument).remove();
 
+    // remove hidden table cells
+    $('th, td', salsaDocument).each(function(){
+      if($(this).css('display') == 'none') {
+        $(this).remove();
+      }
+    });
+
     if (typeof(html_share_link_text) == 'undefined'){
       html_share_link_text = 'SALSA HTML';
     }
