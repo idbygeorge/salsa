@@ -235,6 +235,7 @@ class AdminController < ApplicationController
           a.lms_course_id = ts.lms_course_id
           AND a.root_organization_id = ts.root_organization_id
           AND ts.key = 'total_students'
+          AND ts.value != '0'
         )
 
       -- join the SALSA document
@@ -249,7 +250,6 @@ class AdminController < ApplicationController
         a.root_organization_id = #{@org[:id].to_s}
         AND a.key = 'account_id'
         AND n.value LIKE '%FL16%'
-        AND ts.value != '0'
 
       ORDER BY pn.value, acn.value, n.value, a.lms_course_id
     SQL
