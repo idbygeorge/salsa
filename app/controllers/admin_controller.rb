@@ -135,6 +135,7 @@ class AdminController < ApplicationController
         pn.value as parent_account_name,
         end_date.value as end_at,
         ws.value as workflow_state,
+        ts.value as total_students,
         d.edit_id as edit_id,
         d.view_id as view_id,
         d.lms_published_at as published_at
@@ -228,7 +229,16 @@ class AdminController < ApplicationController
           AND ws.key = 'workflow_state'
         )
 
-      -- join the workflow state meta information
+      -- join the total_students meta information
+      LEFT JOIN
+        document_meta as ts ON (
+          a.lms_course_id = ts.lms_course_id
+          AND a.root_organization_id = ts.root_organization_id
+          AND ts.key = 'total_students'
+          AND ts.value != '0'
+        )
+
+      -- join the SALSA document
       LEFT JOIN
         documents as d ON (
           a.lms_course_id = d.lms_course_id
@@ -239,7 +249,7 @@ class AdminController < ApplicationController
       WHERE
         a.root_organization_id = #{@org[:id].to_s}
         AND a.key = 'account_id'
-        AND n.value LIKE '%SP16%'
+        AND n.value LIKE '%FL16%'
 
       ORDER BY pn.value, acn.value, n.value, a.lms_course_id
     SQL
@@ -248,7 +258,12 @@ class AdminController < ApplicationController
   end
 
   def canvas_courses
-    @document_meta = get_document_meta
+    if params[:show_course_meta]
+        @document_meta = get_document_meta
+    end
+
+    @queued = Que.execute("select run_at, job_id, error_count, last_error, queue from que_jobs where job_class = 'CanvasSyncCourseMeta'")
+    @queued_count = @queued.count
 
     render 'admin/canvas/courses'
   end
@@ -288,7 +303,7 @@ class AdminController < ApplicationController
 
     org_slug = request.env['SERVER_NAME']
 
-    CanvasHelper.courses_sync org_slug, @canvas_access_token
+    CanvasHelper.courses_sync_as_job org_slug, @canvas_access_token
 
     redirect_to canvas_courses_path
   end

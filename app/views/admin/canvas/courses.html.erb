@@ -1,13 +1,25 @@
-<%= form_tag canvas_courses_sync_path, class: 'form form-horizontal' do %>
-  <div class="form-group">
-    <%= label_tag :canvas_token, 'Canvas Admin Token' %>
-    <%= password_field_tag :canvas_token, '', class: 'form-control' %>
-  </div>
+<% if @queued.count > 0 %>
+    <div class="alert alert-info">
+        Currently syncing courses. This may take a few hours.
+        <div class="hide">
+            <hr>
+            <%= @queued %>
+        </div>
+    </div>
+<% else %>
+    <%= form_tag canvas_courses_sync_path, class: 'form form-horizontal' do %>
+        <div class="form-group">
+            <%= label_tag :canvas_token, 'Canvas Admin Token' %>
+            <%= password_field_tag :canvas_token, '', class: 'form-control' %>
+        </div>
 
-  <%= submit_tag 'Sync', class: 'btn btn-default' %>
+        <%= submit_tag 'Sync', class: 'btn btn-default' %>
+    <% end %>
 <% end %>
 
-<% if @document_meta.count > 0 %>
+<% if !@document_meta %>
+    <a href="/admin/canvas/courses?show_course_meta=true">Show course meta</a>
+<% elsif @document_meta.count > 0 %>
 <table class="table table-responsive table-striped">
   <thead>
     <tr>

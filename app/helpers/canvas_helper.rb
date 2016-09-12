@@ -1,5 +1,9 @@
 module CanvasHelper
 
+  def self.courses_sync_as_job (org_slug, canvas_token)
+    CanvasSyncCourseMeta.enqueue(org_slug, canvas_token)
+  end
+
   def self.courses_sync (org_slug, canvas_token)
     @org = Organization.find_by slug: org_slug
     @canvas_access_token = canvas_token
@@ -16,7 +20,6 @@ module CanvasHelper
         throw "Failed to initialize canvas client: #{@canvas_endpoint}"
       end
     else
-      debugger
       throw "Organization #{org_slug} was not found. Aborting."
     end
   end
@@ -33,8 +36,7 @@ module CanvasHelper
       if account_meta.key == 'id' && account != '90334' then
         # get all courses for the current acocunt
         begin
-          canvas_courses = @canvas_client.get("/api/v1/accounts/#{account}/courses?per_page=50&with_enrollments=true")
-
+          canvas_courses = @canvas_client.get("/api/v1/accounts/#{account}/courses?per_page=50&with_enrollments=true&include[]=total_students")
           pg = 0
           while canvas_courses.more?
             pg+=1

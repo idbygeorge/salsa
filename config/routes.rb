@@ -1,4 +1,5 @@
 Salsa::Application.routes.draw do
+
   root 'default#index'
 
   resources :documents, path: 'SALSA', constraints: { slug: /.*/ }
