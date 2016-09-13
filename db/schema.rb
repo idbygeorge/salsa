@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20151125133826) do
+ActiveRecord::Schema.define(version: 20160525015713) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -114,6 +114,16 @@ ActiveRecord::Schema.define(version: 20151125133826) do
   add_index "organizations", ["parent_id"], name: "index_organizations_on_parent_id", using: :btree
   add_index "organizations", ["rgt"], name: "index_organizations_on_rgt", using: :btree
   add_index "organizations", ["slug", "parent_id"], name: "index_organizations_on_slug_and_parent_id", unique: true, using: :btree
+
+  create_table "que_jobs", primary_key: "queue", force: :cascade do |t|
+    t.integer  "priority",    limit: 2, default: 100,                                        null: false
+    t.datetime "run_at",                default: "now()",                                    null: false
+    t.integer  "job_id",      limit: 8, default: "nextval('que_jobs_job_id_seq'::regclass)", null: false
+    t.text     "job_class",                                                                  null: false
+    t.json     "args",                  default: [],                                         null: false
+    t.integer  "error_count",           default: 0,                                          null: false
+    t.text     "last_error"
+  end
 
   create_table "report_archives", force: :cascade do |t|
     t.text     "payload"
