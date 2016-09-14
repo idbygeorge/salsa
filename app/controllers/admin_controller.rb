@@ -22,7 +22,7 @@ class AdminController < ApplicationController
     if File.file?('/vagrant/tmp/report_archive.zip')
       File.delete('/vagrant/tmp/report_archive.zip')
     end
-    reportJSON = ReportArchive.where.not(payload: '[]').first
+    reportJSON = ReportArchive.where(organization_id: @organization.id).first
     report = JSON.parse(reportJSON.payload)
     courses = report.map{ |x|  x['course_id'] }
     # byebug
