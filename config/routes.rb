@@ -13,6 +13,8 @@ Salsa::Application.routes.draw do
     get "search", to: 'admin#search', as: 'admin_search'
 
     get "canvas", to: 'admin#canvas', as: 'admin_canvas'
+    get "archive", to: 'admin#archive', as: 'admin_archive'
+    get "download", to: 'admin#download', as: 'admin_download'
 
     get "canvas/accounts", to: 'admin#canvas_accounts', as: 'canvas_accounts'
     post "canvas/accounts/sync", to: 'admin#canvas_accounts_sync', as: 'canvas_accounts_sync'

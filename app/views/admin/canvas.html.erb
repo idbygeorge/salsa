@@ -11,6 +11,15 @@
       <a href="/admin/canvas?rebuild=true">Rebuild this report</a><br>
       <em class="small">Takes 1-<%= @stale_difference %> minutes</em>
     <% end %>
+    <% if @download_snapshot %>
+      <div class="">
+        <a class="btn btn-success download-btn" href="/admin/download">Download semester snapshot <i class=" download-icon fa fa-download" aria-hidden="true"></i></a>
+      </div>
+    <% end %>
+      <div class="">
+        <a href="/admin/archive">Generate semester snapshot</a><br>
+        <em class="small">Takes 1-<%= @stale_difference %> minutes</em>
+      </div>
   </div>
 
   Report Generated <%= time_ago_in_words @report.updated_at %> ago.<br>

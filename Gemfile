@@ -15,6 +15,10 @@ group :development do
   gem 'capistrano-rails'
   gem 'better_errors'
   gem 'binding_of_caller'
+
+  #debugging gem
+  gem 'byebug'
+
 end
 
 #postgresql for db
@@ -73,6 +77,9 @@ gem 'nokogiri'
 
 # background gem for long runnning tasks
 gem 'que'
+
+#gem for creating zip files
+gem 'rubyzip'
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'

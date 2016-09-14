@@ -1,3 +1,6 @@
+require 'tempfile'
+require 'zip'
+
 class AdminController < ApplicationController
   before_filter :require_admin_password, except: [:canvas,:login,:logout]
   before_filter :require_audit_role, only: [:canvas]
@@ -13,6 +16,45 @@ class AdminController < ApplicationController
   	end
   end
 
+  def archive
+    @organization = get_org
+
+    if File.file?('/vagrant/tmp/report_archive.zip')
+      File.delete('/vagrant/tmp/report_archive.zip')
+    end
+    reportJSON = ReportArchive.where.not(payload: '[]').first
+    report = JSON.parse(reportJSON.payload)
+    courses = report.map{ |x|  x['course_id'] }
+    # byebug
+    docs = Document.where(lms_course_id: courses )
+    docs = docs.where(organization_id: @organization.id )
+
+
+
+    zipfile_name = "/vagrant/tmp/report_archive.zip"
+
+    Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
+      zipfile.get_output_stream('content.css'){ |os| os.write Rails.application.assets['application.css'].to_s }
+      docs.each do |doc|
+
+        @document = doc
+        # Two arguments:
+        # - The name of the file as it will appear in the archive
+        # - The original file, including the path to find it
+        rendered_doc = render_to_string :layout => "archive", :template => "documents/content"
+        zipfile.get_output_stream("#{@document.id}.html") { |os| os.write rendered_doc }
+      end
+    end
+
+    redirect_to '/admin/canvas'
+  end
+
+  def download
+    send_file '/vagrant/tmp/report_archive.zip'
+
+  end
+
+
   def require_audit_role
     unless has_role 'auditor' == true
       redirect_to admin_login_path
@@ -22,6 +64,10 @@ class AdminController < ApplicationController
   def canvas
     rebuild = params[:rebuild]
     flush = params[:flush]
+
+    if File.file?('/vagrant/tmp/report_archive.zip')
+      @download_snapshot = true
+    end
 
     @stale_difference = 5
     stale_limit = Time.now - @stale_difference.minutes

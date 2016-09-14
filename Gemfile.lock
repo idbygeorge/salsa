@@ -61,6 +61,7 @@ GEM
       autoprefixer-rails (>= 5.2.1)
       sass (>= 3.3.4)
     builder (3.2.2)
+    byebug (9.0.5)
     canvas-api (1.1.1)
       json
       typhoeus
@@ -200,6 +201,7 @@ GEM
       rspec-mocks (~> 3.4.0)
       rspec-support (~> 3.4.0)
     rspec-support (3.4.1)
+    rubyzip (1.2.0)
     sass (3.4.22)
     sass-rails (5.0.4)
       railties (>= 4.0.0, < 5.0)
@@ -248,6 +250,7 @@ DEPENDENCIES
   better_errors
   binding_of_caller
   bootstrap-sass
+  byebug
   canvas-api
   capistrano
   capistrano-bundler
@@ -266,6 +269,7 @@ DEPENDENCIES
   rails (= 4.2)
   rails_12factor
   rspec-rails
+  rubyzip
   sass-rails
   sdoc
   sprockets-rails
@@ -278,4 +282,4 @@ DEPENDENCIES
   zurb-foundation
 
 BUNDLED WITH
-   1.13.0
+   1.13.1
