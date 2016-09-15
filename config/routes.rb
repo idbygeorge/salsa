@@ -16,6 +16,8 @@ Salsa::Application.routes.draw do
     get "archive", to: 'admin#archive', as: 'admin_archive'
     get "download", to: 'admin#download', as: 'admin_download'
 
+    get "report-status", to: 'admin#reportStatus', as: 'admin_report_status'
+
     get "canvas/accounts", to: 'admin#canvas_accounts', as: 'canvas_accounts'
     post "canvas/accounts/sync", to: 'admin#canvas_accounts_sync', as: 'canvas_accounts_sync'
     get "canvas/courses", to: 'admin#canvas_courses', as: 'canvas_courses'
