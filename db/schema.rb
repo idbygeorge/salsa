@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160525015713) do
+ActiveRecord::Schema.define(version: 20160916224759) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -106,6 +106,7 @@ ActiveRecord::Schema.define(version: 20160525015713) do
     t.datetime "dashboard_start_at"
     t.datetime "dashboard_end_at"
     t.string   "home_page_redirect"
+    t.json     "default_account_filter"
   end
 
   add_index "organizations", ["depth"], name: "index_organizations_on_depth", using: :btree
@@ -131,6 +132,7 @@ ActiveRecord::Schema.define(version: 20160525015713) do
     t.integer  "organization_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.json     "report_filters"
   end
 
   add_index "report_archives", ["organization_id"], name: "index_report_archives_on_organization_id", using: :btree

@@ -8,7 +8,15 @@
         &mdash; <a href="/admin/canvas?flush=true">cancel report</a>
       <% end %>
     <% else %>
-      <a href="/admin/canvas?rebuild=true">Rebuild this report</a><br>
+    <%= form_tag generate_report_path, class: 'form form-inline' do %>
+        <div class="form-group">
+            <%= label_tag :account_filter, 'Semester' %>
+            <%= text_field_tag :account_filter, 'FL16', class: 'form-control' %>
+            <%= hidden_field_tag :rebuild, 'true', class: 'form-control' %>
+        </div>
+
+        <%= submit_tag 'Build Report', class: 'btn btn-default' %>
+    <% end %>
       <em class="small">Takes 1-5 minutes</em>
     <% end %>
     <% if @download_snapshot %>

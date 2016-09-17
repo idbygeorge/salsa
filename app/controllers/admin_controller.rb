@@ -73,17 +73,29 @@ class AdminController < ApplicationController
       @download_snapshot = true
     end
 
-    #start by saving the report (add check to see if there is a report)
     @org = get_org
-    account_filter = 'FL15'
-    @report = ReportArchive.where(organization_id: @org.id).first_or_create
 
+    #Remove unneeded params
+    # byebug
+    params.delete :authenticity_token
+    params.delete :utf8
+    params.delete :commit
+    # byebug
+    filter = params.keys.sort.map {|k| "{'#{k}':'#{params[k]}'},"}.join
+    filter = filter[0, filter.length - 1]
+    #start by saving the report (add check to see if there is a report)
+    @report = ReportArchive.where(organization_id: 6).all
+    if(@report.empty?)
+      byebug
+      @report = ReportArchive.create([organization_id: 5, payload: ''])
+    end
+
+    # byebug
     if !@report.payload || rebuild
 
       jobs = Que.execute("select run_at, job_id, error_count, last_error, queue, args from que_jobs where job_class = 'ReportGenerator'")
-      args = [ @org.id, account_filter, params ]
+      args = [ @org.id, params[:account_filter], params ]
       jobs.each do |job|
-        # byebu`g
         if job['args'] == args
           return redirect_to '/admin/report-status'
         end
