@@ -1,25 +1,27 @@
 module ReportHelper
 
   def self.generate_report_as_job (org_id, account_filter, params)
-    ReportGenerator.enqueue(org_id, account_filter, params)
-  end
-
-  def self.generate_report (org_slug, account_filter, params)
-
-    @org = Organization.find_by slug: org_slug
-    @reports = ReportArchive.where(organization_id: @org.id).all
+    @reports = ReportArchive.where(organization_id: org_id).all
+    @report = nil;
     @reports.each do |report|
-      @report = nil;
       if report.report_filters && report.report_filters == params
         @report = report
       end
     end
     if !@report
-      @report = ReportArchive.create({organization_id: @org.id, report_filters: params.to_json})
+      @report = ReportArchive.create({organization_id: org_id, report_filters: params.to_json})
     end
 
     @report.generating_at = Time.now
     @report.save!
+
+    ReportGenerator.enqueue(org_id, account_filter, params, @report.id)
+  end
+
+  def self.generate_report (org_slug, account_filter, params, report_id)
+
+    @org = Organization.find_by slug: org_slug
+    @report = ReportArchive.where(id: report_id).first
 
     # get the report data (slow process... only should run one at a time)
     puts 'Getting Document Meta'
@@ -29,9 +31,6 @@ module ReportHelper
     @report.generating_at = nil
     @report.payload = @report_data.to_json
     @report.save!
-    if params[:default]
-      ReportGenerator.enqueue(@org.id, account_filter, params)
-    end
   end
 
   def self.get_document_meta org_slug, account_filter, params

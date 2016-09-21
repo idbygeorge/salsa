@@ -13,6 +13,7 @@
             <%= label_tag :account_filter, 'Semester' %>
             <%= text_field_tag :account_filter, 'FL16', class: 'form-control' %>
             <%= hidden_field_tag :rebuild, 'true', class: 'form-control' %>
+            <%= hidden_field_tag :report, @report.id, class: 'form-control' %>
         </div>
 
         <%= submit_tag 'Build Report', class: 'btn btn-default' %>

@@ -95,9 +95,22 @@ class AdminController < ApplicationController
     params.delete :authenticity_token
     params.delete :utf8
     params.delete :commit
+    # debugger
+    if params[:account_filter] != ""
+      account_filter = params[:account_filter]
+    else
+      if @org.default_account_filter
+        account_filter = @org.default_account_filter
+        params[:account_filter] = account_filter
+      else
+        account_filter = 'FL16'
+        params[:account_filter] = account_filter
+      end
+    end
 
     if params[:report]
       @report = ReportArchive.where(id: params[:report]).first
+      params.delete :report
     else
       #start by saving the report (add check to see if there is a report)
       @reports = ReportArchive.where(organization_id: @org.id).all
@@ -114,13 +127,13 @@ class AdminController < ApplicationController
       if !@report.payload || rebuild
 
         jobs = Que.execute("select run_at, job_id, error_count, last_error, queue, args from que_jobs where job_class = 'ReportGenerator'")
-        args = [ @org.id, params[:account_filter], params ]
+        args = [ @org.id, account_filter, params ]
         jobs.each do |job|
           if job['args'] == args
             return redirect_to '/admin/report-status'
           end
         end
-        @queued = ReportHelper.generate_report_as_job @org.id, params[:account_filter], params
+        @queued = ReportHelper.generate_report_as_job @org.id, account_filter, params
 
         redirect_to '/admin/canvas'
       else
