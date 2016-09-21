@@ -1,0 +1,33 @@
+<div class="container">
+  <div class="col-sm-12">
+    <p class="pull-left">
+      Generated reports for <%= @org.name %>
+    </p>
+    <div class="pull-right">
+      <% if @download_snapshot %>
+      <div class="">
+        <a class="btn btn-success download-btn" href="/admin/download">Download semester snapshot <i class=" download-icon fa fa-download" aria-hidden="true"></i></a>
+      </div>
+      <% end %>
+      <div class="">
+        <a href="/admin/archive">Generate semester snapshot</a><br>
+        <em class="small">Takes 1-5 minutes</em>
+      </div>
+    </div>
+    <div class="clearfix"></div>
+      <% @reports.each do |report| %>
+      <hr>
+      <p>
+        Report #<%=report.id%>  <a class="" href="/admin/canvas?report=<%=report.id%>">Load report</a>
+      </p>
+      <ul>
+        <li>Last generated at: <%= report.updated_at.strftime("%m-%e-%Y")%></li>
+        <% if report.report_filters %>
+        <li>
+            Filters: <%=report.report_filters['account_filter']%>
+        </li>
+        <% end %>
+      </ul>
+      <% end %>
+  </div>
+</div>

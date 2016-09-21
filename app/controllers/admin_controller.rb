@@ -18,14 +18,23 @@ class AdminController < ApplicationController
 
   def archive
     @organization = get_org
+    default_term = 'FL16'
+    reportJSON = nil
 
     if File.file?('/vagrant/tmp/report_archive.zip')
       File.delete('/vagrant/tmp/report_archive.zip')
     end
-    reportJSON = ReportArchive.where(organization_id: @organization.id).first
+    reports = ReportArchive.where(organization_id: @organization.id).all
+    reports.each do |r|
+      if @organization.default_account_filter
+        default_term = @organization.default_account_filter
+      end
+      if r.report_filters && r.report_filters["account_filter"] == default_term
+      reportJSON = r
+      end
+    end
     report = JSON.parse(reportJSON.payload)
     courses = report.map{ |x|  x['course_id'] }
-    # byebug
     docs = Document.where(lms_course_id: courses )
     docs = docs.where(organization_id: @organization.id )
 
@@ -65,45 +74,60 @@ class AdminController < ApplicationController
     render 'report_status', layout: '../admin/report_layout'
   end
 
-  def canvas
-    rebuild = params[:rebuild]
-    flush = params[:flush]
+  def reports
+    @org = get_org
+    @reports = ReportArchive.where(organization_id: @org.id).order(updated_at: :desc ).all
 
     if File.file?('/vagrant/tmp/report_archive.zip')
       @download_snapshot = true
     end
 
+    render 'reports', layout: '../admin/report_layout'
+  end
+
+  def canvas
     @org = get_org
+
+    rebuild = params[:rebuild]
+    flush = params[:flush]
 
     #Remove unneeded params
     params.delete :authenticity_token
     params.delete :utf8
     params.delete :commit
-    filter = params.keys.sort.map {|k| "{'#{k}':'#{params[k]}'},"}.join
-    filter = filter[0, filter.length - 1]
-    #start by saving the report (add check to see if there is a report)
-    @report = ReportArchive.where(organization_id: 6).all
-    if(@report.empty?)
-      @report = ReportArchive.create([organization_id: 5, payload: ''])
-    end
 
-    if !@report.payload || rebuild
-
-      jobs = Que.execute("select run_at, job_id, error_count, last_error, queue, args from que_jobs where job_class = 'ReportGenerator'")
-      args = [ @org.id, params[:account_filter], params ]
-      jobs.each do |job|
-        if job['args'] == args
-          return redirect_to '/admin/report-status'
-        end
-      end
-      @queued = ReportHelper.generate_report_as_job @org.id, account_filter, params
-
-      redirect_to '/admin/canvas'
+    if params[:report]
+      @report = ReportArchive.where(id: params[:report]).first
     else
-      @report_data = JSON.parse(@report.payload)
-
-      render 'canvas', layout: '../admin/report_layout'
+      #start by saving the report (add check to see if there is a report)
+      @reports = ReportArchive.where(organization_id: @org.id).all
+      if(@reports.empty?)
+        @reports = ReportArchive.create([organization_id: @org.id, payload: ''])
+      end
+      if @reports.count == 1
+        @report = @reports.first;
+      else
+        return redirect_to '/admin/reports'
+      end
     end
+
+      if !@report.payload || rebuild
+
+        jobs = Que.execute("select run_at, job_id, error_count, last_error, queue, args from que_jobs where job_class = 'ReportGenerator'")
+        args = [ @org.id, params[:account_filter], params ]
+        jobs.each do |job|
+          if job['args'] == args
+            return redirect_to '/admin/report-status'
+          end
+        end
+        @queued = ReportHelper.generate_report_as_job @org.id, params[:account_filter], params
+
+        redirect_to '/admin/canvas'
+      else
+        @report_data = JSON.parse(@report.payload)
+
+        render 'canvas', layout: '../admin/report_layout'
+      end
   end
 
   def canvas_accounts

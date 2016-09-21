@@ -7,7 +7,16 @@ module ReportHelper
   def self.generate_report (org_slug, account_filter, params)
 
     @org = Organization.find_by slug: org_slug
-    @report = ReportArchive.where(organization_id: @org.id).first_or_create
+    @reports = ReportArchive.where(organization_id: @org.id).all
+    @reports.each do |report|
+      @report = nil;
+      if report.report_filters && report.report_filters == params
+        @report = report
+      end
+    end
+    if !@report
+      @report = ReportArchive.create({organization_id: @org.id, report_filters: params.to_json})
+    end
 
     @report.generating_at = Time.now
     @report.save!
@@ -15,7 +24,7 @@ module ReportHelper
     # get the report data (slow process... only should run one at a time)
     puts 'Getting Document Meta'
     @report_data = self.get_document_meta org_slug, account_filter, params
-    puts 'Retrieved DocumentMeta'
+    puts 'Retrieved Document Meta'
     #store it
     @report.generating_at = nil
     @report.payload = @report_data.to_json
