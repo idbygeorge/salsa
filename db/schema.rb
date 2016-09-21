@@ -16,7 +16,7 @@ ActiveRecord::Schema.define(version: 20160916224759) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "components", force: :cascade do |t|
+  create_table "components", force: true do |t|
     t.string   "name"
     t.string   "slug"
     t.text     "description"
@@ -44,7 +44,7 @@ ActiveRecord::Schema.define(version: 20160916224759) do
   add_index "components", ["organization_id"], name: "index_components_on_organization_id", using: :btree
   add_index "components", ["slug", "organization_id"], name: "index_components_on_slug_and_organization_id", unique: true, using: :btree
 
-  create_table "document_meta", force: :cascade do |t|
+  create_table "document_meta", force: true do |t|
     t.integer  "document_id"
     t.string   "key"
     t.string   "value"
@@ -55,7 +55,7 @@ ActiveRecord::Schema.define(version: 20160916224759) do
     t.datetime "updated_at"
   end
 
-  create_table "documents", force: :cascade do |t|
+  create_table "documents", force: true do |t|
     t.string   "name"
     t.string   "edit_id"
     t.string   "view_id"
@@ -79,7 +79,7 @@ ActiveRecord::Schema.define(version: 20160916224759) do
   add_index "documents", ["term_id"], name: "index_documents_on_term_id", using: :btree
   add_index "documents", ["view_id"], name: "index_documents_on_view_id", unique: true, using: :btree
 
-  create_table "organization_meta", force: :cascade do |t|
+  create_table "organization_meta", force: true do |t|
     t.integer  "organization_id"
     t.string   "key"
     t.string   "value"
@@ -89,7 +89,7 @@ ActiveRecord::Schema.define(version: 20160916224759) do
     t.datetime "updated_at"
   end
 
-  create_table "organizations", force: :cascade do |t|
+  create_table "organizations", force: true do |t|
     t.string   "name"
     t.string   "slug"
     t.integer  "parent_id"
@@ -116,17 +116,18 @@ ActiveRecord::Schema.define(version: 20160916224759) do
   add_index "organizations", ["rgt"], name: "index_organizations_on_rgt", using: :btree
   add_index "organizations", ["slug", "parent_id"], name: "index_organizations_on_slug_and_parent_id", unique: true, using: :btree
 
-  create_table "que_jobs", primary_key: "queue", force: :cascade do |t|
-    t.integer  "priority",    limit: 2, default: 100,                                        null: false
-    t.datetime "run_at",                default: "now()",                                    null: false
-    t.integer  "job_id",      limit: 8, default: "nextval('que_jobs_job_id_seq'::regclass)", null: false
-    t.text     "job_class",                                                                  null: false
-    t.json     "args",                  default: [],                                         null: false
-    t.integer  "error_count",           default: 0,                                          null: false
+  create_table "que_jobs", id: false, force: true do |t|
+    t.integer  "priority",    limit: 2, default: 100, null: false
+    t.datetime "run_at",                              null: false
+    t.integer  "job_id",      limit: 8,               null: false
+    t.text     "job_class",                           null: false
+    t.json     "args",                  default: [],  null: false
+    t.integer  "error_count",           default: 0,   null: false
     t.text     "last_error"
+    t.text     "queue",                 default: "",  null: false
   end
 
-  create_table "report_archives", force: :cascade do |t|
+  create_table "report_archives", force: true do |t|
     t.text     "payload"
     t.datetime "generating_at"
     t.integer  "organization_id"
@@ -137,7 +138,7 @@ ActiveRecord::Schema.define(version: 20160916224759) do
 
   add_index "report_archives", ["organization_id"], name: "index_report_archives_on_organization_id", using: :btree
 
-  create_table "templates", force: :cascade do |t|
+  create_table "templates", force: true do |t|
     t.string   "slug"
     t.text     "payload"
     t.integer  "organization_id"
@@ -147,7 +148,7 @@ ActiveRecord::Schema.define(version: 20160916224759) do
 
   add_index "templates", ["slug", "organization_id"], name: "index_templates_on_slug_and_organization_id", unique: true, using: :btree
 
-  create_table "terms", force: :cascade do |t|
+  create_table "terms", force: true do |t|
     t.string   "slug"
     t.string   "name"
     t.integer  "organization_id"
@@ -162,7 +163,7 @@ ActiveRecord::Schema.define(version: 20160916224759) do
 
   add_index "terms", ["slug", "organization_id"], name: "index_terms_on_slug_and_organization_id", unique: true, using: :btree
 
-  create_table "user_assignments", force: :cascade do |t|
+  create_table "user_assignments", force: true do |t|
     t.integer "user_id"
     t.integer "organization_id"
     t.string  "username"
@@ -172,7 +173,7 @@ ActiveRecord::Schema.define(version: 20160916224759) do
 
   add_index "user_assignments", ["username", "organization_id"], name: "index_user_assignments_on_username_and_organization_id", unique: true, using: :btree
 
-  create_table "users", force: :cascade do |t|
+  create_table "users", force: true do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -181,7 +182,7 @@ ActiveRecord::Schema.define(version: 20160916224759) do
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
 
-  create_table "versions", force: :cascade do |t|
+  create_table "versions", force: true do |t|
     t.integer  "versioned_id"
     t.string   "versioned_type"
     t.integer  "user_id"
