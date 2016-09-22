@@ -161,6 +161,7 @@ GEM
       rspec-mocks (~> 3.0.0)
       rspec-support (~> 3.0.0)
     rspec-support (3.0.2)
+    rubyzip (1.2.0)
     sass (3.2.10)
     sass-rails (4.0.0)
       railties (>= 4.0.0.beta, < 5.0)
@@ -235,6 +236,7 @@ DEPENDENCIES
   rails (= 4.0.0)
   rails_12factor
   rspec-rails
+  rubyzip
   sass-rails (~> 4.0.0)
   sdoc
   sqlite3
