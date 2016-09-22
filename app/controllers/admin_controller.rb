@@ -55,7 +55,7 @@ class AdminController < ApplicationController
       end
     end
 
-    redirect_to '/admin/canvas'
+    redirect_to '/admin/reports'
   end
 
   def download
@@ -77,6 +77,21 @@ class AdminController < ApplicationController
   def reports
     @org = get_org
     @reports = ReportArchive.where(organization_id: @org.id).order(updated_at: :desc ).all
+    @default_report = nil
+    @reports.each do |report|
+      if report.payload
+        if @org.default_account_filter
+          if report.report_filters && report.report_filters["account_filter"] == @org.default_account_filter
+            @default_report = true
+          end
+        else
+          if report.report_filters && report.report_filters["account_filter"] == 'FL16'
+            @default_report = true
+          end
+        end
+      end
+    end
+
 
     if File.file?('/vagrant/tmp/report_archive.zip')
       @download_snapshot = true
@@ -95,8 +110,8 @@ class AdminController < ApplicationController
     params.delete :authenticity_token
     params.delete :utf8
     params.delete :commit
-    # debugger
-    if params[:account_filter] != ""
+
+    if params[:account_filter] && params[:account_filter] != ""
       account_filter = params[:account_filter]
     else
       if @org.default_account_filter
@@ -114,17 +129,17 @@ class AdminController < ApplicationController
     else
       #start by saving the report (add check to see if there is a report)
       @reports = ReportArchive.where(organization_id: @org.id).all
-      if(@reports.empty?)
-        @reports = ReportArchive.create([organization_id: @org.id, payload: ''])
-      end
-      if @reports.count == 1
-        @report = @reports.first;
-      else
-        return redirect_to '/admin/reports'
+
+      if !@reports.empty?
+        if @reports.count == 1
+          @report = @reports.first;
+        else
+          return redirect_to '/admin/reports'
+        end
       end
     end
 
-      if !@report.payload || rebuild
+      if !@report || rebuild
 
         jobs = Que.execute("select run_at, job_id, error_count, last_error, queue, args from que_jobs where job_class = 'ReportGenerator'")
         args = [ @org.id, account_filter, params ]
@@ -137,6 +152,10 @@ class AdminController < ApplicationController
 
         redirect_to '/admin/canvas'
       else
+
+        if !@report.payload
+          return redirect_to '/admin/report-status'
+        end
         @report_data = JSON.parse(@report.payload)
 
         render 'canvas', layout: '../admin/report_layout'

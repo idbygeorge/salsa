@@ -11,7 +11,7 @@
     <%= form_tag generate_report_path, class: 'form form-inline' do %>
         <div class="form-group">
             <%= label_tag :account_filter, 'Semester' %>
-            <%= text_field_tag :account_filter, 'FL16', class: 'form-control' %>
+            <%= text_field_tag :account_filter, @report.report_filters["account_filter"], class: 'form-control' %>
             <%= hidden_field_tag :rebuild, 'true', class: 'form-control' %>
             <%= hidden_field_tag :report, @report.id, class: 'form-control' %>
         </div>

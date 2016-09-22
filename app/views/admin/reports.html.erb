@@ -1,19 +1,21 @@
 <div class="container">
   <div class="col-sm-12">
     <p class="pull-left">
-      Generated reports for <%= @org.name %>
+      Reports for <%= @org.name %>
     </p>
-    <div class="pull-right">
-      <% if @download_snapshot %>
-      <div class="">
-        <a class="btn btn-success download-btn" href="/admin/download">Download semester snapshot <i class=" download-icon fa fa-download" aria-hidden="true"></i></a>
+    <%if @default_report %>
+      <div class="pull-right">
+        <% if @download_snapshot %>
+        <div class="">
+          <a class="btn btn-success download-btn" href="/admin/download">Download semester snapshot <i class=" download-icon fa fa-download" aria-hidden="true"></i></a>
+        </div>
+        <% end %>
+        <div class="">
+          <a href="/admin/archive">Generate semester snapshot</a><br>
+          <em class="small">Takes 1-5 minutes</em>
+        </div>
       </div>
       <% end %>
-      <div class="">
-        <a href="/admin/archive">Generate semester snapshot</a><br>
-        <em class="small">Takes 1-5 minutes</em>
-      </div>
-    </div>
     <div class="clearfix"></div>
       <% @reports.each do |report| %>
       <hr>
@@ -24,7 +26,7 @@
       <ul>
         <%if report.generating_at%>
         <li>
-          Build started <%= time_ago_in_words report.generating_at%> ago
+          Report queued <%= time_ago_in_words report.generating_at%> ago
         </li>
         <%end%>
         <li>Last generated  <%=  time_ago_in_words report.updated_at%> ago</li>
