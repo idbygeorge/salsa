@@ -11,7 +11,7 @@ namespace :report do
 
   def run_report org_id, account_filter
     params = {
-      "rebuild" => "true",
+      "account_filter" => account_filter,
       "controller" => "admin",
       "action" => "canvas"
     }

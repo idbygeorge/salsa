@@ -21,8 +21,8 @@ class AdminController < ApplicationController
     default_term = 'FL16'
     reportJSON = nil
 
-    if File.file?('/vagrant/tmp/report_archive.zip')
-      File.delete('/vagrant/tmp/report_archive.zip')
+    if File.file?('/tmp/report_archive.zip')
+      File.delete('/tmp/report_archive.zip')
     end
     reports = ReportArchive.where(organization_id: @organization.id).all
     reports.each do |r|
@@ -40,7 +40,7 @@ class AdminController < ApplicationController
 
 
 
-    zipfile_name = "/vagrant/tmp/report_archive.zip"
+    zipfile_name = "/tmp/report_archive.zip"
 
     Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
       zipfile.get_output_stream('content.css'){ |os| os.write Rails.application.assets['application.css'].to_s }
@@ -59,7 +59,7 @@ class AdminController < ApplicationController
   end
 
   def download
-    send_file '/vagrant/tmp/report_archive.zip'
+    send_file '/tmp/report_archive.zip'
 
   end
 
@@ -92,8 +92,7 @@ class AdminController < ApplicationController
       end
     end
 
-
-    if File.file?('/vagrant/tmp/report_archive.zip')
+    if File.file?('/tmp/report_archive.zip')
       @download_snapshot = true
     end
 
@@ -110,6 +109,7 @@ class AdminController < ApplicationController
     params.delete :authenticity_token
     params.delete :utf8
     params.delete :commit
+    params.delete :rebuild
 
     if params[:account_filter] && params[:account_filter] != ""
       account_filter = params[:account_filter]
@@ -152,7 +152,6 @@ class AdminController < ApplicationController
 
         redirect_to '/admin/canvas'
       else
-
         if !@report.payload
           return redirect_to '/admin/report-status'
         end
