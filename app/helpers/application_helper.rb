@@ -57,7 +57,7 @@ module ApplicationHelper
     "instances/custom/#{org.slug}" if File.directory?("app/views/instances/custom/#{org.slug}")
   end
 
-  def require_admin_password
+  def require_admin_permissions
     # if there is no admin password set up for the server and we are in the development
     # or test environment, bypass the securtiy check
     if params[:admin_off] == "true"
@@ -68,7 +68,7 @@ module ApplicationHelper
       session[:admin_authorized] = params[:admin_password] == APP_CONFIG['admin_password']
     end
 
-    if !has_role 'admin'
+    if !has_role 'organization_admin'
       redirect_to admin_login_path, status: 401
     end
   end

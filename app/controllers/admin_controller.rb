@@ -2,7 +2,7 @@ require 'tempfile'
 require 'zip'
 
 class AdminController < ApplicationController
-  before_filter :require_admin_password, except: [:canvas,:login,:logout]
+  before_filter :require_admin_permissions, except: [:canvas,:login,:logout,:authenticate]
   before_filter :require_audit_role, only: [:canvas]
   before_filter :get_organizations, only: [:search,:canvas_accounts,:canvas_courses]
 
@@ -14,6 +14,34 @@ class AdminController < ApplicationController
 	  else
   		render action: :login, layout: false
   	end
+  end
+
+  def authenticate
+  	@organization = find_org_by_path params[:slug]
+
+    unless params[:user][:email] && params[:user][:password]
+        flash[:error] = 'Missing email or password'
+        return render action: :login, layout: false
+    end
+
+    user = User.where(email: params[:user][:email]).first
+
+    unless user
+        flash[:error] = 'No account matches the email provided'
+        return render action: :login, layout: false
+    end
+
+    unless user.activated
+        flash[:error] = 'Your account is not active yet'
+        return render action: :login, layout: false
+    end
+
+    unless user.authenticate(params[:user][:password])
+        flash[:error] = 'Invalid email or password'
+        return render action: :login, layout: false
+    end
+
+    return "chech org permissions."
   end
 
   def archive
@@ -66,6 +94,12 @@ class AdminController < ApplicationController
 
   def require_audit_role
     unless has_role 'auditor' == true
+      redirect_to admin_login_path
+    end
+  end
+
+  def require_organization_admin_role
+    unless has_role 'organization_admin' == true
       redirect_to admin_login_path
     end
   end
