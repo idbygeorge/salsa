@@ -31,7 +31,7 @@ class AdminController < ApplicationController
         return render action: :login, layout: false
     end
 
-    unless user.activated
+    unless user.password_digest# && user.activated
         flash[:error] = 'Your account is not active yet'
         return render action: :login, layout: false
     end
@@ -41,7 +41,7 @@ class AdminController < ApplicationController
         return render action: :login, layout: false
     end
 
-    return "chech org permissions."
+    return redirect_to admin_organizations
   end
 
   def archive

@@ -1,6 +1,14 @@
 <div class="row">
   <%= form_for(@user, url: admin_user_path(@user), :html => { :class => "form-horizontal col-md-9 col-lg-6" } ) do |f| %>
 
+    <% if @user.errors.any? %>
+        <ul>
+            <% @user.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+            <% end %>
+        </ul>
+    <% end %>
+
     <div class="form-group">
       <%= f.label :name, class: "control-label" %>
       <div class="controls">
@@ -12,6 +20,20 @@
       <%= f.label :email, class: "control-label" %>
       <div class="controls">
         <%= f.text_field :email, class: 'form-control input-xxlarge' %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :password, class: "control-label" %>
+      <div class="controls">
+        <%= f.password_field :password, class: 'form-control input-xxlarge' %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :password_confirmation, class: "control-label" %>
+      <div class="controls">
+        <%= f.password_field :password_confirmation, class: 'form-control input-xxlarge' %>
       </div>
     </div>
 
