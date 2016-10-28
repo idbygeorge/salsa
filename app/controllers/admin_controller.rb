@@ -2,14 +2,15 @@ require 'tempfile'
 require 'zip'
 
 class AdminController < ApplicationController
-  before_filter :require_admin_permissions, except: [:canvas,:login,:logout,:authenticate]
+  before_filter :require_admin_permissions, only: [:search]
+  before_filter :require_organization_admin_permissions, except: [:canvas,:login,:logout,:authenticate]
   before_filter :require_audit_role, only: [:canvas]
   before_filter :get_organizations, only: [:search,:canvas_accounts,:canvas_courses]
 
   def login
   	@organization = find_org_by_path params[:slug]
 
-  	if @organization and @organization[:lms_authentication_source]
+  	if @organization and @organization[:lms_authentication_source] != ""
   		redirect_to oauth2_login_path
 	  else
   		render action: :login, layout: false
@@ -41,7 +42,9 @@ class AdminController < ApplicationController
         return render action: :login, layout: false
     end
 
-    return redirect_to admin_organizations
+    session[:authenticated_user] = user.id
+
+    return redirect_to admin_path
   end
 
   def archive

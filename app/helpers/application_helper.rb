@@ -58,6 +58,30 @@ module ApplicationHelper
   end
 
   def require_admin_permissions
+    check_for_admin_password
+
+    unless has_role 'admin'
+      return redirect_or_error
+    end
+  end
+
+  def require_organization_admin_permissions
+    check_for_admin_password
+
+    unless has_role 'organization_admin'
+      return redirect_or_error
+    end
+  end
+
+  def redirect_or_error
+    if session[:authenticated_user]
+      return render :file => "public/401.html", :status => :unauthorized, :layout => false
+    else
+      return redirect_to admin_login_path
+    end
+  end
+
+  def check_for_admin_password
     # if there is no admin password set up for the server and we are in the development
     # or test environment, bypass the securtiy check
     if params[:admin_off] == "true"
@@ -67,31 +91,34 @@ module ApplicationHelper
     elsif params[:admin_password] && params[:admin_password] != ''
       session[:admin_authorized] = params[:admin_password] == APP_CONFIG['admin_password']
     end
-
-    if !has_role 'organization_admin'
-      redirect_to admin_login_path, status: 401
-    end
   end
 
   def has_role role, org=nil
-    org = find_org_by_path request.env['SERVER_NAME'] unless org
+    unless org
+      if params[:slug]
+        org = find_org_by_path params[:slug]
+      else
+        org = find_org_by_path request.env['SERVER_NAME']
+      end
+    end
 
     result = false
 
     # # if they are authorized as an admin, let them in
     if session[:admin_authorized] == true
       result = true
-    elsif session[:lms_authenticated_user]
-      if org[:lms_authentication_source] == session[:oauth_endpoint]
+    elsif org && (session[:lms_authenticated_user] != nil || session[:authenticated_user] != nil)
+      if org[:lms_authentication_source] && org[:lms_authentication_source] == session[:oauth_endpoint]
         username = session[:lms_authenticated_user]['id'].to_s
-
         user_assignments = UserAssignment.where organization_id: org[:id], username: username
+      else
+        user_assignments = UserAssignment.where organization_id: org[:id], user_id: session[:authenticated_user]
+      end
 
-        if user_assignments.count > 0
-          user_assignments.each do |ua|
-            if ua[:role] == role or ua[:role] = 'admin'
-              result = true
-            end
+      if user_assignments.count > 0
+        user_assignments.each do |ua|
+          if ua[:role] == role or ua[:role] == 'admin'
+            result = true
           end
         end
       end
@@ -104,9 +131,13 @@ module ApplicationHelper
     # only show orgs that the logged in use should see
     unless session[:admin_authorized]
       # load all orgs that the user has a cascade == true assignment
-      user = UserAssignment.find_by_username(
-        session[:lms_authenticated_user]['id'].to_s
-      ).user
+      if session[:lms_authenticated_user]
+        user = UserAssignment.find_by_username(
+          session[:lms_authenticated_user]['id'].to_s
+        ).user
+      elsif session[:authenticated_user]
+        user = User.find session[:authenticated_user]
+      end
 
       cascade_permissions = user.user_assignments.where(cascades: true)
       cascade_organizations = Organization.where(id: cascade_permissions.map(&:organization_id))

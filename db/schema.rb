@@ -17,10 +17,10 @@ ActiveRecord::Schema.define(version: 20161006194132) do
   enable_extension "plpgsql"
 
   create_table "components", force: true do |t|
-    t.string   "name"
-    t.string   "slug"
+    t.string   "name",                limit: nil
+    t.string   "slug",                limit: nil
     t.text     "description"
-    t.string   "category"
+    t.string   "category",            limit: nil
     t.integer  "organization_id"
     t.text     "css"
     t.text     "js"
@@ -46,29 +46,29 @@ ActiveRecord::Schema.define(version: 20161006194132) do
 
   create_table "document_meta", force: true do |t|
     t.integer  "document_id"
-    t.string   "key"
-    t.string   "value"
-    t.string   "lms_organization_id"
-    t.string   "lms_course_id"
+    t.string   "key",                  limit: nil
+    t.string   "value",                limit: nil
+    t.string   "lms_organization_id",  limit: nil
+    t.string   "lms_course_id",        limit: nil
     t.integer  "root_organization_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "documents", force: true do |t|
-    t.string   "name"
-    t.string   "edit_id"
-    t.string   "view_id"
+    t.string   "name",              limit: nil
+    t.string   "edit_id",           limit: nil
+    t.string   "view_id",           limit: nil
     t.text     "payload"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "template_id"
+    t.string   "template_id",       limit: nil
     t.integer  "organization_id"
-    t.string   "lms_course_id"
+    t.string   "lms_course_id",     limit: nil
     t.datetime "lms_published_at"
     t.integer  "component_id"
     t.integer  "component_version"
-    t.string   "term_id"
+    t.string   "term_id",           limit: nil
   end
 
   add_index "documents", ["component_id"], name: "index_documents_on_component_id", using: :btree
@@ -81,31 +81,31 @@ ActiveRecord::Schema.define(version: 20161006194132) do
 
   create_table "organization_meta", force: true do |t|
     t.integer  "organization_id"
-    t.string   "key"
-    t.string   "value"
-    t.string   "lms_organization_id"
+    t.string   "key",                 limit: nil
+    t.string   "value",               limit: nil
+    t.string   "lms_organization_id", limit: nil
     t.integer  "root_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "organizations", force: true do |t|
-    t.string   "name"
-    t.string   "slug"
+    t.string   "name",                      limit: nil
+    t.string   "slug",                      limit: nil
     t.integer  "parent_id"
     t.integer  "lft"
     t.integer  "rgt"
     t.integer  "depth"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "lms_authentication_source"
-    t.string   "lms_authentication_id"
-    t.string   "lms_authentication_key"
-    t.string   "lms_info_slug"
-    t.string   "lms_id"
+    t.string   "lms_authentication_source", limit: nil
+    t.string   "lms_authentication_id",     limit: nil
+    t.string   "lms_authentication_key",    limit: nil
+    t.string   "lms_info_slug",             limit: nil
+    t.string   "lms_id",                    limit: nil
     t.datetime "dashboard_start_at"
     t.datetime "dashboard_end_at"
-    t.string   "home_page_redirect"
+    t.string   "home_page_redirect",        limit: nil
     t.json     "default_account_filter"
   end
 
@@ -139,7 +139,7 @@ ActiveRecord::Schema.define(version: 20161006194132) do
   add_index "report_archives", ["organization_id"], name: "index_report_archives_on_organization_id", using: :btree
 
   create_table "templates", force: true do |t|
-    t.string   "slug"
+    t.string   "slug",            limit: nil
     t.text     "payload"
     t.integer  "organization_id"
     t.datetime "created_at"
@@ -149,12 +149,12 @@ ActiveRecord::Schema.define(version: 20161006194132) do
   add_index "templates", ["slug", "organization_id"], name: "index_templates_on_slug_and_organization_id", unique: true, using: :btree
 
   create_table "terms", force: true do |t|
-    t.string   "slug"
-    t.string   "name"
+    t.string   "slug",            limit: nil
+    t.string   "name",            limit: nil
     t.integer  "organization_id"
     t.datetime "start_date"
     t.integer  "duration"
-    t.string   "cycle"
+    t.string   "cycle",           limit: nil
     t.integer  "sequence"
     t.boolean  "is_default"
     t.datetime "created_at"
@@ -166,18 +166,18 @@ ActiveRecord::Schema.define(version: 20161006194132) do
   create_table "user_assignments", force: true do |t|
     t.integer "user_id"
     t.integer "organization_id"
-    t.string  "username"
+    t.string  "username",        limit: nil
     t.boolean "cascades"
-    t.string  "role"
+    t.string  "role",            limit: nil
   end
 
   add_index "user_assignments", ["username", "organization_id"], name: "index_user_assignments_on_username_and_organization_id", unique: true, using: :btree
 
   create_table "users", force: true do |t|
-    t.string   "name"
+    t.string   "name",              limit: nil
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "email"
+    t.string   "email",             limit: nil
     t.string   "password_digest"
     t.string   "remember_digest"
     t.string   "activation_digest"
@@ -191,14 +191,14 @@ ActiveRecord::Schema.define(version: 20161006194132) do
 
   create_table "versions", force: true do |t|
     t.integer  "versioned_id"
-    t.string   "versioned_type"
+    t.string   "versioned_type", limit: nil
     t.integer  "user_id"
-    t.string   "user_type"
-    t.string   "user_name"
+    t.string   "user_type",      limit: nil
+    t.string   "user_name",      limit: nil
     t.text     "modifications"
     t.integer  "number"
     t.integer  "reverted_from"
-    t.string   "tag"
+    t.string   "tag",            limit: nil
     t.datetime "created_at"
     t.datetime "updated_at"
   end

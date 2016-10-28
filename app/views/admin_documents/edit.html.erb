@@ -10,7 +10,7 @@
   <div class="form-group">
     <%= f.label :organization_id, class: "control-label" %>
     <div class="controls">
-      <%= f.select(:organization_id, Organization.where.not(id: params[:id]).order('lft', 'rgt').collect { |org| [ (org.parent && org.parent.parent ? org.parent.parent.name + ' » ' : '') + (org.parent ? org.parent.name + ' » ' : '') + org.name, org.id ] }, {include_blank: true}, {class: 'form-control'}) %></p>
+      <%= f.select(:organization_id, @organizations.collect { |org| [ (org.parent && org.parent.parent ? org.parent.parent.name + ' » ' : '') + (org.parent ? org.parent.name + ' » ' : '') + org.name, org.id ] }, {include_blank: true}, {class: 'form-control'}) %></p>
     </div>
   </div>
 
