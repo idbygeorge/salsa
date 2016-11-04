@@ -1,4 +1,6 @@
 class OrganizationsController < AdminController
+  before_filter :require_admin_permissions, only: [:new, :create, :destroy]
+  before_filter :require_organization_admin_permissions, except: [:new, :create, :destroy]
   before_filter :get_organizations, only: [:index, :new, :edit, :show]
   layout 'admin'
   def index

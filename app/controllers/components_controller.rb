@@ -1,7 +1,8 @@
 class ComponentsController < ApplicationController
   layout 'components'
 
-  before_filter :organizations
+  before_filter :get_organizations
+  before_filter :get_organization
 
   def index
     @components = @organization.components
@@ -11,22 +12,41 @@ class ComponentsController < ApplicationController
 
   def new
     @component = Component.new
+
+    available_component_formats
   end
 
   def create
     @component = Component.new component_params
     @component[:organization_id] = @organization[:id]
 
-    @component.save!
+    available_component_formats
 
-    redirect_to components_path
+    if available_component_formats.include? @component.format
+      if @component.valid?
+        @component.save
+        return redirect_to components_path
+      end
+    end
+
+    flash[:error] = 'Error creating component'
+    return render action: :new
   end
 
   def update
     @component = Component.find_by! slug: params[:slug], organization: @organization
-    @component.update! component_params
 
-    redirect_to components_path
+    available_component_formats
+
+    if available_component_formats.include? component_params[:format]
+      if @component.valid?
+        @component.update component_params
+        return redirect_to components_path
+      end
+    end
+
+    flash[:error] = 'Error creating component'
+    render action: :new
   end
 
   def show
@@ -34,14 +54,22 @@ class ComponentsController < ApplicationController
   end
 
   def edit
+    available_component_formats
     @component = Component.find_by! slug: params[:slug], organization: @organization
   end
 
   private
 
-  def organizations
-    @organizations = Organization.all
+  def get_organization
     @organization = Organization.find_by slug: params[:organization_slug]
+  end
+
+  def available_component_formats
+    if has_role('admin')
+      @available_component_formats = ['html','erb','haml'];
+    else
+      @available_component_formats = ['html'];
+    end
   end
 
   def component_params
@@ -52,20 +80,8 @@ class ComponentsController < ApplicationController
       :slug,
       :description,
       :category,
-      :css,
-      :js,
       :layout,
       :format,
-      :gui_css,
-      :gui_js,
-      :gui_templates,
-      :gui_controls,
-      :gui_section_nav,
-      :gui_help,
-      :gui_example,
-      :gui_footer,
-      :gui_content_toolbar,
-      :gui_header
     )
   end
 end

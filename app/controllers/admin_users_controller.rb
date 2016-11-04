@@ -1,4 +1,5 @@
 class AdminUsersController < AdminController
+  before_filter :require_admin_permissions
   before_filter :get_organizations, only: [:index, :new, :edit, :show, :edit_assignment]
 
   def index
@@ -47,8 +48,21 @@ class AdminUsersController < AdminController
   end
 
   def create
-    @user = User.create user_params
-    redirect_to admin_user_path(id: @user[:id])
+    @user = User.new
+
+    @user.attributes = user_params
+
+    # unless @user.password
+    #     @user.password = SecureRandom.urlsafe_base64
+    #     @user.password_confirmation = @user.password
+    # end
+
+    if @user.save
+        return redirect_to admin_user_path(id: @user[:id])
+    else
+        flash[:error] = 'Error creating user'
+        return render action: :new
+    end
   end
 
   def update
@@ -68,12 +82,11 @@ class AdminUsersController < AdminController
     params.require(:user).require(:name)
     params.require(:user).require(:email)
 
-    params.require(:user).permit(:name, :email, :id)
+    params.require(:user).permit(:name, :email, :id, :password, :password_confirmation)
   end
 
   def user_assignment_params
     params.require(:user_assignment).require(:user_id)
-    params.require(:user_assignment).require(:username)
     params.require(:user_assignment).require(:role)
     params.require(:user_assignment).require(:organization_id)
 

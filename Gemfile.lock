@@ -37,6 +37,7 @@ GEM
     atomic (1.1.13)
     awesome_nested_set (3.0.0.rc.3)
       activerecord (>= 4.0.0, < 5)
+    bcrypt-ruby (3.0.1)
     better_errors (2.1.1)
       coderay (>= 1.0.0)
       erubis (>= 2.6.6)
@@ -214,6 +215,7 @@ PLATFORMS
 
 DEPENDENCIES
   awesome_nested_set (~> 3.0.0.rc.3)
+  bcrypt-ruby (~> 3.0.0)
   better_errors
   binding_of_caller
   bootstrap-sass

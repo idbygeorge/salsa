@@ -8,17 +8,19 @@
 
 <h1>Update Organization</h1>
 
-<div class="pull-right">
+<% if @organization.lms_authentication_key != '' %>
+    <div class="pull-right">
 
-  <a class="btn btn-info" href="<%= canvas_accounts_path %>">
-    <span class="glyphicon glyphicon-refresh"></span>
-    LMS Accounts
-  </a>
+      <a class="btn btn-info" href="<%= canvas_accounts_path %>">
+        <span class="glyphicon glyphicon-refresh"></span>
+        LMS Accounts
+      </a>
 
-  <a class="btn btn-info" href="<%= canvas_courses_path %>">
-    <span class="glyphicon glyphicon-refresh"></span>
-    LMS Courses
-  </a>
-</div>
+      <a class="btn btn-info" href="<%= canvas_courses_path %>">
+        <span class="glyphicon glyphicon-refresh"></span>
+        LMS Courses
+      </a>
+    </div>
+<% end %>
 
 <%= render 'edit' %>

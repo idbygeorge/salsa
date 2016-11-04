@@ -35,11 +35,11 @@
       <% permission[:role] = 'auditor' %>
     <% end %>
 
-    <%= f.select(:role, ['admin', 'auditor']) %>
+    <%= f.select(:role, {'Global Administrator'=>'admin', 'Organization Administrator'=>'organization_admin', 'Auditor'=>'auditor'}, {:include_blank => ''}) %>
   </td>
   <td>
     <% if @organizations %>
-      <%= f.select(:organization_id, @organizations.roots.collect {|o| [ o.name + ' (' + o.slug + ')', o.id ] }, include_blank: true) %>
+      <%= f.select(:organization_id, @organizations.collect {|o| [ o.name + ' (' + o.slug + ')', o.id ] }, include_blank: true) %>
     <% else %>
       You don't seem to belong to any organizations... contact your admin to fix this.
     <% end %>

@@ -5,6 +5,7 @@
   Components
 </h1>
 
+<% if session[:admin_authorized] %>
 <ul class="nav nav-pills">
   <li <% if current_page? components_path category: 'document' %>class="active"<% end %>>
     <%= link_to 'Documents', components_path(category: 'document') %>
@@ -19,6 +20,7 @@
     <%= link_to 'All Components', components_path %>
   </li>
 </ul>
+<% end %>
 
 <% if @components.count > 0 %>
   <ul class="media-list">
@@ -41,6 +43,6 @@
 
 <% else %>
   <div class="alert alert-warning">
-    There are no <code><%= params[:category] %></code> components at this layer.
+    There are no <% if params['category'] %><code><%= params[:category] %></code><% end %> components for this organization.
   </div>
 <% end %>
