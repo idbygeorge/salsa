@@ -44,7 +44,7 @@ class ComponentsController < ApplicationController
         return redirect_to components_path
       end
     end
-debugger
+
     flash[:error] = 'Error creating component'
     render action: :new
   end
