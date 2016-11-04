@@ -29,28 +29,18 @@
     </div>
   </div>
 
-  <div class="form-group">
-    <%= f.label :category, class: "control-label" %>
-    <%= f.select :category, ['document','section','element'], { include_blank: '--'}, { class: 'form-control' } %>
-  </div>
+  <% if @available_component_formats.length > 1 %>
+    <div class="form-group">
+      <%= f.label :category, class: "control-label" %>
+      <%= f.select :category, ['document','section','element'], { include_blank: '--'}, { class: 'form-control' } %>
+    </div>
+  <% else %>
+    <%= f.hidden_field :category, :value => 'element' %>
+  <% end %>
 </fieldset>
 
 <fieldset>
   <legend>Document Configuration</legend>
-  
-  <div class="form-group">
-    <%= f.label :css, class: "control-label" %>
-    <div class="controls">
-      <%= f.text_area :css, class: 'form-control', rows: 12 %>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <%= f.label :js, class: "control-label" %>
-    <div class="controls">
-      <%= f.text_area :js, class: 'form-control', rows: 12 %>
-    </div>
-  </div>
 
   <div class="form-group">
     <%= f.label :layout, class: "control-label" %>
@@ -59,89 +49,18 @@
     </div>
   </div>
 
-  <div class="form-group">
-    <%= f.label :format, class: "control-label" %>
-    <div class="controls">
-      <%= f.select :format, ['html','erb','haml'], { include_blank: '--'}, { class: 'form-control' } %>
-
+  <% if @available_component_formats.length > 1 %>
+    <div class="form-group">
+      <%= f.label :format, class: "control-label" %>
+        <div class="controls">
+          <%= f.select :format, @available_component_formats, { include_blank: '--'}, { class: 'form-control' } %>
+      </div>
     </div>
-  </div>
-
+  <% else %>
+    <%= f.hidden_field :format, :value => @available_component_formats[0] %>
+  <% end %>
 </fieldset>
 
-<fieldset>
-  <legend>GUI Configuration</legend>
-  
-  <div class="form-group">
-    <%= f.label :gui_header, class: "control-label" %>
-    <div class="controls">
-      <%= f.text_area :gui_header, class: 'form-control', rows: 12 %>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <%= f.label :gui_css, class: "control-label" %>
-    <div class="controls">
-      <%= f.text_area :gui_css, class: 'form-control', rows: 12 %>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <%= f.label :gui_js, class: "control-label" %>
-    <div class="controls">
-      <%= f.text_area :gui_js, class: 'form-control', rows: 12 %>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <%= f.label :gui_templates, class: "control-label" %>
-    <div class="controls">
-      <%= f.text_area :gui_templates, class: 'form-control', rows: 12 %>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <%= f.label :gui_controls, class: "control-label" %>
-    <div class="controls">
-      <%= f.text_area :gui_controls, class: 'form-control', rows: 12 %>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <%= f.label :gui_section_nav, class: "control-label" %>
-    <div class="controls">
-      <%= f.text_area :gui_section_nav, class: 'form-control', rows: 12 %>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <%= f.label :gui_help, class: "control-label" %>
-    <div class="controls">
-      <%= f.text_area :gui_help, class: 'form-control', rows: 12 %>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <%= f.label :gui_example, class: "control-label" %>
-    <div class="controls">
-      <%= f.text_area :gui_example, class: 'form-control', rows: 12 %>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <%= f.label :gui_footer, class: "control-label" %>
-    <div class="controls">
-      <%= f.text_area :gui_footer, class: 'form-control', rows: 12 %>
-    </div>
-  </div>
-
-  <div class="form-group">
-    <%= f.label :gui_content_toolbar, class: "control-label" %>
-    <div class="controls">
-      <%= f.text_area :gui_content_toolbar, class: 'form-control', rows: 12 %>
-    </div>
-  </div>
-</fieldset>
 
 <div class="form-group">
   <%= f.submit class: 'btn btn-default' %>

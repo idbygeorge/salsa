@@ -8,7 +8,8 @@ class Oauth2Controller < ApplicationController
     session[:institution] = @institution
     session[:oauth_endpoint] = @oauth_endpoint
 
-    redirect_to(@redirect_url)
+    return redirect_to(@redirect_url) if @redirect_url
+    return redirect_to(:back)
   end
 
   def logout
