@@ -23,12 +23,14 @@ class ComponentsController < ApplicationController
     available_component_formats
 
     if available_component_formats.include? @component.format
-      @component.save!
-      return redirect_to components_path
-    else
-      flash[:error] = 'Error creating component'
-      return render action: :new
+      if @component.valid?
+        @component.save
+        return redirect_to components_path
+      end
     end
+
+    flash[:error] = 'Error creating component'
+    return render action: :new
   end
 
   def update
@@ -37,12 +39,14 @@ class ComponentsController < ApplicationController
     available_component_formats
 
     if available_component_formats.include? component_params[:format]
-      @component.update! component_params
-      return redirect_to components_path
-    else
-      flash[:error] = 'Error creating component'
-      return render action: :new
+      if @component.valid?
+        @component.update component_params
+        return redirect_to components_path
+      end
     end
+debugger
+    flash[:error] = 'Error creating component'
+    render action: :new
   end
 
   def show
