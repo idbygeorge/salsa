@@ -313,6 +313,7 @@ class AdminController < ApplicationController
 
   def logout
     session[:admin_authorized] = false
+    session[:authenticated_user] = nil
 
     redirect_to root_path;
   end
