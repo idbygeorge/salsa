@@ -276,8 +276,9 @@ class DocumentsController < ApplicationController
       org = Organization.find_by slug: document_slug
     end
 
-    # if there is no org yet, make one
-    org = Organization.create name: document_slug + ' (unverified)', slug: document_slug unless org
+    # if there is no org yet, show an error
+    raise "error"  unless org
+
     @document[:organization_id] = org[:id] if @document
 
     @organization = org
