@@ -49,7 +49,7 @@ class AdminController < ApplicationController
 
   def archive
     @organization = get_org
-    default_term = 'FL16'
+    default_term = 'SP17'
     reportJSON = nil
 
     if File.file?('/tmp/report_archive.zip')
