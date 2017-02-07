@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -38,11 +37,10 @@ ActiveRecord::Schema.define(version: 20161117024708) do
     t.text     "gui_header"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["category"], name: "index_components_on_category", using: :btree
+    t.index ["organization_id"], name: "index_components_on_organization_id", using: :btree
+    t.index ["slug", "organization_id"], name: "index_components_on_slug_and_organization_id", unique: true, using: :btree
   end
-
-  add_index "components", ["category"], name: "index_components_on_category", using: :btree
-  add_index "components", ["organization_id"], name: "index_components_on_organization_id", using: :btree
-  add_index "components", ["slug", "organization_id"], name: "index_components_on_slug_and_organization_id", unique: true, using: :btree
 
   create_table "document_meta", force: :cascade do |t|
     t.integer  "document_id"
@@ -69,15 +67,14 @@ ActiveRecord::Schema.define(version: 20161117024708) do
     t.integer  "component_id"
     t.integer  "component_version"
     t.string   "term_id"
+    t.index ["component_id"], name: "index_documents_on_component_id", using: :btree
+    t.index ["edit_id"], name: "index_documents_on_edit_id", unique: true, using: :btree
+    t.index ["lms_course_id"], name: "index_documents_on_lms_course_id", using: :btree
+    t.index ["organization_id"], name: "index_documents_on_organization_id", using: :btree
+    t.index ["template_id"], name: "index_documents_on_template_id", unique: true, using: :btree
+    t.index ["term_id"], name: "index_documents_on_term_id", using: :btree
+    t.index ["view_id"], name: "index_documents_on_view_id", unique: true, using: :btree
   end
-
-  add_index "documents", ["component_id"], name: "index_documents_on_component_id", using: :btree
-  add_index "documents", ["edit_id"], name: "index_documents_on_edit_id", unique: true, using: :btree
-  add_index "documents", ["lms_course_id"], name: "index_documents_on_lms_course_id", using: :btree
-  add_index "documents", ["organization_id"], name: "index_documents_on_organization_id", using: :btree
-  add_index "documents", ["template_id"], name: "index_documents_on_template_id", unique: true, using: :btree
-  add_index "documents", ["term_id"], name: "index_documents_on_term_id", using: :btree
-  add_index "documents", ["view_id"], name: "index_documents_on_view_id", unique: true, using: :btree
 
   create_table "organization_meta", force: :cascade do |t|
     t.integer  "organization_id"
@@ -107,23 +104,23 @@ ActiveRecord::Schema.define(version: 20161117024708) do
     t.datetime "dashboard_end_at"
     t.string   "home_page_redirect"
     t.json     "default_account_filter"
+    t.index ["depth"], name: "index_organizations_on_depth", using: :btree
+    t.index ["lft"], name: "index_organizations_on_lft", using: :btree
+    t.index ["lms_id"], name: "index_organizations_on_lms_id", using: :btree
+    t.index ["parent_id"], name: "index_organizations_on_parent_id", using: :btree
+    t.index ["rgt"], name: "index_organizations_on_rgt", using: :btree
+    t.index ["slug", "parent_id"], name: "index_organizations_on_slug_and_parent_id", unique: true, using: :btree
   end
 
-  add_index "organizations", ["depth"], name: "index_organizations_on_depth", using: :btree
-  add_index "organizations", ["lft"], name: "index_organizations_on_lft", using: :btree
-  add_index "organizations", ["lms_id"], name: "index_organizations_on_lms_id", using: :btree
-  add_index "organizations", ["parent_id"], name: "index_organizations_on_parent_id", using: :btree
-  add_index "organizations", ["rgt"], name: "index_organizations_on_rgt", using: :btree
-  add_index "organizations", ["slug", "parent_id"], name: "index_organizations_on_slug_and_parent_id", unique: true, using: :btree
-
-  create_table "que_jobs", primary_key: "queue", force: :cascade do |t|
-    t.integer  "priority",    limit: 2, default: 100,                                        null: false
-    t.datetime "run_at",                default: "now()",                                    null: false
-    t.integer  "job_id",      limit: 8, default: "nextval('que_jobs_job_id_seq'::regclass)", null: false
-    t.text     "job_class",                                                                  null: false
-    t.json     "args",                  default: [],                                         null: false
-    t.integer  "error_count",           default: 0,                                          null: false
-    t.text     "last_error"
+  create_table "que_jobs", primary_key: ["queue", "priority", "run_at", "job_id"], force: :cascade, comment: "3" do |t|
+    t.integer   "priority",    limit: 2, default: 100,            null: false
+    t.datetime  "run_at",                default: -> { "now()" }, null: false
+    t.bigserial "job_id",                                         null: false
+    t.text      "job_class",                                      null: false
+    t.json      "args",                  default: [],             null: false
+    t.integer   "error_count",           default: 0,              null: false
+    t.text      "last_error"
+    t.text      "queue",                 default: "",             null: false
   end
 
   create_table "report_archives", force: :cascade do |t|
@@ -133,9 +130,8 @@ ActiveRecord::Schema.define(version: 20161117024708) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.json     "report_filters"
+    t.index ["organization_id"], name: "index_report_archives_on_organization_id", using: :btree
   end
-
-  add_index "report_archives", ["organization_id"], name: "index_report_archives_on_organization_id", using: :btree
 
   create_table "templates", force: :cascade do |t|
     t.string   "slug"
@@ -143,9 +139,8 @@ ActiveRecord::Schema.define(version: 20161117024708) do
     t.integer  "organization_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["slug", "organization_id"], name: "index_templates_on_slug_and_organization_id", unique: true, using: :btree
   end
-
-  add_index "templates", ["slug", "organization_id"], name: "index_templates_on_slug_and_organization_id", unique: true, using: :btree
 
   create_table "terms", force: :cascade do |t|
     t.string   "slug"
@@ -158,9 +153,8 @@ ActiveRecord::Schema.define(version: 20161117024708) do
     t.boolean  "is_default"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["slug", "organization_id"], name: "index_terms_on_slug_and_organization_id", unique: true, using: :btree
   end
-
-  add_index "terms", ["slug", "organization_id"], name: "index_terms_on_slug_and_organization_id", unique: true, using: :btree
 
   create_table "user_assignments", force: :cascade do |t|
     t.integer "user_id"
@@ -182,9 +176,8 @@ ActiveRecord::Schema.define(version: 20161117024708) do
     t.datetime "activated_at"
     t.string   "reset_digest",      limit: 255
     t.datetime "reset_sent_at"
+    t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
   end
-
-  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
 
   create_table "versions", force: :cascade do |t|
     t.integer  "versioned_id"
@@ -198,13 +191,12 @@ ActiveRecord::Schema.define(version: 20161117024708) do
     t.string   "tag"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["created_at"], name: "index_versions_on_created_at", using: :btree
+    t.index ["number"], name: "index_versions_on_number", using: :btree
+    t.index ["tag"], name: "index_versions_on_tag", using: :btree
+    t.index ["user_id", "user_type"], name: "index_versions_on_user_id_and_user_type", using: :btree
+    t.index ["user_name"], name: "index_versions_on_user_name", using: :btree
+    t.index ["versioned_id", "versioned_type"], name: "index_versions_on_versioned_id_and_versioned_type", using: :btree
   end
-
-  add_index "versions", ["created_at"], name: "index_versions_on_created_at", using: :btree
-  add_index "versions", ["number"], name: "index_versions_on_number", using: :btree
-  add_index "versions", ["tag"], name: "index_versions_on_tag", using: :btree
-  add_index "versions", ["user_id", "user_type"], name: "index_versions_on_user_id_and_user_type", using: :btree
-  add_index "versions", ["user_name"], name: "index_versions_on_user_name", using: :btree
-  add_index "versions", ["versioned_id", "versioned_type"], name: "index_versions_on_versioned_id_and_versioned_type", using: :btree
 
 end

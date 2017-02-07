@@ -1,4 +1,4 @@
-class Component < ActiveRecord::Base
+class Component < ApplicationRecord
   versioned
 
   belongs_to :organization

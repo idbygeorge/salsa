@@ -1,4 +1,4 @@
-class Document < ActiveRecord::Base
+class Document < ApplicationRecord
   versioned
 
   before_validation :normalize_blank_values, :ensure_ids
@@ -15,11 +15,11 @@ class Document < ActiveRecord::Base
     end
   end
 
-	def ensure_ids
-		self.view_id = Document.generate_id unless view_id
+  def ensure_ids
+    self.view_id = Document.generate_id unless view_id
     self.edit_id = Document.generate_id unless edit_id
     self.template_id = Document.generate_id unless template_id
-	end
+  end
 
   def reset_ids
     self.view_id = Document.generate_id
@@ -28,9 +28,9 @@ class Document < ActiveRecord::Base
     self.lms_course_id = nil
   end
 
-	protected
+  protected
 
-	def self.generate_id
-		(0...30).map{ ('a'..'z').to_a[rand(26)] }.join
-	end
+  def self.generate_id
+    (0...30).map{ ('a'..'z').to_a[rand(26)] }.join
+  end
 end

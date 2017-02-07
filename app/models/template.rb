@@ -1,4 +1,4 @@
-class Template < ActiveRecord::Base
+class Template < ApplicationRecord
   versioned
 
   belongs_to :organization

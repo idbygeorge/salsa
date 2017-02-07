@@ -1,10 +1,11 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.2'
+gem 'rails', '5.0.1'
 
 group :development, :test do
   gem 'sqlite3'
+  gem 'byebug'
   gem 'rspec-rails'
 end
 
@@ -47,11 +48,11 @@ gem 'jquery-ui-rails'
 gem 'zurb-foundation'
 
 # Add awesome nested set
-gem 'awesome_nested_set', '~> 3.0.0.rc.3'
+gem 'awesome_nested_set'
 # pagination
 gem 'kaminari'
 # active record version control
-gem 'vestal_versions', :git => 'git://github.com/safetypins/vestal_versions'
+gem 'vestal_versions', :git => 'https://github.com/safetypins/vestal_versions'
 
 # processing meta data for orgs and accounts
 gem 'pivot_table'
@@ -60,7 +61,7 @@ gem 'pivot_table'
 gem 'turbolinks'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 1.2'
+gem 'jbuilder'
 
 # for aws bucket usage
 gem 'uber-s3'
@@ -77,7 +78,7 @@ gem 'que'
 gem 'rubyzip'
 
 # Use ActiveModel has_secure_password
-gem 'bcrypt-ruby', '~> 3.0.0'
+gem 'bcrypt'
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
