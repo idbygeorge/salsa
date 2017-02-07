@@ -1,25 +1,13 @@
 require File.expand_path('../boot', __FILE__)
 
-# Pick the frameworks you want:
-require "active_record/railtie"
-require "action_controller/railtie"
-require "action_mailer/railtie"
-require "sprockets/railtie"
-# require "rails/test_unit/railtie"
+require 'rails/all'
 
 # Require the gems listed in Gemfile, including any gems
 # you've limited to :test, :development, or :production.
-Bundler.require(:default, Rails.env)
+Bundler.require(*Rails.groups)
 
 module Salsa
   class Application < Rails::Application
-    config.assets.precompile += ['gui.css']
-    config.assets.precompile += %w( home.css )
-    config.assets.precompile += %w( home.js )
-    config.assets.precompile += %w( admin.css )
-    config.assets.precompile += %w( admin.js )
-    config.assets.precompile += %w( dashboard.css )
-    config.assets.precompile += %w( dashboard.js )
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded.
@@ -32,8 +20,7 @@ module Salsa
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
 
-    config.action_dispatch.default_headers = {
-      'X-UA-Compatible' => 'IE=Edge,chrome=1'
-    }
+    # Do not swallow errors in after_commit/after_rollback callbacks.
+    config.active_record.raise_in_transactional_callbacks = true
   end
 end
