@@ -27,3 +27,4 @@ salsa_test
 /config/config.yml
 /config/database.yml
 /config/newrelic.yml
+/config/secrets.yml
