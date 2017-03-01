@@ -3374,13 +3374,21 @@ input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="butto
 .navbar-form {
   margin-left: -15px;
   margin-right: -15px;
-  padding: 10px 15px;
   border-top: 1px solid transparent;
   border-bottom: 1px solid transparent;
   -webkit-box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1), 0 1px 0 rgba(255, 255, 255, .1);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, .1), 0 1px 0 rgba(255, 255, 255, .1);
-  margin-top: 8px;
-  margin-bottom: 8px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+
+  .input-group {
+      padding: 8px 0;
+  }
+
+  .checkbox {
+      padding: 15px 0;
+      color: #fff;
+  }
 }
 @media (max-width: 767px) {
   .navbar-form .form-group {
