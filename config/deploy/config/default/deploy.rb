@@ -1,6 +1,5 @@
-server 'oasis4he-syllabustool', port: 22, roles: [:web, :app, :db], primary: true
-
 set :repo_url,        'https://github.com/idbygeorge/salsa.git'
+set :branch, ENV.fetch("CAPISTRANO_BRANCH", "master")
 set :application,     'salsa'
 set :user,            'ubuntu'
 set :puma_threads,    [4, 16]
@@ -12,15 +11,23 @@ set :use_sudo,        false
 set :stage,           :production
 set :deploy_via,      :remote_cache
 set :deploy_to,       "/home/#{fetch(:user)}/apps/#{fetch(:application)}"
-set :puma_bind,       "unix://#{shared_path}/tmp/sockets/#{fetch(:application)}-puma.sock"
+
+set :puma_bind,       "unix://#{shared_path}/tmp/sockets/puma.sock"
 set :puma_state,      "#{shared_path}/tmp/pids/puma.state"
 set :puma_pid,        "#{shared_path}/tmp/pids/puma.pid"
 set :puma_access_log, "#{release_path}/log/puma.error.log"
 set :puma_error_log,  "#{release_path}/log/puma.access.log"
-set :ssh_options,     { forward_agent: true, user: fetch(:user), keys: %w(~/.ssh/oasis4he/syllabustool.pub) }
 set :puma_preload_app, true
 set :puma_worker_timeout, nil
 set :puma_init_active_record, false  # Change to true if using ActiveRecord
+
+set :ssh_options,     { forward_agent: true }
+
+set :linked_files, %w{config/database.yml config/config.yml public/500.html public/422.html public/404.html}
+
+# instances/custom view folder is not part of the public repository
+# any customization instance views will need to be added to the server another way
+set :linked_dirs, %w{app/views/instances/custom public/assets/scripts}
 
 ## Defaults:
 # set :scm,           :git
@@ -46,21 +53,12 @@ namespace :puma do
 end
 
 namespace :deploy do
-  desc "Make sure local git is in sync with remote."
-  task :check_revision do
-    on roles(:app) do
-      unless `git rev-parse HEAD` == `git rev-parse origin/master`
-        puts "WARNING: HEAD is not the same as origin/master"
-        puts "Run `git push` to sync changes."
-        exit
-      end
-    end
-  end
 
   desc 'Initial Deploy'
   task :initial do
     on roles(:app) do
       before 'deploy:restart', 'puma:start'
+      before 'deploy', 'setup'
       invoke 'deploy'
     end
   end
@@ -72,7 +70,32 @@ namespace :deploy do
     end
   end
 
-  before :starting,     :check_revision
+  desc 'Copy config files to server'
+  task :copy_config do
+    on release_roles :app do |role|
+      if File.exists?('config/newrelic-#{rails_env}.yml')
+        linked_files.push('config/newrelic-#{rails_env}.yml')
+      end
+
+      if File.exists?('config/puma-#{rails_env}.rb')
+        linked_files.push('config/puma-#{rails_env}.rb')
+      end
+
+      remote_files = linked_files(shared_path)
+
+      fetch(:linked_files).each do |linked_file|
+        run_locally do
+          if File.exist?(linked_file)
+              remote_file = linked_file.sub! '-', '_' || linked_file
+              puts "#{linked_file} #{role}:#{shared_path}/#{remote_file}"
+            # execute :rsync, linked_file, "#{role}:#{shared_path}/#{linked_file.sub! "-#{role}", ''}"
+          end
+        end
+      end
+    end
+  end
+
+  before "check:linked_files", :copy_config
   after  :finishing,    :compile_assets
   after  :finishing,    :cleanup
   after  :finishing,    :restart

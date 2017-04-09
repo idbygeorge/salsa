@@ -1,5 +1,3 @@
-role :web, %w{username@example.com}
-role :app, %w{username@example.com}
-role :db,  %w{username@example.com}
+server 'salsa.example.com', roles: %w{app web db}, user: 'user', key: '~/.ssh/salsa.example.com.pem'
 
 set :rails_env, 'production'
