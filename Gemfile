@@ -11,9 +11,11 @@ end
 
 group :development do
   # Use Capistrano for deployment
-  gem 'capistrano'
-  gem 'capistrano-bundler'
-  gem 'capistrano-rails'
+  gem 'capistrano',         require: false
+  gem 'capistrano-rvm',     require: false
+  gem 'capistrano-rails',   require: false
+  gem 'capistrano-bundler', require: false
+  gem 'capistrano3-puma',   require: false
   gem 'better_errors'
   gem 'binding_of_caller'
 end
@@ -24,8 +26,8 @@ gem 'pg'
 group :production do
   gem 'rails_12factor'
 
-  # Use unicorn as the app server
-  gem 'unicorn'
+  # Use puma as the app server
+  gem 'puma'
 
   # newrelic for monitoring
   gem 'newrelic_rpm'

@@ -26,5 +26,6 @@ salsa_test
 /workers/pdf/iron.json
 /config/config.yml
 /config/database.yml
+/config/deploy.rb
 /config/newrelic.yml
 /config/secrets.yml
