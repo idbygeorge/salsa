@@ -19,10 +19,10 @@ development:
   encoding: unicode
   database: salsa_development
   pool: 5
-# by default this is the same as your OS X user  
+# by default this is the same as your OS X user
   username: dbusername
   password:
-  host: localhost
+  host:
 
   # Connect on a TCP socket. Omitted by default since the client uses a
   # domain socket that doesn't need configuration. Windows does not have
@@ -52,13 +52,13 @@ test:
   pool: 5
   username: salsa
   password:
-  host: localhost
+  host: 
 
 production:
   adapter: postgresql
   encoding: unicode
   database: salsa_production
   pool: 5
-# by default this is the same as your OS X user  
+# by default this is the same as your OS X user
   username: dbusername
   password:

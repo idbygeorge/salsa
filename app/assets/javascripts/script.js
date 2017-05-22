@@ -446,11 +446,20 @@ function liteOff(x){
 
             settings.data = cleanupDocument($('#page-data').html());
 
+            var document_version = $('[data-document-version]').attr('data-document-version');
+            settings.url = settings.url + '?document_version=' + document_version;
+
             $('#save_prompt').stop().removeAttr('style').removeClass('hidden').css({display: 'block', zIndex: 999999999, top: 30, position: 'fixed', width: '100%', textAlign: 'center', backgroundColor: '#ffe', borderBottom: 'solid 1px #ddd'}).html('Saving...');
         });
 
-        $('#tb_save').on('ajax:success', function(event, xhr, settings) {
-            $("#save_prompt").html('saved at: ' + new Date().toLocaleTimeString()).delay(5000).fadeOut(1000);
+        $('#tb_save').on('ajax:success', function(event, data, xhr, settings) {
+            if(data.status == 'ok') {
+              $("#save_prompt").html('saved at: ' + new Date().toLocaleTimeString()).delay(5000).fadeOut(1000);
+              $('[data-document-version]').attr('data-document-version', data.version);
+            } else {
+              $("#save_prompt").css({display: 'block', zIndex: 999999999, top: 30, position: 'fixed', width: '100%', textAlign: 'center', backgroundColor: '#f99', borderBottom: 'solid 1px #ddd'}).html(data.message).delay(5000).fadeOut(1000);
+            }
+
         });
 
         // preview
@@ -524,21 +533,30 @@ function liteOff(x){
 
             settings.data = cleanupDocument($('#page-data').html());
 
+            var document_version = $('[data-document-version]').attr('data-document-version');
+            settings.url = settings.url + '&document_version=' + document_version;
+
+
             $('#save_message').show();
             $('#pdf_share_link').hide();
-            $('#share_prompt').dialog('open');
 
             // should be save to LMS...
             $('#tb_send_canvas:visible').trigger('click');
         });
 
-        $('#tb_share').on('ajax:success', function() {
+        $('#tb_share').on('ajax:success', function(event,data) {
+          if(data.status == 'ok') {
+            $('[data-document-version]').attr('data-document-version', data.version);
+            $('#share_prompt').dialog('open');
             setTimeout(
-                function() {
-                    $('#save_message').hide();
-                    $('#pdf_share_link').removeClass('hidden').show();
-                }, 15000
+              function() {
+                $('#save_message').hide();
+                $('#pdf_share_link').removeClass('hidden').show();
+              }, 15000
             );
+          } else {
+            $('#save_prompt').stop().removeAttr('style').removeClass('hidden').css({display: 'block', zIndex: 999999999, top: 30, position: 'fixed', width: '100%', textAlign: 'center', backgroundColor: '#f99', borderBottom: 'solid 1px #ddd'}).html(data.message);
+          }
         });
 
         // select course from LMS

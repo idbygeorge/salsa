@@ -20,6 +20,8 @@ class DocumentsController < ApplicationController
 
     verify_org
 
+    @document[:version] = 1;
+
     @document.save!
 
     if params[:sub_organization_slugs]
@@ -163,6 +165,8 @@ class DocumentsController < ApplicationController
 
   def update
     canvas_course_id = params[:canvas_course_id]
+    document_version = params[:document_version]
+    saved = false;
 
     verify_org
 
@@ -179,15 +183,24 @@ class DocumentsController < ApplicationController
         @document.lms_course_id = params[:canvas_relink_course_id]
       end
 
-      @document.payload = request.raw_post
+      if document_version && @document[:version] == document_version.to_i
+        #increment document version and save
+        @document.version = document_version.to_i + 1;
+        @document.payload = request.raw_post
 
-      @document.payload = nil if @document.payload == ''
+        @document.payload = nil if @document.payload == ''
 
-      @document.save!
+        @document.save!
+        saved = true;
+      end
     end
 
     respond_to do |format|
-      msg = { :status => "ok", :message => "Success!" }
+      if saved
+        msg = { :status => "ok", :message => "Success!", :version => @document[:version] }
+      else
+        msg = { :status => "error", :message => "This is not a current version of this document! Please copy your changes and refresh the page to get the current version.", :version => @document[:version]}
+      end
       format.json  {
         view_url = document_url(@document.view_id, :only_path => false)
         render :json => msg

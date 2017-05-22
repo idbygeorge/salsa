@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161117024708) do
+ActiveRecord::Schema.define(version: 20170522190239) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -67,6 +67,7 @@ ActiveRecord::Schema.define(version: 20161117024708) do
     t.integer  "component_id"
     t.integer  "component_version"
     t.string   "term_id"
+    t.integer  "version"
     t.index ["component_id"], name: "index_documents_on_component_id", using: :btree
     t.index ["edit_id"], name: "index_documents_on_edit_id", unique: true, using: :btree
     t.index ["lms_course_id"], name: "index_documents_on_lms_course_id", using: :btree
@@ -104,6 +105,7 @@ ActiveRecord::Schema.define(version: 20161117024708) do
     t.datetime "dashboard_end_at"
     t.string   "home_page_redirect"
     t.json     "default_account_filter"
+    t.datetime "republished_at"
     t.index ["depth"], name: "index_organizations_on_depth", using: :btree
     t.index ["lft"], name: "index_organizations_on_lft", using: :btree
     t.index ["lms_id"], name: "index_organizations_on_lms_id", using: :btree
@@ -169,21 +171,21 @@ ActiveRecord::Schema.define(version: 20161117024708) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "email"
-    t.string   "password_digest",   limit: 255
-    t.string   "remember_digest",   limit: 255
-    t.string   "activation_digest", limit: 255
+    t.string   "password_digest"
+    t.string   "remember_digest"
+    t.string   "activation_digest"
     t.boolean  "activated"
     t.datetime "activated_at"
-    t.string   "reset_digest",      limit: 255
+    t.string   "reset_digest"
     t.datetime "reset_sent_at"
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
   end
 
   create_table "versions", force: :cascade do |t|
-    t.integer  "versioned_id"
     t.string   "versioned_type"
-    t.integer  "user_id"
+    t.integer  "versioned_id"
     t.string   "user_type"
+    t.integer  "user_id"
     t.string   "user_name"
     t.text     "modifications"
     t.integer  "number"
