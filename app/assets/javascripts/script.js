@@ -593,6 +593,18 @@ function liteOff(x){
         }).trigger('hashchange');
 
         initEditor(editor, $('#page'));
+
+        $('#republish').on("shown.bs.modal", function(e){
+          console.log('here');
+          // $(this).on('ajax:success', function(event, data, xhr, settings) {
+          //   if(data.status == 'ok') {
+          //
+          //   } else {
+          //
+          //   }
+          //
+          // });
+        })
     });
 
     var updateGradeScale = function(grade_scale, total_points) {

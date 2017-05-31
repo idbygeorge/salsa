@@ -33,7 +33,6 @@
         <% end -%>
     </div>
 
-    <span class="hidden" id="document-version" data-document-version="<%= @document[:version]%>"></span>
     <div id="wrapper">
 
         <%= salsa_partial 'section_nav' %>
@@ -41,6 +40,7 @@
 
         <div role="main" id="container">
             <div id="page" class="editor_controls">
+              <span class="hidden" id="document-version" data-document-version="<%= @document.version %>"></span>
                 <div id="page-data" data-view-id="<%= @document.view_id %>">
                     <%= yield.force_encoding("utf-8") %>
                 </div>

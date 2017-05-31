@@ -1,0 +1,31 @@
+<div class="pull-right text-right">
+  <%= link_to @organization.documents.where('documents.updated_at != documents.created_at').count.to_s + ' documents', organization_path(id: @organization[:id]) %><br>
+  <%= link_to @organization.documents.where('documents.updated_at = documents.created_at').count.to_s + ' abandoned', organization_path(id: @organization[:id], key: 'abandoned') %>
+</div>
+
+<h1 class="page-header">
+  <% @organization.ancestors.each do |org| %>
+    <small>
+      <%= org[:name] %> &raquo;<br>
+    </small>
+  <% end %>
+
+  <%= link_to  @organization[:name], organization_path(slug: full_org_path( @organization)) %>
+</h1>
+
+<div id="organizationControl row">
+  <div class="pull-right">
+    <!-- Trigger the modal with a button -->
+    <button id="republish_trigger" type="button" class="btn btn-success " data-toggle="modal" data-target="#republish">Republish All</button>
+
+  </div>
+
+</div>
+
+
+<div class="row">
+  <span class="hidden invisible" id="republish_ids"><%= @republish_urls %></span>
+
+<%= render 'preview' %>
+
+</div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170522190239) do
+ActiveRecord::Schema.define(version: 20170531164314) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -105,7 +105,8 @@ ActiveRecord::Schema.define(version: 20170522190239) do
     t.datetime "dashboard_end_at"
     t.string   "home_page_redirect"
     t.json     "default_account_filter"
-    t.datetime "republished_at"
+    t.datetime "republish_at"
+    t.string   "republish_batch_token"
     t.index ["depth"], name: "index_organizations_on_depth", using: :btree
     t.index ["lft"], name: "index_organizations_on_lft", using: :btree
     t.index ["lms_id"], name: "index_organizations_on_lms_id", using: :btree
