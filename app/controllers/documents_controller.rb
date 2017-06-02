@@ -166,7 +166,7 @@ class DocumentsController < ApplicationController
 
     verify_org
 
-    if canvas_course_id
+    if canvas_course_id && !@organization.skip_lms_publish
       # publishing to canvas should not save in the Document model, the canvas version has been modified
       update_course_document(canvas_course_id, request.raw_post, @organization[:lms_info_slug]) if params[:canvas] && canvas_course_id
     else

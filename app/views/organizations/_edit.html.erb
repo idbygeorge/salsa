@@ -74,6 +74,13 @@
           URL to redirect to instead of showing the home page
         </div>
       </div>
+
+      <div class="form-group">
+        <div class="controls">
+          <%= f.check_box :skip_lms_publish, class: '' %>
+          <%= f.label :skip_lms_publish, class: "control-label" %>
+        </div>
+      </div>
     </fieldset>
     <% end %>
 
