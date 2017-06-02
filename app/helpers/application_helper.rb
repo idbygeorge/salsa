@@ -205,7 +205,13 @@ module ApplicationHelper
 
   def check_lock path, batch_token
     organization = Organization.find_by slug:path
-    if !organization.republish_at ||(organization.republish_batch_token == batch_token)
+    if(organization.republish_at)
+      if ((DateTime.now - organization.republish_at.to_datetime)*24).to_i > 4
+        organization.republish_at = nil
+        organization.republish_batch_token = nil
+        return true
+      end
+    elsif organization.republish_batch_token == batch_token
       true
     else
       false
