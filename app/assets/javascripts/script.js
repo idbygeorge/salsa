@@ -529,7 +529,9 @@ function liteOff(x){
             $('#share_prompt').dialog('open');
 
             // should be save to LMS...
-            $('#tb_send_canvas:visible').trigger('click');
+            if($('#skip-lms').html() != 'true') {
+              $('#tb_send_canvas:visible').trigger('click');
+            }
         });
 
         $('#tb_share').on('ajax:success', function() {
