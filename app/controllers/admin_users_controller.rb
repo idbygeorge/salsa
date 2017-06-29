@@ -1,6 +1,6 @@
 class AdminUsersController < AdminController
-  before_filter :require_admin_permissions
-  before_filter :get_organizations, only: [:index, :new, :edit, :show, :edit_assignment]
+  before_action :require_admin_permissions
+  before_action :get_organizations, only: [:index, :new, :edit, :show, :edit_assignment]
 
   def index
     @users = User.all

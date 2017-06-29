@@ -1,5 +1,5 @@
 class CanvasController < ApplicationController
-  before_filter :init_view_folder, :only => [:list_courses]
+  before_action :init_view_folder, :only => [:list_courses]
 
   def list_courses
     select_course_dialog 'list_courses'

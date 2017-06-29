@@ -1,5 +1,5 @@
 class Document < ApplicationRecord
-  versioned
+  has_paper_trail
 
   before_validation :normalize_blank_values, :ensure_ids
 

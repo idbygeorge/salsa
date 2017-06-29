@@ -1,8 +1,8 @@
 class ComponentsController < ApplicationController
   layout 'components'
 
-  before_filter :get_organizations
-  before_filter :get_organization
+  before_action :get_organizations
+  before_action :get_organization
 
   def index
     @components = @organization.components

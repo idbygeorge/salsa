@@ -1,7 +1,7 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '5.0.1'
+gem 'rails', '5.1.2'
 
 group :development, :test do
   gem 'sqlite3'
@@ -18,6 +18,7 @@ group :development do
   gem 'capistrano3-puma',   require: false
   gem 'better_errors'
   gem 'binding_of_caller'
+  gem 'listen'
 end
 
 #postgresql for db
@@ -54,7 +55,7 @@ gem 'awesome_nested_set'
 # pagination
 gem 'kaminari'
 # active record version control
-gem 'vestal_versions', :git => 'https://github.com/safetypins/vestal_versions'
+gem 'paper_trail'
 
 # processing meta data for orgs and accounts
 gem 'pivot_table'

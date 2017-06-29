@@ -2,10 +2,10 @@ require 'tempfile'
 require 'zip'
 
 class AdminController < ApplicationController
-  before_filter :require_admin_permissions, only: [:search]
-  before_filter :require_organization_admin_permissions, except: [:canvas,:login,:logout,:authenticate]
-  before_filter :require_audit_role, only: [:canvas]
-  before_filter :get_organizations, only: [:search,:canvas_accounts,:canvas_courses]
+  before_action :require_admin_permissions, only: [:search]
+  before_action :require_organization_admin_permissions, except: [:canvas,:login,:logout,:authenticate]
+  before_action :require_audit_role, only: [:canvas]
+  before_action :get_organizations, only: [:search,:canvas_accounts,:canvas_courses]
 
   def login
   	@organization = find_org_by_path params[:slug]

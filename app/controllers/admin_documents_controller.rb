@@ -1,5 +1,5 @@
 class AdminDocumentsController < AdminController
-  before_filter :get_organizations, only: [:new, :edit, :update]
+  before_action :get_organizations, only: [:new, :edit, :update]
   layout 'admin'
 
   def new

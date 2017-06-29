@@ -6,19 +6,19 @@
     <% if has_role 'admin' %>
       <nav class="doc-nav" style=" float: right; width: auto; position: relative; z-index: 999999;">
           <ul>
-              <% if @document.version > 2 %>
+              <% if @document.version && @document.version > 2 %>
                 <li>
                   <a style="text-decoration: none;" href="edit?version=1">&laquo;</a>
                 </li>
               <% end %>
 
-              <% if @document.version > 1 %>
+              <% if @document.version && @document.version > 1 %>
                 <li>
                   <a style="text-decoration: none;" href="edit?version=<%= @document.version - 1 %>">&lt;</a>
                 </li>
               <% end %>
               <li>
-                  <span>v<%= @document.version %></span>
+                  <span>v<%= @document.version %>???</span>
               </li>
               <% if params[:version].to_i > 0 && params[:version].to_i < @document.versions.count + 1 %>
                 <li>

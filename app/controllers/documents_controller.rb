@@ -4,9 +4,9 @@ class DocumentsController < ApplicationController
 
   layout 'view'
 
-  before_filter :lms_connection_information, :only => [:edit, :course, :course_list]
-  before_filter :lookup_document, :only => [:edit, :update]
-  before_filter :init_view_folder, :only => [:new, :edit, :update, :show, :course]
+  before_action :lms_connection_information, :only => [:edit, :course, :course_list]
+  before_action :lookup_document, :only => [:edit, :update]
+  before_action :init_view_folder, :only => [:new, :edit, :update, :show, :course]
 
   def index
     redirect_to :new
@@ -69,6 +69,8 @@ class DocumentsController < ApplicationController
 
     @document.revert_to params[:version].to_i if params[:version]
     verify_org
+
+    debugger
 
     render :layout => 'edit', :template => '/documents/content'
   end
@@ -277,7 +279,7 @@ class DocumentsController < ApplicationController
     end
 
     # if there is no org yet, show an error
-    raise "error"  unless org
+    raise "error: no org found matching #{document_slug}"  unless org
 
     @document[:organization_id] = org[:id] if @document
 

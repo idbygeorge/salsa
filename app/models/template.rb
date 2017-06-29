@@ -1,5 +1,5 @@
 class Template < ApplicationRecord
-  versioned
+  has_paper_trail
 
   belongs_to :organization
 end
