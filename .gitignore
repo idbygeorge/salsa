@@ -32,3 +32,4 @@ salsa_test
 /config/newrelic.yml
 /config/puma.rb
 /config/secrets.yml
+/config/nginx.conf
