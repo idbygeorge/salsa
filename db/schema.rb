@@ -10,16 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161117024708) do
+ActiveRecord::Schema.define(version: 20170602223025) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "components", force: :cascade do |t|
-    t.string   "name"
-    t.string   "slug"
+    t.string   "name",                limit: 255
+    t.string   "slug",                limit: 255
     t.text     "description"
-    t.string   "category"
+    t.string   "category",            limit: 255
     t.integer  "organization_id"
     t.text     "css"
     t.text     "js"
@@ -44,29 +44,29 @@ ActiveRecord::Schema.define(version: 20161117024708) do
 
   create_table "document_meta", force: :cascade do |t|
     t.integer  "document_id"
-    t.string   "key"
-    t.string   "value"
-    t.string   "lms_organization_id"
-    t.string   "lms_course_id"
+    t.string   "key",                  limit: 255
+    t.string   "value",                limit: 255
+    t.string   "lms_organization_id",  limit: 255
+    t.string   "lms_course_id",        limit: 255
     t.integer  "root_organization_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "documents", force: :cascade do |t|
-    t.string   "name"
-    t.string   "edit_id"
-    t.string   "view_id"
+    t.string   "name",              limit: 255
+    t.string   "edit_id",           limit: 255
+    t.string   "view_id",           limit: 255
     t.text     "payload"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "template_id"
+    t.string   "template_id",       limit: 255
     t.integer  "organization_id"
-    t.string   "lms_course_id"
+    t.string   "lms_course_id",     limit: 255
     t.datetime "lms_published_at"
     t.integer  "component_id"
     t.integer  "component_version"
-    t.string   "term_id"
+    t.string   "term_id",           limit: 255
     t.index ["component_id"], name: "index_documents_on_component_id", using: :btree
     t.index ["edit_id"], name: "index_documents_on_edit_id", unique: true, using: :btree
     t.index ["lms_course_id"], name: "index_documents_on_lms_course_id", using: :btree
@@ -78,32 +78,33 @@ ActiveRecord::Schema.define(version: 20161117024708) do
 
   create_table "organization_meta", force: :cascade do |t|
     t.integer  "organization_id"
-    t.string   "key"
-    t.string   "value"
-    t.string   "lms_organization_id"
+    t.string   "key",                 limit: 255
+    t.string   "value",               limit: 255
+    t.string   "lms_organization_id", limit: 255
     t.integer  "root_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "organizations", force: :cascade do |t|
-    t.string   "name"
-    t.string   "slug"
+    t.string   "name",                      limit: 255
+    t.string   "slug",                      limit: 255
     t.integer  "parent_id"
     t.integer  "lft"
     t.integer  "rgt"
     t.integer  "depth"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "lms_authentication_source"
-    t.string   "lms_authentication_id"
-    t.string   "lms_authentication_key"
-    t.string   "lms_info_slug"
-    t.string   "lms_id"
+    t.string   "lms_authentication_source", limit: 255
+    t.string   "lms_authentication_id",     limit: 255
+    t.string   "lms_authentication_key",    limit: 255
+    t.string   "lms_info_slug",             limit: 255
+    t.string   "lms_id",                    limit: 255
     t.datetime "dashboard_start_at"
     t.datetime "dashboard_end_at"
-    t.string   "home_page_redirect"
+    t.string   "home_page_redirect",        limit: 255
     t.json     "default_account_filter"
+    t.boolean  "skip_lms_publish"
     t.index ["depth"], name: "index_organizations_on_depth", using: :btree
     t.index ["lft"], name: "index_organizations_on_lft", using: :btree
     t.index ["lms_id"], name: "index_organizations_on_lms_id", using: :btree
@@ -134,7 +135,7 @@ ActiveRecord::Schema.define(version: 20161117024708) do
   end
 
   create_table "templates", force: :cascade do |t|
-    t.string   "slug"
+    t.string   "slug",            limit: 255
     t.text     "payload"
     t.integer  "organization_id"
     t.datetime "created_at"
@@ -143,12 +144,12 @@ ActiveRecord::Schema.define(version: 20161117024708) do
   end
 
   create_table "terms", force: :cascade do |t|
-    t.string   "slug"
-    t.string   "name"
+    t.string   "slug",            limit: 255
+    t.string   "name",            limit: 255
     t.integer  "organization_id"
     t.datetime "start_date"
     t.integer  "duration"
-    t.string   "cycle"
+    t.string   "cycle",           limit: 255
     t.integer  "sequence"
     t.boolean  "is_default"
     t.datetime "created_at"
@@ -159,16 +160,16 @@ ActiveRecord::Schema.define(version: 20161117024708) do
   create_table "user_assignments", force: :cascade do |t|
     t.integer "user_id"
     t.integer "organization_id"
-    t.string  "username"
+    t.string  "username",        limit: 255
     t.boolean "cascades"
-    t.string  "role"
+    t.string  "role",            limit: 255
   end
 
   create_table "users", force: :cascade do |t|
-    t.string   "name"
+    t.string   "name",              limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "email"
+    t.string   "email",             limit: 255
     t.string   "password_digest",   limit: 255
     t.string   "remember_digest",   limit: 255
     t.string   "activation_digest", limit: 255
@@ -181,14 +182,14 @@ ActiveRecord::Schema.define(version: 20161117024708) do
 
   create_table "versions", force: :cascade do |t|
     t.integer  "versioned_id"
-    t.string   "versioned_type"
+    t.string   "versioned_type", limit: 255
     t.integer  "user_id"
-    t.string   "user_type"
-    t.string   "user_name"
+    t.string   "user_type",      limit: 255
+    t.string   "user_name",      limit: 255
     t.text     "modifications"
     t.integer  "number"
     t.integer  "reverted_from"
-    t.string   "tag"
+    t.string   "tag",            limit: 255
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["created_at"], name: "index_versions_on_created_at", using: :btree
