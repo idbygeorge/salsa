@@ -43,7 +43,7 @@ These example Dockerfile and docker-compose.yml expect to be in a folder above t
       db:
         image: postgres
         volumes:
-          - ./db-data/postgres:/var/lib/postgresql/data
+          - ./salsa/tmp/db/postgres-data:/var/lib/postgresql/data
       salsa:
         build: .
         command: bundle exec rails s -p 3000 -b '0.0.0.0'
@@ -54,6 +54,9 @@ These example Dockerfile and docker-compose.yml expect to be in a folder above t
         depends_on:
           - db
 
+Make the postgres data folder in the project's tmp folder
+
+    mkdir tmp/db/postgres-data
 
 Docker run
 
