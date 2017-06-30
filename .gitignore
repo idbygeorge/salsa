@@ -33,3 +33,5 @@ salsa_test
 /config/puma.rb
 /config/secrets.yml
 /config/nginx.conf
+
+.byebug_history
