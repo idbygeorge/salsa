@@ -1,0 +1,78 @@
+# Dev Guide - Docker
+
+Copy default configs, adjust as necessary
+
+    cp config/deploy/config/default/* config/
+
+Setup Docker (for postgresql db)
+
+    curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+    sudo add-apt-repository \
+       "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+       $(lsb_release -cs) \
+       stable"
+    sudo apt-get update
+    sudo apt-get install docker-ce
+
+Install docker composer (as root)
+
+    curl -L https://github.com/docker/compose/releases/download/1.14.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+    chmod +x /usr/local/bin/docker-compose
+
+These example Dockerfile and docker-compose.yml expect to be in a folder above the application folder.
+
+../Dockerfile
+
+    FROM ruby:2.4.0
+
+    # set the app directory var
+    ENV APP_HOME /home/apps/salsa
+    WORKDIR $APP_HOME
+
+    RUN apt-get update -qq && apt-get install -y build-essential libpq-dev nodejs
+    RUN gem install bundler
+
+    COPY salsa/Gemfile* ./
+    RUN bundle install
+    ADD . .
+
+../docker-compose.yml
+
+    version: '3'
+    services:
+      db:
+        image: postgres
+        volumes:
+          - ./db-data/postgres:/var/lib/postgresql/data
+      salsa:
+        build: .
+        command: bundle exec rails s -p 3000 -b '0.0.0.0'
+        volumes:
+          - .:/home/apps
+        ports:
+          - "3000:3000"
+        depends_on:
+          - db
+
+
+Docker run
+
+    sudo docker-compose run salsa rails new . --force --database=postgresql
+
+
+Build (do once for first run, then only if Gemfile or Dockerfile change)
+
+    sudo docker-compose build
+
+Database commands
+
+    sudo docker-compose run salsa rake db:create
+    sudo docker-compose run salsa rake db:migrate
+
+## Running the application
+
+    sudo docker-compose up
+
+First time for a new hostname (support multi-tennants via differnet hostnames) visit http://0.0.0.0:3000/admin/organizations/new
+
+Slug must be hostname used to access site (i.e. `0.0.0.0` if using http://0.0.0.0:3000/ or `salsa.dev` if using http://salsa.dev:3000/, etc...)
