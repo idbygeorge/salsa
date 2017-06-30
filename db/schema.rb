@@ -16,10 +16,10 @@ ActiveRecord::Schema.define(version: 20170629174616) do
   enable_extension "plpgsql"
 
   create_table "components", id: :serial, force: :cascade do |t|
-    t.string "name", limit: 255
-    t.string "slug", limit: 255
+    t.string "name"
+    t.string "slug"
     t.text "description"
-    t.string "category", limit: 255
+    t.string "category"
     t.integer "organization_id"
     t.text "css"
     t.text "js"
@@ -44,29 +44,29 @@ ActiveRecord::Schema.define(version: 20170629174616) do
 
   create_table "document_meta", id: :serial, force: :cascade do |t|
     t.integer "document_id"
-    t.string "key", limit: 255
-    t.string "value", limit: 255
-    t.string "lms_organization_id", limit: 255
-    t.string "lms_course_id", limit: 255
+    t.string "key"
+    t.string "value"
+    t.string "lms_organization_id"
+    t.string "lms_course_id"
     t.integer "root_organization_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "documents", id: :serial, force: :cascade do |t|
-    t.string "name", limit: 255
-    t.string "edit_id", limit: 255
-    t.string "view_id", limit: 255
+    t.string "name"
+    t.string "edit_id"
+    t.string "view_id"
     t.text "payload"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string "template_id", limit: 255
+    t.string "template_id"
     t.integer "organization_id"
-    t.string "lms_course_id", limit: 255
+    t.string "lms_course_id"
     t.datetime "lms_published_at"
     t.integer "component_id"
     t.integer "component_version"
-    t.string "term_id", limit: 255
+    t.string "term_id"
     t.index ["component_id"], name: "index_documents_on_component_id"
     t.index ["edit_id"], name: "index_documents_on_edit_id", unique: true
     t.index ["lms_course_id"], name: "index_documents_on_lms_course_id"
@@ -78,31 +78,31 @@ ActiveRecord::Schema.define(version: 20170629174616) do
 
   create_table "organization_meta", id: :serial, force: :cascade do |t|
     t.integer "organization_id"
-    t.string "key", limit: 255
-    t.string "value", limit: 255
-    t.string "lms_organization_id", limit: 255
+    t.string "key"
+    t.string "value"
+    t.string "lms_organization_id"
     t.integer "root_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   create_table "organizations", id: :serial, force: :cascade do |t|
-    t.string "name", limit: 255
-    t.string "slug", limit: 255
+    t.string "name"
+    t.string "slug"
     t.integer "parent_id"
     t.integer "lft"
     t.integer "rgt"
     t.integer "depth"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string "lms_authentication_source", limit: 255
-    t.string "lms_authentication_id", limit: 255
-    t.string "lms_authentication_key", limit: 255
-    t.string "lms_info_slug", limit: 255
-    t.string "lms_id", limit: 255
+    t.string "lms_authentication_source"
+    t.string "lms_authentication_id"
+    t.string "lms_authentication_key"
+    t.string "lms_info_slug"
+    t.string "lms_id"
     t.datetime "dashboard_start_at"
     t.datetime "dashboard_end_at"
-    t.string "home_page_redirect", limit: 255
+    t.string "home_page_redirect"
     t.json "default_account_filter"
     t.boolean "skip_lms_publish"
     t.index ["depth"], name: "index_organizations_on_depth"
@@ -135,7 +135,7 @@ ActiveRecord::Schema.define(version: 20170629174616) do
   end
 
   create_table "templates", id: :serial, force: :cascade do |t|
-    t.string "slug", limit: 255
+    t.string "slug"
     t.text "payload"
     t.integer "organization_id"
     t.datetime "created_at"
@@ -144,12 +144,12 @@ ActiveRecord::Schema.define(version: 20170629174616) do
   end
 
   create_table "terms", id: :serial, force: :cascade do |t|
-    t.string "slug", limit: 255
-    t.string "name", limit: 255
+    t.string "slug"
+    t.string "name"
     t.integer "organization_id"
     t.datetime "start_date"
     t.integer "duration"
-    t.string "cycle", limit: 255
+    t.string "cycle"
     t.integer "sequence"
     t.boolean "is_default"
     t.datetime "created_at"
@@ -160,22 +160,22 @@ ActiveRecord::Schema.define(version: 20170629174616) do
   create_table "user_assignments", id: :serial, force: :cascade do |t|
     t.integer "user_id"
     t.integer "organization_id"
-    t.string "username", limit: 255
+    t.string "username"
     t.boolean "cascades"
-    t.string "role", limit: 255
+    t.string "role"
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
-    t.string "name", limit: 255
+    t.string "name"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string "email", limit: 255
-    t.string "password_digest", limit: 255
-    t.string "remember_digest", limit: 255
-    t.string "activation_digest", limit: 255
+    t.string "email"
+    t.string "password_digest"
+    t.string "remember_digest"
+    t.string "activation_digest"
     t.boolean "activated"
     t.datetime "activated_at"
-    t.string "reset_digest", limit: 255
+    t.string "reset_digest"
     t.datetime "reset_sent_at"
     t.index ["email"], name: "index_users_on_email", unique: true
   end
@@ -191,15 +191,15 @@ ActiveRecord::Schema.define(version: 20170629174616) do
   end
 
   create_table "vestal_versions", id: :serial, force: :cascade do |t|
+    t.string "versioned_type"
     t.integer "versioned_id"
-    t.string "versioned_type", limit: 255
+    t.string "user_type"
     t.integer "user_id"
-    t.string "user_type", limit: 255
-    t.string "user_name", limit: 255
+    t.string "user_name"
     t.text "modifications"
     t.integer "number"
     t.integer "reverted_from"
-    t.string "tag", limit: 255
+    t.string "tag"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["created_at"], name: "index_vestal_versions_on_created_at"

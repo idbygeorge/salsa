@@ -1,4 +1,4 @@
-class AddOrganizationMeta < ActiveRecord::Migration
+class AddOrganizationMeta < ActiveRecord::Migration[4.2]
   def change
   	create_table :organization_meta do |t|
   		t.integer :organization_id
