@@ -27,6 +27,16 @@ class AdminController < ApplicationController
   end
 
   def authenticate
+
+    # allow using the login form for the admin password if it is set
+    if APP_CONFIG['admin_password']
+        if params[:user][:email] == 'admin@' + (params[:slug] || request.env['SERVER_NAME'])
+          session[:admin_authorized] = params[:user][:password] == APP_CONFIG['admin_password']
+
+          return redirect_to admin_path
+        end
+    end
+
   	@organization = find_org_by_path params[:slug]
 
     unless params[:user][:email] && params[:user][:password]
