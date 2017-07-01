@@ -67,6 +67,7 @@ ActiveRecord::Schema.define(version: 20170629174616) do
     t.integer "component_id"
     t.integer "component_version"
     t.string "term_id"
+    t.integer "version"
     t.index ["component_id"], name: "index_documents_on_component_id"
     t.index ["edit_id"], name: "index_documents_on_edit_id", unique: true
     t.index ["lms_course_id"], name: "index_documents_on_lms_course_id"
@@ -104,6 +105,8 @@ ActiveRecord::Schema.define(version: 20170629174616) do
     t.datetime "dashboard_end_at"
     t.string "home_page_redirect"
     t.json "default_account_filter"
+    t.datetime "republish_at"
+    t.string "republish_batch_token"
     t.boolean "skip_lms_publish"
     t.index ["depth"], name: "index_organizations_on_depth"
     t.index ["lft"], name: "index_organizations_on_lft"
