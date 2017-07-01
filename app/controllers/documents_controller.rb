@@ -66,11 +66,14 @@ class DocumentsController < ApplicationController
   end
 
   def edit
+    if params[:version].to_i > 0
+      @document_version = params[:version].to_i
+      @document = @document.versions[@document_version].reify
+    else
+      @document_version = @document.versions.count
+    end
 
-    @document.revert_to params[:version].to_i if params[:version]
     verify_org
-
-    debugger
 
     render :layout => 'edit', :template => '/documents/content'
   end
