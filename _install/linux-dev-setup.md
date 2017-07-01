@@ -46,7 +46,7 @@ These example Dockerfile and docker-compose.yml expect to be in a folder above t
           - ./salsa/tmp/db/postgres-data:/var/lib/postgresql/data
       salsa:
         environment:
-          - TRUSTED_IP=172.19.0.0/24
+          - TRUSTED_IP=0.0.0.0/0
         build: .
         command: bundle exec rails s -p 3000 -b '0.0.0.0'
         volumes:
