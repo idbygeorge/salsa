@@ -25,7 +25,7 @@ class OrganizationsController < AdminController
         org_id = nil
       end
 
-      Document.update_all(["organization_id=?", org_id], :id => params[:document_ids])
+      Document.where(:id => params[:document_ids]).update_all(["organization_id=?", org_id])
     end
 
     redirect_to organizations_path
