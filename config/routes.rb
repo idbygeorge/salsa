@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   get '/:alias/:document', to: redirect('/SALSA/%{document}'), constraints: { alias: /(syllabuses|salsas?)/ }
   get '/:alias/:document/:action', to: redirect('/SALSA/%{document}/%{action}'), constraints: { alias: /(syllabuses|salsas?)/, action: /(edit|template)?/ }
 
-  get '/admin', to: redirect('/admin/organizations'), as: 'admin'
+  get '/admin', to: 'admin#landing', as: 'admin'
 
   scope 'admin' do
     get "search", to: 'admin#search', as: 'admin_search'

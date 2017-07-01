@@ -2,10 +2,19 @@ require 'tempfile'
 require 'zip'
 
 class AdminController < ApplicationController
-  before_action :require_admin_permissions, only: [:search]
-  before_action :require_organization_admin_permissions, except: [:canvas,:login,:logout,:authenticate]
-  before_action :require_audit_role, only: [:canvas]
+  before_action :require_organization_admin_permissions, except: [:landing,:canvas,:reports,:reportStatus,:archive,:login,:logout,:authenticate]
+  before_action :require_auditor_role, only: [:canvas,:reports,:reportStatus,:archive]
   before_action :get_organizations, only: [:search,:canvas_accounts,:canvas_courses]
+
+  def landing
+    if has_role 'organization_admin'
+      return redirect_to organizations_path
+    elsif has_role 'auditor'
+      return redirect_to admin_reports_path
+    else
+      return redirect_or_error
+    end
+  end
 
   def login
   	@organization = find_org_by_path params[:slug]

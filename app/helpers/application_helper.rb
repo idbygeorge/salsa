@@ -89,7 +89,7 @@ module ApplicationHelper
     if session[:authenticated_user]
       return render :file => "public/401.html", :status => :unauthorized, :layout => false
     else
-      return redirect_to admin_login_path
+      return redirect_to admin_path
     end
   end
 
