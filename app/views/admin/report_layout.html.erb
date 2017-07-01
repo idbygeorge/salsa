@@ -46,7 +46,11 @@
 			<% end %>
 
 			<ul class="nav navbar-nav navbar-right">
-				<li><%= link_to 'Admin', admin_path, class: "btn btn-default" %></li>
+				<% if has_role 'organization_admin' %>
+					<li><%= link_to 'Admin', admin_path, class: "btn btn-default" %></li>
+				<% end %>
+
+				<li><%= link_to 'Logout', admin_logout_path, class: "btn btn-default" %></li>
 			</ul>
 		</div><!-- .container  -->
 	</div><!-- .heading -->
