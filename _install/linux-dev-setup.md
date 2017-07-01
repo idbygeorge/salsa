@@ -58,12 +58,7 @@ These example Dockerfile and docker-compose.yml expect to be in a folder above t
 
 Make the postgres data folder in the project's tmp folder
 
-    mkdir tmp/db/postgres-data
-
-Docker run
-
-    sudo docker-compose run salsa rails new . --force --database=postgresql
-
+    mkdir tmp/db/postgres-data -p
 
 Build (do once for first run, then only if Gemfile or Dockerfile change)
 
