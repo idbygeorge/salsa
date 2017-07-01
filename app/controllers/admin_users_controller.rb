@@ -20,9 +20,17 @@ class AdminUsersController < AdminController
 
   def assign
     @user = User.find params[:user_assignment][:user_id]
-
     @user_assignment = UserAssignment.create user_assignment_params
-    redirect_to admin_user_path id: @user[:id]
+
+    if @user_assignment.errors.any?
+      get_organizations
+      @user_assignments = @user.user_assignments if @user.user_assignments.count > 0
+      @new_permission = @user_assignment
+
+      render action: :show
+    else
+      redirect_to admin_user_path id: @user[:id]
+    end
   end
 
   def remove_assignment
@@ -40,7 +48,14 @@ class AdminUsersController < AdminController
     @user = User.find params[:user_assignment][:user_id]
 
     @user_assignment = UserAssignment.update params[:id], user_assignment_params
-    redirect_to admin_user_path id: @user[:id]
+
+    if @user_assignment.errors.any?
+      get_organizations
+
+      render action: :edit_assignment
+    else
+      redirect_to admin_user_path id: @user[:id]
+    end
   end
 
   def new
@@ -88,7 +103,14 @@ class AdminUsersController < AdminController
   def user_assignment_params
     params.require(:user_assignment).require(:user_id)
     params.require(:user_assignment).require(:role)
-    params.require(:user_assignment).require(:organization_id)
+
+    # global admin role, doens't have an organization, all other roles require one
+    if params[:user_assignment][:role] == 'admin'
+      params[:user_assignment][:organization_id] = nil
+      params[:user_assignment][:cascades] = true
+    else
+      params.require(:user_assignment).require(:organization_id)
+    end
 
     params.require(:user_assignment).permit(:user_id, :username, :role, :organization_id, :cascades)
   end
