@@ -3,10 +3,6 @@
     <% if @report.generating_at %>
       Started building a new report <%= time_ago_in_words @report.generating_at %> ago<br>
       <em class="small"><%= @report.generating_at %></em>
-
-      <% if @report_stale %>
-        &mdash; <a href="/admin/canvas?flush=true">cancel report</a>
-      <% end %>
     <% else %>
     <%= form_tag generate_report_path, class: 'form form-inline' do %>
         <div class="form-group">

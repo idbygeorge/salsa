@@ -3,25 +3,24 @@
     <p class="pull-left">
       Reports for <%= @org.name %>
     </p>
-    <%if @default_report %>
+
       <div class="pull-right">
-        <% if @download_snapshot %>
         <div class="">
-          <a class="btn btn-success download-btn" href="/admin/download">Download semester snapshot <i class=" download-icon fa fa-download" aria-hidden="true"></i></a>
+          <a class="btn btn-success download-btn" href="/admin/download">Download documents <i class=" download-icon fa fa-download" aria-hidden="true"></i></a>
         </div>
+        <%if @default_report %>
+          <div class="">
+            <a href="/admin/archive">Generate semester snapshot</a><br>
+            <em class="small">Takes 1-5 minutes</em>
+          </div>
         <% end %>
-        <div class="">
-          <a href="/admin/archive">Generate semester snapshot</a><br>
-          <em class="small">Takes 1-5 minutes</em>
-        </div>
       </div>
-      <% end %>
     <div class="clearfix"></div>
       <% @reports.each do |report| %>
       <hr>
       <p>
         Report #<%=report.id%>
-        <a class="" href="/admin/canvas?report=<%=report.id%>">Load report</a>
+        <a class="" href="/admin/report?report=<%=report.id%>">Load report</a>
       </p>
       <ul>
         <%if report.generating_at%>

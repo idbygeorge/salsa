@@ -1,10 +1,15 @@
-require 'tempfile'
-require 'zip'
-
 class AdminController < ApplicationController
-  before_action :require_organization_admin_permissions, except: [:landing,:canvas,:reports,:reportStatus,:archive,:login,:logout,:authenticate]
-  before_action :require_auditor_role, only: [:canvas,:reports,:reportStatus,:archive]
-  before_action :get_organizations, only: [:search,:canvas_accounts,:canvas_courses]
+  before_action :require_organization_admin_permissions, except: [
+    :landing,
+    :login,
+    :logout,
+    :authenticate,
+  ]
+  before_action :get_organizations, only: [
+      :search,
+      :canvas_accounts,
+      :canvas_courses
+  ]
 
   def landing
     if has_role 'organization_admin'
@@ -66,144 +71,6 @@ class AdminController < ApplicationController
     return redirect_to admin_path
   end
 
-  def archive
-    @organization = get_org
-    default_term = 'SP17'
-    reportJSON = nil
-
-    if File.file?('/tmp/report_archive.zip')
-      File.delete('/tmp/report_archive.zip')
-    end
-    reports = ReportArchive.where(organization_id: @organization.id).all
-    reports.each do |r|
-      if @organization.default_account_filter
-        default_term = @organization.default_account_filter
-      end
-      if r.report_filters && r.report_filters["account_filter"] == default_term
-      reportJSON = r
-      end
-    end
-    report = JSON.parse(reportJSON.payload)
-    courses = report.map{ |x|  x['course_id'] }
-    docs = Document.where(lms_course_id: courses )
-    docs = docs.where(organization_id: @organization.id )
-
-
-
-    zipfile_name = "/tmp/report_archive.zip"
-
-    Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
-      zipfile.get_output_stream('content.css'){ |os| os.write Rails.application.assets['application.css'].to_s }
-      docs.each do |doc|
-
-        @document = doc
-        # Two arguments:
-        # - The name of the file as it will appear in the archive
-        # - The original file, including the path to find it
-        rendered_doc = render_to_string :layout => "archive", :template => "documents/content"
-        zipfile.get_output_stream("#{@document.id}.html") { |os| os.write rendered_doc }
-      end
-    end
-
-    redirect_to '/admin/reports'
-  end
-
-  def download
-    send_file '/tmp/report_archive.zip'
-
-  end
-
-  def reportStatus
-    render 'report_status', layout: '../admin/report_layout'
-  end
-
-  def reports
-    @org = get_org
-    @reports = ReportArchive.where(organization_id: @org.id).order(updated_at: :desc ).all
-    @default_report = nil
-    @reports.each do |report|
-      if report.payload
-        if @org.default_account_filter
-          if report.report_filters && report.report_filters["account_filter"] == @org.default_account_filter
-            @default_report = true
-          end
-        else
-          if report.report_filters && report.report_filters["account_filter"] == 'FL16'
-            @default_report = true
-          end
-        end
-      end
-    end
-
-    if File.file?('/tmp/report_archive.zip')
-      @download_snapshot = true
-    end
-
-    render 'reports', layout: '../admin/report_layout'
-  end
-
-  def canvas
-    @org = get_org
-
-    rebuild = params[:rebuild]
-    flush = params[:flush]
-
-    #Remove unneeded params
-    params.delete :authenticity_token
-    params.delete :utf8
-    params.delete :commit
-    params.delete :rebuild
-
-    if params[:account_filter] && params[:account_filter] != ""
-      account_filter = params[:account_filter]
-    else
-      if @org.default_account_filter
-        account_filter = @org.default_account_filter
-        params[:account_filter] = account_filter
-      else
-        account_filter = 'FL16'
-        params[:account_filter] = account_filter
-      end
-    end
-
-    if params[:report]
-      @report = ReportArchive.where(id: params[:report]).first
-      params.delete :report
-    else
-      #start by saving the report (add check to see if there is a report)
-      @reports = ReportArchive.where(organization_id: @org.id).all
-
-      if !@reports.empty?
-        if @reports.count == 1
-          @report = @reports.first;
-        else
-          return redirect_to '/admin/reports'
-        end
-      end
-    end
-
-      if !@report || rebuild
-
-        jobs = Que.execute("select run_at, job_id, error_count, last_error, queue, args from que_jobs where job_class = 'ReportGenerator'")
-        args = [ @org.id, account_filter, params ]
-        jobs.each do |job|
-          if job['args'] == args
-            return redirect_to '/admin/report-status'
-          end
-        end
-        @queued = ReportHelper.generate_report_as_job @org.id, account_filter, params
-
-        redirect_to '/admin/canvas'
-      else
-        if !@report.payload
-          return redirect_to '/admin/report-status'
-        end
-        @report_data = JSON.parse(@report.payload)
-
-        render 'canvas', layout: '../admin/report_layout'
-      end
-  end
-
   def canvas_accounts
     org_slug = request.env['SERVER_NAME']
     @org = Organization.find_by slug: org_slug
@@ -229,19 +96,6 @@ class AdminController < ApplicationController
     @org_meta.build
 
     render 'admin/canvas/accounts'
-  end
-
-  def get_org_slug
-    request.env['SERVER_NAME']
-  end
-
-  def get_org
-    Organization.find_by slug: get_org_slug
-  end
-
-  def get_document_meta
-    org_slug = request.env['SERVER_NAME']
-    ReportHelper.get_document_meta org_slug, 'FL16', params
   end
 
   def canvas_courses

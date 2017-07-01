@@ -238,4 +238,17 @@ module ApplicationHelper
 
     return true
   end
+
+  def get_org_slug
+    request.env['SERVER_NAME']
+  end
+
+  def get_org
+    Organization.find_by slug: get_org_slug
+  end
+
+  def get_document_meta
+    org_slug = request.env['SERVER_NAME']
+    ReportHelper.get_document_meta org_slug, 'FL16', params
+  end
 end
