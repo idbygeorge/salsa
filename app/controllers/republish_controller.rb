@@ -1,6 +1,6 @@
 require 'net/http'
 class RepublishController < ApplicationController
-  before_filter :require_admin_permissions
+  before_action :require_admin_permissions
   def preview
     get_documents
     @organizations = Organization.all.order(:lft, :rgt, :name)
