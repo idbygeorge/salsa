@@ -20,7 +20,7 @@
               <% end %>
 
               <div class="info pull-right">
-                Version: <%= document.version %>
+                Version: <%= document.versions.count %>
               </div>
             </div>
 
@@ -75,7 +75,7 @@
           	<div>
               View: <%= link_to "#{org_base}#{document_path(id: document.view_id)}", "#{org_base}#{document_path(id: document.view_id)}", target: "_blank" %>
               <br>
-              Edit: <%= link_to "#{org_base}#{document_path(id: document.edit_id)}", "#{org_base}#{document_path(id: document.edit_id)}", target: "_blank", class: "republish" %>
+              Edit: <%= link_to "#{org_base}#{document_path(id: document.edit_id)}/edit", "#{org_base}#{document_path(id: document.edit_id)}", target: "_blank", class: "republish" %>
 
           	</div>
           </li>

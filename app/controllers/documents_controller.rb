@@ -31,41 +31,37 @@ class DocumentsController < ApplicationController
 
   def show
     @document = Document.find_by_view_id(params[:id])
-    if check_lock @organization[:slug], params[:batch_token]
-      unless @document
-        document = Document.find_by_edit_id(params[:id])
+    unless @document
+      document = Document.find_by_edit_id(params[:id])
 
-        unless document
-          document_template = Document.find_by_template_id(params[:id])
-          if document_template
-            document = document_template.dup
-            document.reset_ids
-            document.save!
-          end
-
+      unless document
+        document_template = Document.find_by_template_id(params[:id])
+        if document_template
+          document = document_template.dup
+          document.reset_ids
+          document.save!
         end
 
-        raise ActionController::RoutingError.new('Not Found') unless document
-        redirect_to edit_document_path(:id => document.edit_id, :batch_token => params[:batch_token])
-        return
       end
 
-      @calendar_only = params[:calendar_only] ? true : false
+      raise ActionController::RoutingError.new('Not Found') unless document
+      redirect_to edit_document_path(:id => document.edit_id, :batch_token => params[:batch_token])
+      return
+    end
 
-      @action = 'show'
+    @calendar_only = params[:calendar_only] ? true : false
 
-      respond_to do |format|
-        format.html {
-          render :layout => 'view', :template => '/documents/content'
-        }
-        format.pdf{
-          html = render_to_string :layout => 'view', :template => '/documents/content.html.erb'
-          content = Rails.env.development? ? WickedPdf.new.pdf_from_string(html.force_encoding("UTF-8")) : html
-          render :text => content, :layout => false
-        }
-      end
-    else
-      render :layout => 'dialog', :template => '/documents/republishing'
+    @action = 'show'
+
+    respond_to do |format|
+      format.html {
+        render :layout => 'view', :template => '/documents/content'
+      }
+      format.pdf{
+        html = render_to_string :layout => 'view', :template => '/documents/content.html.erb'
+        content = Rails.env.development? ? WickedPdf.new.pdf_from_string(html.force_encoding("UTF-8")) : html
+        render :text => content, :layout => false
+      }
     end
   end
 
@@ -180,7 +176,6 @@ class DocumentsController < ApplicationController
     saved = false
     republishing = true
 
-
     verify_org
 
     if check_lock @organization[:slug], params[:batch_token]
@@ -198,9 +193,7 @@ class DocumentsController < ApplicationController
           @document.lms_course_id = params[:canvas_relink_course_id]
         end
 
-        if document_version && @document.version == document_version.to_i
-          #increment document version and save
-          @document.version = document_version.to_i + 1;
+        if document_version && @document.versions.count == document_version.to_i
           @document.payload = request.raw_post
 
           @document.payload = nil if @document.payload == ''
@@ -213,7 +206,7 @@ class DocumentsController < ApplicationController
     end
 
     respond_to do |format|
-      msg = { :status => "ok", :message => "Success!", :version => @document.version }
+      msg = { :status => "ok", :message => "Success!", :version => @document.versions.count }
 
       if republishing
        msg = { :status => "error", :message => "Documents for this organization are currently being republished. Please copy your changes and try again later.", :version => @document[:version] }

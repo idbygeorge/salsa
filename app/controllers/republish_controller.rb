@@ -16,19 +16,19 @@ class RepublishController < ApplicationController
   def update_lock
     expire = params[:expire]
     @organization = find_org_by_path params[:slug]
-    if !expire
+
+    if expire == 'false'
       @organization.republish_at = DateTime.now
 
       @organization.save!
-
-      respond_to do |format|
-        msg = { :status => "ok", :message => "Success!" }
-        format.html  {
-          render :json => msg
-        }
-      end
     else
       expire_lock
+    end
+    respond_to do |format|
+      msg = { :status => "ok", :message => "Success!" }
+      format.html  {
+        render :json => @organization.republish_at
+      }
     end
   end
 
@@ -62,7 +62,7 @@ class RepublishController < ApplicationController
     ids =  documents.pluck(:edit_id)
 
     ids.each do |id|
-    @republish_urls.push("//#{path}#{redirect_port}/SALSA/" + id)
+    @republish_urls.push("//#{path}#{redirect_port}/SALSA/" + id + "/edit")
     end
 
     @documents = documents.order(updated_at: :desc, created_at: :desc).page(page).per(per)

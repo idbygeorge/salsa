@@ -227,12 +227,15 @@ module ApplicationHelper
       if ((DateTime.now - organization.republish_at.to_datetime)*24).to_i > 4
         organization.republish_at = nil
         organization.republish_batch_token = nil
+
+        organization.save!
+
         return true
+      elsif organization.republish_batch_token != batch_token
+        return false
       end
-    elsif organization.republish_batch_token == batch_token
-      true
-    else
-      false
     end
+
+    return true
   end
 end
