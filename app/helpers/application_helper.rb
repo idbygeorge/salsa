@@ -128,9 +128,9 @@ module ApplicationHelper
     elsif org && (session[:lms_authenticated_user] != nil || session[:authenticated_user] != nil)
       if org[:lms_authentication_source] && org[:lms_authentication_source] == session[:oauth_endpoint]
         username = session[:lms_authenticated_user]['id'].to_s
-        user_assignments = UserAssignment.where organization_id: org[:id], username: username
+        user_assignments = UserAssignment.where('organization_id = ? OR (role = ?)', org[:id], 'admin').where(username: username)
       else
-        user_assignments = UserAssignment.where organization_id: org[:id], user_id: session[:authenticated_user]
+        user_assignments = UserAssignment.where('organization_id = ? OR (role = ?)', org[:id], 'admin').where(user_id: session[:authenticated_user])
       end
 
       if user_assignments.count > 0
