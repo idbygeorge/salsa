@@ -7,27 +7,9 @@
   <%= form_tag('/admin/organizations/documents', :html => { :class => "form-vertical" } ) do |f| %>
     <div class="row">
 
-      <% if other_orgs.count > 0 %>
-      <div class="form-group col-sm-4">
-        <%= label_tag :id, 'Move selected documents: ', class: "control-label" %>
-        <div class="controls">
-          <%= select('organization', 'id', other_orgs.collect { |org| [ (org.parent && org.parent.parent ? org.parent.parent.name + ' » ' : '') + (org.parent ? org.parent.name + ' » ' : '') + org.name, org.id ] }, {include_blank: true}, {class: 'form-control'}) %></p>
-        </div>
-      </div>
-
-      <div class="form-group pull-right text-right">
-        <br>
-        <%= submit_tag 'submit', {class: 'btn btn-default'}%>
-      </div>
-      <% end %>
     </div>
 
     <div class="row">
-      <% if other_orgs.count > 0 %>
-      <a id="toggleChecked" href="#toggleChecked">
-        select all/none
-      </a>
-      <% end %>
 
       <ul class="nav" id="salsaDocuments">
         <% @documents.each do |document| %>
@@ -42,13 +24,7 @@
               </div>
             </div>
 
-            <% if other_orgs.count > 0 %>
-            <%= check_box_tag "document_ids[]", document.id, false, id: "document_#{document.id}" %>
-            <% end %>
-
             <label for="<%= "document_#{document.id}" %>"><%= document.name %></label>
-
-            <%= link_to 'edit', edit_admin_document_path(document) %>
 
             <time datetime="<%= document.created_at %>">Created <%= time_ago_in_words document.created_at %> ago</time>
 
@@ -99,12 +75,8 @@
           	<div>
               View: <%= link_to "#{org_base}#{document_path(id: document.view_id)}", "#{org_base}#{document_path(id: document.view_id)}", target: "_blank" %>
               <br>
-              Edit: <%= link_to "#{org_base}#{document_path(id: document.edit_id)}", "#{org_base}#{document_path(id: document.edit_id)}", target: "_blank" %>
+              Edit: <%= link_to "#{org_base}#{document_path(id: document.edit_id)}", "#{org_base}#{document_path(id: document.edit_id)}", target: "_blank", class: "republish" %>
 
-              <% if document.template_id %>
-                <br>
-                Template: <%= link_to "#{org_base}#{document_path(id: document.template_id)}", "#{org_base}#{document_path(id: document.template_id)}", target: "_blank" %>
-              <% end %>
           	</div>
           </li>
         <% end %>
@@ -113,32 +85,29 @@
     </div><!-- .row -->
   <% end %><!-- form -->
   <!-- Modal -->
-  <div id="republishSearch" class="modal fade" role="dialog">
+  <div id="republish" class="modal fade" role="dialog">
     <div class="modal-dialog">
       <!-- Modal content-->
       <div class="modal-content">
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal">&times;</button>
-          <h4 class="modal-title">Republish Documents</h4>
+          <h4 class="modal-title">Republishing Documents</h4>
         </div>
         <div class="modal-body">
-          <p>Republishing works by using the last published date for your documents.</p>
-          <p>Search for documents:</p>
+          <span class="hide" id="batch_token"><%=@organization.republish_batch_token%></span>
+          <div class="">
+            <iframe id="republish_iframe" width="100%" src=""></iframe>
+          </div>
+          <div class="errors"></div>
 
-          <%= form_tag("/admin/organization/preview/#{org_slug_parts(@documents[0].organization)[0]}", method: "get") do %>
-            <div class="form-group">
-              <%= label_tag(:document_start_date, "Start Date:") %>
-              <%= date_field(:document, :start_date, class: 'form-control') %>
+          <p>
+            Progress:
+          </p>
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 2%;">
+              0%
             </div>
-            <div class="form-group">
-              <%= label_tag(:document_end_date, "End Date:") %>
-              <%= date_field(:document, :end_date, class: 'form-control') %>
-            </div>
-            <div class="form-group">
-              <%= submit_tag("Search", class: 'btn btn-success') %>
-            </div>
-          <% end %>
-
+          </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

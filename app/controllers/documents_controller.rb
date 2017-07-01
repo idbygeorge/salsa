@@ -31,51 +31,59 @@ class DocumentsController < ApplicationController
 
   def show
     @document = Document.find_by_view_id(params[:id])
+    if check_lock @organization[:slug], params[:batch_token]
+      unless @document
+        document = Document.find_by_edit_id(params[:id])
 
-    unless @document
-      document = Document.find_by_edit_id(params[:id])
+        unless document
+          document_template = Document.find_by_template_id(params[:id])
+          if document_template
+            document = document_template.dup
+            document.reset_ids
+            document.save!
+          end
 
-      unless document
-        document_template = Document.find_by_template_id(params[:id])
-        if document_template
-          document = document_template.dup
-          document.reset_ids
-          document.save!
         end
+
+        raise ActionController::RoutingError.new('Not Found') unless document
+        redirect_to edit_document_path(:id => document.edit_id, :batch_token => params[:batch_token])
+        return
       end
 
-      raise ActionController::RoutingError.new('Not Found') unless document
-      redirect_to edit_document_path(:id => document.edit_id)
-      return
-    end
+      @calendar_only = params[:calendar_only] ? true : false
 
-    @calendar_only = params[:calendar_only] ? true : false
+      @action = 'show'
 
-    @action = 'show'
-
-    respond_to do |format|
-      format.html {
-        render :layout => 'view', :template => '/documents/content'
-      }
-      format.pdf{
-        html = render_to_string :layout => 'view', :template => '/documents/content.html.erb'
-        content = Rails.env.development? ? WickedPdf.new.pdf_from_string(html.force_encoding("UTF-8")) : html
-        render :text => content, :layout => false
-      }
+      respond_to do |format|
+        format.html {
+          render :layout => 'view', :template => '/documents/content'
+        }
+        format.pdf{
+          html = render_to_string :layout => 'view', :template => '/documents/content.html.erb'
+          content = Rails.env.development? ? WickedPdf.new.pdf_from_string(html.force_encoding("UTF-8")) : html
+          render :text => content, :layout => false
+        }
+      end
+    else
+      render :layout => 'dialog', :template => '/documents/republishing'
     end
   end
 
   def edit
-    if params[:version].to_i > 0
-      @document_version = params[:version].to_i
-      @document = @document.versions[@document_version].reify
+    if check_lock @organization[:slug], params[:batch_token]
+      if params[:version].to_i > 0
+        @document_version = params[:version].to_i
+        @document = @document.versions[@document_version].reify
+      else
+        @document_version = @document.versions.count
+      end
+
+      verify_org
+
+      render :layout => 'edit', :template => '/documents/content'
     else
-      @document_version = @document.versions.count
+      render :layout => 'dialog', :template => '/documents/republishing'
     end
-
-    verify_org
-
-    render :layout => 'edit', :template => '/documents/content'
   end
 
   def course
@@ -168,31 +176,50 @@ class DocumentsController < ApplicationController
 
   def update
     canvas_course_id = params[:canvas_course_id]
+    document_version = params[:document_version]
+    saved = false
+    republishing = true
+
 
     verify_org
 
-    if canvas_course_id && !@organization.skip_lms_publish
-      # publishing to canvas should not save in the Document model, the canvas version has been modified
-      update_course_document(canvas_course_id, request.raw_post, @organization[:lms_info_slug]) if params[:canvas] && canvas_course_id
-    else
-      if(params[:canvas_relink_course_id])
-        #find old document in this org with this id, set to null
-        old_document = Document.find_by lms_course_id: params[:canvas_relink_course_id], organization: @organization
-        old_document.update(lms_published_at: nil, lms_course_id: nil)
+    if check_lock @organization[:slug], params[:batch_token]
+      republishing = false;
+      if canvas_course_id && !@organization.skip_lms_publish
+        # publishing to canvas should not save in the Document model, the canvas version has been modified
+        update_course_document(canvas_course_id, request.raw_post, @organization[:lms_info_slug]) if params[:canvas] && canvas_course_id
+      else
+        if(params[:canvas_relink_course_id])
+          #find old document in this org with this id, set to null
+          old_document = Document.find_by lms_course_id: params[:canvas_relink_course_id], organization: @organization
+          old_document.update(lms_published_at: nil, lms_course_id: nil)
 
-        #set this document's canvas_course_id
-        @document.lms_course_id = params[:canvas_relink_course_id]
+          #set this document's canvas_course_id
+          @document.lms_course_id = params[:canvas_relink_course_id]
+        end
+
+        if document_version && @document.version == document_version.to_i
+          #increment document version and save
+          @document.version = document_version.to_i + 1;
+          @document.payload = request.raw_post
+
+          @document.payload = nil if @document.payload == ''
+          @document.lms_published_at = DateTime.now
+
+          @document.save!
+          saved = true;
+        end
       end
-
-      @document.payload = request.raw_post
-
-      @document.payload = nil if @document.payload == ''
-
-      @document.save!
     end
 
     respond_to do |format|
-      msg = { :status => "ok", :message => "Success!" }
+      msg = { :status => "ok", :message => "Success!", :version => @document.version }
+
+      if republishing
+       msg = { :status => "error", :message => "Documents for this organization are currently being republished. Please copy your changes and try again later.", :version => @document[:version] }
+      elsif !saved
+        msg = { :status => "error", :message => "This is not a current version of this document! Please copy your changes and refresh the page to get the current version.", :version => @document[:version]}
+      end
       format.json  {
         view_url = document_url(@document.view_id, :only_path => false)
         render :json => msg

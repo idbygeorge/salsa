@@ -220,4 +220,19 @@ module ApplicationHelper
   def redirect_port
     ':' + request.env['SERVER_PORT'] unless ['80', '443'].include?(request.env['SERVER_PORT'])
   end
+
+  def check_lock path, batch_token
+    organization = Organization.find_by slug:path
+    if(organization.republish_at)
+      if ((DateTime.now - organization.republish_at.to_datetime)*24).to_i > 4
+        organization.republish_at = nil
+        organization.republish_batch_token = nil
+        return true
+      end
+    elsif organization.republish_batch_token == batch_token
+      true
+    else
+      false
+    end
+  end
 end

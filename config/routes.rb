@@ -47,7 +47,11 @@ Rails.application.routes.draw do
 
     resources :organizations, param: :slug, constraints: { slug: /.*/ }
 
+    get "organization/preview/:slug", to: 'republish#preview', as: 'republish_preview', constraints: { slug: /.*/ }
+    get "organization/republish/:slug", to: 'republish#update_lock', as: 'republish_update', constraints: { slug: /.*/ }
+
     scope 'organization/:organization_slug' do
+
       resources :components, param: :slug, constraints: { slug: /.*/, organization_slug: /.+/ }
       resources :reports, param: :slug, constraints: { slug: /.*/, organization_slug: /.+/ }
     end
