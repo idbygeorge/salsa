@@ -94,19 +94,6 @@ class AdminController < ApplicationController
 
   end
 
-
-  def require_audit_role
-    unless has_role 'auditor' == true
-      redirect_to admin_login_path
-    end
-  end
-
-  def require_organization_admin_role
-    unless has_role 'organization_admin' == true
-      redirect_to admin_login_path
-    end
-  end
-
   def reportStatus
     render 'report_status', layout: '../admin/report_layout'
   end
