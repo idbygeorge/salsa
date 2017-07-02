@@ -106,14 +106,18 @@ Setup nginx, git, curl
 
 Letsencrypt (assumes you want `server.name` as the hostname and the admin email of `admin@example.com` - change to your values)
 
-    sudo apt install letsencrypt
+    sudo apt-get update
+    sudo apt-get install software-properties-common
+    sudo add-apt-repository ppa:certbot/certbot
+    sudo apt-get update
+    sudo apt-get install python-certbot-nginx
     sudo mkdir -p /var/www/html/.well-known/acme-challenge
-    sudo letsencrypt certonly --webroot --agree-tos --redirect --renew-by-default --email admin@example.com -w /var/www/html -d salsa.example.com -d www.salsa.example.com
+    sudo certbot certonly --webroot --agree-tos --redirect --renew-by-default --email admin@example.com -w /var/www/html -d salsa.example.com -d www.salsa.example.com
 
 Letsencrypt cron (pick a random minute - example renews 2x every day which is the recommendation)
 
     sudo crontab -e
-    42	*/12	*	*	*	letsencrypt renew --renew-hook "service nginx reload"
+    42	*/12	*	*	*	certbot renew --renew-hook "service nginx reload"
 
 ### Generate dhparam files
 
