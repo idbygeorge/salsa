@@ -31,10 +31,14 @@ $(function(){
     var counter = 0;
     var errors = 0;
     republish(batch_token, sources, counter, errors);
-    });
-})
+  });
+});
 
-function updateLock(expire = false) {
+function updateLock(expire) {
+  if(!expire) {
+    expire = false;
+  }
+
   slug = $('.page-header a').html();
   $.get('/admin/organization/republish/' + slug + '?expire=' + expire, function(data){ });
 
@@ -81,13 +85,9 @@ function republish(token, sources, counter, errors) {
       updateProgress(increment, counter, sources);
       if(counter >= sources.length) {
         if (errors > 0) {
-          $('.modal-body').append(`<div class="alert alert-danger" role="alert">
-          <strong>Errors!</strong> Please refresh the page to rerun any missing documents. If the problem persists, please contact your admin.
-          </div>`);
+          $('.modal-body').append('<div class="alert alert-danger" role="alert"><strong>Errors!</strong> Please refresh the page to rerun any missing documents. If the problem persists, please contact your admin.</div>');
         } else {
-          $('.modal-body').append(`<div class="alert alert-success" role="alert">
-          <strong>Success!</strong> Document republishing has successfully completed.
-          </div>`)
+          $('.modal-body').append('<div class="alert alert-success" role="alert"><strong>Success!</strong> Document republishing has successfully completed.</div>');
           updateLock(true);
         }
         return;
@@ -110,5 +110,5 @@ function updateProgress(increment, counter, sources) {
   }
   progressBar.attr('aria-valuenow', counter);
   progressBar.attr('style', 'width: ' + newProgress + '%');
-  progressBar.html(counter + ' of ' + sources.length)
+  progressBar.html(counter + ' of ' + sources.length);
 }
