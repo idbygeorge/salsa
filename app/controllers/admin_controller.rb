@@ -15,7 +15,7 @@ class AdminController < ApplicationController
     if has_role 'organization_admin'
       return redirect_to organizations_path
     elsif has_role 'auditor'
-      return redirect_to admin_reports_path
+      return redirect_to admin_auditor_reports_path
     else
       return redirect_or_error
     end
