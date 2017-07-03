@@ -53,6 +53,44 @@ Create salsa-database security group
 * Remove all outbound rules
 * Allow outbound postgresql connections (5432) to database IP address (we set this up later)
 
+## Optional - setup postgresql on the server directly
+
+    sudo apt-get update
+    sudo apt-get install postgresql postgresql-contrib
+
+Set password
+
+    sudo -u postgres psql
+    \password
+
+    \q
+
+Enable password authentication for local connections (replace with version number installed)
+
+    sudo vim /etc/postgresql/9.5/main/pg_hba.conf
+
+Set the local connection to use md5 instead of peer
+
+    # old setting
+    ## local   all             all                                     peer
+
+    ## new setting
+    local   all             all                                     md5
+
+Restart postgresql
+
+    sudo service postgresql restart
+
+Update `config/database-production.yml` (initial deploy will copy this to the server, if you need to update it check in the `~/apps/salsa/shared/config/database.yml` file)
+
+    production:
+      <<: *default
+      host: 127.0.0.1
+      database: salsaproduction
+      # optional, if default uses same username
+      # username: postgres
+      password: __SOMEPASSWORD__
+
 ## Optional Server Setup
 
 These are optional, but nice to have updates
@@ -277,6 +315,9 @@ RVM
     rvm use 2.4.0 --default
     rvm rubygems current
 
+    # have rvm stay upto date (optional)
+    echo rvm_autoupdate_flag=2 >> ~/.rvmrc
+
 Install Rails/bundler
 
     gem install rails --no-ri --no-rdoc -V
@@ -292,6 +333,12 @@ Node (v7.x)
 
     curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
     sudo apt install -y nodejs libcurl4-openssl-dev
+
+Node packages
+
+    curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+    echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+    sudo apt-get update && sudo apt-get install yarn
 
 App setup
 
