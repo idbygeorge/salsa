@@ -182,7 +182,7 @@ class DocumentsController < ApplicationController
       republishing = false;
       if canvas_course_id && !@organization.skip_lms_publish
         # publishing to canvas should not save in the Document model, the canvas version has been modified
-        update_course_document(canvas_course_id, request.raw_post, @organization[:lms_info_slug]) if params[:canvas] && canvas_course_id
+        saved = update_course_document(canvas_course_id, request.raw_post, @organization[:lms_info_slug]) if params[:canvas] && canvas_course_id
       else
         if(params[:canvas_relink_course_id])
           #find old document in this org with this id, set to null
@@ -206,12 +206,12 @@ class DocumentsController < ApplicationController
     end
 
     respond_to do |format|
-      msg = { :status => "ok", :message => "Success!", :version => @document.versions.count }
-
       if republishing
-       msg = { :status => "error", :message => "Documents for this organization are currently being republished. Please copy your changes and try again later.", :version => @document[:version] }
+       msg = { :status => "error", :message => "Documents for this organization are currently being republished. Please copy your changes and try again later.", :version => @document.versions.count }
       elsif !saved
-        msg = { :status => "error", :message => "This is not a current version of this document! Please copy your changes and refresh the page to get the current version.", :version => @document[:version]}
+        msg = { :status => "error", :message => "This is not a current version of this document! Please copy your changes and refresh the page to get the current version.", :version => @document.versions.count }
+      else
+        msg = { :status => "ok", :message => "Success!", :version => @document.versions.count }
       end
       format.json  {
         view_url = document_url(@document.view_id, :only_path => false)
