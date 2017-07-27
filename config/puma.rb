@@ -4,7 +4,7 @@ workers 1
 # Min and Max threads per worker
 threads 1, 6
 
-rails_env = ENV['RAILS_ENV'] || "development"
+rails_env = ENV['RAILS_ENV'] || "production"
 
 if rails_env == "production"
   shared_dir = "/home/ubuntu/apps/salsa/shared"
