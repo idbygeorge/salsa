@@ -6,10 +6,8 @@ threads 1, 6
 
 rails_env = ENV['RAILS_ENV'] || "development"
 
-app_dir = File.expand_path("../..", __FILE__)
-
 if rails_env == "production"
-  shared_dir = "#{app_dir}/shared"
+  shared_dir = "/home/ubuntu/apps/salsa/shared"
 else
   shared_dir = "/tmp"
 end
