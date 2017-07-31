@@ -162,7 +162,7 @@ GEM
     paper_trail (7.0.3)
       activerecord (>= 4.0, < 5.2)
       request_store (~> 1.1)
-    pg (0.21.0)
+    pg (0.20.0)
     pivot_table (1.0.0)
     puma (3.9.1)
     que (0.13.0)
@@ -290,7 +290,7 @@ DEPENDENCIES
   newrelic_rpm
   nokogiri
   paper_trail
-  pg
+  pg (= 0.20)
   pivot_table
   puma
   que

@@ -23,7 +23,7 @@ group :development do
 end
 
 #postgresql for db
-gem 'pg'
+gem 'pg', '0.20'
 
 group :production do
   gem 'rails_12factor'
