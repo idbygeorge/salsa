@@ -56,6 +56,17 @@ These example Dockerfile and docker-compose.yml expect to be in a folder above t
         depends_on:
           - db
 
+Databse config (config/database.yml)
+
+    development:
+      adapter: postgresql
+      encoding: unicode
+      database: salsa_development
+      host: db
+      username: postgres
+      password:
+      pool: 5
+
 Make the postgres data folder in the project's tmp folder
 
     mkdir tmp/db/postgres-data -p
@@ -76,3 +87,12 @@ Database commands
 First time for a new hostname (support multi-tennants via differnet hostnames) visit http://0.0.0.0:3000/admin/organizations/new
 
 Slug must be hostname used to access site (i.e. `0.0.0.0` if using http://0.0.0.0:3000/ or `salsa.dev` if using http://salsa.dev:3000/, etc...)
+
+## Stopping application
+
+    sudo docker-compose down
+
+## Other useful docker commands
+
+    docker images #list all docker images
+    sudo docker rmi ########    #remove docker image id from above command (useful to recreate db or application image if needed)
