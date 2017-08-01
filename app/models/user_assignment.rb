@@ -1,6 +1,6 @@
 class UserAssignment < ApplicationRecord
   belongs_to :user
-  belongs_to :organization
+  belongs_to :organization, optional: true
 
   default_scope { order('user_id, organization_id, role') }
 

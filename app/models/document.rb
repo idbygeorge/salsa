@@ -4,7 +4,7 @@ class Document < ApplicationRecord
   before_validation :normalize_blank_values, :ensure_ids
 
   belongs_to :organization
-  belongs_to :component
+  belongs_to :component, optoinal: true
 
   validates :lms_course_id, uniqueness: { scope: :organization_id, message: "is already in use for this organization" }, allow_nil: true
   validates_uniqueness_of [:view_id, :edit_id, :template_id]
