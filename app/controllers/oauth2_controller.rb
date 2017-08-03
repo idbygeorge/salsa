@@ -48,7 +48,7 @@ class Oauth2Controller < ApplicationController
     elsif params[:document_id] != ''
       redirect_to document_path(params[:document_id]) + '#/select/course'
     else
-      redirect_to auditor_reports_path
+      redirect_to admin_auditor_reports_path
     end
   end
 end

@@ -33,7 +33,7 @@
 			<% if false %>
 			<div class="col-sm-3 col-md-3">
 				<br>
-				<%= form_tag(auditor_reports_path, method: 'get', class: "form-horizontal col-md-9 navbar-form", role: "search" ) do |f| %>
+				<%= form_tag(admin_auditor_reports_path, method: 'get', class: "form-horizontal col-md-9 navbar-form", role: "search" ) do |f| %>
 
 				<div class="input-group">
 					<input type="text" class="form-control" placeholder="Start Date (YYYY-MM-DD)" name="start" id="start-term" value="<%= params[:start] %>">
