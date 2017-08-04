@@ -71,7 +71,7 @@ gem 'jbuilder'
 gem 'uber-s3'
 
 # instructure canvas api
-gem 'canvas-api'
+gem 'canvas-api', '0.7'
 
 gem 'nokogiri'
 
