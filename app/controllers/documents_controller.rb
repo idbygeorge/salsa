@@ -147,9 +147,9 @@ class DocumentsController < ApplicationController
       render :layout => 'edit', :template => '/documents/content'
     else
       if params[:document_token]
-        redirect_to controller: 'oauth2', action: 'login', lms_course_id: params[:lms_course_id], document_token: params[:document_token]
+        redirect_to '/oauth2/login', lms_course_id: params[:lms_course_id], document_token: params[:document_token]
       else
-        redirect_to controller: 'oauth2', action: 'login', lms_course_id: params[:lms_course_id]
+        redirect_to '/oauth2/login', lms_course_id: params[:lms_course_id]
       end
     end
   end
