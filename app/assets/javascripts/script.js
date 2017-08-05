@@ -310,7 +310,7 @@ function liteOff(x){
                     $(this).dialog("destroy");
                 }
             });
-            $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-state-default").focus();
+            $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-button-icon-only").focus();
         };
 
         var syncViewState = function(viewSelector, viewName) {
@@ -393,7 +393,7 @@ function liteOff(x){
                 open: function() {
                     $('#compilation_tabs').tabs();
 
-                    $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-state-default");
+                    $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-button-icon-only");
                 }
             });
         });
@@ -428,7 +428,7 @@ function liteOff(x){
                 width: "600px",
                 draggable: false,
                 create: function() {
-                    $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-state-default");
+                    $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-button-icon-only");
                 }
             });
 
@@ -511,7 +511,7 @@ function liteOff(x){
                     }
                 });
 
-                $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-state-default").focus();
+                $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-button-icon-only").focus();
             }
 
             return false;
@@ -523,7 +523,7 @@ function liteOff(x){
 
         // publish
         $("#share_prompt").dialog({ modal:true, width:600, title:'Publish', autoOpen:false });
-        $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-state-default").focus();
+        $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-button-icon-only").focus();
 
         $('#tb_share').on('ajax:beforeSend', function(event, xhr, settings) {
             if($('body').hasClass('disable-save')) {
@@ -542,7 +542,7 @@ function liteOff(x){
 
             // should be save to LMS...
             if($('#skip-lms').html() != 'true') {
-              $('#tb_send_canvas:visible').trigger('click');
+              $('#tb_send_canvas').trigger('click');
             }
         });
 
@@ -563,7 +563,7 @@ function liteOff(x){
 
         // select course from LMS
         $("#course_prompt").dialog({ modal:true, width:500, title:'Select Course', autoOpen:false });
-        $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-state-default").focus();
+        $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-button-icon-only").focus();
 
         // table drag and drop
         $("#grade_components,#extra_credit,table.sortable").tableDnD({ onDragClass: "myDragClass",});
@@ -578,7 +578,7 @@ function liteOff(x){
 
         $('#tb_save_canvas').on('ajax:beforeSend', function(){
             $('#loading_courses_dialog').removeClass('hidden').dialog({modal: true, width: 500, title: "Loading from Canvas"});
-            $('.ui-dialog-titlebar-close').html('close | x').removeClass('ui-state-default').focus();
+            $('.ui-dialog-titlebar-close').html('close | x').removeClass('ui-button-icon-only').focus();
         });
 
         $(window).on('hashchange', function() {
