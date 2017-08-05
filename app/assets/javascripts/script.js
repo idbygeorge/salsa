@@ -539,17 +539,18 @@ function liteOff(x){
 
             $('#save_message').show();
             $('#pdf_share_link').hide();
-
-            // should be save to LMS...
-            if($('#skip-lms').html() != 'true') {
-              $('#tb_send_canvas').trigger('click');
-            }
         });
 
         $('#tb_share').on('ajax:success', function(event,data) {
           if(data.status == 'ok') {
             $('[data-document-version]').attr('data-document-version', data.version);
             $('#share_prompt').dialog('open');
+
+              // should be save to LMS...
+            if($('#skip-lms').html() != 'true') {
+              $('#tb_send_canvas').trigger('click');
+            }
+
             setTimeout(
               function() {
                 $('#save_message').hide();

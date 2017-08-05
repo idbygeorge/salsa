@@ -223,8 +223,10 @@ $(function() {
 
   $('#tb_send_canvas').on('ajax:error', function(event, xhr, settings) {
     $('#send_canvas .details').html('There was a problem publishing to Canvas');
-  }).on('ajax:success', function(event, xhr, settings) {
+  }).on('ajax:success', function(event, data, status, xhr) {
+    console.log(arguments);
     $('#send_canvas .details').html(new Date());
+    $('[data-document-version]').attr('data-document-version', data.version);
   }).on('ajax:complete', function(event, xhr, settings) {
     $('.in-progress', this).remove();
     $(this).html('Sent to Canvas');
