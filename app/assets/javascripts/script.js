@@ -469,6 +469,11 @@ function liteOff(x){
             } else {
 
                 var url = $('#tb_save').attr('href');
+
+                if(!url) {
+                    url = $('#tb_share').prop('href');
+                }
+
                 var content = $('#page-data').html();
                 $.ajax({
                     type:'PUT',
@@ -482,7 +487,7 @@ function liteOff(x){
                     }
                 });
 
-                var previewHTML = $('<div id="preview-data"/>').append($("#container #page").children().html());
+                var previewHTML = $('<div id="preview-data"/>').append(content);
                 var preview = $('#preview').html(previewHTML);
 
                 var previewWrapper = $('#previewWrapper').clone().css({ backgroundColor: "#F5F5F5" });
