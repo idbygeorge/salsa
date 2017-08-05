@@ -20,7 +20,7 @@ class Oauth2Controller < ApplicationController
 
     flash[:notice] = "You are disconnected from Canvas."
 
-    redirect_to(:back)
+    redirect_back(fallback_location: root_path)
   end
 
   def callback
