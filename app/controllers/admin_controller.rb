@@ -4,6 +4,10 @@ class AdminController < ApplicationController
     :login,
     :logout,
     :authenticate,
+    :search
+  ]
+  before_action :require_designer_permissions, only: [
+    :search
   ]
   before_action :get_organizations, only: [
       :search,

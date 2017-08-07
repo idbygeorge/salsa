@@ -75,6 +75,12 @@ module ApplicationHelper
     end
   end
 
+  def require_designer_permissions
+    unless has_role('designer') || has_role('organization_admin')
+      return redirect_or_error
+    end
+  end
+
   def require_auditor_role
     unless has_role 'auditor'
       return redirect_or_error
@@ -111,7 +117,7 @@ module ApplicationHelper
     end
   end
 
-  def has_role role, org=nil
+  def has_role (role, org=nil)
     unless org
       if params[:slug]
         org = find_org_by_path params[:slug]

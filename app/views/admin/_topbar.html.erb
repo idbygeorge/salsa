@@ -11,7 +11,7 @@
     </div>
 
     <%= form_tag(admin_search_path, method: 'get', class: "form-horizontal col-md-9 navbar-form", role: "search" ) do |f| %>
-      <% if session[:admin_authorized] %>
+      <% if has_role('designer') %>
         <div class="col-sm-6">
 
           <div class="input-group">
@@ -36,7 +36,7 @@
     <div class="navbar-collapse collapse">
       <ul class="nav navbar-nav navbar-right">
         <%# <li class="active"><%= link_to "Reports", reports_path %><%# </li> %>
-        <% if session[:admin_authorized] %>
+        <% if has_role('admin') %>
           <li class="active"><%= link_to "Users", admin_users_path %></li>
         <% end %>
         <li class="active"><%= link_to "Organizations", organizations_path %></li>
