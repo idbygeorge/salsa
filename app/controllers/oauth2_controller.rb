@@ -39,11 +39,21 @@ class Oauth2Controller < ApplicationController
       flash[:error] = params[:error]
     end
 
-    if params[:lms_course_id]
+    lms_course_id = params[:lms_course_id]
+
+    unless lms_course_id
+      if session[:redirect_course_id]
+        lms_course_id = session[:redirect_course_id]
+  
+        session[:redirect_course_id] = nil
+      end
+    end
+
+    if lms_course_id
       if params[:document_token]
-        redirect_to lms_course_document_path(params[:lms_course_id], document_token: params[:document_token])
+        redirect_to lms_course_document_path(lms_course_id, document_token: params[:document_token])
       else
-        redirect_to lms_course_document_path(params[:lms_course_id])
+        redirect_to lms_course_document_path(lms_course_id)
       end
     elsif params[:document_id] != ''
       redirect_to document_path(params[:document_id]) + '#/select/course'
