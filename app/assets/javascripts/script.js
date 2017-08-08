@@ -473,7 +473,7 @@ function liteOff(x){
                     }
                 });
 
-                var previewHTML = $('<div id="preview-data"/>').append($("#container #page").children().html());
+                var previewHTML = $('<div id="preview-data"/>').append(content);
                 var preview = $('#preview').html(previewHTML);
 
                 var previewWrapper = $('#previewWrapper').clone().css({ backgroundColor: "#F5F5F5" });
