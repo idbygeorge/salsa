@@ -32,7 +32,8 @@ class Oauth2Controller < ApplicationController
       token = @lms_client.retrieve_access_token(code, @redirect_url)
       session[:canvas_access_token] = token
 
-      flash[:notice] = 'You are connected to Canvas. Please Select a Course.'
+      flash[:notice] = 'You are connected to Canvas.'
+
       session[:authenticated_institution] = session[:institution]
       session[:lms_authenticated_user] = session[:canvas_access_token]['user']
     else
@@ -44,7 +45,7 @@ class Oauth2Controller < ApplicationController
     unless lms_course_id
       if session[:redirect_course_id]
         lms_course_id = session[:redirect_course_id]
-  
+
         session[:redirect_course_id] = nil
       end
     end
