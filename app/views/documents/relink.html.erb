@@ -2,7 +2,8 @@
 
 
 <div class="btn-horizontal">
-  <%= link_to 'Use this SALSA syllabus as my template', params.merge({ canvas_course_id: @document[:lms_course_id], canvas: true }), {class: 'btn btn-primary'} %>
+  <% params.permit! %>
+  <%= link_to 'Use this SALSA syllabus as my template', lms_course_document_path(params.merge({ canvas_course_id: @document[:lms_course_id], canvas: true })), {class: 'btn btn-primary'} %>
 </div>
 
 <div class="btn-horizontal">
