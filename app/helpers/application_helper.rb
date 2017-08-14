@@ -144,6 +144,11 @@ module ApplicationHelper
           if ua[:role] == role or ua[:role] == 'admin'
             result = true
           end
+
+          # if we aren't looking for an admin role, but the user has organization admin permissions, then they have permissions for this role
+          if role != 'admin' && ua[:role] == 'organization_admin'
+            result = true
+          end
         end
       end
     end
