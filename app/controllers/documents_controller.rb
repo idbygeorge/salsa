@@ -83,6 +83,11 @@ class DocumentsController < ApplicationController
   end
 
   def course
+    # if we got here from a relink action, keep track of the document token incase the user is not logged in yet
+    if params[:document_token] && params[:lms_course_id]
+      session['relink_'+params[:lms_course_id]] = params[:document_token]
+    end
+
     begin
       @lms_course = @lms_client.get("/api/v1/courses/#{params[:lms_course_id]}", { include: 'syllabus_body' }) if @lms_client.token
     rescue
@@ -99,6 +104,13 @@ class DocumentsController < ApplicationController
 
       # flag to see if there is a match on the token id
       token_matches = false
+
+      # if no document_token is in the params, but there is a relink value matching the current course, use that, then clear it
+      unless params[:document_token]
+        if session['relink_'+params[:lms_course_id]]
+          params[:document_token] = session['relink_'+params[:lms_course_id]]
+        end
+      end
 
       if params[:document_token]
         # check if the supplied token token_matches the document view_id
@@ -133,6 +145,8 @@ class DocumentsController < ApplicationController
 
         @document = Document.new(name: @lms_course['name'], lms_course_id: params[:lms_course_id], organization: @organization)
         @document.save!
+
+        session['relink_'+params[:lms_course_id]] = nil if session['relink_'+params[:lms_course_id]]
       end
 
       @document.revert_to params[:version].to_i if params[:version]
