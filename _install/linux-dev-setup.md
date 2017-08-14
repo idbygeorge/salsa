@@ -96,3 +96,17 @@ Slug must be hostname used to access site (i.e. `0.0.0.0` if using http://0.0.0.
 
     docker images #list all docker images
     sudo docker rmi ########    #remove docker image id from above command (useful to recreate db or application image if needed)
+
+### Running the queue (que gem)
+
+    sudo docker-compose exec salsa sh
+    cd /home/apps/salsa && RAILS_ENV=development que ./config/environment.rb
+    
+    #adding a report through rake
+    cd /home/apps/salsa && rake RAILS_ENV=development report:generate_report[5,'FL17']
+    
+## Logs
+
+Logs are shared with host, so you can view logs via on host via:
+
+    tail -f salsa/logs/*.log
