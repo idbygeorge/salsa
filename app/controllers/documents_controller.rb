@@ -83,8 +83,12 @@ class DocumentsController < ApplicationController
   end
 
   def course
-    # if we got here from a relink action, keep track of the document token incase the user is not logged in yet
-    if params[:document_token] && params[:lms_course_id]
+
+    # if clicked the create new document link on relink page, clear out the session relink value
+    if params[:create_new]
+      session['relink_'+params[:lms_course_id]] = nil
+    # if we got here from a relink action, keep track of the document token in case the user is not logged in yet
+    elsif params[:document_token] && params[:lms_course_id]
       session['relink_'+params[:lms_course_id]] = params[:document_token]
     end
 
