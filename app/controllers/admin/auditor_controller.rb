@@ -59,7 +59,7 @@ class Admin::AuditorController < ApplicationController
     if File.file?(get_archive_file)
       send_file get_archive_file
     else
-      redirect_to admin_archive_path
+      redirect_to admin_auditor_archive_path
     end
   end
 
