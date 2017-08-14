@@ -1,13 +1,20 @@
 class AdminController < ApplicationController
-  before_action :require_organization_admin_permissions, except: [
+  before_action :require_designer_permissions, except: [
     :landing,
     :login,
     :logout,
     :authenticate,
-    :search
+    :canvas_accounts,
+    :canvas_courses,
+    :canvas_accounts_sync,
+    :canvas_courses_sync
   ]
-  before_action :require_designer_permissions, only: [
-    :search
+  before_action :require_organization_admin_permissions, only: [
+    :canvas_accounts,
+    :canvas_courses,
+    :canvas_accounts_sync,
+    :canvas_courses_sync
+
   ]
   before_action :get_organizations, only: [
       :search,
@@ -16,7 +23,7 @@ class AdminController < ApplicationController
   ]
 
   def landing
-    if has_role 'organization_admin'
+    if has_role 'designer'
       return redirect_to organizations_path
     elsif has_role 'auditor'
       return redirect_to admin_auditor_reports_path
@@ -176,8 +183,7 @@ class AdminController < ApplicationController
   end
 
   def logout
-    session[:admin_authorized] = false
-    session[:authenticated_user] = nil
+    reset_session
 
     redirect_to root_path;
   end

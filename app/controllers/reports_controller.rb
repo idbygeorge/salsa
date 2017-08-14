@@ -1,5 +1,5 @@
 class ReportsController < ApplicationController
-  before_action :require_admin_permissions
+  before_action :require_auditor_role
   before_action :get_organizations, only: [:index, :new, :edit, :show]
 
   before_action :lms_connection_information, :only => [:show]

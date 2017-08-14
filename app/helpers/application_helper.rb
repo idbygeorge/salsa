@@ -82,7 +82,7 @@ module ApplicationHelper
   end
 
   def require_auditor_role
-    unless has_role 'auditor'
+    unless has_role('auditor')  || has_role('organization_admin')
       return redirect_or_error
     end
   end

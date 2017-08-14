@@ -26,22 +26,25 @@
     </a>
   </div>
 
-  <p>
-    <a class="btn btn-default" href="<%= edit_organization_path(id: @organization[:id]) %>">
-      Update Organization
-    </a>
+  <% if has_role 'organization_admin' %>
+    <p>
+      <a class="btn btn-default" href="<%= edit_organization_path(id: @organization[:id]) %>">
+        Update Organization
+      </a>
 
-    <a class="btn btn-default" href="<%= components_path(organization_slug: @organization[:slug]) %>">
-      Manage Components
-    </a>
+      <a class="btn btn-default" href="<%= components_path(organization_slug: @organization[:slug]) %>">
+        Manage Components
+      </a>
 
-    <% if @organization.lms_authentication_key != '' %>
-        <a class="btn btn-default" href="//<%= "#{org_slug_parts(@organization)[0]}#{redirect_port}" + admin_auditor_reports_path %>">
-          View Dashboard
-        </a>
-    <% end %>
-  </p>
-  <hr>
+      <% if @organization.lms_authentication_key != '' %>
+          <a class="btn btn-default" href="//<%= "#{org_slug_parts(@organization)[0]}#{redirect_port}" + admin_auditor_reports_path %>">
+            View Dashboard
+          </a>
+      <% end %>
+    </p>
+    <hr>
+  <% end %>
+
 </div>
 
 

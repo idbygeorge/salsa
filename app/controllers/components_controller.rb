@@ -1,6 +1,8 @@
 class ComponentsController < ApplicationController
   layout 'components'
 
+  before_action :require_organization_admin_permissions
+
   before_action :get_organizations
   before_action :get_organization
 

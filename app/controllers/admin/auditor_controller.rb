@@ -3,13 +3,7 @@ require 'zip'
 
 class Admin::AuditorController < ApplicationController
 
-  before_action :require_auditor_role, only: [
-    :archive,
-    :download,
-    :reportStatus,
-    :reports,
-    :report,
-  ]
+  before_action :require_auditor_role
 
   def archive
     @organization = get_org

@@ -2,12 +2,12 @@
   <%= paginate @documents %>
   <span class="badge"><%= @documents.total_count %> documents</span>
 
-  <% other_orgs = @organizations.where.not(id: params[:id]).order('lft', 'rgt') %>
+  <% other_orgs = @organizations.where.not(slug: params[:slug]).order('lft', 'rgt') %>
 
   <%= form_tag('/admin/organizations/documents', :html => { :class => "form-vertical" } ) do |f| %>
     <div class="row">
 
-      <% if other_orgs.count > 0 %>
+      <% if other_orgs.count > 0 && has_role('organization_admin') %>
       <div class="form-group col-sm-4">
         <%= label_tag :id, 'Move selected documents: ', class: "control-label" %>
         <div class="controls">
@@ -23,7 +23,7 @@
     </div>
 
     <div class="row">
-      <% if other_orgs.count > 0 %>
+      <% if other_orgs.count > 0 && has_role('organization_admin') %>
       <a id="toggleChecked" href="#toggleChecked">
         select all/none
       </a>
@@ -42,7 +42,7 @@
               </div>
             </div>
 
-            <% if other_orgs.count > 0 %>
+            <% if other_orgs.count > 0 && has_role('organization_admin') %>
             <%= check_box_tag "document_ids[]", document.id, false, id: "document_#{document.id}" %>
             <% end %>
 
