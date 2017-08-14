@@ -120,10 +120,12 @@ class Admin::AuditorController < ApplicationController
         account_filter = @org.default_account_filter
         params[:account_filter] = account_filter
       else
-        account_filter = 'FL16'
+        account_filter = 'FL17'
         params[:account_filter] = account_filter
       end
     end
+
+    puts params[:account_filter]
 
     if params[:report]
       @report = ReportArchive.where(id: params[:report]).first
