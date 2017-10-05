@@ -35,7 +35,7 @@ class AdminController < ApplicationController
   def login
   	@organization = find_org_by_path params[:slug]
 
-  	if @organization and @organization[:lms_authentication_source] != ""
+  	if @organization and @organization[:lms_authentication_source] != "" and @organization[:lms_authentication_source] != nil
   		redirect_to oauth2_login_path
 	  else
   		render action: :login, layout: false
