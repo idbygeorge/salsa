@@ -9,7 +9,7 @@ rails_env = ENV['RAILS_ENV'] || "production"
 if rails_env == "production"
   shared_dir = "/home/ubuntu/apps/salsa/shared"
 else
-  shared_dir = "/tmp"
+  shared_dir = "/home/apps/salsa"
 end
 
 # Default to production
@@ -19,7 +19,7 @@ environment rails_env
 bind "unix:///tmp/sockets/puma.sock"
 
 # Logging
-stdout_redirect "#{shared_dir}/log/puma.stdout.log", "#{shared_dir}/log/puma.stderr.log", true
+# stdout_redirect "#{shared_dir}/log/puma.stdout.log", "#{shared_dir}/log/puma.stderr.log", true
 
 # Set master PID and state locations
 pidfile "/tmp/pids/puma.pid"
@@ -29,5 +29,5 @@ activate_control_app
 on_worker_boot do
   require "active_record"
   ActiveRecord::Base.connection.disconnect! rescue ActiveRecord::ConnectionNotEstablished
-  ActiveRecord::Base.establish_connection(YAML.load_file("/home/ubuntu/apps/salsa/shared/config/database.yml")[rails_env])
+  ActiveRecord::Base.establish_connection(YAML.load_file(shared_dir+"/config/database.yml")[rails_env])
 end

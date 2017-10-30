@@ -9,7 +9,7 @@ module ReportHelper
       end
     end
     if !@report
-      @report = ReportArchive.create({organization_id: org_id, report_filters: params.to_json})
+      @report = ReportArchive.create({organization_id: org_id, report_filters: params})
     end
 
     @report.generating_at = Time.now
