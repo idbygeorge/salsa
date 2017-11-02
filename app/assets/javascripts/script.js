@@ -161,13 +161,17 @@ function liteOff(x){
         });
 
         $("body").on("click", "#topBar a", function(){
-          var firstItemText = $("#controlPanel .active dl").data('target').find('li:first').text();
+          var context = $("#topBar").data('context');
+          var parentList = context.source.closest('dl');
+          var target = getTarget(context.source);
+          var firstItem = target.find('li:first');
+          var firstItemText = firstItem.text();
 
           if(firstItemText == 'Outcome text here' || firstItemText == 'Objective text here.') {
-            $("#controlPanel .active dl").data('target').find('li:first').remove();
+            firstItem.remove();
           }
 
-          $("#controlPanel .active dl").data({ element: "li", text: $(this).text() }).find(".ui-state-active").click();
+          parentList.data({ element: "li", text: $(this).text() }).find(".ui-state-active").click();
 
           return false;
         });
@@ -841,6 +845,7 @@ function liteOff(x){
             }
 
             var topBar = $("<div id='topBar'><ul class='inner'/></div>");
+            topBar.data('context', args);
             topBar.prepend($("<h2/>").text(args.source.text()));
 
             args.source.nextUntil("dt").each(function(){
