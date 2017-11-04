@@ -1,0 +1,15 @@
+<% if @document.payload %>
+  <% if @calendar_only %>
+    <% html_doc = Nokogiri::HTML(@document.payload) %>
+    <% html_doc.css('section#information').remove %>
+    <% html_doc.css('section#outcomes').remove %>
+    <% html_doc.css('section#activities').remove %>
+    <% html_doc.css('section#policies').remove %>
+    <% html_doc.css('section#grades').remove %>
+    <%= html_doc.to_s.html_safe %>
+  <% else %>
+    <%= @document.payload.html_safe %>
+  <% end %>
+<% else %>
+  <%= salsa_partial("salsa") %>
+<% end %>

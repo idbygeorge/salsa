@@ -52,9 +52,9 @@ class Admin::AuditorController < ApplicationController
         # - The original file, including the path to find it
         rendered_doc = render_to_string :layout => "archive", :template => "documents/content"
 
-        lms_identifier = 'none'
+        lms_identifier = @document.name.parameterize
         if @document.lms_course_id
-          lms_identifier = "#{@document.lms_course_id}"
+          lms_identifier = "#{@document.lms_course_id}".parameterize
         end
 
         zipfile.get_output_stream("#{lms_identifier}_#{@document.id}.html") { |os| os.write rendered_doc }
@@ -87,10 +87,7 @@ class Admin::AuditorController < ApplicationController
           if report.report_filters && report.report_filters["account_filter"] == @org.default_account_filter
             @default_report = true
           end
-        else
-          if report.report_filters && report.report_filters["account_filter"] == 'FL16'
-            @default_report = true
-          end
+
         end
       end
     end
