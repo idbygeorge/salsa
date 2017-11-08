@@ -166,10 +166,10 @@ class Admin::AuditorController < ApplicationController
 
   def get_archive_file
     slug = get_org_slug
+
     if !params[:report] || params[:report] == ''
       params[:report] = 'default'
     end
-
     "/tmp/#{slug}_#{params[:report]}.zip"
   end
 end

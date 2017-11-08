@@ -18,6 +18,18 @@
     <div class="clearfix"></div>
       <% @reports.each do |report| %>
       <hr>
+      <div class="pull-right">
+        <div class="">
+          <a class="btn btn-success download-btn" href="/admin/download">Download documents <i class=" download-icon fa fa-download" aria-hidden="true"></i></a>
+          <%= link_to "Download Report#{report.id}", admin_auditor_download_path, :report => report.id%>
+        </div>
+        <%if @default_report %>
+          <div class="">
+            <a href="/admin/archive">Generate semester snapshot</a><br>
+            <em class="small">Takes 1-5 minutes</em>
+          </div>
+        <% end %>
+      </div>
       <p>
         Report #<%=report.id%>
         <a class="" href="/admin/report?report=<%=report.id%>">Load report</a>

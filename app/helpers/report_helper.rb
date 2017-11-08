@@ -31,14 +31,14 @@ module ReportHelper
     puts 'Retrieved Document Meta'
     #store it
     @report.generating_at = nil
-    @report.payload = @report_data.to_json
+    #@report.payload = @report_data.to_json
     @report.save!
+
     self.archive org_slug, report_id
   end
 
   def self.archive (org_slug, report_id)
     @org = Organization.find_by slug: org_slug
-
     docs = Document.where(organization_id: @org.id ).all
     zipfile_name = "/tmp/#{org_slug}_#{report_id}.zip"
 
@@ -51,7 +51,7 @@ module ReportHelper
         # - The name of the file as it will appear in the archive
         # - The original file, including the path to find it
         #rendered_doc = render_to_string :layout => "archive", :template => "documents/content"
-        rendered_doc = ApplicationController.new.render_to_string(partial: 'documents/content')
+        rendered_doc = ApplicationController.new.render_to_string(partial: 'documents/content', locals: {doc: @document})
 
         lms_identifier = @document.name.parameterize
         if @document.lms_course_id
