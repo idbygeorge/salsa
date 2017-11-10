@@ -61,7 +61,7 @@ class Admin::AuditorController < ApplicationController
       end
     end
 
-    redirect_to '/admin/download?report='+report_id
+    redirect_to '/admin/download?report='+"#{report_id}"
   end
 
   def download
