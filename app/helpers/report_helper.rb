@@ -53,9 +53,9 @@ module ReportHelper
         #rendered_doc = render_to_string :layout => "archive", :template => "documents/content"
         rendered_doc = ApplicationController.new.render_to_string(partial: 'documents/content', locals: {doc: @document})
 
-        lms_identifier = @document.name.parameterize
+        lms_identifier = @document.name.gsub!(/[^a-z0-9]+/, '_')
         if @document.lms_course_id
-          lms_identifier = "#{@document.lms_course_id}".parameterize
+          lms_identifier = "#{@document.lms_course_id}".gsub!(/[^a-z0-9]+/, '_')
         end
 
         zipfile.get_output_stream("#{lms_identifier}_#{@document.id}.html") { |os| os.write rendered_doc }
