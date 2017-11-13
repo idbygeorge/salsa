@@ -16,7 +16,6 @@ module ReportHelper
 
     @report.generating_at = Time.now
     @report.save!
-
     ReportGenerator.enqueue(org_id, account_filter, params, @report.id)
   end
 
@@ -29,23 +28,25 @@ module ReportHelper
     puts 'Getting Document Meta'
     @report_data = self.get_document_meta org_slug, account_filter, params
     puts 'Retrieved Document Meta'
+
     #store it
     @report.generating_at = nil
-    #@report.payload = @report_data.to_json
+    @report.payload = @report_data.to_json
     @report.save!
 
-    self.archive org_slug, report_id
+    self.archive org_slug, report_id, @report_data
   end
 
-  def self.archive (org_slug, report_id)
+  def self.archive (org_slug, report_id, report_data)
+    report = ReportArchive.find_by id: report_id
     @org = Organization.find_by slug: org_slug
-    docs = Document.where(organization_id: @org.id ).all
+    docs = Document.where(organization_id: @org.id, id: report_data.map(&:document_id)).all
+
     zipfile_name = "/tmp/#{org_slug}_#{report_id}.zip"
 
     Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
       zipfile.get_output_stream('content.css'){ |os| os.write Rails.application.assets['application.css'].to_s }
       docs.each do |doc|
-
         @document = doc
         # Two arguments:
         # - The name of the file as it will appear in the archive

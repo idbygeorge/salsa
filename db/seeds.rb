@@ -23,44 +23,50 @@ orgB = Organization.create(
   lms_authentication_key: "asdasd",
   lms_authentication_id: "lkjlkl"
 )
+1.upto(4) do |d|
+  if d >= 2
+    org = orgB
+  else
+    org = orgA
+  end
 
-doc = Document.create(
-  name:"Document 1",
-  organization_id: orgA.id,
-  lms_course_id: "#{org.slug} 1",
-  lms_published_at: DateTime.now,
-  term_id: "2134"
-)
-
-DocumentMeta.create(
-  document_id: doc.id,
-  key: "account_id",
-  value: "FL17",
-  lms_organization_id: "asdasfsgsadf",
-  lms_course_id: doc.lms_course_id,
-  root_organization_id: orgA[:id].to_s
-)
-DocumentMeta.create(
-  document_id: doc.id,
-  key: "name",
-  value: "FL17",
-  lms_organization_id: "asdasfsgsadf",
-  lms_course_id: doc.lms_course_id,
-  root_organization_id: orgA[:id].to_s
-)
-DocumentMeta.create(
-  document_id: doc.id,
-  key: "total_students",
-  value: "23",
-  lms_organization_id: "asdasfsgsadf",
-  lms_course_id: doc.lms_course_id,
-  root_organization_id: orgA[:id].to_s
-)
-DocumentMeta.create(
-  document_id: doc.id,
-  key: "enrollment_term_id",
-  value: doc.term_id,
-  lms_organization_id: "asdasfsgsadf",
-  lms_course_id: doc.lms_course_id,
-  root_organization_id: orgA[:id].to_s
-)
+  doc = Document.create(
+    name:"Document #{d}",
+    organization_id: org.id,
+    lms_course_id: "CS",
+    lms_published_at: DateTime.now,
+  )
+  #Create document_meta's
+  DocumentMeta.create(
+    document_id: doc.id,
+    key: "account_id",
+    value: "CLS",
+    lms_organization_id: "asdasfsgsadf",
+    lms_course_id: doc.lms_course_id,
+    root_organization_id: org[:id].to_s
+  )
+  DocumentMeta.create(
+    document_id: doc.id,
+    key: "name",
+    value: "FL17",
+    lms_organization_id: "asdasfsgsadf",
+    lms_course_id: doc.lms_course_id,
+    root_organization_id: org[:id].to_s
+  )
+  DocumentMeta.create(
+    document_id: doc.id,
+    key: "total_students",
+    value: "23",
+    lms_organization_id: "asdasfsgsadf",
+    lms_course_id: doc.lms_course_id,
+    root_organization_id: org[:id].to_s
+  )
+  DocumentMeta.create(
+    document_id: doc.id,
+    key: "enrollment_term_id",
+    value: doc.term_id,
+    lms_organization_id: "asdasfsgsadf",
+    lms_course_id: doc.lms_course_id,
+    root_organization_id: org[:id].to_s
+  )
+end
