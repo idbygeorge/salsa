@@ -13,14 +13,12 @@ module ReportHelper
     if !@report
       @report = ReportArchive.create({organization_id: org_id, report_filters: params})
     end
-
     @report.generating_at = Time.now
     @report.save!
     ReportGenerator.enqueue(org_id, account_filter, params, @report.id)
   end
 
   def self.generate_report (org_slug, account_filter, params, report_id)
-
     @org = Organization.find_by slug: org_slug
     @report = ReportArchive.where(id: report_id).first
 
@@ -43,7 +41,9 @@ module ReportHelper
     docs = Document.where(organization_id: @org.id, id: report_data.map(&:document_id)).all
 
     zipfile_name = "/tmp/#{org_slug}_#{report_id}.zip"
-
+    if File.exist?(zipfile_name)
+      File.delete(zipfile_name)
+    end
     Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
       zipfile.get_output_stream('content.css'){ |os| os.write Rails.application.assets['application.css'].to_s }
       docs.each do |doc|
@@ -54,11 +54,10 @@ module ReportHelper
         #rendered_doc = render_to_string :layout => "archive", :template => "documents/content"
         rendered_doc = ApplicationController.new.render_to_string(partial: 'documents/content', locals: {doc: @document})
 
-        lms_identifier = @document.name.gsub!(/[^a-z0-9]+/, '_')
+        lms_identifier = @document.name.gsub(/[^A-Za-z0-9]+/, '_')
         if @document.lms_course_id
-          lms_identifier = "#{@document.lms_course_id}".gsub!(/[^a-z0-9]+/, '_')
+          lms_identifier = "#{@document.lms_course_id}".gsub(/[^A-Za-z0-9]+/, '_')
         end
-
         zipfile.get_output_stream("#{lms_identifier}_#{@document.id}.html") { |os| os.write rendered_doc }
       end
     end

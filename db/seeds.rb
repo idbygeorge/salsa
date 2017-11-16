@@ -24,7 +24,7 @@ orgB = Organization.create(
   lms_authentication_id: "lkjlkl"
 )
 1.upto(4) do |d|
-  if d >= 2
+  if d > 2
     org = orgB
   else
     org = orgA
