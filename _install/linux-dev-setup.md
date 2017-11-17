@@ -44,17 +44,28 @@ These example Dockerfile and docker-compose.yml expect to be in a folder above t
         image: postgres
         volumes:
           - ./salsa/tmp/db/postgres-data:/var/lib/postgresql/data
+        ports:
+          - "54321:5432"
+        environment:
+          - POSTGRES_USER:'postgres'
+          - POSTGRES_PASSWORD:'postgres'
       salsa:
         environment:
           - TRUSTED_IP=0.0.0.0/0
+          - RAILS_ENV=development
         build: .
         command: bundle exec rails s -p 3000 -b '0.0.0.0'
         volumes:
           - .:/home/apps
+          - ./salsa/tmp:/tmp
         ports:
           - "3000:3000"
         depends_on:
           - db
+
+Puma File (config/puma.rb)
+  copy from config/deploy/development/
+  cp config/deploy/development/puma.rb config/
 
 Databse config (config/database.yml)
 
@@ -79,14 +90,21 @@ Database commands
 
     sudo docker-compose run salsa rake db:create
     sudo docker-compose run salsa rake db:migrate
+    sudo docker-compose run salsa rake db:seed
 
 ## Running the application
 
     sudo docker-compose up
 
 First time for a new hostname (support multi-tennants via differnet hostnames) visit http://0.0.0.0:3000/admin/organizations/new
+or just go to http://0.0.0.0:3000/admin/organizations if you have used the database seed command
 
 Slug must be hostname used to access site (i.e. `0.0.0.0` if using http://0.0.0.0:3000/ or `salsa.dev` if using http://salsa.dev:3000/, etc...)
+
+or just go to http://0.0.0.0:3000/admin/organizations if you have used the database seed command
+
+There are already some organizations created if you run the database seed command
+there are also documents created but you still need to publish them by going to the abandoned link on the org show page and
 
 ## Stopping application
 

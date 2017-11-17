@@ -33,8 +33,11 @@ orgB = Organization.create(
   doc = Document.create(
     name:"Document #{d}",
     organization_id: org.id,
-    lms_course_id: "CS",
+    lms_course_id: "CS#{d}",
     lms_published_at: DateTime.now,
+    created_at: DateTime.now.ago(10),
+    updated_at: DateTime.now,
+
   )
   #Create document_meta's
   DocumentMeta.create(
