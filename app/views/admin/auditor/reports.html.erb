@@ -6,7 +6,7 @@
 
       <div class="pull-right">
         <div class="">
-          <a class="btn btn-success download-btn" href="/admin/download">Download documents <i class=" download-icon fa fa-download" aria-hidden="true"></i></a>
+          <a class="btn btn-success download-btn" href="/admin/download">Download Default Report documents <i class=" download-icon fa fa-download" aria-hidden="true"></i></a>
         </div>
         <%if @default_report %>
           <div class="">
@@ -18,6 +18,11 @@
     <div class="clearfix"></div>
       <% @reports.each do |report| %>
       <hr>
+      <div class="pull-right">
+        <div class="">
+          <%= link_to "Download Report #{report.id}", admin_auditor_download_path(report: report.id), class: "btn btn-success"%>
+        </div>
+      </div>
       <p>
         Report #<%=report.id%>
         <a class="" href="/admin/report?report=<%=report.id%>">Load report</a>

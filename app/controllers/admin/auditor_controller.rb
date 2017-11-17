@@ -52,16 +52,16 @@ class Admin::AuditorController < ApplicationController
         # - The original file, including the path to find it
         rendered_doc = render_to_string :layout => "archive", :template => "documents/content"
 
-        lms_identifier = 'none'
+        lms_identifier = @document.name.parameterize
         if @document.lms_course_id
-          lms_identifier = "#{@document.lms_course_id}"
+          lms_identifier = "#{@document.lms_course_id}".parameterize
         end
 
         zipfile.get_output_stream("#{lms_identifier}_#{@document.id}.html") { |os| os.write rendered_doc }
       end
     end
 
-    redirect_to '/admin/download?report='+report_id
+    redirect_to '/admin/download?report='+"#{report_id}"
   end
 
   def download
@@ -87,10 +87,7 @@ class Admin::AuditorController < ApplicationController
           if report.report_filters && report.report_filters["account_filter"] == @org.default_account_filter
             @default_report = true
           end
-        else
-          if report.report_filters && report.report_filters["account_filter"] == 'FL16'
-            @default_report = true
-          end
+
         end
       end
     end
@@ -104,9 +101,8 @@ class Admin::AuditorController < ApplicationController
 
   def report
     @org = get_org
-
+    params_hash = params.permit(:account_filter, :controller, :action).to_hash
     rebuild = params[:rebuild]
-
     #Remove unneeded params
     params.delete :authenticity_token
     params.delete :utf8
@@ -152,7 +148,7 @@ class Admin::AuditorController < ApplicationController
           return redirect_to '/admin/report-status'
         end
       end
-      @queued = ReportHelper.generate_report_as_job @org.id, account_filter, params
+      @queued = ReportHelper.generate_report_as_job @org.id, account_filter, params_hash
 
       redirect_to '/admin/report'
     else
@@ -169,10 +165,10 @@ class Admin::AuditorController < ApplicationController
 
   def get_archive_file
     slug = get_org_slug
+
     if !params[:report] || params[:report] == ''
       params[:report] = 'default'
     end
-
     "/tmp/#{slug}_#{params[:report]}.zip"
   end
 end
