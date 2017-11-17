@@ -101,7 +101,7 @@ class Admin::AuditorController < ApplicationController
 
   def report
     @org = get_org
-    paramss = params.permit(:account_filter, :controller, :action).to_hash
+    params_hash = params.permit(:account_filter, :controller, :action).to_hash
     rebuild = params[:rebuild]
     #Remove unneeded params
     params.delete :authenticity_token
@@ -148,7 +148,7 @@ class Admin::AuditorController < ApplicationController
           return redirect_to '/admin/report-status'
         end
       end
-      @queued = ReportHelper.generate_report_as_job @org.id, account_filter, paramss
+      @queued = ReportHelper.generate_report_as_job @org.id, account_filter, params_hash
 
       redirect_to '/admin/report'
     else

@@ -64,8 +64,12 @@ These example Dockerfile and docker-compose.yml expect to be in a folder above t
           - db
 
 Puma File (config/puma.rb)
+
   copy from config/deploy/development/
+
+  ```
   cp config/deploy/development/puma.rb config/
+  ```
 
 Databse config (config/database.yml)
 
