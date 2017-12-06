@@ -1,0 +1,8 @@
+development:
+  adapter: postgresql
+  encoding: unicode
+  database: salsa_development
+  host: db
+  username: postgres
+  password:
+  pool: 5

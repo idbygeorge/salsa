@@ -6,6 +6,8 @@ development:
   aws_bucket: 'AMAZON BUCKET'
   aws_region: 'AMAZON REGION'
   allow_erb_components: true
+  admin_password: 'asdfasdf'
+
 
 production:
   domain: 'http://example.com'
