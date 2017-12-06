@@ -118,6 +118,7 @@ there are also documents created but you still need to publish them by going to 
 
     docker images #list all docker images
     sudo docker rmi ########    #remove docker image id from above command (useful to recreate db or application image if needed)
+
 ##### debuging
   attach to rails app for debugger
 
