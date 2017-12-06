@@ -2,7 +2,7 @@
 
 Copy default configs, adjust as necessary
 
-    cp config/deploy/config/default/* config/
+    cp config/deploy/default/* config/
 
 Setup Docker (for postgresql db)
 
@@ -16,7 +16,8 @@ Setup Docker (for postgresql db)
 
 Install docker composer (as root)
 
-    curl -L https://github.com/docker/compose/releases/download/1.14.0/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+    sudo curl -o /usr/local/bin/docker-compose -L "https://github.com/docker/compose/releases/download/1.15.0/docker-compose-$(uname -s)-$(uname -m)"
+
     chmod +x /usr/local/bin/docker-compose
 
 These example Dockerfile and docker-compose.yml expect to be in a folder above the application folder.
@@ -101,11 +102,10 @@ Database commands
     sudo docker-compose up
 
 First time for a new hostname (support multi-tennants via differnet hostnames) visit http://0.0.0.0:3000/admin/organizations/new
-or just go to http://0.0.0.0:3000/admin/organizations if you have used the database seed command
 
 Slug must be hostname used to access site (i.e. `0.0.0.0` if using http://0.0.0.0:3000/ or `salsa.dev` if using http://salsa.dev:3000/, etc...)
 
-or just go to http://0.0.0.0:3000/admin/organizations if you have used the database seed command
+or just go to http://localhost:3000/admin/organizations if you have used the database seed command
 
 There are already some organizations created if you run the database seed command
 there are also documents created but you still need to publish them by going to the abandoned link on the org show page and
