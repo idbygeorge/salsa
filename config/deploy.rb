@@ -3,7 +3,7 @@ set :branch, ENV.fetch("CAPISTRANO_BRANCH", "releases/0.9")
 set :application,     'salsa'
 set :user,            'ubuntu'
 set :puma_threads,    [4, 16]
-set :puma_workers,    4
+set :puma_workers,    0
 
 # Don't change these unless you know what you're doing
 set :pty,             true
