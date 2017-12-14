@@ -20,7 +20,7 @@ class Oauth2Controller < ApplicationController
 
     flash[:notice] = "You are disconnected from Canvas."
 
-    redirect_to(:back)
+    redirect_back(fallback_location: root_path)
   end
 
   def callback
@@ -32,23 +32,34 @@ class Oauth2Controller < ApplicationController
       token = @lms_client.retrieve_access_token(code, @redirect_url)
       session[:canvas_access_token] = token
 
-      flash[:notice] = 'You are connected to Canvas. Please Select a Course.'
+      flash[:notice] = 'You are connected to Canvas.'
+
       session[:authenticated_institution] = session[:institution]
       session[:lms_authenticated_user] = session[:canvas_access_token]['user']
     else
       flash[:error] = params[:error]
     end
 
-    if params[:lms_course_id]
+    lms_course_id = params[:lms_course_id]
+
+    unless lms_course_id
+      if session[:redirect_course_id]
+        lms_course_id = session[:redirect_course_id]
+
+        session[:redirect_course_id] = nil
+      end
+    end
+
+    if lms_course_id
       if params[:document_token]
-        redirect_to lms_course_document_path(params[:lms_course_id], document_token: params[:document_token])
+        redirect_to lms_course_document_path(lms_course_id, document_token: params[:document_token])
       else
-        redirect_to lms_course_document_path(params[:lms_course_id])
+        redirect_to lms_course_document_path(lms_course_id)
       end
     elsif params[:document_id] != ''
       redirect_to document_path(params[:document_id]) + '#/select/course'
     else
-      redirect_to admin_canvas_path
+      redirect_to admin_auditor_reports_path
     end
   end
 end

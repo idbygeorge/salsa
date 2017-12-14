@@ -1,4 +1,6 @@
 module ApplicationHelper
+  include ActionView::Helpers::UrlHelper
+
   def salsa_partial(name, org=@organization)
     path_info = name.split '/'
 
@@ -73,11 +75,33 @@ module ApplicationHelper
     end
   end
 
+  def require_designer_permissions
+    unless has_role('designer') || has_role('organization_admin')
+      return redirect_or_error
+    end
+  end
+
+  def require_auditor_role
+    unless has_role('auditor') || has_role('designer') ||  has_role('organization_admin')
+      return redirect_or_error
+    end
+  end
+
+  def require_organization_admin_role
+    unless has_role 'organization_admin'
+      return redirect_or_error
+    end
+  end
+
   def redirect_or_error
     if session[:authenticated_user]
       return render :file => "public/401.html", :status => :unauthorized, :layout => false
     else
-      return redirect_to admin_login_path
+      if current_page?(admin_path)
+        return redirect_to admin_login_path
+      else
+        return redirect_to admin_path
+      end
     end
   end
 
@@ -93,7 +117,7 @@ module ApplicationHelper
     end
   end
 
-  def has_role role, org=nil
+  def has_role (role, org=nil)
     unless org
       if params[:slug]
         org = find_org_by_path params[:slug]
@@ -110,14 +134,19 @@ module ApplicationHelper
     elsif org && (session[:lms_authenticated_user] != nil || session[:authenticated_user] != nil)
       if org[:lms_authentication_source] && org[:lms_authentication_source] == session[:oauth_endpoint]
         username = session[:lms_authenticated_user]['id'].to_s
-        user_assignments = UserAssignment.where organization_id: org[:id], username: username
+        user_assignments = UserAssignment.where('organization_id = ? OR (role = ?)', org[:id], 'admin').where(username: username)
       else
-        user_assignments = UserAssignment.where organization_id: org[:id], user_id: session[:authenticated_user]
+        user_assignments = UserAssignment.where('organization_id = ? OR (role = ?)', org[:id], 'admin').where(user_id: session[:authenticated_user])
       end
 
       if user_assignments.count > 0
         user_assignments.each do |ua|
           if ua[:role] == role or ua[:role] == 'admin'
+            result = true
+          end
+
+          # if we aren't looking for an admin role, but the user has organization admin permissions, then they have permissions for this role
+          if role != 'admin' && ua[:role] == 'organization_admin'
             result = true
           end
         end
@@ -128,16 +157,17 @@ module ApplicationHelper
   end
 
   def get_organizations
-    # only show orgs that the logged in use should see
-    unless session[:admin_authorized]
+    if session[:lms_authenticated_user]
+      user = UserAssignment.find_by_username(
+        session[:lms_authenticated_user]['id'].to_s
+      ).user
+    elsif session[:authenticated_user]
+      user = User.find session[:authenticated_user]
+    end
+
+    # only show orgs that the logged in user should see
+    unless session[:admin_authorized] || user.user_assignments.find_by(role: "admin")
       # load all orgs that the user has a cascade == true assignment
-      if session[:lms_authenticated_user]
-        user = UserAssignment.find_by_username(
-          session[:lms_authenticated_user]['id'].to_s
-        ).user
-      elsif session[:authenticated_user]
-        user = User.find session[:authenticated_user]
-      end
 
       cascade_permissions = user.user_assignments.where(cascades: true)
       cascade_organizations = Organization.where(id: cascade_permissions.map(&:organization_id))
@@ -201,5 +231,36 @@ module ApplicationHelper
 
   def redirect_port
     ':' + request.env['SERVER_PORT'] unless ['80', '443'].include?(request.env['SERVER_PORT'])
+  end
+
+  def check_lock path, batch_token
+    organization = Organization.find_by slug:path
+    if(organization.republish_at)
+      if ((DateTime.now - organization.republish_at.to_datetime)*24).to_i > 4
+        organization.republish_at = nil
+        organization.republish_batch_token = nil
+
+        organization.save!
+
+        return true
+      elsif organization.republish_batch_token != batch_token
+        return false
+      end
+    end
+
+    return true
+  end
+
+  def get_org_slug
+    request.env['SERVER_NAME']
+  end
+
+  def get_org
+    Organization.find_by slug: get_org_slug
+  end
+
+  def get_document_meta
+    org_slug = request.env['SERVER_NAME']
+    ReportHelper.get_document_meta org_slug, 'FL16', params
   end
 end

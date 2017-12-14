@@ -15,28 +15,36 @@
 
 <div id="organizationControl row">
   <div class="pull-right">
+    <!-- Trigger the modal with a button -->
+    <% if has_role 'organization_admin' %>
+      <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#republishSearch">Republish...</button>
+    <% end %>
+
     <a target="_blank" class="btn btn-success" href="//<%= "#{org_slug_parts(@organization)[0]}#{redirect_port}" %><% if @organization.depth > 0 %>/<%= org_slug_parts(@organization)[1] %><% end %>/SALSA/new">
       <span class="glyphicon glyphicon-plus"></span>
       SALSA
     </a>
   </div>
 
-  <p>
-    <a class="btn btn-default" href="<%= edit_organization_path(id: @organization[:id]) %>">
-      Update Organization
-    </a>
+  <% if has_role 'organization_admin' %>
+    <p>
+      <a class="btn btn-default" href="<%= edit_organization_path(id: @organization[:id]) %>">
+        Update Organization
+      </a>
 
-    <a class="btn btn-default" href="<%= components_path(organization_slug: @organization[:slug]) %>">
-      Manage Components
-    </a>
+      <a class="btn btn-default" href="<%= components_path(organization_slug: @organization[:slug]) %>">
+        Manage Components
+      </a>
 
-    <% if @organization.lms_authentication_key != '' %>
-        <a class="btn btn-default" href="//<%= "#{org_slug_parts(@organization)[0]}#{redirect_port}" + admin_reports_path %>">
-          View Dashboard
-        </a>
-    <% end %>
-  </p>
-  <hr>
+      <% if @organization.lms_authentication_key != '' %>
+          <a class="btn btn-default" href="//<%= "#{org_slug_parts(@organization)[0]}#{redirect_port}" + admin_auditor_reports_path %>">
+            View Dashboard
+          </a>
+      <% end %>
+    </p>
+    <hr>
+  <% end %>
+
 </div>
 
 

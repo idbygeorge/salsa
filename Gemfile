@@ -1,41 +1,45 @@
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '4.0.0'
+gem 'rails', '5.1.2'
 
 group :development, :test do
   gem 'sqlite3'
-  gem 'debugger'
+  gem 'byebug'
   gem 'rspec-rails'
 end
 
 group :development do
   # Use Capistrano for deployment
-  gem 'capistrano'
-  gem 'capistrano-bundler'
-  gem 'capistrano-rails'
+  gem 'capistrano',         require: false
+  gem 'capistrano-rvm',     require: false
+  gem 'capistrano-rails',   require: false
+  gem 'capistrano-bundler', require: false
+  gem 'capistrano3-puma',   require: false
+  gem 'capistrano-rails-collection', require: false
   gem 'better_errors'
   gem 'binding_of_caller'
+  gem 'listen'
 end
 
 #postgresql for db
-gem 'pg'
+gem 'pg', '0.20'
 
 group :production do
   gem 'rails_12factor'
 
-  # Use unicorn as the app server
-  gem 'unicorn'
+  # Use puma as the app server
+  gem 'puma'
 
   # newrelic for monitoring
   gem 'newrelic_rpm'
 end
 
 # preprocessors
-gem 'sass-rails', '~> 4.0.0'
+gem 'sass-rails'
 gem 'compass-rails'
-gem 'coffee-rails', '~> 4.0.0'
-gem 'uglifier', '>= 1.3.0'
+gem 'coffee-rails'
+gem 'uglifier'
 
 # bootstrap
 gem 'bootstrap-sass'
@@ -48,11 +52,11 @@ gem 'jquery-ui-rails'
 gem 'zurb-foundation'
 
 # Add awesome nested set
-gem 'awesome_nested_set', '~> 3.0.0.rc.3'
+gem 'awesome_nested_set'
 # pagination
 gem 'kaminari'
 # active record version control
-gem 'vestal_versions', :git => 'git://github.com/laserlemon/vestal_versions'
+gem 'paper_trail'
 
 # processing meta data for orgs and accounts
 gem 'pivot_table'
@@ -61,13 +65,13 @@ gem 'pivot_table'
 gem 'turbolinks'
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder', '~> 1.2'
+gem 'jbuilder'
 
 # for aws bucket usage
 gem 'uber-s3'
 
 # instructure canvas api
-gem 'canvas-api'
+gem 'canvas-api', '0.7'
 
 gem 'nokogiri'
 
@@ -78,7 +82,7 @@ gem 'que'
 gem 'rubyzip'
 
 # Use ActiveModel has_secure_password
-gem 'bcrypt-ruby', '~> 3.0.0'
+gem 'bcrypt'
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.

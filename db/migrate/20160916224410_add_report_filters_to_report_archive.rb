@@ -1,5 +1,7 @@
-class AddReportFiltersToReportArchive < ActiveRecord::Migration
+class AddReportFiltersToReportArchive < ActiveRecord::Migration[4.2]
   def change
-    add_column :report_archives, :report_filters, :json
+    change_table :report_archives do |t|
+      t.column :report_filters, :json
+    end
   end
 end

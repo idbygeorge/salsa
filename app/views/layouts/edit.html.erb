@@ -40,7 +40,10 @@
 
         <div role="main" id="container">
             <div id="page" class="editor_controls">
-              <div class="hidden" id="skip-lms"><%= @organization.skip_lms_publish %></div>
+                <div class="hidden" id="skip-lms"><%= @organization.skip_lms_publish %></div>
+
+                <span class="hidden" id="document-version" data-document-version="<%= @document.versions.count %>"></span>
+
                 <div id="page-data" data-view-id="<%= @document.view_id %>">
                     <%= yield.force_encoding("utf-8") %>
                 </div>

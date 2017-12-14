@@ -1,7 +1,11 @@
 class OrganizationsController < AdminController
-  before_filter :require_admin_permissions, only: [:new, :create, :destroy]
-  before_filter :require_organization_admin_permissions, except: [:new, :create, :destroy]
-  before_filter :get_organizations, only: [:index, :new, :edit, :show]
+  before_action :require_admin_permissions, only: [:new, :create, :destroy]
+  before_action :require_organization_admin_permissions, except: [:new, :create, :destroy, :show, :index]
+  before_action :require_designer_permissions, only: [
+      :show,
+      :index
+  ]
+  before_action :get_organizations, only: [:index, :new, :edit, :show]
   layout 'admin'
   def index
     get_documents
@@ -25,7 +29,7 @@ class OrganizationsController < AdminController
         org_id = nil
       end
 
-      Document.update_all(["organization_id=?", org_id], :id => params[:document_ids])
+      Document.where(:id => params[:document_ids]).update_all(["organization_id=?", org_id])
     end
 
     redirect_to organizations_path
@@ -85,6 +89,10 @@ class OrganizationsController < AdminController
   end
 
   def organization_params
-    params.require(:organization).permit(:name, :slug, :parent_id, :lms_authentication_source, :lms_authentication_id, :lms_authentication_key, :lms_info_slug, :home_page_redirect, :skip_lms_publish)
+    if has_role 'admin'
+        params.require(:organization).permit(:name, :slug, :parent_id, :lms_authentication_source, :lms_authentication_id, :lms_authentication_key, :lms_info_slug, :home_page_redirect, :skip_lms_publish, :enable_anonymous_actions)
+    elsif has_role 'organization_admin'
+        params.require(:organization).permit(:name,  :lms_authentication_source, :lms_authentication_id, :lms_authentication_key, :lms_info_slug, :home_page_redirect, :skip_lms_publish, :enable_anonymous_actions)
+    end
   end
 end

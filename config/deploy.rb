@@ -1,54 +1,78 @@
-# TODO: this file shouldn't be tracked... each instance may be different
+set :repo_url,        'https://github.com/idbygeorge/salsa.git'
+set :branch, ENV.fetch("CAPISTRANO_BRANCH", "master")
+set :application,     'salsa'
+set :user,            'ubuntu'
+set :puma_threads,    [4, 16]
+set :puma_workers,    0
 
-# config valid only for Capistrano 3.1
-lock '3.1.0'
+# Don't change these unless you know what you're doing
+set :pty,             true
+set :use_sudo,        false
+set :stage,           :production
+set :deploy_via,      :remote_cache
+set :deploy_to,       "/home/#{fetch(:user)}/apps/#{fetch(:application)}"
 
-set :application, 'salsa'
-set :repo_url, 'https://github.com/idbygeorge/salsa.git'
+set :puma_env,        'production'
+set :puma_conf,       "#{release_path}/config/puma.rb"
+set :puma_bind,       "unix:///tmp/sockets/puma.sock"
+set :puma_state,      "/tmp/pids/puma.state"
+set :puma_pid,        "/tmp/pids/puma.pid"
+set :puma_access_log, "/tmp/log/puma.error.log"
+set :puma_error_log,  "/tmp/log/puma.access.log"
+set :puma_preload_app, true
+set :puma_worker_timeout, nil
+set :puma_init_active_record, true  # Change to true if using ActiveRecord
 
-# Default branch is :master
-set :branch, 'master' # proc { `git rev-parse --abbrev-ref HEAD`.chomp }
+set :ssh_options,     { forward_agent: true }
 
-# Default deploy_to directory is /var/www/my_app
-set :deploy_to, '/u/apps/salsa'
-
-# Default value for :scm is :git
-# set :scm, :git
-
-# Default value for :format is :pretty
-# set :format, :pretty
-
-# Default value for :log_level is :debug
-set :log_level, :debug
-
-# Default value for :pty is false
-# set :pty, true
-
-# Default value for :linked_files is []
-set :linked_files, %w{config/database.yml config/config.yml config/newrelic.yml public/500.html public/422.html public/404.html}
-
-# Default value for linked_dirs is []
-# set :linked_dirs, %w{bin log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
-
-# instances/custom view folder is not part of the public repository
-# any customization instance views will need to be added to the server another way
-set :linked_dirs, %w{app/views/instances/custom public/assets/scripts}
-
-# Default value for default_env is {}
-# set :default_env, { path: "/opt/ruby/bin:$PATH" }
-
-# Default value for keep_releases is 5
+## Defaults:
+# set :scm,           :git
+# set :branch,        :master
+# set :format,        :pretty
+# set :log_level,     :debug
 # set :keep_releases, 5
 
-namespace :deploy do
+## Linked Files & Directories (Default None):
+set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/config.yml', 'config/secrets.yml', 'public/500.html', 'public/422.html', 'public/404.html')
+# Default value for linked_dirs is []
+set :linked_dirs, fetch(:linked_dirs, []).push('log', 'vendor/bundle', 'app/views/instances/custom')
+# TODO: see if we needthis in linked_dirs - public/assets/scripts
 
-  desc 'Restart application'
-  task :restart do
-    on roles(:app), in: :sequence, wait: 5 do
-      execute "kill -s USR2 `cat /tmp/unicorn.salsa.pid`"
+namespace :puma do
+  desc 'Create Directories for Puma Pids and Socket'
+  task :make_dirs do
+    on roles(:app) do
+      execute "mkdir /tmp/sockets -p"
+      execute "mkdir /tmp/pids -p"
     end
   end
 
-  after :publishing, :restart
-
+  before :start, :make_dirs
 end
+
+namespace :deploy do
+
+  desc 'Initial Deploy'
+  task :initial do
+    on roles(:app) do
+      before 'deploy:restart', 'puma:start'
+      before 'deploy', 'setup'
+      invoke 'deploy'
+    end
+  end
+
+  # desc 'Restart application'
+  # task :restart do
+  #   on roles(:app), in: :sequence, wait: 5 do
+  #     invoke 'puma:restart'
+  #   end
+  # end
+
+  # after  :finishing,    :compile_assets
+  # after  :finishing,    :cleanup
+  # after  :finishing,    :restart
+end
+
+# ps aux | grep puma    # Get puma pid
+# kill -s SIGUSR2 pid   # Restart puma
+# kill -s SIGTERM pid   # Stop puma

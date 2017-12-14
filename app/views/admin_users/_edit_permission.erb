@@ -7,6 +7,16 @@
 <%= form_for permission, url: path, html: {class: "form"} do |f| %>
 <%= f.hidden_field :user_id %>
 
+<% if permission.errors.any? %>
+  <div class="alert alert-danger">
+    <ul>
+        <% permission.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+        <% end %>
+    </ul>
+</div>
+<% end %>
+
 <table class="table table-responsive">
 <thead>
   <tr>
@@ -35,7 +45,7 @@
       <% permission[:role] = 'auditor' %>
     <% end %>
 
-    <%= f.select(:role, {'Global Administrator'=>'admin', 'Organization Administrator'=>'organization_admin', 'Auditor'=>'auditor'}, {:include_blank => ''}) %>
+    <%= f.select(:role, {'Global Administrator'=>'admin', 'Organization Administrator'=>'organization_admin', 'Auditor'=>'auditor', 'Designer'=>'designer'}, {:include_blank => ''}) %>
   </td>
   <td>
     <% if @organizations %>
@@ -59,6 +69,10 @@
 
   <td class="text-right">
     <button type="submit" class="btn btn-success pull-right"><span class="glyphicon glyphicon-plus"></span> <%= action %> Access</button>
+    <% if action != 'Add' %>
+      <br>
+      <%= link_to 'cancel', admin_user_path(id: permission[:user_id]) %>
+    <% end %>
   </td>
 </tr>
 </tbody>

@@ -1,4 +1,4 @@
-class RenameSyllabusToDocument < ActiveRecord::Migration
+class RenameSyllabusToDocument < ActiveRecord::Migration[4.2]
   def change
     rename_table :syllabuses, :documents
 

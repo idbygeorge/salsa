@@ -1,8 +1,10 @@
 class ComponentsController < ApplicationController
   layout 'components'
 
-  before_filter :get_organizations
-  before_filter :get_organization
+  before_action :require_organization_admin_permissions
+
+  before_action :get_organizations
+  before_action :get_organization
 
   def index
     @components = @organization.components
@@ -34,7 +36,7 @@ class ComponentsController < ApplicationController
   end
 
   def update
-    @component = Component.find_by! slug: params[:slug], organization: @organization
+    @component = Component.find_by! slug: params[:component_slug], organization: @organization
 
     available_component_formats
 
@@ -55,13 +57,13 @@ class ComponentsController < ApplicationController
 
   def edit
     available_component_formats
-    @component = Component.find_by! slug: params[:slug], organization: @organization
+    @component = Component.find_by! slug: params[:component_slug], organization: @organization
   end
 
   private
 
   def get_organization
-    @organization = Organization.find_by slug: params[:organization_slug]
+    @organization = Organization.find_by slug: params[:slug]
   end
 
   def available_component_formats

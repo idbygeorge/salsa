@@ -1,7 +1,7 @@
 class DefaultController < ApplicationController
 
   layout false
-  before_filter :init_view_folder
+  before_action :init_view_folder
 
   def index
     root_org_slug = request.env['SERVER_NAME']

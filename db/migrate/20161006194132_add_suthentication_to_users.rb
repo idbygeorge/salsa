@@ -1,4 +1,4 @@
-class AddSuthenticationToUsers < ActiveRecord::Migration
+class AddSuthenticationToUsers < ActiveRecord::Migration[4.2]
   def change
     add_column :users, :password_digest, :string
     add_column :users, :remember_digest, :string

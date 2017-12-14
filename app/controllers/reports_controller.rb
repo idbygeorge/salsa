@@ -1,8 +1,8 @@
 class ReportsController < ApplicationController
-  before_filter :require_admin_permissions
-  before_filter :get_organizations, only: [:index, :new, :edit, :show]
+  before_action :require_auditor_role
+  before_action :get_organizations, only: [:index, :new, :edit, :show]
 
-  before_filter :lms_connection_information, :only => [:show]
+  before_action :lms_connection_information, :only => [:show]
 
   layout 'admin'
 

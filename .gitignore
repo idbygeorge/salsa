@@ -5,6 +5,7 @@
 #   git config --global core.excludesfile '~/.gitignore_global'
 
 .vagrant/
+.idea/
 
 # Ignore bundler config.
 /.bundle
@@ -24,7 +25,14 @@ salsa_test
 
 # Ignore instance configuration files
 /workers/pdf/iron.json
+
+/config/deploy/config/
 /config/config.yml
 /config/database.yml
+/config/deploy.rb
 /config/newrelic.yml
+/config/puma.rb
 /config/secrets.yml
+/config/nginx.conf
+
+.byebug_history

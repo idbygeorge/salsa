@@ -1,0 +1,124 @@
+<% if @documents.length > 0 %>
+  <%= paginate @documents %>
+  <span class="badge"><%= @documents.total_count %> documents</span>
+
+  <% other_orgs = @organizations.where.not(id: params[:id]).order('lft', 'rgt') %>
+
+  <%= form_tag('/admin/organizations/documents', :html => { :class => "form-vertical" } ) do |f| %>
+    <div class="row">
+
+    </div>
+
+    <div class="row">
+
+      <ul class="nav" id="salsaDocuments">
+        <% @documents.each do |document| %>
+          <li class="nav-header form-group">
+            <div class='pull-right text-right'>
+              <% if document.lms_published_at.is_a?(Time) %>
+                  <div>Published <%= time_ago_in_words document.lms_published_at %> ago</div>
+              <% end %>
+
+              <div class="info pull-right">
+                Version: <%= document.versions.count %>
+              </div>
+            </div>
+
+            <label for="<%= "document_#{document.id}" %>"><%= document.name %></label>
+
+            <time datetime="<%= document.created_at %>">Created <%= time_ago_in_words document.created_at %> ago</time>
+
+            <% if time_ago_in_words(document.created_at) != time_ago_in_words(document.updated_at) %>
+              <time datetime="<%= document.created_at %>">Updated <%= time_ago_in_words document.updated_at %> ago</time>
+            <% end %>
+          </li>
+
+          <li id="<%= "document_#{document.id}_wrapper" %>">
+            <% org = @organization if @organization %>
+            <% org = document.organization unless org %>
+
+            <% if org %>
+              <% org_base = "//#{org_slug_parts(org)[0]}#{redirect_port}" %>
+              <% if org.depth > 0 %>
+                <% org_base += "/#{org_slug_parts(org)[1]}"%>
+              <% end %>
+            <% else %>
+              <% org_base = '' %>
+            <% end %>
+
+            <% if document.lms_published_at %>
+              <div>
+                Published to:
+
+                <% if document.lms_course_id %>
+                  <% if document.organization && document.organization[:lms_authentication_source] %>
+                    <a href="<%= document.organization[:lms_authentication_source] + '/courses/' + document.lms_course_id + '/assignments/syllabus' %>" target="_blank">
+                      <%= document.organization[:lms_authentication_source] + '/courses/' + document.lms_course_id + '/assignments/syllabus' %>
+                    </a>
+                  <% end %>
+
+                  <div>
+                    Course Edit Link: <%= link_to "#{org_base}#{lms_course_document_path(lms_course_id: document.lms_course_id)}", "#{org_base}#{lms_course_document_path(lms_course_id: document.lms_course_id)}", target: "_blank" %>
+                  </div>
+                <% end %>
+              </div>
+            <% elsif document.lms_course_id %>
+              <div>
+                LMS Course ID: <%= document.lms_course_id %>
+                <div class="badge alert-warning">
+                  manually set, unpublished
+                </div>
+              </div>
+            <% end %>
+
+
+          	<div>
+              View: <%= link_to "#{org_base}#{document_path(id: document.view_id)}", "#{org_base}#{document_path(id: document.view_id)}", target: "_blank" %>
+              <br>
+              Edit: <%= link_to "#{org_base}#{document_path(id: document.edit_id)}/edit", "#{org_base}#{document_path(id: document.edit_id)}", target: "_blank", class: "republish" %>
+
+          	</div>
+          </li>
+        <% end %>
+      </ul>
+
+    </div><!-- .row -->
+  <% end %><!-- form -->
+  <!-- Modal -->
+  <div id="republish" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h4 class="modal-title">Republishing Documents</h4>
+        </div>
+        <div class="modal-body">
+          <span class="hide" id="batch_token"><%=@organization.republish_batch_token%></span>
+          <div class="">
+            <iframe id="republish_iframe" width="100%" src=""></iframe>
+          </div>
+          <div class="errors"></div>
+
+          <p>
+            Progress:
+          </p>
+          <div class="progress">
+            <div class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 2%;">
+              0%
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <%= paginate @documents %>
+<% else %>
+  <p>
+    No <acronym title"Styled, accessibly layered, service applications">SALSAs</acronym> were found.
+  </p>
+<% end %>

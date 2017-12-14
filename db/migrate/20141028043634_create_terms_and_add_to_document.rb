@@ -1,4 +1,4 @@
-class CreateTermsAndAddToDocument < ActiveRecord::Migration
+class CreateTermsAndAddToDocument < ActiveRecord::Migration[4.2]
   def change
     create_table :terms do |t|
       t.string :slug

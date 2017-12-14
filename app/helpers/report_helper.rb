@@ -1,5 +1,7 @@
-module ReportHelper
+require 'tempfile'
+require 'zip'
 
+module ReportHelper
   def self.generate_report_as_job (org_id, account_filter, params)
     @reports = ReportArchive.where(organization_id: org_id).all
     @report = nil;
@@ -9,17 +11,14 @@ module ReportHelper
       end
     end
     if !@report
-      @report = ReportArchive.create({organization_id: org_id, report_filters: params.to_json})
+      @report = ReportArchive.create({organization_id: org_id, report_filters: params})
     end
-
     @report.generating_at = Time.now
     @report.save!
-
     ReportGenerator.enqueue(org_id, account_filter, params, @report.id)
   end
 
   def self.generate_report (org_slug, account_filter, params, report_id)
-
     @org = Organization.find_by slug: org_slug
     @report = ReportArchive.where(id: report_id).first
 
@@ -27,10 +26,41 @@ module ReportHelper
     puts 'Getting Document Meta'
     @report_data = self.get_document_meta org_slug, account_filter, params
     puts 'Retrieved Document Meta'
+
     #store it
     @report.generating_at = nil
     @report.payload = @report_data.to_json
     @report.save!
+
+    self.archive org_slug, report_id, @report_data
+  end
+
+  def self.archive (org_slug, report_id, report_data)
+    report = ReportArchive.find_by id: report_id
+    @org = Organization.find_by slug: org_slug
+    docs = Document.where(organization_id: @org.id, id: report_data.map(&:document_id)).all
+
+    zipfile_name = "/tmp/#{org_slug}_#{report_id}.zip"
+    if File.exist?(zipfile_name)
+      File.delete(zipfile_name)
+    end
+    Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
+      zipfile.get_output_stream('content.css'){ |os| os.write Rails.application.assets['application.css'].to_s }
+      docs.each do |doc|
+        @document = doc
+        # Two arguments:
+        # - The name of the file as it will appear in the archive
+        # - The original file, including the path to find it
+        #rendered_doc = render_to_string :layout => "archive", :template => "documents/content"
+        rendered_doc = ApplicationController.new.render_to_string(partial: 'documents/content', locals: {doc: @document})
+
+        lms_identifier = @document.name.gsub(/[^A-Za-z0-9]+/, '_')
+        if @document.lms_course_id
+          lms_identifier = "#{@document.lms_course_id}".gsub(/[^A-Za-z0-9]+/, '_')
+        end
+        zipfile.get_output_stream("#{lms_identifier}_#{@document.id}.html") { |os| os.write rendered_doc }
+      end
+    end
   end
 
   def self.get_document_meta org_slug, account_filter, params

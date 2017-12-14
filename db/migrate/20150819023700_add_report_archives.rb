@@ -1,4 +1,4 @@
-class AddReportArchives < ActiveRecord::Migration
+class AddReportArchives < ActiveRecord::Migration[4.2]
   def change
     create_table :report_archives do |t|
       t.text :payload

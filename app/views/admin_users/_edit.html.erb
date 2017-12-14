@@ -1,5 +1,11 @@
 <div class="row">
-  <%= form_for(@user, url: admin_user_path(@user), :html => { :class => "form-horizontal col-md-9 col-lg-6" } ) do |f| %>
+  <% if @user.id %>
+    <% form_path = admin_user_path(@user) %>
+  <% else %>
+    <% form_path = admin_users_path(@user) %>
+  <% end %>
+
+  <%= form_for(@user, url: form_path, :html => { :class => "form-horizontal col-md-9 col-lg-6" } ) do |f| %>
 
     <% if @user.errors.any? %>
         <ul>
