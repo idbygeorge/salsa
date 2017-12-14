@@ -50,8 +50,8 @@
     <%= f.label :layout, class: "control-label" %>
     <div class="info pull-right">Version: <%= @component.versions.count %></div>
     <div class="controls">
-      <div id="editor"><%= @component.layout %></div>
-      <%= f.text_area :layout, class: 'form-control', rows: 12, class: "hidden" %>
+      <div id="editor" class="hidden"></div>
+      <%= f.text_area :layout, class: 'form-control', rows: 12 %>
     </div>
 </div>
 
