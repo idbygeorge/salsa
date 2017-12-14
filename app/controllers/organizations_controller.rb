@@ -79,7 +79,9 @@ class OrganizationsController < AdminController
 
     if path
       @organization = find_org_by_path path
+    end
 
+    if @organization
       documents = Document.where("documents.organization_id=? AND documents.updated_at #{operation} documents.created_at", @organization[:id])
     else
       documents = Document.where("documents.organization_id IS NULL AND documents.updated_at #{operation} documents.created_at")
