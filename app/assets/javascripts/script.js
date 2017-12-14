@@ -171,7 +171,20 @@ function liteOff(x){
             firstItem.remove();
           }
 
-          parentList.data({ element: "li", text: $(this).text() }).find(".ui-state-active").click();
+          var identifier = $(this).data('meta');
+          parentList.data({ element: "li", text: $(this).text(), meta: identifier }).find(".ui-state-active").click();
+
+          if(context.unique) {
+              $('[data-meta="'+identifier+'"]', parentList).remove();
+              $('[data-meta="'+identifier+'"]', '#topBar').remove();
+
+              if($('#topBar li a').length == 0) {
+                  $('#topBar').remove();
+                  $("#container").removeAttr("style");
+
+                  $(context.source).removeClass('ui-state-active').addClass('ui-state-disabled');
+              }
+          }
 
           return false;
         });
@@ -783,6 +796,7 @@ function liteOff(x){
             var existingElements = args.target.find(args.element);
             var visibleElements = existingElements.filter(":visible");
             var newText;
+            var element;
 
             if(args.action === "+") {
 
@@ -800,6 +814,8 @@ function liteOff(x){
                     }
 
                     activateElement.show().removeClass('hide');
+
+                    element = activateElement;
                 } else if(args.max === undefined || existingElements.length < args.max) {
                     var newElement;
 
@@ -823,6 +839,8 @@ function liteOff(x){
                     } else {
                         args.target.append(newElement);
                     }
+
+                    element = newElement;
                 }
             } else if(args.action === "-") {
                 if(args.min === undefined || visibleElements.length > args.min) {
@@ -831,6 +849,16 @@ function liteOff(x){
             } else {
                 args.target.toggleClass('hide');
                 args.source.closest("section").toggleClass("ui-state-active ui-state-default");
+
+                element = argsTarget;
+            }
+
+            if(args.meta) {
+                $(element).attr('data-meta', args.meta);
+            }
+
+            if(args.editable) {
+                $(element).addClass('editable', true);
             }
 
             // a callback was defined for this control
@@ -880,19 +908,33 @@ function liteOff(x){
                 args.element = undefined;
             }
 
+            var list = args.source.nextUntil("dt");
+
+            if(list.length == 0) {
+                return;
+            }
+
             var topBar = $("<div id='topBar'><ul class='inner'/></div>");
             topBar.data('context', args);
             topBar.prepend($("<h2/>").text(args.source.text()));
 
-            args.source.nextUntil("dt").each(function(){
+            list.each(function(){
                 var newItem = $("<li><a href='#'/></li>");
-                $("a", newItem).text($(this).text());
+                $("a", newItem).text($(this).text()).attr('data-meta', $(this).data('meta'));
 
                 newItem.appendTo($(".inner", topBar));
             });
 
             $("#topBar").remove();
             $("#container").before($(topBar)).css({ top: (parseInt(topBar.css("top"), 10) + parseInt(topBar.outerHeight(), 10) + 5) + "px" });
+
+            if(args.uiClass) {
+                topBar.addClass(args.uiClass);
+            }
+
+            if(args.unique) {
+                topBar.data('unique', args.unique);
+            }
 
             args.source.siblings(".ui-state-active").removeClass("ui-state-active");
             args.source.addClass("ui-state-active");
