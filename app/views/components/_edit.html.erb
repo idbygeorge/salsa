@@ -46,27 +46,26 @@
   <% end %>
 </fieldset>
 
-<fieldset>
-  <legend>Document Configuration</legend>
-
-  <div class="form-group">
+<div class="form-group">
     <%= f.label :layout, class: "control-label" %>
+    <div class="info pull-right">Version: <%= @component.versions.count %></div>
     <div class="controls">
-      <%= f.text_area :layout, class: 'form-control', rows: 12 %>
+      <div id="editor"><%= @component.layout %></div>
+      <%= f.text_area :layout, class: 'form-control', rows: 12, class: "hidden" %>
     </div>
-  </div>
+</div>
 
-  <% if @available_component_formats.length > 1 %>
+<% if @available_component_formats.length > 1 %>
     <div class="form-group">
       <%= f.label :format, class: "control-label" %>
         <div class="controls">
           <%= f.select :format, @available_component_formats, { include_blank: '--'}, { class: 'form-control' } %>
       </div>
     </div>
-  <% else %>
+<% else %>
     <%= f.hidden_field :format, :value => @available_component_formats[0] %>
-  <% end %>
-</fieldset>
+<% end %>
+
 
 
 <div class="form-group">

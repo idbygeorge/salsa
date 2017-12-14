@@ -2,3 +2,28 @@
 <small><%= @organization[:slug] %></small><br>
 Update Component</h1>
 <%= render 'edit' %>
+
+<script src="/assets/ace/ace.js" type="text/javascript" charset="utf-8"></script>
+<script>
+    var editor = ace.edit("editor");
+    editor.setTheme("ace/theme/chrome");
+    editor.session.setMode("ace/mode/html_ruby");
+    editor.setOptions({
+        'useSoftTabs': true,
+        'wrap': 'free',
+        'highlightActiveLine': true,
+        'autoScrollEditorIntoView': true
+    });
+
+    var textarea = $('#component_layout');
+    editor.getSession().on("change", function () {
+        console.log(textarea);
+        textarea.val(editor.getSession().getValue());
+    });
+</script>
+
+<style type="text/css" media="screen">
+    .ace_editor {
+        min-height: 600px;
+    }
+  </style>
