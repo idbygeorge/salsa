@@ -61,7 +61,7 @@ class ComponentsController < ApplicationController
 
   def edit
     available_component_formats
-    @component = Component.find_by! slug: params[:component_slug], organization: @organization
+    @component = Component.find_by! slug: params[:component_slug], organization: @organization, format: @available_component_formats
   end
 
   private
