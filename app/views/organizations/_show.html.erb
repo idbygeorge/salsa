@@ -99,7 +99,7 @@
               View: <%= link_to "#{org_base}#{document_path(id: document.view_id)}", "#{org_base}#{document_path(id: document.view_id)}", target: "_blank" %>
               <br>
 
-              <% if document.organization[:enable_anonymous_actions] %>
+              <% if document.organization && document.organization[:enable_anonymous_actions] %>
                   Edit: <%= link_to "#{org_base}#{document_path(id: document.edit_id)}", "#{org_base}#{document_path(id: document.edit_id)}", target: "_blank" %>
 
                   <% if document.template_id %>
