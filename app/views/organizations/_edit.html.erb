@@ -7,82 +7,122 @@
 
   <%= form_for(@organization, url: form_action, :html => { :class => "form-horizontal col-md-9" } ) do |f| %>
     <% if session[:admin_authorized] %>
-    <fieldset>
-      <legend>Organization</legend>
+        <fieldset>
+          <legend>Organization</legend>
+
+          <div class="form-group">
+            <%= f.label :name, class: "control-label" %>
+            <div class="controls">
+                  <%= f.text_field :name, class: 'form-control input-xxlarge' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :slug, class: "control-label" %>
+            <div class="controls">
+              <%= f.text_field :slug, class: 'form-control' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :parent_id, class: "control-label" %>
+
+              <%= f.select :parent_id, @organizations.where.not(id: params[:id]).collect { |org| [ org.slug + ' - ' + org.name, org.id ] }, { include_blank: '-- top level organization --'}, { class: 'form-control' } %>
+
+          </div>
+        </fieldset>
+    <% else %>
+        <div class="form-group">
+          <%= f.label :name, class: "control-label" %>
+          <div class="controls">
+                <%= f.text_field :name, class: 'form-control input-xxlarge' %>
+          </div>
+        </div>
     <% end %>
 
-      <div class="form-group">
-        <%= f.label :name, class: "control-label" %>
-        <div class="controls">
-          <%= f.text_field :name, class: 'form-control input-xxlarge' %>
-        </div>
-      </div>
+    <% if has_role 'organization_admin' %>
 
-    <% if session[:admin_authorized] %>
-      <div class="form-group">
-        <%= f.label :slug, class: "control-label" %>
-        <div class="controls">
-          <%= f.text_field :slug, class: 'form-control' %>
-        </div>
-      </div>
+        <fieldset class="lms_config collapse">
+          <legend>LMS Information</legend>
 
-      <div class="form-group">
-        <%= f.label :parent_id, class: "control-label" %>
+          Supported LMS integrations
+          <ul>
+              <li>
+                  Canvas - <a href="https://github.com/idbygeorge/salsa/blob/releases/0.9/_install/canvas_integration.md" target="_blank">Integration Guide</a>
+              </li>
+          </ul>
 
-          <%= f.select :parent_id, @organizations.where.not(id: params[:id]).collect { |org| [ org.slug + ' - ' + org.name, org.id ] }, { include_blank: '-- top level organization --'}, { class: 'form-control' } %>
+          <div class="form-group">
+            <%= f.label :lms_authentication_source, class: "control-label" %>
+            <div class="controls">
+              <%= f.text_field :lms_authentication_source, class: 'form-control' %>
+              <div class="help-block">
+                  Canvas expects the format: <code>https://<em>instance</em>.instructure.com</code>
+              </div>
+            </div>
+          </div>
 
-      </div>
-    </fieldset>
+          <div class="form-group">
+            <%= f.label :lms_authentication_id, "LMS Client ID", class: "control-label" %>
+            <div class="controls">
+              <%= f.text_field :lms_authentication_id, class: 'form-control' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :lms_authentication_key, "LMS Authentication Key", class: "control-label" %>
+            <div class="controls">
+              <%= f.text_field :lms_authentication_key, class: 'form-control' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :lms_info_slug, class: "control-label" %>
+            <div class="controls">
+              <%= f.text_field :lms_info_slug, class: 'form-control' %>
+              <div class="help-block">
+                  Canvas expects the format: <code>pages/_edit_gui_salsa</code> for the wiki pages (note use of pages, not wiki).
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <div class="controls">
+              <%= f.check_box :skip_lms_publish, class: '' %>
+              <%= f.label :skip_lms_publish, class: "control-label" %>
+              <div class="help-block">When enabled, the document:publish event will not try and publish the document to any configured LMS</div>
+            </div>
+          </div>
+
+        </fieldset>
+
+<div class="form-group">
+        <button data-toggle="collapse" data-target=".lms_config" type="button" class="lms_config collapse in">LMS Configuration</button>
+</div>
+    <% end %>
 
     <fieldset>
-      <legend>LMS Information</legend>
-
-      <div class="form-group">
-        <%= f.label :lms_authentication_source, class: "control-label" %>
-        <div class="controls">
-          <%= f.text_field :lms_authentication_source, class: 'form-control' %>
-          Canvas expects the format: <code>https://<em>instance</em>.instructure.com</code>
+        <legend>Settings</fieldset>
+        <div class="form-group">
+          <%= f.label :home_page_redirect, class: "control-label" %>
+          <div class="controls">
+            <%= f.text_field :home_page_redirect, class: 'form-control' %>
+            <div class="help-block">
+                URL to redirect to instead of showing the home page
+            </div>
+          </div>
         </div>
-      </div>
 
-      <div class="form-group">
-        <%= f.label :lms_authentication_id, class: "control-label" %>
-        <div class="controls">
-          <%= f.text_field :lms_authentication_id, class: 'form-control' %>
+        <div class="form-group">
+          <div class="controls">
+            <%= f.check_box :enable_anonymous_actions, class: '' %>
+            <%= f.label :enable_anonymous_actions, class: "control-label" %>
+          </div>
+          <div class="help-block">
+              Enables the edit and template link even when a user is not logged  (if disabled, template link will work even for documents the user doesn't have permissions for).
+          </div>
         </div>
-      </div>
-
-      <div class="form-group">
-        <%= f.label :lms_authentication_key, class: "control-label" %>
-        <div class="controls">
-          <%= f.text_field :lms_authentication_key, class: 'form-control' %>
-        </div>
-      </div>
-
-      <div class="form-group">
-        <%= f.label :lms_info_slug, class: "control-label" %>
-        <div class="controls">
-          <%= f.text_field :lms_info_slug, class: 'form-control' %>
-          Canvas expects the format: <code>pages/_edit_gui_salsa</code> for the wiki pages (note use of pages, not wiki).
-        </div>
-      </div>
-
-      <div class="form-group">
-        <%= f.label :home_page_redirect, class: "control-label" %>
-        <div class="controls">
-          <%= f.text_field :home_page_redirect, class: 'form-control' %>
-          URL to redirect to instead of showing the home page
-        </div>
-      </div>
-
-      <div class="form-group">
-        <div class="controls">
-          <%= f.check_box :skip_lms_publish, class: '' %>
-          <%= f.label :skip_lms_publish, class: "control-label" %>
-        </div>
-      </div>
     </fieldset>
-    <% end %>
 
     <div class="form-group">
       <%= f.submit class: 'btn btn-default' %>

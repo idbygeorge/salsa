@@ -191,9 +191,9 @@ class AdminController < ApplicationController
   def search page=params[:page], per=25
     search_document_text = ''
 
-    search_document_text = "OR payload LIKE '%#{params[:q]}%'" if params[:search_document_text]
+    search_document_text = "OR payload ~* '.*#{params[:q]}.*'" if params[:search_document_text]
 
-    @documents = Document.where("organization_id IN (#{@organizations.pluck(:id).join(',')}) AND (lms_course_id = '#{params[:q]}' OR name LIKE '%#{params[:q]}%' OR edit_id LIKE '#{params[:q]}%' OR view_id LIKE '#{params[:q]}%' OR template_id LIKE '#{params[:q]}%' #{search_document_text})").page(page).per(per)
+    @documents = Document.where("organization_id IN (#{@organizations.pluck(:id).join(',')}) AND (lms_course_id = '#{params[:q]}' OR name ~* '.*#{params[:q]}.*' OR edit_id ~* '#{params[:q]}.*' OR view_id ~* '#{params[:q]}.*' OR template_id ~* '#{params[:q]}.*' #{search_document_text})").page(page).per(per)
   end
 
 
