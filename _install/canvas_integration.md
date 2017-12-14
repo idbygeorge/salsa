@@ -23,7 +23,7 @@ In Salsa, goto `example.syllabustool.com/admin` login, for each organization thi
 Select organization -> Update Organization
 
     LMS Authentication Source: https://example.instructure.com
-    LMS Authentication: ID
+    LMS Client ID: ID
     LMS Authentication Key: Key
 
 ## Setup Users
@@ -32,7 +32,7 @@ Select organization -> Update Organization
 
 In Canvas, get the user ID for any users you want to allow to login to salsa (numeric ID that canvas uses is what is needed)
 
-Admin -> Select Account -> People -> Search -> click on user record you are adding 
+Admin -> Select Account -> People -> Search -> click on user record you are adding
 
 The user ID we need is in the URL at the end (last verified 2017-11-10)
 
@@ -56,7 +56,7 @@ On the user details (click the user record /admin/users if editing later)
     Role: Organization Administrator
     Organization: Example Org (example.syllabustool.com)
     Cascades: yes
-    
+
 Click `Add Access`
 
 ## Testing
