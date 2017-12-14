@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170629174616) do
+ActiveRecord::Schema.define(version: 20171214004623) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -108,6 +108,7 @@ ActiveRecord::Schema.define(version: 20170629174616) do
     t.datetime "republish_at"
     t.string "republish_batch_token"
     t.boolean "skip_lms_publish"
+    t.boolean "enable_anonymous_actions", default: true
     t.index ["depth"], name: "index_organizations_on_depth"
     t.index ["lft"], name: "index_organizations_on_lft"
     t.index ["lms_id"], name: "index_organizations_on_lms_id"
