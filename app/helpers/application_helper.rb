@@ -157,16 +157,17 @@ module ApplicationHelper
   end
 
   def get_organizations
-    # only show orgs that the logged in use should see
-    unless session[:admin_authorized]
+    if session[:lms_authenticated_user]
+      user = UserAssignment.find_by_username(
+        session[:lms_authenticated_user]['id'].to_s
+      ).user
+    elsif session[:authenticated_user]
+      user = User.find session[:authenticated_user]
+    end
+
+    # only show orgs that the logged in user should see
+    unless session[:admin_authorized] || user.user_assignments.find_by(role: "admin")
       # load all orgs that the user has a cascade == true assignment
-      if session[:lms_authenticated_user]
-        user = UserAssignment.find_by_username(
-          session[:lms_authenticated_user]['id'].to_s
-        ).user
-      elsif session[:authenticated_user]
-        user = User.find session[:authenticated_user]
-      end
 
       cascade_permissions = user.user_assignments.where(cascades: true)
       cascade_organizations = Organization.where(id: cascade_permissions.map(&:organization_id))
