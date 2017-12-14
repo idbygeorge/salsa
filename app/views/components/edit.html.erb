@@ -2,31 +2,3 @@
 <small><%= @organization[:slug] %></small><br>
 Update Component</h1>
 <%= render 'edit' %>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.9/ace.js" integrity="sha384-0NsDNlp/Rj45+c3BACpEiW+X+cOg4JWZ4Hf4wQR0zcFa9AmyDBOaJ0JupRuW5SHC" crossorigin="anonymous"></script>
-<script>
-    if(typeof(ace) != 'undefined') {
-        var textarea = $('#component_layout').hide();
-        $('#editor').text(textarea.val()).removeClass('hidden');
-
-        var editor = ace.edit("editor");
-        editor.setTheme("ace/theme/chrome");
-        editor.session.setMode("ace/mode/html_ruby");
-        editor.setOptions({
-            'useSoftTabs': true,
-            'wrap': 'free',
-            'highlightActiveLine': true,
-            'autoScrollEditorIntoView': true
-        });
-
-        editor.getSession().on("change", function () {
-            textarea.val(editor.getSession().getValue());
-        });
-    }
-</script>
-
-<style type="text/css" media="screen">
-    .ace_editor {
-        min-height: 600px;
-    }
-  </style>
