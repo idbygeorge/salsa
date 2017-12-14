@@ -39,6 +39,16 @@ set :linked_dirs, fetch(:linked_dirs, []).push('log', 'vendor/bundle', 'app/view
 # TODO: see if we needthis in linked_dirs - public/assets/scripts
 
 namespace :puma do
+  Rake::Task[:restart].clear_actions
+
+  desc "Overwritten puma:restart task"
+  task :restart do
+    puts "Overwriting puma:restart to ensure that puma is running. Effectively, we are just starting Puma."
+    puts "A solution to this should be found."
+    invoke 'puma:stop'
+    invoke 'puma:start'
+  end
+
   desc 'Create Directories for Puma Pids and Socket'
   task :make_dirs do
     on roles(:app) do
