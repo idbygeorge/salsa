@@ -3,7 +3,10 @@ class AdminUsersController < AdminController
   before_action :get_organizations, only: [:index, :new, :edit, :show, :edit_assignment]
 
   def index
-    @users = User.all
+    page = 1
+    page = params[:page] if params[:page]
+
+    @users = User.order('name', 'email').all.page(params[:page]).per(15)
     @session = session
   end
 
