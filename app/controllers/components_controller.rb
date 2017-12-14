@@ -9,7 +9,11 @@ class ComponentsController < ApplicationController
   def index
     @components = @organization.components
 
+    available_component_formats
+
     @components = @components.where(category: params[:category]) if params[:category]
+
+    @components = @components.where(format: @available_component_formats)
   end
 
   def new
@@ -36,9 +40,9 @@ class ComponentsController < ApplicationController
   end
 
   def update
-    @component = Component.find_by! slug: params[:component_slug], organization: @organization
-
     available_component_formats
+
+    @component = Component.find_by! slug: params[:component_slug], organization: @organization, format: @available_component_formats
 
     if available_component_formats.include? component_params[:format]
       if @component.valid?
