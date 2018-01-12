@@ -21,7 +21,13 @@ group :development do
   gem 'binding_of_caller'
   gem 'listen'
 end
-
+group :test do
+  gem 'launchy'
+  gem 'factory_bot'
+  gem 'cucumber-rails', :require => false
+  # database_cleaner is not required, but highly recommended
+  gem 'database_cleaner'
+end
 #postgresql for db
 gem 'pg', '0.20'
 
