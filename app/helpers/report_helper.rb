@@ -82,7 +82,7 @@ module ReportHelper
         a.value as account_id,
         acn.value as account,
         p.value as parent_id,
-        a.document_id as document_id,
+        d.id as document_id,
         n.value as name,
         cc.value as course_code,
         et.value as enrollment_term_id,
