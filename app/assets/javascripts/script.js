@@ -908,7 +908,7 @@ function liteOff(x){
                 args.text = undefined;
                 args.element = undefined;
             }
-            debugger
+
             var list = args.source.nextUntil("dt");
             if(list.length == 0) {
                 return;
