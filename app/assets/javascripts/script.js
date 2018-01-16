@@ -175,7 +175,7 @@ function liteOff(x){
           parentList.data({ element: "li", text: $(this).text(), meta: identifier }).find(".ui-state-active").click();
 
           if(context.unique) {
-              $('[data-meta="'+identifier+'"]', parentList).remove();
+              //$('[data-meta="'+identifier+'"]', parentList).remove();
               $('[data-meta="'+identifier+'"]', '#topBar').remove();
 
               if($('#topBar li a').length == 0) {
@@ -845,6 +845,7 @@ function liteOff(x){
             } else if(args.action === "-") {
                 if(args.min === undefined || visibleElements.length > args.min) {
                     args.target.find(args.element+":visible").last().remove();
+                    $("#controlPanel").find(".ui-state-active").trigger("click")
                 }
             } else {
                 args.target.toggleClass('hide');
@@ -907,9 +908,8 @@ function liteOff(x){
                 args.text = undefined;
                 args.element = undefined;
             }
-
+            debugger
             var list = args.source.nextUntil("dt");
-
             if(list.length == 0) {
                 return;
             }
@@ -919,10 +919,13 @@ function liteOff(x){
             topBar.prepend($("<h2/>").text(args.source.text()));
 
             list.each(function(){
-                var newItem = $("<li><a href='#'/></li>");
-                $("a", newItem).text($(this).text()).attr('data-meta', $(this).data('meta'));
+                if ($("#container").contents().find( `[data-meta='${$(this).data('meta')}']` ).length == 0) {
 
-                newItem.appendTo($(".inner", topBar));
+                    var newItem = $("<li><a href='#'/></li>");
+                    $("a", newItem).text($(this).text()).attr('data-meta', $(this).data('meta'));
+
+                    newItem.appendTo($(".inner", topBar));
+              }
             });
 
             $("#topBar").remove();
