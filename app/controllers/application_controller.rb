@@ -64,7 +64,7 @@ class ApplicationController < ActionController::Base
         redirect_to oauth2_logout_path
       end
     elsif @lms_client_id
-      @lms_client = Canvas::API.new(:host => @oauth_endpoint, :client_id => @lms_client_id, :secret => @lms_secret, :replace_tokens => true)
+      @lms_client = Canvas::API.new(:host => @oauth_endpoint, :client_id => @lms_client_id, :secret => @lms_secret)
 
       if params[:lms_course_id]
         if params[:document_token]
