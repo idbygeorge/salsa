@@ -140,6 +140,7 @@ there are also documents created but you still need to publish them by going to 
     end
 
 ### Running the queue (que gem)
+   if no documents are published at the time of generating the report the que gem will add errors to the que_jobs table and no html files will be in the archive
 
     sudo docker-compose exec salsa sh
     cd /home/apps/salsa && RAILS_ENV=development que ./config/environment.rb
