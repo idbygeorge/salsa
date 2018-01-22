@@ -96,7 +96,10 @@ function liteOff(x){
                 }
             });
         });
-
+        // dropdown
+        $(".dropbtn").on('click', function() {
+            $(this).next(".dropdown-content").toggleClass("show")}
+        );
         // left sidebar section selector
         $("#tabs a").on("click", function(){
             var listItem = $(this).closest("li");
@@ -900,6 +903,9 @@ function liteOff(x){
             } else if (args.action === '-') {
                 args.target.children(":visible").last().hide();
             }
+        },
+        radiodropdown: function(args) {
+          alert(`this is ${args}`)
         },
         taxonomy: function(args) {
             if(args.text && args.element) {
