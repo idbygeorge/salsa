@@ -843,8 +843,10 @@ function liteOff(x){
                     element = newElement;
                 }
             } else if(args.action === "-") {
-                if(args.min === undefined || visibleElements.length > args.min) {
-                    args.target.find(args.element+":visible").last().remove();
+                if(args.min === undefined || visibleElements.length > args.min){
+                    var target = args.target.find(args.element+":visible").last()
+                    $("#controlPanel").contents().find( `[data-meta='${target.data('meta')}']`).prevAll("dt").first().addClass("ui-state-default").removeClass("ui-state-disabled")
+                    target.remove();
                     $("#controlPanel").find(".ui-state-active").trigger("click")
                 }
             } else {
@@ -908,7 +910,6 @@ function liteOff(x){
                 args.text = undefined;
                 args.element = undefined;
             }
-
             var list = args.source.nextUntil("dt");
             if(list.length == 0) {
                 return;
@@ -919,13 +920,19 @@ function liteOff(x){
             topBar.prepend($("<h2/>").text(args.source.text()));
 
             list.each(function(){
-                if ($("#container").contents().find( `[data-meta='${$(this).data('meta')}']` ).length == 0) {
+                if ( args.unique && $("#container").contents().find( `[data-meta='${$(this).data('meta')}']` ).length == 0) {
 
                     var newItem = $("<li><a href='#'/></li>");
                     $("a", newItem).text($(this).text()).attr('data-meta', $(this).data('meta'));
 
                     newItem.appendTo($(".inner", topBar));
+              } else if (!args.unique) {
+                var newItem = $("<li><a href='#'/></li>");
+                $("a", newItem).text($(this).text()).attr('data-meta', $(this).data('meta'));
+
+                newItem.appendTo($(".inner", topBar));
               }
+
             });
 
             $("#topBar").remove();
