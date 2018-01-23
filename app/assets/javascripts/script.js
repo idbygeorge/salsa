@@ -96,7 +96,10 @@ function liteOff(x){
                 }
             });
         });
-
+        // dropdown
+        $(".dropbtn").on('click', function() {
+            $(this).next(".dropdown-content").toggleClass("show")}
+        );
         // left sidebar section selector
         $("#tabs a").on("click", function(){
             var listItem = $(this).closest("li");
@@ -899,6 +902,65 @@ function liteOff(x){
                 args.target.append($("#templates #" + args.template).clone());
             } else if (args.action === '-') {
                 args.target.children(":visible").last().hide();
+            }
+        },
+        radiodropdown: function(args) {
+
+            var option = $('input[name=choose]:checked').val()
+            args.source.parent().contents().find("dt").each(function(){
+              $(this).hide();
+              if ($(this).is(`#${option}`) | $(this).is(".dropbtn")){
+                $(this).show();
+              }
+            });
+
+            if (!args.source.is('.radio, .dropbtn')){
+              if(args.text && args.element) {
+                  var newArgs = $.extend({}, args);
+                  newArgs.action = "+";
+                  controlMethods.toggleContent(newArgs);
+
+                  args.text = undefined;
+                  args.element = undefined;
+              }
+              var list = args.source.nextUntil("dt");
+
+              if(list.length == 0) {
+                  return;
+              }
+
+              var topBar = $("<div id='topBar'><ul class='inner'/></div>");
+              topBar.data('context', args);
+              topBar.prepend($("<h2/>").text(args.source.text()));
+
+              list.each(function(){
+                  if ( args.unique && $("#container").contents().find( `[data-meta='${$(this).data('meta')}']` ).length == 0) {
+
+                      var newItem = $("<li><a href='#'/></li>");
+                      $("a", newItem).text($(this).text()).attr('data-meta', $(this).data('meta'));
+
+                      newItem.appendTo($(".inner", topBar));
+                } else if (!args.unique) {
+                  var newItem = $("<li><a href='#'/></li>");
+                  $("a", newItem).text($(this).text()).attr('data-meta', $(this).data('meta'));
+
+                  newItem.appendTo($(".inner", topBar));
+                }
+
+              });
+              $("#topBar").remove();
+              $("#container").before($(topBar)).css({ top: (parseInt(topBar.css("top"), 10) + parseInt(topBar.outerHeight(), 10) + 5) + "px" });
+
+              if(args.uiClass) {
+                  topBar.addClass(args.uiClass);
+              }
+
+              if(args.unique) {
+                  topBar.data('unique', args.unique);
+              }
+
+              args.source.siblings(".ui-state-active").removeClass("ui-state-active");
+              args.source.addClass("ui-state-active");
             }
         },
         taxonomy: function(args) {
