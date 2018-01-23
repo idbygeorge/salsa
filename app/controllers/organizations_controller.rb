@@ -45,7 +45,7 @@ class OrganizationsController < AdminController
     @organization.default_account_filter = '{"account_filter":""}' unless @organization.default_account_filter
     @organization.default_account_filter = '{"account_filter":""}' if @organization.default_account_filter == ''
 
-    @organization.default_account_filter = @organization.default_account_filter.to_json if @organization.default_account_filter['account_filter']
+    @organization.default_account_filter = @organization.default_account_filter.to_json if @organization.default_account_filter.class == Hash
   end
 
   # commit actions
