@@ -848,7 +848,7 @@ function liteOff(x){
             } else if(args.action === "-") {
                 if(args.min === undefined || visibleElements.length > args.min){
                     var target = args.target.find(args.element+":visible").last()
-                    $("#controlPanel").contents().find( `[data-meta='${target.data('meta')}']`).prevAll("dt").first().addClass("ui-state-default").removeClass("ui-state-disabled")
+                    $("#controlPanel").contents().find( "[data-meta='"+target.data('meta')+"']").prevAll("dt").first().addClass("ui-state-default").removeClass("ui-state-disabled")
                     target.remove();
                     $("#controlPanel").find(".ui-state-active").trigger("click")
                 }
@@ -909,7 +909,7 @@ function liteOff(x){
             var option = $('input[name=choose]:checked').val()
             args.source.parent().contents().find("dt").each(function(){
               $(this).hide();
-              if ($(this).is(`#${option}`) | $(this).is(".dropbtn")){
+              if ($(this).is("#"+option) || $(this).is(".dropbtn")){
                 $(this).show();
               }
             });
@@ -934,7 +934,7 @@ function liteOff(x){
               topBar.prepend($("<h2/>").text(args.source.text()));
 
               list.each(function(){
-                  if ( args.unique && $("#container").contents().find( `[data-meta='${$(this).data('meta')}']` ).length == 0) {
+                  if ( args.unique && $("#container").contents().find( "[data-meta='"+$(this).data('meta')+"']" ).length == 0) {
 
                       var newItem = $("<li><a href='#'/></li>");
                       $("a", newItem).text($(this).text()).attr('data-meta', $(this).data('meta'));
@@ -982,7 +982,7 @@ function liteOff(x){
             topBar.prepend($("<h2/>").text(args.source.text()));
 
             list.each(function(){
-                if ( args.unique && $("#container").contents().find( `[data-meta='${$(this).data('meta')}']` ).length == 0) {
+                if ( args.unique && $("#container").contents().find( "[data-meta='"+$(this).data('meta')+"']" ).length == 0) {
 
                     var newItem = $("<li><a href='#'/></li>");
                     $("a", newItem).text($(this).text()).attr('data-meta', $(this).data('meta'));
