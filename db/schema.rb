@@ -105,9 +105,9 @@ ActiveRecord::Schema.define(version: 20171214004623) do
     t.datetime "dashboard_end_at"
     t.string "home_page_redirect"
     t.json "default_account_filter"
+    t.boolean "skip_lms_publish"
     t.datetime "republish_at"
     t.string "republish_batch_token"
-    t.boolean "skip_lms_publish"
     t.boolean "enable_anonymous_actions", default: true
     t.index ["depth"], name: "index_organizations_on_depth"
     t.index ["lft"], name: "index_organizations_on_lft"
