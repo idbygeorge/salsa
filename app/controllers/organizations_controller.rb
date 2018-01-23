@@ -41,6 +41,11 @@ class OrganizationsController < AdminController
 
   def edit
     get_documents params[:slug]
+
+    @organization.default_account_filter = '{"account_filter":""}' unless @organization.default_account_filter
+    @organization.default_account_filter = '{"account_filter":""}' if @organization.default_account_filter == ''
+
+    @organization.default_account_filter = @organization.default_account_filter.to_json if @organization.default_account_filter['account_filter']
   end
 
   # commit actions
@@ -52,6 +57,11 @@ class OrganizationsController < AdminController
 
   def update
     @organization = find_org_by_path params[:slug]
+
+    if params['organization']['default_account_filter'] != ''
+      params['organization']['default_account_filter'] = JSON.parse(params['organization']['default_account_filter'])
+    end
+
     @organization.update organization_params
 
     redirect_to organization_path(slug: full_org_path(@organization))
@@ -92,7 +102,7 @@ class OrganizationsController < AdminController
 
   def organization_params
     if has_role 'admin'
-        params.require(:organization).permit(:name, :slug, :parent_id, :lms_authentication_source, :lms_authentication_id, :lms_authentication_key, :lms_info_slug, :home_page_redirect, :skip_lms_publish, :enable_anonymous_actions)
+        params.require(:organization).permit(:name, :slug, :parent_id, :lms_authentication_source, :lms_authentication_id, :lms_authentication_key, :lms_info_slug, :home_page_redirect, :skip_lms_publish, :enable_anonymous_actions, default_account_filter: [:account_filter])
     elsif has_role 'organization_admin'
         params.require(:organization).permit(:name,  :lms_authentication_source, :lms_authentication_id, :lms_authentication_key, :lms_info_slug, :home_page_redirect, :skip_lms_publish, :enable_anonymous_actions)
     end

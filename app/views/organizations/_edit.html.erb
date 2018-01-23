@@ -31,6 +31,18 @@
 
           </div>
         </fieldset>
+
+
+        <fieldset class="default_account_filter">
+          <legend>Report Defaults</legend>
+
+          <div class="form-group">
+            <%= f.label :default_account_filter, class: "control-label" %>
+            <div class="controls">
+              <%= f.text_field :default_account_filter, class: 'form-control' %>
+            </div>
+          </div>
+        </fieldset>
     <% else %>
         <div class="form-group">
           <%= f.label :name, class: "control-label" %>
@@ -41,7 +53,6 @@
     <% end %>
 
     <% if has_role 'organization_admin' %>
-
         <fieldset class="lms_config collapse">
           <legend>LMS Information</legend>
 
@@ -96,9 +107,9 @@
 
         </fieldset>
 
-<div class="form-group">
-        <button data-toggle="collapse" data-target=".lms_config" type="button" class="lms_config collapse in">LMS Configuration</button>
-</div>
+        <div class="form-group">
+            <button data-toggle="collapse" data-target=".lms_config" type="button" class="lms_config collapse in">LMS Configuration</button>
+        </div>
     <% end %>
 
     <fieldset>
