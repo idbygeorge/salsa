@@ -1,3 +1,4 @@
+require "#{Rails.root}/lib/canvas_api"
 class Oauth2Controller < ApplicationController
   def login
     session[:canvas_access_token] = ''
