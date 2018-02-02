@@ -29,7 +29,7 @@ class Oauth2Controller < ApplicationController
     code = params[:code]
 
     if code
-      token = CanvasApi.retrieve_access_token(code, @redirect_url, @client_id, @secret)
+      token = CanvasApi.retrieve_access_token(code, @redirect_url, @lms_client.client_id, @lms_client.as_json["secret"], @lms_client.as_json["host"])
       session[:canvas_access_token] = token
 
       flash[:notice] = 'You are connected to Canvas.'
