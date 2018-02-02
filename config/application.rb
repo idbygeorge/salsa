@@ -1,4 +1,5 @@
 require_relative 'boot'
+require_relative '../lib/canvas_api'
 
 require 'rails/all'
 
