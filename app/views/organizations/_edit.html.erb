@@ -127,10 +127,7 @@
         <div class="form-group">
           <div class="controls">
             <%= f.check_box :enable_anonymous_actions, class: '' %>
-            <%= f.label :enable_anonymous_actions, class: "control-label" %>
-          </div>
-          <div class="help-block">
-              Enables the edit and template link even when a user is not logged  (if disabled, template link will work even for documents the user doesn't have permissions for).
+            <%= f.label :enable_anonymous_actions, 'Enable Editing for Unauthorized Users', class: "control-label" %>
           </div>
         </div>
     </fieldset>
