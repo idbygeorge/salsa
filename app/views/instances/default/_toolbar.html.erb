@@ -140,12 +140,14 @@
 </div>
 
 <div id="mySalsa">
-    <p style="padding: 10px;">The <strong>Edit Link</strong> is a unique, randomly-generated URL for your SALSA:</p>
-    <p id="custom-url" style="text-decoration: underline;"></p>
+    <% if @document.organization[:enable_anonymous_actions] | @lms_user %>
+      <p style="padding: 10px;">The <strong>Edit Link</strong> is a unique, randomly-generated URL for your SALSA:</p>
+      <p id="custom-url" style="text-decoration: underline;"></p>
+    <% end %>
+    <p style="padding: 10px;">The <strong>Template Link</strong> generates a <em>new</em> SALSA pre-populated with the information from your SALSA:</p>
+    <p id="custom-url"><%= link_to @template_url, @template_url, :target => '_blank', :id => "view_url" %></p>
     <div style="color: #666; font-style: italic;">
         <p>If your browser’s bookmarks are visible, drag and drop the “My SALSA” link to create a bookmark.</p>
         <p>Or, create a bookmark with the following keyboard shortcuts: Ctrl+D (Windows and Chrome OS) or ⌘-D (Mac).</p>
     </div>
-    <p style="padding: 10px;">The <strong>Template Link</strong> generates a <em>new</em> SALSA pre-populated with the information from your SALSA:</p>
-    <p id="custom-url"><%= link_to @template_url, @template_url, :target => '_blank', :id => "view_url" %></p>
 </div>
