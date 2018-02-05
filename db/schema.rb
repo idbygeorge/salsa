@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171214004623) do
+ActiveRecord::Schema.define(version: 20180205223400) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -75,6 +75,17 @@ ActiveRecord::Schema.define(version: 20171214004623) do
     t.index ["template_id"], name: "index_documents_on_template_id", unique: true
     t.index ["term_id"], name: "index_documents_on_term_id"
     t.index ["view_id"], name: "index_documents_on_view_id", unique: true
+  end
+
+  create_table "failed_jobs", id: false, force: :cascade do |t|
+    t.integer "priority", limit: 2
+    t.datetime "run_at"
+    t.bigint "job_id"
+    t.text "job_class"
+    t.json "args"
+    t.integer "error_count"
+    t.text "last_error"
+    t.text "queue"
   end
 
   create_table "organization_meta", id: :serial, force: :cascade do |t|
