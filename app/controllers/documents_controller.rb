@@ -197,7 +197,7 @@ class DocumentsController < ApplicationController
   end
 
   def update
-    if session[:lms_authenticated_user] | @document.organization[:enable_anonymous_actions] | has_role("designer")
+    if session[:lms_authenticated_user] || @organization[:enable_anonymous_actions] || has_role("designer")
       authorized = true
     else
       authorized = false
@@ -208,8 +208,7 @@ class DocumentsController < ApplicationController
     republishing = true
 
     verify_org
-
-    if check_lock @organization[:slug], params[:batch_token] && authorized
+    if check_lock(@organization[:slug], params[:batch_token]) && authorized 
       republishing = false;
       if canvas_course_id && !@organization.skip_lms_publish
         # publishing to canvas should not save in the Document model, the canvas version has been modified
@@ -237,9 +236,9 @@ class DocumentsController < ApplicationController
     end
 
     respond_to do |format|
-      if republishing
+      if republishing && authorized
        msg = { :status => "error", :message => "Documents for this organization are currently being republished. Please copy your changes and try again later.", :version => @document.versions.count }
-     elsif !saved & authorized
+     elsif !saved && authorized
         msg = { :status => "error", :message => "This is not a current version of this document! Please copy your changes and refresh the page to get the current version.", :version => @document.versions.count }
       elsif !authorized
         msg = { :status => "error", :message => "You do not have permisson to save this document"}
