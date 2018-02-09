@@ -1,1 +1,6 @@
+<% if flash[:error] %>
+  <div class="alert alert-danger">
+    <%= flash[:error] %>
+  </div>
+<% end %>
 <%= salsa_partial 'home/layout' %>

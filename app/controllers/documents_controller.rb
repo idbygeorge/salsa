@@ -13,19 +13,23 @@ class DocumentsController < ApplicationController
   end
 
   def new
-    @document = Document.new(name: 'Unnamed')
+    if session[:lms_authenticated_user] || @organization[:enable_anonymous_actions] || has_role("designer")
+      @document = Document.new(name: 'Unnamed')
 
-    # if an lms course ID is specified, capture it with the document
-    @document[:lms_course_id] = params[:lms_course_id]
+      # if an lms course ID is specified, capture it with the document
+      @document[:lms_course_id] = params[:lms_course_id]
 
-    verify_org
+      verify_org
 
-    @document.save!
+      @document.save!
 
-    if params[:sub_organization_slugs]
-      redirect_to edit_sub_org_document_path(id: @document.edit_id, sub_organization_slugs: params[:sub_organization_slugs])
+      if params[:sub_organization_slugs]
+        redirect_to edit_sub_org_document_path(id: @document.edit_id, sub_organization_slugs: params[:sub_organization_slugs])
+      else
+        redirect_to edit_document_path(id: @document.edit_id)
+      end
     else
-      redirect_to edit_document_path(id: @document.edit_id)
+      redirect_to root_path, :flash => { :error => "You are not authorized to create a document" }
     end
   end
 
@@ -206,31 +210,32 @@ class DocumentsController < ApplicationController
     document_version = params[:document_version]
     saved = false
     republishing = true
+    if authorized
+      verify_org
+      if check_lock @organization[:slug], params[:batch_token]
+        republishing = false;
+        if canvas_course_id && !@organization.skip_lms_publish
+          # publishing to canvas should not save in the Document model, the canvas version has been modified
+          saved = update_course_document(canvas_course_id, request.raw_post, @organization[:lms_info_slug]) if params[:canvas] && canvas_course_id
+        else
+          if(params[:canvas_relink_course_id])
+            #find old document in this org with this id, set to null
+            old_document = Document.find_by lms_course_id: params[:canvas_relink_course_id], organization: @organization
+            old_document.update(lms_published_at: nil, lms_course_id: nil)
 
-    verify_org
-    if check_lock(@organization[:slug], params[:batch_token]) && authorized 
-      republishing = false;
-      if canvas_course_id && !@organization.skip_lms_publish
-        # publishing to canvas should not save in the Document model, the canvas version has been modified
-        saved = update_course_document(canvas_course_id, request.raw_post, @organization[:lms_info_slug]) if params[:canvas] && canvas_course_id
-      else
-        if(params[:canvas_relink_course_id])
-          #find old document in this org with this id, set to null
-          old_document = Document.find_by lms_course_id: params[:canvas_relink_course_id], organization: @organization
-          old_document.update(lms_published_at: nil, lms_course_id: nil)
+            #set this document's canvas_course_id
+            @document.lms_course_id = params[:canvas_relink_course_id]
+          end
 
-          #set this document's canvas_course_id
-          @document.lms_course_id = params[:canvas_relink_course_id]
-        end
+          if document_version && @document.versions.count == document_version.to_i
+            @document.payload = request.raw_post
 
-        if document_version && @document.versions.count == document_version.to_i
-          @document.payload = request.raw_post
+            @document.payload = nil if @document.payload == ''
+            @document.lms_published_at = DateTime.now
 
-          @document.payload = nil if @document.payload == ''
-          @document.lms_published_at = DateTime.now
-
-          @document.save!
-          saved = true;
+            @document.save!
+            saved = true;
+          end
         end
       end
     end
