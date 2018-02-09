@@ -238,7 +238,7 @@ class DocumentsController < ApplicationController
     respond_to do |format|
       if republishing && authorized
        msg = { :status => "error", :message => "Documents for this organization are currently being republished. Please copy your changes and try again later.", :version => @document.versions.count }
-     elsif !saved && authorized
+      elsif !saved && authorized
         msg = { :status => "error", :message => "This is not a current version of this document! Please copy your changes and refresh the page to get the current version.", :version => @document.versions.count }
       elsif !authorized
         msg = { :status => "error", :message => "You do not have permisson to save this document"}
