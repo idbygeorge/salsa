@@ -25,6 +25,7 @@ module ReportHelper
     # get the report data (slow process... only should run one at a time)
     puts 'Getting Document Meta'
     @report_data = self.get_document_meta org_slug, account_filter, params
+    bre
     puts 'Retrieved Document Meta'
 
     #store it

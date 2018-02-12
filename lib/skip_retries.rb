@@ -1,7 +1,7 @@
 module SkipRetries
   def run(*args)
     super
-  rescue
+  rescue => error
     sql = <<-SQL
       WITH failed AS (
         DELETE
@@ -15,9 +15,15 @@ module SkipRetries
       INSERT INTO failed_jobs
         SELECT * FROM failed;
     SQL
-
+    update_sql = <<-SQL
+      UPDATE failed_jobs
+        SET last_error = $1::text
+        WHERE job_id = $2::bigint
+    SQL
+    
+    @attrs[:last_error] = "#{error}"
     Que.execute sql, @attrs.values_at(:queue, :priority, :run_at, :job_id)
-
-    raise # Reraises caught error.
+    Que.execute update_sql, @attrs.values_at(:last_error, :job_id)
+    print error
   end
 end
