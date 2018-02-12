@@ -20,10 +20,10 @@ module SkipRetries
         SET last_error = $1::text
         WHERE job_id = $2::bigint
     SQL
-    
+
     @attrs[:last_error] = "#{error}"
     Que.execute sql, @attrs.values_at(:queue, :priority, :run_at, :job_id)
     Que.execute update_sql, @attrs.values_at(:last_error, :job_id)
-    print error
+    puts error
   end
 end
