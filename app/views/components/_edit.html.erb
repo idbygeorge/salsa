@@ -25,7 +25,7 @@
   <% else %>
     <div class="form-group">
       <%= f.label :slug, class: "control-label" %>
-      <%= f.select :slug, ['salsa', 'section_nav', 'control_panel', 'footer', 'dynamic_content_1', 'dynamic_content_2', 'dynamic_content_3'], { include_blank: '--'}, { class: 'form-control' } %>
+      <%= f.select :slug, [@component.slug, 'salsa', 'section_nav', 'control_panel', 'footer', 'dynamic_content_1', 'dynamic_content_2', 'dynamic_content_3'], { include_blank: '--'}, { class: 'form-control' } %>
     </div>
   <% end %>
 
