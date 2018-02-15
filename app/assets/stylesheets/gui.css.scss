@@ -50,9 +50,9 @@ $hover: lighten($base_color, $lighten_percent);
 
     .masthead a, footer a, #preview_control a, .masthead a:visited, footer a:visited, #preview_control a:visited, #preview_control .previewLabel { display: block; padding: 5px 20px; color: #fff; text-decoration: none; }
     .masthead a:hover, footer a:hover, #preview_control a:hover, .masthead a:focus, footer a:focus, #preview_control a:focus { background: $hover; color: #eee; }
-    
+
     a.home { float: left; }
-    
+
     .masthead { top: 0; }
     footer { bottom: 0; }
     .masthead, footer { color: #fff; position: fixed; left: 0; right: 0; z-index: 999; }
@@ -74,7 +74,7 @@ $hover: lighten($base_color, $lighten_percent);
             #tabs li a:hover, #tabs li.selected a { background: #fff; border-color: #aaa; }
             #tabs li a:hover.tool, #tabs li.selected a.tool { border-color: #556677;}
             #tabs li i {float: right;}
-           
+
             #tabs li.button {margin-bottom: 3px;}
             #tabs li.noicon {padding-right: 15px;}
             #tabs li.save {margin-bottom: 20px;}
@@ -94,7 +94,7 @@ div#container {
     #controlPanel { float: right; width: 148px; margin-top: 46px; max-height: 80%; overflow: auto; font-size: 12px; }
         #controlPanel header { }
             #controlPanel header input, #controlPanel header a { width: 100%; background: transparent; border: 0 none; color: #fff; font-weight: bold; text-decoration: none; }
-            
+
         #controlPanel .ui-state-default header { opacity: .4; }
         #controlPanel .ui-state-active header { opacity: 1; }
         #controlPanel .ui-state-default fieldset { display: none; }
@@ -138,8 +138,8 @@ div#container {
 
     #preview_control { display: none; position:fixed; width:100%; top:0;}
     #preview section { border: solid 1px #fff;  padding-left: .25in; /*min-height: 11in;*/ }
-    
-#topBar { z-index: 999; background: #fff; bottom: auto; }
+
+#topBar { z-index: 100; background: #fff; bottom: auto; }
     #topBar h2 { text-align: center; margin: 5px 18px 0px; font-size: 10pt; color: #fff; background: $base_color; opacity: .6; }
 
     #topBar ul { list-style: none; margin: 0; padding: 4px 15px 8px; overflow: hidden; }
