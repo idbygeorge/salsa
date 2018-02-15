@@ -121,6 +121,7 @@ div#container {
         #page { padding: 15px; }
             .content { min-height: 1.4em; }
                 .editing input, .editing textarea { width: 100% !important; text-align: left !important; }
+                li.editing input { width:90% !important; }
                 .right.editing input, #grade_scale .editing input { width: 30px !important; text-align: right !important;}
                 #grade_scale.inactive td, #grade_scale.inactive th {
                     color: #999;
