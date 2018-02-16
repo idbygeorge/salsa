@@ -140,7 +140,7 @@
 </div>
 
 <div id="mySalsa">
-    <% if @document.organization[:enable_anonymous_actions] || session[:lms_authenticated_user] || has_role('designer') %>
+    <% if @can_use_edit_token %>
       <p style="padding: 10px;">The <strong>Edit Link</strong> is a unique, randomly-generated URL for your SALSA:</p>
       <p id="custom-url" style="text-decoration: underline;"></p>
     <% end %>
