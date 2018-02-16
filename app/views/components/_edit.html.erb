@@ -4,8 +4,8 @@
   <% post_url = component_path(@organization[:slug], '') %>
 <% end %>
 
-<%= form_for(@component, url: post_url, html: { class: "form-horizontal col-md-9" } ) do |f| %>
-<fieldset>
+<%= form_for(@component, url: post_url, html: { class: "form-horizontal" } ) do |f| %>
+<fieldset class="col-md-9">
   <legend>Info</legend>
 
   <div class="form-group">
@@ -25,7 +25,7 @@
   <% else %>
     <div class="form-group">
       <%= f.label :slug, class: "control-label" %>
-      <%= f.select :slug, ['salsa', 'section_nav', 'control_panel', 'footer', 'dynamic_content_1', 'dynamic_content_2', 'dynamic_content_3'], { include_blank: '--'}, { class: 'form-control' } %>
+      <%= f.select :slug, [@component.slug, 'salsa', 'section_nav', 'control_panel', 'footer', 'dynamic_content_1', 'dynamic_content_2', 'dynamic_content_3'], { include_blank: '--'}, { class: 'form-control' } %>
     </div>
   <% end %>
 
@@ -46,35 +46,35 @@
   <% end %>
 </fieldset>
 
-<div class="form-group">
+<div class="col-md-12">
+  <div class="form-group">
     <%= f.label :layout, class: "control-label" %>
-    <div class="info pull-right">Version: <%= @component.versions.count %></div>
+    <div class="info pull-right" id="componentVersion">Version: <%= @component.versions.count %></div>
     <div class="controls">
       <div id="editor" class="hidden"></div>
       <%= f.text_area :layout, class: 'form-control', rows: 12 %>
     </div>
+  </div>
 </div>
 
-<% if @available_component_formats.length > 1 %>
+<div class="col-md-9">
+  <% if @available_component_formats.length > 1 %>
     <div class="form-group">
       <%= f.label :format, class: "control-label" %>
         <div class="controls">
           <%= f.select :format, @available_component_formats, { include_blank: '--'}, { class: 'form-control' } %>
       </div>
     </div>
-<% else %>
+  <% else %>
     <%= f.hidden_field :format, :value => @available_component_formats[0] %>
-<% end %>
+  <% end %>
 
-
-
-<div class="form-group">
-  <%= f.submit class: 'btn btn-default' %>
+  <div class="form-group">
+      <%= f.submit class: 'btn btn-default' %>
+  </div>
 </div>
 
 <% end %>
-
-
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.2.9/ace.js" integrity="sha384-0NsDNlp/Rj45+c3BACpEiW+X+cOg4JWZ4Hf4wQR0zcFa9AmyDBOaJ0JupRuW5SHC" crossorigin="anonymous"></script>
 <script>
@@ -94,6 +94,41 @@
 
         editor.getSession().on("change", function () {
             textarea.val(editor.getSession().getValue());
+        });
+
+        editor.commands.addCommand({
+            name: 'saveFile',
+            bindKey: {
+                win: 'Ctrl-S',
+                mac: 'Command-S',
+                sender: 'editor|cli'
+            },
+            exec: function(env, args, request) {
+                var component = $('.main form');
+
+                $.ajax({
+                    url: component.attr('action'),
+                    data: component.serialize(),
+                    type: 'post',
+                    dataType: 'text',
+                    success: function() {
+                        $('<div class="alert alert-success fixed ">').text('Saved').prependTo(component).delay(2000).fadeOut(2000, function(){
+                            $(this).remove();
+                        });
+
+                        var versionElement = $('#componentVersion');
+
+                        if(versionElement.text().search(/\+/) < 0) {
+                            versionElement.text(versionElement.text() + "+");
+                        }
+                    },
+                    error: function() {
+                        $('<div class="alert alert-danger fixed">').text('Error saving...').prependTo(component).delay(2000).fadeOut(2000, function(){
+                            $(this).remove();
+                        });
+                    }
+                })
+            }
         });
     }
 </script>
