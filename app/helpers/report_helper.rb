@@ -14,7 +14,7 @@ module ReportHelper
       @report = ReportArchive.create({organization_id: org_id, report_filters: params})
     end
     @report.generating_at = Time.now
-    @report.save!(touch:false)
+    @report.save!
     ReportGenerator.enqueue(org_id, account_filter, params, @report.id)
   end
 

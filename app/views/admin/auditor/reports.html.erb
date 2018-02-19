@@ -35,9 +35,6 @@
           Report queued <%= time_ago_in_words report.generating_at%> ago
         </li>
         <%end%>
-        <%if report.updated_at != report.created_at%>
-          <li>Last generated  <%=  time_ago_in_words report.updated_at%> ago</li>
-        <%end%>
         <% if report.report_filters %>
         <li>
             Filters: <%=report.report_filters['account_filter']%>
