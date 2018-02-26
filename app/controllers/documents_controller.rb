@@ -270,7 +270,6 @@ class DocumentsController < ApplicationController
   end
 
   def authorized_to_edit_course lms_course_id
-    lms_connection_information
     courses = get_canvas_courses
     if courses.pluck("id").reject { |a| a != lms_course_id.to_i }.length < 1
       true
@@ -280,9 +279,11 @@ class DocumentsController < ApplicationController
   end
 
   def get_canvas_courses
+    lms_connection_information
     canvas_access_token = session[:canvas_access_token]["access_token"]
     canvas = Canvas::API.new(:host => @oauth_endpoint, :token => canvas_access_token)
-    courses = canvas.get("/api/v1/users/self/courses")
+    courses = canvas.get("/api/v1/courses?state[]=unpublished, available, completed, deleted")
+
   end
 
   def is_lms_authenticated_user?

@@ -270,7 +270,7 @@ DEPENDENCIES
   binding_of_caller
   bootstrap-sass
   byebug
-  canvas-api (= 0.7)
+  canvas-api
   capistrano
   capistrano-bundler
   capistrano-rails
@@ -304,4 +304,4 @@ DEPENDENCIES
   zurb-foundation
 
 BUNDLED WITH
-   1.15.3
+   1.16.1
