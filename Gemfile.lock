@@ -270,7 +270,7 @@ DEPENDENCIES
   binding_of_caller
   bootstrap-sass
   byebug
-  canvas-api
+  canvas-api (= 0.7)
   capistrano
   capistrano-bundler
   capistrano-rails
