@@ -24,6 +24,5 @@ module SkipRetries
     @attrs[:last_error] = "#{error}"
     Que.execute sql, @attrs.values_at(:queue, :priority, :run_at, :job_id)
     Que.execute update_sql, @attrs.values_at(:last_error, :job_id)
-    puts error
   end
 end
