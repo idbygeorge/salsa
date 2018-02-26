@@ -87,7 +87,6 @@ class DocumentsController < ApplicationController
   end
 
   def course
-
     # if canvas flag is set in URL, don't try relinking again
     unless params[:canvas]
       # if clicked the create new document link on relink page, clear out the session relink value
@@ -205,8 +204,8 @@ class DocumentsController < ApplicationController
     document_version = params[:document_version]
     saved = false
     republishing = true
+    verify_org
     if can_use_edit_token
-      verify_org
       if check_lock @organization[:slug], params[:batch_token]
         republishing = false;
         if canvas_course_id && !@organization.skip_lms_publish
@@ -236,8 +235,8 @@ class DocumentsController < ApplicationController
     end
 
     respond_to do |format|
-      if !can_use_edit_token
-        msg = { :status => "error", :message => "You do not have permisson to save this document"}
+      if can_use_edit_token != true
+        msg = { :status => "error", :message => "You do not have permisson to save this document" + " #{session}la"}
       elsif republishing
        msg = { :status => "error", :message => "Documents for this organization are currently being republished. Please copy your changes and try again later.", :version => @document.versions.count }
       elsif !saved
@@ -254,7 +253,20 @@ class DocumentsController < ApplicationController
 
   protected
   def can_use_edit_token
-    if session[:lms_authenticated_user] || @organization[:enable_anonymous_actions] || has_role("designer")
+    lms_connection_information
+    if session[:lms_authenticated_user] && session[:canvas_access_token] != nil && session[:canvas_access_token] != ""
+      canvas = Canvas::API.new(:host => @oauth_endpoint, :token => session[:canvas_access_token]["access_token"])
+      courses = canvas.get("/api/v1/users/self/courses")
+      if @document == nil
+        true
+      elsif @document.lms_course_id == nil
+        true
+      elsif courses.pluck("id").reject { |a| a != @document.lms_course_id.to_i }.length < 1
+        true
+      else
+        false
+      end
+    elsif @organization[:enable_anonymous_actions] || has_role("designer")
       true
     else
       false
