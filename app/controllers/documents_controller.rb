@@ -236,7 +236,7 @@ class DocumentsController < ApplicationController
 
     respond_to do |format|
       if can_use_edit_token != true
-        msg = { :status => "error", :message => "You do not have permisson to save this document" + " #{session}la"}
+        msg = { :status => "error", :message => "You do not have permisson to save this document"}
       elsif republishing
        msg = { :status => "error", :message => "Documents for this organization are currently being republished. Please copy your changes and try again later.", :version => @document.versions.count }
       elsif !saved
