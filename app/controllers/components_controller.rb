@@ -18,21 +18,21 @@ class ComponentsController < ApplicationController
 
   def new
     @component = Component.new
-    @valid_slugs = valid_slugs
+    @valid_slugs = valid_slugs(@component.slug)
 
     available_component_formats
   end
 
   def create
     @component = Component.new component_params
-    @valid_slugs = valid_slugs
+    @valid_slugs = valid_slugs(@component.slug)
     @component[:organization_id] = @organization[:id]
 
     available_component_formats
 
     if available_component_formats.include? @component.format
       if @component.valid?
-        if valid_slug
+        if valid_slug?(@component.slug)
           @component.save
           return redirect_to components_path
         else
@@ -50,10 +50,10 @@ class ComponentsController < ApplicationController
     available_component_formats
 
     @component = Component.find_by! slug: params[:component_slug], organization: @organization, format: @available_component_formats
-    @valid_slugs = valid_slugs
+    @valid_slugs = valid_slugs(@component.slug)
 
     if available_component_formats.include? component_params[:format]
-      if @component.valid? && valid_slug == true
+      if @component.valid? && valid_slug?(@component.slug) == true
         @component.update component_params
         return redirect_to components_path
       end
@@ -70,24 +70,24 @@ class ComponentsController < ApplicationController
   def edit
     available_component_formats
     @component = Component.find_by! slug: params[:component_slug], organization: @organization, format: @available_component_formats
-    @valid_slugs = valid_slugs
+    @valid_slugs = valid_slugs(@component.slug)
   end
 
   private
 
-  def valid_slug
-    if has_role('admin') || @valid_slugs.include?(component_params[:slug])
+  def valid_slug? component_slug
+    if has_role('admin') || valid_slugs(component_slug).include?(component_params[:slug])
       true
     else
       false
     end
   end
 
-  def valid_slugs
+  def valid_slugs component_slug
     if action_name == "new"
       ['salsa', 'section_nav', 'control_panel', 'footer', 'dynamic_content_1', 'dynamic_content_2', 'dynamic_content_3']
     else
-      [@component.slug, 'salsa', 'section_nav', 'control_panel', 'footer', 'dynamic_content_1', 'dynamic_content_2', 'dynamic_content_3']
+      [component_slug, 'salsa', 'section_nav', 'control_panel', 'footer', 'dynamic_content_1', 'dynamic_content_2', 'dynamic_content_3']
     end
   end
 
