@@ -84,10 +84,10 @@ class ComponentsController < ApplicationController
   end
 
   def valid_slugs
-    if action_name == "edit" || action_name == "update"
-      [@component.slug, 'salsa', 'section_nav', 'control_panel', 'footer', 'dynamic_content_1', 'dynamic_content_2', 'dynamic_content_3']
-    else
+    if action_name == "new"
       ['salsa', 'section_nav', 'control_panel', 'footer', 'dynamic_content_1', 'dynamic_content_2', 'dynamic_content_3']
+    else
+      [@component.slug, 'salsa', 'section_nav', 'control_panel', 'footer', 'dynamic_content_1', 'dynamic_content_2', 'dynamic_content_3']
     end
   end
 
