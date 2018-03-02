@@ -78,7 +78,7 @@ ActiveRecord::Schema.define(version: 20180205223400) do
   end
 
   create_table "failed_jobs", id: false, force: :cascade do |t|
-    t.integer "priority", limit: 2
+    t.integer "priority"
     t.datetime "run_at"
     t.bigint "job_id"
     t.text "job_class"
@@ -116,9 +116,9 @@ ActiveRecord::Schema.define(version: 20180205223400) do
     t.datetime "dashboard_end_at"
     t.string "home_page_redirect"
     t.json "default_account_filter"
-    t.boolean "skip_lms_publish"
     t.datetime "republish_at"
     t.string "republish_batch_token"
+    t.boolean "skip_lms_publish"
     t.boolean "enable_anonymous_actions", default: true
     t.index ["depth"], name: "index_organizations_on_depth"
     t.index ["lft"], name: "index_organizations_on_lft"
