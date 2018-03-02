@@ -282,9 +282,8 @@ class DocumentsController < ApplicationController
   def get_canvas_courses
     lms_connection_information
     canvas_access_token = session[:canvas_access_token]["access_token"]
-    canvas = Canvas::API.new(:host => @oauth_endpoint, :token => canvas_access_token)
-    courses = canvas.get("/api/v1/courses?state[]=unpublished, available, completed, deleted")
-
+    canvas = Canvas::API.new(:host => session[:oauth_endpoint], :token => canvas_access_token)
+    courses = canvas.get("/api/v1/courses?per_page=50")
   end
 
   def is_lms_authenticated_user?
