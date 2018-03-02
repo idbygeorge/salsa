@@ -266,6 +266,8 @@ class DocumentsController < ApplicationController
       elsif authorized_to_edit_course(lms_course_id)
         true
       end
+    elsif !is_lms_authenticated_user? && !has_canvas_access_token && lms_course_id
+      false
     end
   end
 
