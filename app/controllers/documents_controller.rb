@@ -271,7 +271,7 @@ class DocumentsController < ApplicationController
 
   def authorized_to_edit_course lms_course_id
     courses = get_canvas_courses
-    if courses.pluck("id").reject { |a| a != lms_course_id.to_i }.length < 1
+    if courses.pluck("id").include?(lms_course_id)
       true
     else
       false
