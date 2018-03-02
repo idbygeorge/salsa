@@ -13,7 +13,7 @@ class DocumentsController < ApplicationController
   end
 
   def new
-    if can_use_edit_token
+    if can_use_edit_token(params[:lms_course_id])
       @document = Document.new(name: 'Unnamed')
 
       # if an lms course ID is specified, capture it with the document
@@ -79,7 +79,7 @@ class DocumentsController < ApplicationController
       end
 
       verify_org
-      @can_use_edit_token = can_use_edit_token
+      @can_use_edit_token = can_use_edit_token(@document.lms_course_id)
       render :layout => 'edit', :template => '/documents/content'
     else
       render :layout => 'dialog', :template => '/documents/republishing'
@@ -87,7 +87,6 @@ class DocumentsController < ApplicationController
   end
 
   def course
-
     # if canvas flag is set in URL, don't try relinking again
     unless params[:canvas]
       # if clicked the create new document link on relink page, clear out the session relink value
@@ -205,8 +204,8 @@ class DocumentsController < ApplicationController
     document_version = params[:document_version]
     saved = false
     republishing = true
-    if can_use_edit_token
-      verify_org
+    verify_org
+    if can_use_edit_token(@document.lms_course_id)
       if check_lock @organization[:slug], params[:batch_token]
         republishing = false;
         if canvas_course_id && !@organization.skip_lms_publish
@@ -236,7 +235,7 @@ class DocumentsController < ApplicationController
     end
 
     respond_to do |format|
-      if !can_use_edit_token
+      if can_use_edit_token(@document.lms_course_id) != true
         msg = { :status => "error", :message => "You do not have permisson to save this document"}
       elsif republishing
        msg = { :status => "error", :message => "Documents for this organization are currently being republished. Please copy your changes and try again later.", :version => @document.versions.count }
@@ -253,8 +252,51 @@ class DocumentsController < ApplicationController
   end
 
   protected
-  def can_use_edit_token
-    if session[:lms_authenticated_user] || @organization[:enable_anonymous_actions] || has_role("designer")
+  def can_use_edit_token(lms_course_id = nil)
+    if @organization[:enable_anonymous_actions]
+      true
+    elsif has_role('designer')
+      true
+    elsif is_lms_authenticated_user? && has_canvas_access_token? && lms_course_id
+      if @document == nil
+        true
+      elsif lms_course_id == nil
+        true
+      elsif authorized_to_edit_course(lms_course_id)
+        true
+      end
+    else
+      false
+    end
+  end
+
+  def authorized_to_edit_course lms_course_id
+    courses = get_canvas_courses
+    if courses.pluck("id").include?(lms_course_id)
+      true
+    else
+      false
+    end
+  end
+
+  def get_canvas_courses
+    lms_connection_information
+    canvas_access_token = session[:canvas_access_token]["access_token"]
+    canvas = Canvas::API.new(:host => @oauth_endpoint, :token => canvas_access_token)
+    courses = canvas.get("/api/v1/courses?state[]=unpublished, available, completed, deleted")
+
+  end
+
+  def is_lms_authenticated_user?
+    if session[:lms_authenticated_user]
+      true
+    else
+      false
+    end
+  end
+
+  def has_canvas_access_token?
+    if session[:canvas_access_token] != nil && session[:canvas_access_token] != ""
       true
     else
       false
