@@ -253,7 +253,6 @@ class DocumentsController < ApplicationController
 
   protected
   def can_use_edit_token(lms_course_id = nil)
-    false
     if @organization[:enable_anonymous_actions]
       true
     elsif has_role('designer')
@@ -266,7 +265,7 @@ class DocumentsController < ApplicationController
       elsif authorized_to_edit_course(lms_course_id)
         true
       end
-    elsif !is_lms_authenticated_user? && !has_canvas_access_token && lms_course_id
+    else
       false
     end
   end
