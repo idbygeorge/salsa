@@ -32,11 +32,11 @@ class ComponentsController < ApplicationController
 
     if available_component_formats.include? @component.format
       if @component.valid?
-        if valid_slug?(@component.slug)
+        if valid_slug?(params[:slug])
           @component.save
           return redirect_to components_path
         else
-          flash[:error] = "invalid_slug"
+          flash[:error] = "Invalid Slug"
           return render action: :new
         end
       end
