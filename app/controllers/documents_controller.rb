@@ -272,7 +272,7 @@ class DocumentsController < ApplicationController
 
   def authorized_to_edit_course lms_course_id
     courses = get_canvas_courses
-    if courses.pluck("id").include?(lms_course_id)
+    if courses.pluck("id").include?(lms_course_id.to_i)
       true
     else
       false
