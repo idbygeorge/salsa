@@ -4,17 +4,6 @@
       Reports for <%= @org.name %>
     </p>
 
-      <div class="pull-right">
-        <div class="">
-          <a class="btn btn-success download-btn" href="/admin/download">Download Default Report documents <i class=" download-icon fa fa-download" aria-hidden="true"></i></a>
-        </div>
-        <%if @default_report %>
-          <div class="">
-            <a href="/admin/archive">Generate semester snapshot</a><br>
-            <em class="small">Takes 1-5 minutes</em>
-          </div>
-        <% end %>
-      </div>
     <div class="clearfix"></div>
       <% @reports.each do |report| %>
       <hr>
@@ -35,7 +24,9 @@
           Report queued <%= time_ago_in_words report.generating_at%> ago
         </li>
         <%end%>
-        <li>Last generated  <%=  time_ago_in_words report.updated_at%> ago</li>
+        <%if report.updated_at != report.created_at%>
+          <li>Last generated  <%=  time_ago_in_words report.updated_at%> ago</li>
+        <%end%>
         <% if report.report_filters %>
         <li>
             Filters: <%=report.report_filters['account_filter']%>
