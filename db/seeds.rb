@@ -9,7 +9,7 @@
 orgA = Organization.create(
   name: "localhost",
   slug: "localhost",
-  default_account_filter: "FL17",
+  default_account_filter: '{"account_filter":"SU17"}',
   lms_authentication_source: "",
   lms_authentication_key: "asdas",
   lms_authentication_id: "lkjlk"
@@ -18,7 +18,7 @@ orgA = Organization.create(
 orgB = Organization.create(
   name: "lvh.me",
   slug: "lvh.me",
-  default_account_filter: "SU17",
+  default_account_filter: '{"account_filter":"SU17"}' ,
   lms_authentication_source: "",
   lms_authentication_key: "asdasd",
   lms_authentication_id: "lkjlkl"

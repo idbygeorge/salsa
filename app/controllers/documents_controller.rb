@@ -202,6 +202,7 @@ class DocumentsController < ApplicationController
   def update
     canvas_course_id = params[:canvas_course_id]
     document_version = params[:document_version]
+    meta_data_from_doc = params[:meta_data_from_doc].tr('[]','').split(',')
     saved = false
     republishing = true
     verify_org
@@ -220,7 +221,25 @@ class DocumentsController < ApplicationController
             #set this document's canvas_course_id
             @document.lms_course_id = params[:canvas_relink_course_id]
           end
-
+          if meta_data_from_doc && @document.lms_course_id && @organization.lms_authentication_id
+            meta_data_from_doc.each do |mdfd|
+              a = mdfd.split("=")
+              if dm = DocumentMeta.find_by(key: a[0])
+                dm.value = a[1]
+                dm.save
+              else
+                #DocumentMeta.create( :key => a[1], :value => a[2], :document_id => @document.id, :root_organization_id => @document.organization_id, :lms_course_id => @document.lms_course_id, :document_id => @document.id)
+                DocumentMeta.create(
+                :key => a[0].to_s,
+                :value => a[1].to_s,
+                :document_id => @document.id,
+                :root_organization_id => @document.organization_id,
+                :lms_course_id => @document.lms_course_id.to_i,
+                :lms_organization_id => @organization.lms_authentication_id.to_i
+              )
+              end
+            end
+          end
           if document_version && @document.versions.count == document_version.to_i
             @document.payload = request.raw_post
 
@@ -242,7 +261,7 @@ class DocumentsController < ApplicationController
       elsif !saved
         msg = { :status => "error", :message => "This is not a current version of this document! Please copy your changes and refresh the page to get the current version.", :version => @document.versions.count }
       else
-        msg = { :status => "ok", :message => "Success!", :version => @document.versions.count }
+        msg = { :status => "ok", :message => "Success!", :version => @document.versions.count, :meta => params[:meta_data_from_doc], :org => @organization.lms_authentication_id, :course => @document.lms_course_id}
       end
       format.json  {
         view_url = document_url(@document.view_id, :only_path => false)
