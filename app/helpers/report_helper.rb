@@ -58,6 +58,7 @@ module ReportHelper
         if @document.lms_course_id
           lms_identifier = "#{@document.lms_course_id}".gsub(/[^A-Za-z0-9]+/, '_')
         end
+        zipfile.get_output_stream('document-meta.json'){ |os| os.write report_data.where(['key LIKE %salsa_%'])  }
         zipfile.get_output_stream("#{lms_identifier}_#{@document.id}.html") { |os| os.write rendered_doc }
       end
     end

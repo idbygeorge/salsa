@@ -228,15 +228,14 @@ class DocumentsController < ApplicationController
                 dm.value = a[1]
                 dm.save
               else
-                #DocumentMeta.create( :key => a[1], :value => a[2], :document_id => @document.id, :root_organization_id => @document.organization_id, :lms_course_id => @document.lms_course_id, :document_id => @document.id)
                 DocumentMeta.create(
-                :key => a[0].to_s,
-                :value => a[1].to_s,
-                :document_id => @document.id,
-                :root_organization_id => @document.organization_id,
-                :lms_course_id => @document.lms_course_id.to_i,
-                :lms_organization_id => @organization.lms_authentication_id.to_i
-              )
+                  :key => a[0].to_s,
+                  :value => a[1].to_s,
+                  :document_id => @document.id,
+                  :root_organization_id => @document.organization_id,
+                  :lms_course_id => @document.lms_course_id,
+                  :lms_organization_id => @organization.lms_authentication_id
+                )
               end
             end
           end
@@ -261,7 +260,7 @@ class DocumentsController < ApplicationController
       elsif !saved
         msg = { :status => "error", :message => "This is not a current version of this document! Please copy your changes and refresh the page to get the current version.", :version => @document.versions.count }
       else
-        msg = { :status => "ok", :message => "Success!", :version => @document.versions.count, :meta => params[:meta_data_from_doc], :org => @organization.lms_authentication_id, :course => @document.lms_course_id}
+        msg = { :status => "ok", :message => "Success!", :version => @document.versions.count}
       end
       format.json  {
         view_url = document_url(@document.view_id, :only_path => false)
