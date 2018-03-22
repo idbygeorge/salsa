@@ -202,7 +202,7 @@ class DocumentsController < ApplicationController
   def update
     canvas_course_id = params[:canvas_course_id]
     document_version = params[:document_version]
-    meta_data_from_doc = params[:meta_data_from_doc].tr('[]','').split(',')
+    meta_data_from_doc = params[:meta_data_from_doc]
     saved = false
     republishing = true
     verify_org
@@ -221,16 +221,19 @@ class DocumentsController < ApplicationController
             #set this document's canvas_course_id
             @document.lms_course_id = params[:canvas_relink_course_id]
           end
-          if meta_data_from_doc && @document.lms_course_id && @organization.lms_authentication_id
-            meta_data_from_doc.each do |mdfd|
-              a = mdfd.split("=")
-              if dm = DocumentMeta.find_by(key: a[0])
-                dm.value = a[1]
+          if meta_data_from_doc && @document.lms_course_id && @organization.lms_authentication_id && @organization.track_meta_info_from_document
+            count = Hash.new 0
+            meta_data_from_doc = meta_data_from_doc.tr('[]','').split(',')
+            meta_data_from_doc.each_slice(2) do |k,v|
+              count[k.to_s] +=1
+              k = "#{k.to_s}_#{count[k]}"
+              if dm = DocumentMeta.find_by(key: k, document_id: @document.id)
+                dm.value = v
                 dm.save
-              else
+              elsif !DocumentMeta.exists?(key:k, document_id: @document.id)
                 DocumentMeta.create(
-                  :key => a[0].to_s,
-                  :value => a[1].to_s,
+                  :key => k,
+                  :value => v.to_s,
                   :document_id => @document.id,
                   :root_organization_id => @document.organization_id,
                   :lms_course_id => @document.lms_course_id,

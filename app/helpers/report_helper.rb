@@ -46,19 +46,25 @@ module ReportHelper
     end
     Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
       zipfile.get_output_stream('content.css'){ |os| os.write Rails.application.assets['application.css'].to_s }
-      docs.each do |doc|
+      if @org.track_meta_info_from_document
+        zipfile.get_output_stream('document-meta.json'){ |os| os.write "#{DocumentMeta.where("key LIKE :prefix", prefix: "salsa_%").to_json}"  }
+        #The bellow comment is the code for if we want all the document metas to render as individual files
+        #DocumentMeta.where("key LIKE :prefix", prefix: "salsa_%").each do |dm|
+        #  zipfile.get_output_stream("document-meta-#{dm.key}.json"){ |os| os.write "#{dm.to_json}"  }
+        #end
+      end
+          docs.each do |doc|
         @document = doc
         # Two arguments:
         # - The name of the file as it will appear in the archive
         # - The original file, including the path to find it
         #rendered_doc = render_to_string :layout => "archive", :template => "documents/content"
-        rendered_doc = ApplicationController.new.render_to_string(partial: 'documents/content', locals: {doc: @document})
+        rendered_doc = ApplicationController.new.render_to_string(layout: "archive", partial: 'documents/content', locals: {doc: @document})
 
         lms_identifier = @document.name.gsub(/[^A-Za-z0-9]+/, '_')
         if @document.lms_course_id
           lms_identifier = "#{@document.lms_course_id}".gsub(/[^A-Za-z0-9]+/, '_')
         end
-        zipfile.get_output_stream('document-meta.json'){ |os| os.write report_data.where(['key LIKE %salsa_%'])  }
         zipfile.get_output_stream("#{lms_identifier}_#{@document.id}.html") { |os| os.write rendered_doc }
       end
     end
