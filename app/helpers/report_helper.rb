@@ -14,7 +14,7 @@ module ReportHelper
       @report = ReportArchive.create({organization_id: org_id, report_filters: params})
     end
     @report.generating_at = Time.now
-    @report.save!
+    @report.save!(touch:false)
     ReportGenerator.enqueue(org_id, account_filter, params, @report.id)
   end
 
@@ -37,8 +37,8 @@ module ReportHelper
 
   def self.archive (org_slug, report_id, report_data)
     report = ReportArchive.find_by id: report_id
-    @org = Organization.find_by slug: org_slug
-    docs = Document.where(organization_id: @org.id, id: report_data.map(&:document_id)).all
+    @organization = Organization.find_by slug: org_slug
+    docs = Document.where(organization_id: @organization.id, id: report_data.map(&:document_id)).all
 
     zipfile_name = "/tmp/#{org_slug}_#{report_id}.zip"
     if File.exist?(zipfile_name)

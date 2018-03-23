@@ -77,6 +77,17 @@ ActiveRecord::Schema.define(version: 20180309210710) do
     t.index ["view_id"], name: "index_documents_on_view_id", unique: true
   end
 
+  create_table "failed_jobs", id: false, force: :cascade do |t|
+    t.integer "priority"
+    t.datetime "run_at"
+    t.bigint "job_id"
+    t.text "job_class"
+    t.json "args"
+    t.integer "error_count"
+    t.text "last_error"
+    t.text "queue"
+  end
+
   create_table "organization_meta", id: :serial, force: :cascade do |t|
     t.integer "organization_id"
     t.string "key"
