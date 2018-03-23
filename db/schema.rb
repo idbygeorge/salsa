@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180205223400) do
+ActiveRecord::Schema.define(version: 20180309210710) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -146,6 +146,7 @@ ActiveRecord::Schema.define(version: 20180205223400) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.json "report_filters"
+    t.boolean "is_archived", default: false
     t.index ["organization_id"], name: "index_report_archives_on_organization_id"
   end
 
