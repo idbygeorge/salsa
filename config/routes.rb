@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 
   get '/:alias/:document', to: redirect('/SALSA/%{document}'), constraints: { alias: /(syllabuses|salsas?)/ }
   get '/:alias/:document/:action', to: redirect('/SALSA/%{document}/%{action}'), constraints: { alias: /(syllabuses|salsas?)/, action: /(edit|template)?/ }
+
   get '/admin', to: 'admin#landing', as: 'admin'
 
   namespace :admin do
