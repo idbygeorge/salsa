@@ -46,14 +46,14 @@ module ReportHelper
     end
     Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
       zipfile.get_output_stream('content.css'){ |os| os.write Rails.application.assets['application.css'].to_s }
-        if @org.track_meta_info_from_document
-          zipfile.get_output_stream('document-meta.json'){ |os| os.write "#{DocumentMeta.where("key LIKE :prefix", prefix: "salsa_%").to_json}"  }
-          #The bellow comment is the code for if we want all the document metas to render as individual files
-          #DocumentMeta.where("key LIKE :prefix", prefix: "salsa_%").each do |dm|
-          #  zipfile.get_output_stream("document-meta-#{dm.key}.json"){ |os| os.write "#{dm.to_json}"  }
-          #end
-        end
-        docs.each do |doc|
+      if @org.track_meta_info_from_document
+        zipfile.get_output_stream('document-meta.json'){ |os| os.write "#{DocumentMeta.where("key LIKE :prefix", prefix: "salsa_%").to_json}"  }
+        #The bellow comment is the code for if we want all the document metas to render as individual files
+        #DocumentMeta.where("key LIKE :prefix", prefix: "salsa_%").each do |dm|
+        #  zipfile.get_output_stream("document-meta-#{dm.key}.json"){ |os| os.write "#{dm.to_json}"  }
+        #end
+      end
+      docs.each do |doc|
         @document = doc
         # Two arguments:
         # - The name of the file as it will appear in the archive
