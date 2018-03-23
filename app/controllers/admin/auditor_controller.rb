@@ -79,7 +79,7 @@ class Admin::AuditorController < ApplicationController
 
   def reports
     @org = get_org
-    @reports = ReportArchive.where(organization_id: @org.id).order(updated_at: :desc ).all
+    @reports = ReportArchive.where(organization_id: @org.id, is_archived: false).order(updated_at: :desc ).all
     @default_report = nil
     @reports.each do |report|
       if report.payload
