@@ -77,9 +77,27 @@ class Admin::AuditorController < ApplicationController
     render 'report_status', layout: '../admin/auditor/report_layout'
   end
 
+  def archive_report
+    report = ReportArchive.where(id: params[:report]).first
+    report.is_archived = true
+    report.save
+    return redirect_to '/admin/reports'
+  end
+
+  def restore_report
+    report = ReportArchive.where(id: params[:report]).first
+    report.is_archived = false
+    report.save
+    return redirect_to '/admin/reports?show_archived=true'
+  end
+
   def reports
     @org = get_org
-    @reports = ReportArchive.where(organization_id: @org.id, is_archived: false).order(updated_at: :desc ).all
+    if params[:show_archived]
+      @reports = ReportArchive.where(organization_id: @org.id, is_archived: true).order(updated_at: :desc ).all
+    else
+      @reports = ReportArchive.where(organization_id: @org.id, is_archived: false).order(updated_at: :desc ).all
+    end
     @default_report = nil
     @reports.each do |report|
       if report.payload

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171214004623) do
+ActiveRecord::Schema.define(version: 20180309210710) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -105,10 +105,11 @@ ActiveRecord::Schema.define(version: 20171214004623) do
     t.datetime "dashboard_end_at"
     t.string "home_page_redirect"
     t.json "default_account_filter"
-    t.boolean "skip_lms_publish"
     t.datetime "republish_at"
     t.string "republish_batch_token"
+    t.boolean "skip_lms_publish"
     t.boolean "enable_anonymous_actions", default: true
+    t.boolean "track_meta_info_from_document"
     t.index ["depth"], name: "index_organizations_on_depth"
     t.index ["lft"], name: "index_organizations_on_lft"
     t.index ["lms_id"], name: "index_organizations_on_lms_id"
@@ -135,6 +136,7 @@ ActiveRecord::Schema.define(version: 20171214004623) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.json "report_filters"
+    t.boolean "is_archived", default: false
     t.index ["organization_id"], name: "index_report_archives_on_organization_id"
   end
 
