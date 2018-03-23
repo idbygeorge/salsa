@@ -59,7 +59,7 @@ module ReportHelper
         # - The name of the file as it will appear in the archive
         # - The original file, including the path to find it
         #rendered_doc = render_to_string :layout => "archive", :template => "documents/content"
-        rendered_doc = ApplicationController.new.render_to_string(layout: "archive", partial: 'documents/content', locals: {doc: @document})
+        rendered_doc = ApplicationController.new.render_to_string(partial: 'documents/content', locals: {doc: @document})
 
         lms_identifier = @document.name.gsub(/[^A-Za-z0-9]+/, '_')
         if @document.lms_course_id
