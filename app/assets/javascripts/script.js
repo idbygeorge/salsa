@@ -1032,7 +1032,7 @@ function liteOff(x){
             }
 
             updateGradeScale($('#grade_scale'), $('#grade_components .total td:last').text());
-        },
+        }
     };
 
     var focusEditor = function(editor, context) {

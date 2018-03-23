@@ -263,7 +263,7 @@ class DocumentsController < ApplicationController
       elsif !saved
         msg = { :status => "error", :message => "This is not a current version of this document! Please copy your changes and refresh the page to get the current version.", :version => @document.versions.count }
       else
-        msg = { :status => "ok", :message => "Success!", :version => @document.versions.count}
+        msg = { :status => "ok", :message => "Success!", :version => @document.versions.count }
       end
       format.json  {
         view_url = document_url(@document.view_id, :only_path => false)
