@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171214004623) do
+ActiveRecord::Schema.define(version: 20180205223400) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -77,6 +77,17 @@ ActiveRecord::Schema.define(version: 20171214004623) do
     t.index ["view_id"], name: "index_documents_on_view_id", unique: true
   end
 
+  create_table "failed_jobs", id: false, force: :cascade do |t|
+    t.integer "priority"
+    t.datetime "run_at"
+    t.bigint "job_id"
+    t.text "job_class"
+    t.json "args"
+    t.integer "error_count"
+    t.text "last_error"
+    t.text "queue"
+  end
+
   create_table "organization_meta", id: :serial, force: :cascade do |t|
     t.integer "organization_id"
     t.string "key"
@@ -105,9 +116,9 @@ ActiveRecord::Schema.define(version: 20171214004623) do
     t.datetime "dashboard_end_at"
     t.string "home_page_redirect"
     t.json "default_account_filter"
-    t.boolean "skip_lms_publish"
     t.datetime "republish_at"
     t.string "republish_batch_token"
+    t.boolean "skip_lms_publish"
     t.boolean "enable_anonymous_actions", default: true
     t.index ["depth"], name: "index_organizations_on_depth"
     t.index ["lft"], name: "index_organizations_on_lft"
