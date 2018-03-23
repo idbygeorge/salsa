@@ -14,6 +14,15 @@ class DefaultController < ApplicationController
     end
   end
 
+  def status_server
+    if Organization.count
+      @status = 200
+    else
+      @status = 500
+    end
+    render '/default/status_server'
+  end
+
   def maintenance
   	response.headers.delete('X-Frame-Options')
   end
