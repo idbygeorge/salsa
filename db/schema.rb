@@ -109,7 +109,6 @@ ActiveRecord::Schema.define(version: 20180309210710) do
     t.string "republish_batch_token"
     t.boolean "skip_lms_publish"
     t.boolean "enable_anonymous_actions", default: true
-    t.boolean "track_meta_info_from_document"
     t.index ["depth"], name: "index_organizations_on_depth"
     t.index ["lft"], name: "index_organizations_on_lft"
     t.index ["lms_id"], name: "index_organizations_on_lms_id"

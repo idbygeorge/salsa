@@ -250,7 +250,7 @@ class DocumentsController < ApplicationController
       }
     end
   end
-  
+
   protected
   def can_use_edit_token(lms_course_id = nil)
     if @organization[:enable_anonymous_actions]
