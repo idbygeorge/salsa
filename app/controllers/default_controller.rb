@@ -20,7 +20,10 @@ class DefaultController < ApplicationController
     else
       @status = 500
     end
-    render '/default/status_server'
+    render 'default/status_server',:status => @status
+    headers['Last-Modified'] = Time.now.httpdate
+    response.set_header('hostname', ENV["HOSTNAME"])
+
   end
 
   def maintenance
