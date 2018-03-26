@@ -14,7 +14,6 @@
     <div class="clearfix"></div>
       <% @reports.each do |report| %>
       <hr>
-      <% if File.exist?("/tmp/#{@org.slug}_#{report.id}.zip")%>
       <div class="pull-right">
         <div class="">
           <% if params[:show_archived] %>
@@ -22,10 +21,11 @@
           <% else %>
             <%= link_to "Archive Report #{report.id}", admin_auditor_archive_report_path(report: report.id), class: "btn btn-danger"%>
           <% end %>
-          <%= link_to "Download Report #{report.id}", admin_auditor_download_path(report: report.id), class: "btn btn-success"%>
+          <% if File.exist?("/tmp/#{@org.slug}_#{report.id}.zip")%>
+            <%= link_to "Download Report #{report.id}", admin_auditor_download_path(report: report.id), class: "btn btn-success"%>
+          <% end %>
         </div>
       </div>
-      <% end %>
       <p>
         Report #<%=report.id%>
         <a class="" href="/admin/report?report=<%=report.id%>">Load report</a>
