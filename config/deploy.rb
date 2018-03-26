@@ -1,5 +1,5 @@
 set :repo_url,        'https://github.com/idbygeorge/salsa.git'
-set :branch, ENV.fetch("CAPISTRANO_BRANCH", "stage")
+set :branch, ENV.fetch("CAPISTRANO_BRANCH", "master")
 set :application,     'salsa'
 set :user,            'ubuntu'
 set :puma_threads,    [4, 16]
