@@ -46,7 +46,7 @@ module ReportHelper
     end
     Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
       zipfile.get_output_stream('content.css'){ |os| os.write Rails.application.assets['application.css'].to_s }
-      if @org.track_meta_info_from_document
+      if @organization.track_meta_info_from_document
         zipfile.get_output_stream('document-meta.json'){ |os| os.write "#{DocumentMeta.where("key LIKE :prefix AND document_id IN (:document_id)", prefix: "salsa_%", document_id: docs.map(&:id)).to_json}"  }
         #The bellow comment is the code for if we want all the document metas to render as individual files
         #DocumentMeta.where("key LIKE :prefix", prefix: "salsa_%").each do |dm|
