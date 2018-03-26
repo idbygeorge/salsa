@@ -38,7 +38,7 @@ module ReportHelper
   def self.archive (org_slug, report_id, report_data)
     report = ReportArchive.find_by id: report_id
     @organization = Organization.find_by slug: org_slug
-    docs = Document.where(organization_id: @organization.id, id: report_data.map(&:document_id)).all
+    docs = Document.where(organization_id: @organization.id, id: report_data.map(&:document_id)).where('updated_at != created_at').all
 
     zipfile_name = "/tmp/#{org_slug}_#{report_id}.zip"
     if File.exist?(zipfile_name)
@@ -47,7 +47,7 @@ module ReportHelper
     Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
       zipfile.get_output_stream('content.css'){ |os| os.write Rails.application.assets['application.css'].to_s }
       if @org.track_meta_info_from_document
-        zipfile.get_output_stream('document-meta.json'){ |os| os.write "#{DocumentMeta.where("key LIKE :prefix", prefix: "salsa_%").to_json}"  }
+        zipfile.get_output_stream('document-meta.json'){ |os| os.write "#{DocumentMeta.where("key LIKE :prefix AND document_id IN (:document_id)", prefix: "salsa_%", document_id: docs.map(&:id)).to_json}"  }
         #The bellow comment is the code for if we want all the document metas to render as individual files
         #DocumentMeta.where("key LIKE :prefix", prefix: "salsa_%").each do |dm|
         #  zipfile.get_output_stream("document-meta-#{dm.key}.json"){ |os| os.write "#{dm.to_json}"  }
