@@ -13,7 +13,7 @@ class ComponentsController < ApplicationController
 
     @components = @components.where(category: params[:category]) if params[:category]
 
-    @components = @components.where(format: @available_component_formats)
+    @components = @components.where(format: @available_component_formats).order(:name, :slug)
   end
 
   def new
