@@ -46,13 +46,7 @@ module ReportHelper
     end
     Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
       zipfile.get_output_stream('content.css'){ |os| os.write Rails.application.assets['application.css'].to_s }
-      if @organization.track_meta_info_from_document
-        zipfile.get_output_stream('document-meta.json'){ |os| os.write "#{DocumentMeta.where("key LIKE :prefix AND document_id IN (:document_id)", prefix: "salsa_%", document_id: docs.map(&:id)).to_json}"  }
-        #The bellow comment is the code for if we want all the document metas to render as individual files
-        #DocumentMeta.where("key LIKE :prefix", prefix: "salsa_%").each do |dm|
-        #  zipfile.get_output_stream("document-meta-#{dm.key}.json"){ |os| os.write "#{dm.to_json}"  }
-        #end
-      end
+      document_metas = {}
       docs.each do |doc|
         @document = doc
         # Two arguments:
@@ -65,8 +59,14 @@ module ReportHelper
         if @document.lms_course_id
           lms_identifier = "#{@document.lms_course_id}".gsub(/[^A-Za-z0-9]+/, '_')
         end
+        if @organization.track_meta_info_from_document
+          dm = "#{DocumentMeta.where("key LIKE :prefix AND document_id IN (:document_id)", prefix: "salsa_%", document_id: doc.id).select(:key, :value).to_json(:except => :id)}"
+          document_metas["lms_course-#{@document.lms_course_id}"] = JSON.parse(dm)
+          zipfile.get_output_stream("#{lms_identifier}_#{@document.id}_document_meta.json"){ |os| os.write JSON.pretty_generate(JSON.parse(dm))   }
+        end
         zipfile.get_output_stream("#{lms_identifier}_#{@document.id}.html") { |os| os.write rendered_doc }
       end
+      zipfile.get_output_stream("document_meta.json"){ |os| os.write document_metas.to_json  }
     end
   end
 
