@@ -66,7 +66,9 @@ module ReportHelper
         end
         zipfile.get_output_stream("#{lms_identifier}_#{@document.id}.html") { |os| os.write rendered_doc }
       end
-      zipfile.get_output_stream("document_meta.json"){ |os| os.write document_metas.to_json  }
+      if @organization.track_meta_info_from_document
+        zipfile.get_output_stream("document_meta.json"){ |os| os.write document_metas.to_json  }
+      end
     end
   end
 
