@@ -6,7 +6,7 @@
   <% end %>
 
   <%= form_for(@organization, url: form_action, :html => { :class => "form-horizontal col-md-9" } ) do |f| %>
-    <% if session[:admin_authorized] %>
+    <% if has_role 'admin' %>
         <fieldset>
           <legend>Organization</legend>
 
