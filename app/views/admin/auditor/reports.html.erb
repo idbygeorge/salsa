@@ -3,28 +3,29 @@
     <p class="pull-left">
       Reports for <%= @org.name %>
     </p>
+    <div class="pull-right">
+      <% if params[:show_archived] %>
+        <%= link_to "Normal Reports", admin_auditor_reports_path, class: "btn btn-info"%>
+      <% else %>
+        <%= link_to "Archived Reports", admin_auditor_reports_path(show_archived: true), class: "btn btn-info"%>
+      <% end %>
+    </div>
 
-      <div class="pull-right">
-        <div class="">
-          <a class="btn btn-success download-btn" href="/admin/download">Download Default Report documents <i class=" download-icon fa fa-download" aria-hidden="true"></i></a>
-        </div>
-        <%if @default_report %>
-          <div class="">
-            <a href="/admin/archive">Generate semester snapshot</a><br>
-            <em class="small">Takes 1-5 minutes</em>
-          </div>
-        <% end %>
-      </div>
     <div class="clearfix"></div>
       <% @reports.each do |report| %>
       <hr>
-      <% if File.exist?("/tmp/#{@org.slug}_#{report.id}.zip")%>
       <div class="pull-right">
         <div class="">
-          <%= link_to "Download Report #{report.id}", admin_auditor_download_path(report: report.id), class: "btn btn-success"%>
+          <% if params[:show_archived] %>
+            <%= link_to "Restore Report #{report.id}", admin_auditor_restore_report_path(report: report.id), class: "btn btn-primary"%>
+          <% else %>
+            <%= link_to "Archive Report #{report.id}", admin_auditor_archive_report_path(report: report.id), class: "btn btn-danger"%>
+          <% end %>
+          <% if File.exist?("/tmp/#{@org.slug}_#{report.id}.zip")%>
+            <%= link_to "Download Report #{report.id}", admin_auditor_download_path(report: report.id), class: "btn btn-success"%>
+          <% end %>
         </div>
       </div>
-      <% end %>
       <p>
         Report #<%=report.id%>
         <a class="" href="/admin/report?report=<%=report.id%>">Load report</a>
@@ -35,7 +36,9 @@
           Report queued <%= time_ago_in_words report.generating_at%> ago
         </li>
         <%end%>
-        <li>Last generated  <%=  time_ago_in_words report.updated_at%> ago</li>
+        <%if report.updated_at != report.created_at%>
+          <li>Last generated  <%=  time_ago_in_words report.updated_at%> ago</li>
+        <%end%>
         <% if report.report_filters %>
         <li>
             Filters: <%=report.report_filters['account_filter']%>

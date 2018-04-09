@@ -13,19 +13,23 @@ class DocumentsController < ApplicationController
   end
 
   def new
-    @document = Document.new(name: 'Unnamed')
+    if can_use_edit_token(params[:lms_course_id])
+      @document = Document.new(name: 'Unnamed')
 
-    # if an lms course ID is specified, capture it with the document
-    @document[:lms_course_id] = params[:lms_course_id]
+      # if an lms course ID is specified, capture it with the document
+      @document[:lms_course_id] = params[:lms_course_id]
 
-    verify_org
+      verify_org
 
-    @document.save!
+      @document.save!
 
-    if params[:sub_organization_slugs]
-      redirect_to edit_sub_org_document_path(id: @document.edit_id, sub_organization_slugs: params[:sub_organization_slugs])
+      if params[:sub_organization_slugs]
+        redirect_to edit_sub_org_document_path(id: @document.edit_id, sub_organization_slugs: params[:sub_organization_slugs])
+      else
+        redirect_to edit_document_path(id: @document.edit_id)
+      end
     else
-      redirect_to edit_document_path(id: @document.edit_id)
+      redirect_to root_path, :flash => { :error => "You are not authorized to create a document" }
     end
   end
 
@@ -75,7 +79,7 @@ class DocumentsController < ApplicationController
       end
 
       verify_org
-
+      @can_use_edit_token = can_use_edit_token(@document.lms_course_id)
       render :layout => 'edit', :template => '/documents/content'
     else
       render :layout => 'dialog', :template => '/documents/republishing'
@@ -83,7 +87,6 @@ class DocumentsController < ApplicationController
   end
 
   def course
-
     # if canvas flag is set in URL, don't try relinking again
     unless params[:canvas]
       # if clicked the create new document link on relink page, clear out the session relink value
@@ -199,40 +202,63 @@ class DocumentsController < ApplicationController
   def update
     canvas_course_id = params[:canvas_course_id]
     document_version = params[:document_version]
+    meta_data_from_doc = params[:meta_data_from_doc]
     saved = false
     republishing = true
-
     verify_org
+    if can_use_edit_token(@document.lms_course_id)
+      if check_lock @organization[:slug], params[:batch_token]
+        republishing = false;
+        if canvas_course_id && !@organization.skip_lms_publish
+          # publishing to canvas should not save in the Document model, the canvas version has been modified
+          saved = update_course_document(canvas_course_id, request.raw_post, @organization[:lms_info_slug]) if params[:canvas] && canvas_course_id
+        else
+          if(params[:canvas_relink_course_id])
+            #find old document in this org with this id, set to null
+            old_document = Document.find_by lms_course_id: params[:canvas_relink_course_id], organization: @organization
+            old_document.update(lms_published_at: nil, lms_course_id: nil)
 
-    if check_lock @organization[:slug], params[:batch_token]
-      republishing = false;
-      if canvas_course_id && !@organization.skip_lms_publish
-        # publishing to canvas should not save in the Document model, the canvas version has been modified
-        saved = update_course_document(canvas_course_id, request.raw_post, @organization[:lms_info_slug]) if params[:canvas] && canvas_course_id
-      else
-        if(params[:canvas_relink_course_id])
-          #find old document in this org with this id, set to null
-          old_document = Document.find_by lms_course_id: params[:canvas_relink_course_id], organization: @organization
-          old_document.update(lms_published_at: nil, lms_course_id: nil)
+            #set this document's canvas_course_id
+            @document.lms_course_id = params[:canvas_relink_course_id]
+          end
+          if meta_data_from_doc && @document.lms_course_id && @organization.lms_authentication_id && @organization.track_meta_info_from_document
+            count = Hash.new 0
+            meta_data_from_doc = meta_data_from_doc.tr('[]','').split(',')
+            meta_data_from_doc.each_slice(2) do |k,v|
+              count[k.to_s] +=1
+              k = "#{k.to_s}_#{count[k]}"
+              if dm = DocumentMeta.find_by(key: k, document_id: @document.id)
+                dm.value = v
+                dm.save
+              elsif !DocumentMeta.exists?(key:k, document_id: @document.id)
+                DocumentMeta.create(
+                  :key => k,
+                  :value => v.to_s,
+                  :document_id => @document.id,
+                  :root_organization_id => @document.organization_id,
+                  :lms_course_id => @document.lms_course_id,
+                  :lms_organization_id => @organization.lms_authentication_id
+                )
+              end
+            end
+          end
+          if document_version && @document.versions.count == document_version.to_i
+            @document.payload = request.raw_post
 
-          #set this document's canvas_course_id
-          @document.lms_course_id = params[:canvas_relink_course_id]
-        end
+            @document.payload = nil if @document.payload == ''
+            @document.lms_published_at = DateTime.now
 
-        if document_version && @document.versions.count == document_version.to_i
-          @document.payload = request.raw_post
-
-          @document.payload = nil if @document.payload == ''
-          @document.lms_published_at = DateTime.now
-
-          @document.save!
-          saved = true;
+            @document.save!
+            saved = true;
+          end
         end
       end
     end
 
     respond_to do |format|
-      if republishing
+      if can_use_edit_token(@document.lms_course_id) != true
+        msg = { :status => "error", :message => "You do not have permisson to save this document"}
+      elsif republishing
        msg = { :status => "error", :message => "Documents for this organization are currently being republished. Please copy your changes and try again later.", :version => @document.versions.count }
       elsif !saved
         msg = { :status => "error", :message => "This is not a current version of this document! Please copy your changes and refresh the page to get the current version.", :version => @document.versions.count }
@@ -247,6 +273,55 @@ class DocumentsController < ApplicationController
   end
 
   protected
+  def can_use_edit_token(lms_course_id = nil)
+    if @organization[:enable_anonymous_actions]
+      true
+    elsif has_role('designer')
+      true
+    elsif is_lms_authenticated_user? && has_canvas_access_token? && lms_course_id
+      if @document == nil
+        true
+      elsif lms_course_id == nil
+        true
+      elsif authorized_to_edit_course(lms_course_id)
+        true
+      end
+    else
+      false
+    end
+  end
+
+  def authorized_to_edit_course lms_course_id
+    courses = get_canvas_courses
+    if courses.pluck("id").include?(lms_course_id.to_i)
+      true
+    else
+      false
+    end
+  end
+
+  def get_canvas_courses
+    lms_connection_information
+    canvas_access_token = session[:canvas_access_token]["access_token"]
+    canvas = Canvas::API.new(:host => session[:oauth_endpoint], :token => canvas_access_token)
+    courses = canvas.get("/api/v1/courses?per_page=50")
+  end
+
+  def is_lms_authenticated_user?
+    if session[:lms_authenticated_user]
+      true
+    else
+      false
+    end
+  end
+
+  def has_canvas_access_token?
+    if session[:canvas_access_token] != nil && session[:canvas_access_token] != ""
+      true
+    else
+      false
+    end
+  end
 
   def view_pdf_url
     if Rails.env.production?

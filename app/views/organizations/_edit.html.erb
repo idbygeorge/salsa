@@ -130,6 +130,16 @@
             <%= f.label :enable_anonymous_actions, 'Enable Editing for Unauthorized Users', class: "control-label" %>
           </div>
         </div>
+
+        <div class="form-group">
+          <div class="controls">
+            <%= f.check_box :track_meta_info_from_document, class: '' %>
+            <%= f.label :track_meta_info_from_document, class: "control-label" %>
+            <div class="help-block">
+              requires all data-meta tags in the document to have unique values
+            </div>
+          </div>
+        </div>
     </fieldset>
 
     <div class="form-group">

@@ -37,27 +37,40 @@ module ReportHelper
 
   def self.archive (org_slug, report_id, report_data)
     report = ReportArchive.find_by id: report_id
-    @org = Organization.find_by slug: org_slug
-    docs = Document.where(organization_id: @org.id, id: report_data.map(&:document_id)).all
+    @organization = Organization.find_by slug: org_slug
+    docs = Document.where(organization_id: @organization.id, id: report_data.map(&:document_id)).where('updated_at != created_at').all
 
     if File.exist?(zipfile_path(org_slug, report_id))
       File.delete(zipfile_path(org_slug, report_id))
     end
-    Zip::File.open(zipfile_path(org_slug, report_id), Zip::File::CREATE) do |zipfile|
-      zipfile.get_output_stream('content.css'){ |os| os.write Rails.application.assets['application.css'].to_s }
+    Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
+      if Rails.env.production?
+        zipfile.get_output_stream('content.css'){ |os| os.write Rails.application.assets_manifest.assets["application.css"].to_s }
+      else
+        zipfile.get_output_stream('content.css'){ |os| os.write Rails.application.assets["application.css"].to_s }
+      end
+      document_metas = {}
       docs.each do |doc|
         @document = doc
-        # Two arguments:
-        # - The name of the file as it will appear in the archive
-        # - The original file, including the path to find it
-        #rendered_doc = render_to_string :layout => "archive", :template => "documents/content"
-        rendered_doc = ApplicationController.new.render_to_string(partial: 'documents/content', locals: {doc: @document})
-
         lms_identifier = @document.name.gsub(/[^A-Za-z0-9]+/, '_')
         if @document.lms_course_id
           lms_identifier = "#{@document.lms_course_id}".gsub(/[^A-Za-z0-9]+/, '_')
         end
+        if @organization.track_meta_info_from_document
+          dm = "#{DocumentMeta.where("key LIKE :prefix AND document_id IN (:document_id)", prefix: "salsa_%", document_id: doc.id).select(:key, :value).to_json(:except => :id)}"
+          document_metas["lms_course-#{@document.lms_course_id}"] = JSON.parse(dm)
+          zipfile.get_output_stream("#{lms_identifier}_#{@document.id}_document_meta.json"){ |os| os.write JSON.pretty_generate(JSON.parse(dm))   }
+        end
+        # Two arguments:
+        # - The name of the file as it will appear in the archive
+        # - The original file, including the path to find it
+        #rendered_doc = render_to_string :layout => "archive", :template => "documents/content"
+        rendered_doc = ApplicationController.new.render_to_string(layout: 'archive',partial: 'documents/content', locals: {doc: @document, organization: @organization})
+
         zipfile.get_output_stream("#{lms_identifier}_#{@document.id}.html") { |os| os.write rendered_doc }
+      end
+      if @organization.track_meta_info_from_document
+        zipfile.get_output_stream("document_meta.json"){ |os| os.write document_metas.to_json  }
       end
     end
   end

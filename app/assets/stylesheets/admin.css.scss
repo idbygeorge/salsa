@@ -5153,6 +5153,19 @@ body {
  * Placeholder dashboard ideas
  */
 }
+.main {
+  .alert {
+    &.fixed {
+        position: fixed;
+        opacity: .8;
+        right: 20px;
+        bottom: 20px;
+        width: 200px;
+        text-align: center;
+        z-index: 999;
+    }
+  }
+}
 .placeholders {
   margin-bottom: 30px;
   text-align: center;

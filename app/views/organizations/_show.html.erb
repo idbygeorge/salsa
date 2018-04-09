@@ -129,7 +129,7 @@
               <p>Republishing works by using the last published date for your documents.</p>
               <p>Search for documents:</p>
 
-              <%= form_tag("/admin/organization/preview/#{org_slug_parts(@organization)}", method: "get") do %>
+              <%= form_tag("/admin/organization/preview/#{full_org_path(@organization)}", method: "get") do %>
                 <div class="form-group">
                   <%= label_tag(:document_start_date, "Start Date:") %>
                   <%= date_field(:document, :start_date, class: 'form-control') %>
