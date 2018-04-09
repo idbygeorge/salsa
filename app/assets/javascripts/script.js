@@ -850,7 +850,6 @@ function liteOff(x){
                     var target = args.target.find(args.element+":visible").last()
                     $("#controlPanel").contents().find( "[data-meta='"+target.data('meta')+"']").prevAll("dt").first().addClass("ui-state-default").removeClass("ui-state-disabled")
                     target.remove();
-                    $("#controlPanel").find(".ui-state-active").trigger("click")
                 }
             } else {
                 args.target.toggleClass('hide');
