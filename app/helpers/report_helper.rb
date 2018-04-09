@@ -45,11 +45,7 @@ module ReportHelper
       File.delete(zipfile_name)
     end
     Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
-      if Rails.env.production?
-        zipfile.get_output_stream('content.css'){ |os| os.write Rails.application.assets_manifest.assets["application.css"].to_s }
-      else
-        zipfile.get_output_stream('content.css'){ |os| os.write Rails.application.assets["application.css"].to_s }
-      end
+      zipfile.get_output_stream('content.css'){ |os| os.write Salsa::Application.assets.find_asset('application.css').to_s }
       document_metas = {}
       docs.each do |doc|
         @document = doc
