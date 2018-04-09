@@ -14,7 +14,7 @@ module ReportHelper
       @report = ReportArchive.create({organization_id: org_id, report_filters: params})
     end
     @report.generating_at = Time.now
-    @report.save!
+    @report.save!(touch:false)
     ReportGenerator.enqueue(org_id, account_filter, params, @report.id)
   end
 
@@ -40,11 +40,10 @@ module ReportHelper
     @org = Organization.find_by slug: org_slug
     docs = Document.where(organization_id: @org.id, id: report_data.map(&:document_id)).all
 
-    zipfile_name = "/tmp/#{org_slug}_#{report_id}.zip"
-    if File.exist?(zipfile_name)
-      File.delete(zipfile_name)
+    if File.exist?(zipfile_path(org_slug, report_id))
+      File.delete(zipfile_path(org_slug, report_id))
     end
-    Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
+    Zip::File.open(zipfile_path(org_slug, report_id), Zip::File::CREATE) do |zipfile|
       zipfile.get_output_stream('content.css'){ |os| os.write Rails.application.assets['application.css'].to_s }
       docs.each do |doc|
         @document = doc
@@ -61,6 +60,10 @@ module ReportHelper
         zipfile.get_output_stream("#{lms_identifier}_#{@document.id}.html") { |os| os.write rendered_doc }
       end
     end
+  end
+
+  def self.zipfile_path (org_slug, report_id)
+    "/tmp/#{org_slug}_#{report_id}.zip"
   end
 
   def self.get_document_meta org_slug, account_filter, params

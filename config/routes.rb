@@ -12,7 +12,6 @@ Rails.application.routes.draw do
   namespace :admin do
     get "report", to: 'auditor#report', as: 'auditor_report'
     post "report", to: 'auditor#report', as: 'auditor_generate_report'
-    get "archive", to: 'auditor#archive', as: 'auditor_archive'
     get "download", to: 'auditor#download', as: 'auditor_download'
 
     get "report-status", to: 'auditor#reportStatus', as: 'auditor_report_status'
