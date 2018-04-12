@@ -24,7 +24,7 @@
 
         <div class="col-sm-4 col-md-3 sidebar">
           <%# TODO: global admins should be access this if to (admin_authorized is only set if you use admin pass from config.yml)  %>
-          <% if session[:admin_authorized] %>
+          <% if has_role 'admin' %>
             <div class="pull-right text-right">
               <%= Document.where('documents.updated_at != documents.created_at').count %> documents<br>
               <%= Document.where('documents.updated_at = documents.created_at').count %> abandoned
