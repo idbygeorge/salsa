@@ -16,6 +16,8 @@ Rails.application.routes.draw do
     get "download", to: 'auditor#download', as: 'auditor_download'
 
     get "report-status", to: 'auditor#reportStatus', as: 'auditor_report_status'
+    get "archive-report", to: 'auditor#archive_report', as: 'auditor_archive_report'
+    get "restore-report", to: 'auditor#restore_report', as: 'auditor_restore_report'
     get "reports", to: 'auditor#reports', as: 'auditor_reports'
   end
 
