@@ -69,7 +69,7 @@ class Admin::AuditorController < ApplicationController
       send_file get_archive_file
     elsif params
 
-      redirect_to admin_auditor_archive_pathu
+      redirect_to admin_auditor_archive_path
     end
   end
 
