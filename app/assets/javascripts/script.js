@@ -463,11 +463,19 @@ function liteOff(x){
                 xhr.abort();
                 return false;
             }
+            meta_data_from_doc = []
+            $("#page").find( '[data-meta]' ).each(function() {
+              meta_data_from_doc.push("salsa_" + $( this ).attr( 'data-meta' ))
+              meta_data_from_doc.push($( this ).text())
+            });
 
             settings.data = cleanupDocument($('#page-data').html());
 
             var document_version = $('[data-document-version]').attr('data-document-version');
+
             settings.url = settings.url + '?document_version=' + document_version;
+            settings.url = settings.url + '&meta_data_from_doc=' + '[' + meta_data_from_doc + ']';
+            settings.url = encodeURI(settings.url);
 
             $('#save_prompt').stop().removeAttr('style').removeClass('hidden').css({display: 'block', zIndex: 999999999, top: 30, position: 'fixed', width: '100%', textAlign: 'center', backgroundColor: '#ffe', borderBottom: 'solid 1px #ddd'}).html('Saving...');
         });

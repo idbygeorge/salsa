@@ -97,6 +97,16 @@ Database commands
     sudo docker-compose run salsa rake db:migrate
     sudo docker-compose run salsa rake db:seed
 
+  Generate secrets
+
+  run `sudo docker-compose run salsa rake secrets` and put the result in config/secrets.yml
+
+    development:
+      secret_key_base: < put result right here >
+
+    test:
+      secret_key_base: < and put the result here too >
+  
 ## Running the application
 
     sudo docker-compose up
