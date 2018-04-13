@@ -45,7 +45,7 @@ module ReportHelper
       File.delete(zipfile_name)
     end
     Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
-      zipfile.get_output_stream('content.css'){ |os| os.write Salsa::Application.assets.find_asset('application.css').to_s }
+      zipfile.get_output_stream('content.css'){ |os| os.write CompassRails.sprockets.find_asset('application.css').to_s }
       document_metas = {}
       docs.each do |doc|
         @document = doc
