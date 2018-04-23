@@ -1,3 +1,7 @@
+Repository is moving to https://github.com/oasis4hedev/salsa
+
+Please use the new repo for updates
+
 Salsa
 =====
 
