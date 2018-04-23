@@ -3,6 +3,8 @@ var editor = 'CKEditor';
 
 var controlMethods;
 
+
+
 function liteOn(x,color){
     $('.control_highlighted').css({ backgroundColor: 'transparent' }).removeClass('control_highlighted');
     $(x).css({ backgroundColor: color }).addClass('control_highlighted');
@@ -66,6 +68,19 @@ function liteOff(x){
         });
 
         $(".click_on_init").trigger('click');
+
+        //Sync Section_nav with main
+        var sidebarList = $("#tabs").children().children("li")
+        var sidebarClassList = []
+        sidebarList.each(function(){
+          sidebarClassList.push(this.classList.item(0))
+        })
+        var mainList = $("div #page-data").children("section")
+        mainList.each(function(){
+          if(!sidebarClassList.includes(this.id)){
+            $(this).addClass("disabled")
+          }
+        })
 
         // dynamically get all of the top level sections as an array
         var sectionsNames = $('#tabs a').map(function(){
