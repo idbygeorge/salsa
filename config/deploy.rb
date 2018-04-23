@@ -1,4 +1,4 @@
-set :repo_url,        'https://github.com/idbygeorge/salsa.git'
+set :repo_url,        'https://github.com/oasis4hedev/salsa.git'
 set :branch, ENV.fetch("CAPISTRANO_BRANCH", "master")
 set :application,     'salsa'
 set :user,            'ubuntu'

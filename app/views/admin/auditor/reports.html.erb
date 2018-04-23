@@ -5,7 +5,7 @@
     </p>
     <div class="pull-right">
       <% if params[:show_archived] %>
-        <%= link_to "Normal Reports", admin_auditor_reports_path, class: "btn btn-info"%>
+        <%= link_to "Reports", admin_auditor_reports_path, class: "btn btn-info"%>
       <% else %>
         <%= link_to "Archived Reports", admin_auditor_reports_path(show_archived: true), class: "btn btn-info"%>
       <% end %>

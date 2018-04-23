@@ -6,7 +6,7 @@
   <% end %>
 
   <%= form_for(@organization, url: form_action, :html => { :class => "form-horizontal col-md-9" } ) do |f| %>
-    <% if session[:admin_authorized] %>
+    <% if has_role 'admin' %>
         <fieldset>
           <legend>Organization</legend>
 
@@ -59,7 +59,7 @@
           Supported LMS integrations
           <ul>
               <li>
-                  Canvas - <a href="https://github.com/idbygeorge/salsa/blob/releases/0.9/_install/canvas_integration.md" target="_blank">Integration Guide</a>
+                  Canvas - <a href="https://github.com/oasis4hedev/salsa/blob/releases/0.9/_install/canvas_integration.md" target="_blank">Integration Guide</a>
               </li>
           </ul>
 
@@ -128,6 +128,16 @@
           <div class="controls">
             <%= f.check_box :enable_anonymous_actions, class: '' %>
             <%= f.label :enable_anonymous_actions, 'Enable Editing for Unauthorized Users', class: "control-label" %>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="controls">
+            <%= f.check_box :track_meta_info_from_document, class: '' %>
+            <%= f.label :track_meta_info_from_document, class: "control-label" %>
+            <div class="help-block">
+              requires all data-meta tags in the document to have unique values
+            </div>
           </div>
         </div>
     </fieldset>

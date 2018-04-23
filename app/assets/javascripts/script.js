@@ -3,6 +3,8 @@ var editor = 'CKEditor';
 
 var controlMethods;
 
+
+
 function liteOn(x,color){
     $('.control_highlighted').css({ backgroundColor: 'transparent' }).removeClass('control_highlighted');
     $(x).css({ backgroundColor: color }).addClass('control_highlighted');
@@ -66,6 +68,19 @@ function liteOff(x){
         });
 
         $(".click_on_init").trigger('click');
+
+        //Sync Section_nav with main
+        var sidebarList = $("#tabs").children().children("li")
+        var sidebarClassList = []
+        sidebarList.each(function(){
+          sidebarClassList.push(this.classList.item(0))
+        })
+        var mainList = $("div #page-data").children("section")
+        mainList.each(function(){
+          if(!sidebarClassList.includes(this.id)){
+            $(this).addClass("disabled")
+          }
+        })
 
         // dynamically get all of the top level sections as an array
         var sectionsNames = $('#tabs a').map(function(){
@@ -463,11 +478,19 @@ function liteOff(x){
                 xhr.abort();
                 return false;
             }
+            meta_data_from_doc = []
+            $("#page").find( '[data-meta]' ).each(function() {
+              meta_data_from_doc.push("salsa_" + $( this ).attr( 'data-meta' ))
+              meta_data_from_doc.push($( this ).text())
+            });
 
             settings.data = cleanupDocument($('#page-data').html());
 
             var document_version = $('[data-document-version]').attr('data-document-version');
+
             settings.url = settings.url + '?document_version=' + document_version;
+            settings.url = settings.url + '&meta_data_from_doc=' + '[' + meta_data_from_doc + ']';
+            settings.url = encodeURI(settings.url);
 
             $('#save_prompt').stop().removeAttr('style').removeClass('hidden').css({display: 'block', zIndex: 999999999, top: 30, position: 'fixed', width: '100%', textAlign: 'center', backgroundColor: '#ffe', borderBottom: 'solid 1px #ddd'}).html('Saving...');
         });
@@ -850,7 +873,7 @@ function liteOff(x){
                     var target = args.target.find(args.element+":visible").last()
                     $("#controlPanel").contents().find( "[data-meta='"+target.data('meta')+"']").prevAll("dt").first().addClass("ui-state-default").removeClass("ui-state-disabled")
                     target.remove();
-                    $("#controlPanel").find(".ui-state-active").trigger("click")
+                    $('aside:visible:has([data-method="taxonomy"][data-unique])', "#controlPanel").find("dt.ui-state-active").trigger("click")
                 }
             } else {
                 args.target.toggleClass('hide');
