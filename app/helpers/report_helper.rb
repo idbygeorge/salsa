@@ -40,9 +40,8 @@ module ReportHelper
     @organization = Organization.find_by slug: org_slug
     docs = Document.where(organization_id: @organization.id, id: report_data.map(&:document_id)).where('updated_at != created_at').all
 
-    zipfile_name = "/tmp/#{org_slug}_#{report_id}.zip"
-    if File.exist?(zipfile_name)
-      File.delete(zipfile_name)
+    if File.exist?(zipfile_path(org_slug, report_id))
+      File.delete(zipfile_path(org_slug, report_id))
     end
     Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
       zipfile.get_output_stream('content.css'){ |os| os.write CompassRails.sprockets.find_asset('application.css').to_s }
@@ -70,6 +69,10 @@ module ReportHelper
         zipfile.get_output_stream("document_meta.json"){ |os| os.write document_metas.to_json  }
       end
     end
+  end
+
+  def self.zipfile_path (org_slug, report_id)
+    "/tmp/#{org_slug}_#{report_id}.zip"
   end
 
   def self.get_document_meta org_slug, account_filter, params
