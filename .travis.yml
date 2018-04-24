@@ -1,0 +1,4 @@
+language: ruby
+bundler_args: --without production
+rvm:
+  - 2.4
