@@ -1,0 +1,3 @@
+test:
+  domain: 'http://localhost:3000'
+  allow_erb_components: true
