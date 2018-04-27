@@ -23,7 +23,7 @@ class DefaultController < ApplicationController
     @hostname = Socket.gethostname
     render 'default/status_server',:status => @status
     headers['Last-Modified'] = Time.now.httpdate
-    response.set_header('hostname', @hostname)
+    response.set_header('X-Status-Check-Hostname', @hostname)
 
   end
 
