@@ -1,5 +1,6 @@
-
+require "#{Rails.root}/lib/skip_retries"
 class ReportGenerator < Que::Job
+  prepend SkipRetries
   # Default settings for this job. These are optional - without them, jobs
   # will default to priority 100 and run immediately.
   # @priority = 10
