@@ -1,5 +1,8 @@
 addons:
   postgresql: 9.6
+  apt:
+    packages:
+      - docker-ce
 after_success:
   - bundle exec codeclimate-test-reporter
 before_script:
@@ -25,5 +28,4 @@ rvm:
   - 2.4.1
 services:
   - redis-server
-  - docker
 sudo: required
