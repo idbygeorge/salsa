@@ -1,14 +1,12 @@
 FactoryBot.define do
-  factory :user_admin do
-    name: "gloadmin"
-    email: "gloadmin@localhost"
-    password: "password"
-
-    factory :user_assignments do
-      role: "admin"
-      cascades: true
-
-      user_admin
-    end
+  factory :admin, class: User do
+    name "gloadmin"
+    email "gloadmin@localhost.org"
+    password "password"
+    created_at Time.now.ago(10)
+  end
+  factory :user_assignment do
+    role 'admin'
+    cascades true
   end
 end

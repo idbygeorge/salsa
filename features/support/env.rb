@@ -6,6 +6,7 @@
 
 require 'cucumber/rails'
 
+
 # Capybara defaults to CSS3 selectors rather than XPath.
 # If you'd prefer to use XPath, just uncomment this line and adjust any
 # selectors in your step definitions to use the XPath syntax.
@@ -36,6 +37,15 @@ rescue NameError
   raise "You need to add database_cleaner to your Gemfile (in the :test group) if you wish to use it."
 end
 
+ def execute_rake(file,task)
+    require 'rake'
+    rake = Rake::Application.new
+    Rake.application = rake
+    Rake::Task.define_task(:environment)
+    load "#{Rails.root}/lib/tasks/#{file}"
+    rake[task].invoke
+  end
+
 # You may also want to configure DatabaseCleaner to use different strategies for certain features and scenarios.
 # See the DatabaseCleaner documentation for details. Example:
 #
@@ -55,3 +65,4 @@ end
 # The :transaction strategy is faster, but might give you threading problems.
 # See https://github.com/cucumber/cucumber-rails/blob/master/features/choose_javascript_database_strategy.feature
 Cucumber::Rails::Database.javascript_strategy = :truncation
+World(FactoryBot::Syntax::Methods)

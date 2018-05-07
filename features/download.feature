@@ -6,14 +6,12 @@ I want to be able to download a report
 
   Scenario: download report
 
-    Given That I am logged in as a super admin 
-    And there is a organization
-    And there are documents with documnet metas that match the filter
-    And I am authorized on the organization
-    And the reports need to be generated
+    Given there is a organization
+    And That I am logged in as a super admin
+    And there are documents with document_metas that match the filter
+    And the reports are generated
     And I am on the admin reports page for organization
 
-
-    When I click "Download Report #"
-    Then the report should download
+    When I click the "Download Report" link
+    Then I should receive the report file
     And the Report zip file should have documents in it

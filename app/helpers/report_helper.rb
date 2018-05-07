@@ -43,7 +43,7 @@ module ReportHelper
     if File.exist?(zipfile_path(org_slug, report_id))
       File.delete(zipfile_path(org_slug, report_id))
     end
-    Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
+    Zip::File.open(zipfile_path(org_slug, report_id), Zip::File::CREATE) do |zipfile|
       zipfile.get_output_stream('content.css'){ |os| os.write CompassRails.sprockets.find_asset('application.css').to_s }
       document_metas = {}
       docs.each do |doc|

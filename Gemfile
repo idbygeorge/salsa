@@ -7,6 +7,8 @@ group :development, :test do
   gem 'sqlite3'
   gem 'byebug'
   gem 'rspec-rails'
+  gem 'factory_bot'
+  gem "factory_bot_rails", "~> 4.0"
 end
 
 group :development do
@@ -23,7 +25,6 @@ group :development do
 end
 group :test do
   gem 'launchy'
-  gem 'factory_bot'
   gem 'cucumber-rails', :require => false
   # database_cleaner is not required, but highly recommended
   gem 'database_cleaner'
