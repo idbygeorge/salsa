@@ -17,7 +17,6 @@ before_script:
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
-  - bash generate_secrets.sh
   - sudo docker-compose build
   - sudo docker-compose run salsa rake db:create
   - sudo docker-compose run salsa rake db:migrate
