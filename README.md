@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/oasis4hedev/salsa.svg?branch=master)](https://travis-ci.org/oasis4hedev/salsa) [![Maintainability](https://api.codeclimate.com/v1/badges/db12ca4f669ebd3e0b0b/maintainability)](https://codeclimate.com/github/oasis4hedev/salsa/maintainability) [![Test Coverage](https://api.codeclimate.com/v1/badges/db12ca4f669ebd3e0b0b/test_coverage)](https://codeclimate.com/github/oasis4hedev/salsa/test_coverage)
+
 Salsa
 =====
 

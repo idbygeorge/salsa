@@ -14,6 +14,18 @@ class DefaultController < ApplicationController
     end
   end
 
+  def status_server
+    if Organization.count
+      @status = 200
+    else
+      @status = 500
+    end
+    render 'default/status_server',:status => @status
+    headers['Last-Modified'] = Time.now.httpdate
+    response.set_header('hostname', Socket.gethostname)
+
+  end
+
   def maintenance
   	response.headers.delete('X-Frame-Options')
   end
