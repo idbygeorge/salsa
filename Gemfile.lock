@@ -325,7 +325,6 @@ DEPENDENCIES
   capistrano3-puma
   coffee-rails
   compass-rails
-  cucumber
   cucumber-rails
   database_cleaner
   factory_bot
