@@ -34,16 +34,15 @@ class DocumentsController < ApplicationController
   end
 
   def show
-    unless @document = Document.find_by_view_id(params[:id])
-      unless document = Document.find_by_edit_id(params[:id])
-        if document_template = Document.find_by_template_id(params[:id])
-          document = document_template.dup
-          document.reset_ids
-          document.save!
-        end
-        raise ActionController::RoutingError.new('Not Found')
-      end
-dd
+    case @document
+    when !Document.find_by_view_id(params[:id])
+    when !document = Document.find_by_edit_id(params[:id])
+    when document_template = Document.find_by_template_id(params[:id])
+      document = document_template.dup
+      document.reset_ids
+      document.save!
+    else
+      raise ActionController::RoutingError.new('Not Found') unless document
       redirect_to edit_document_path(:id => document.edit_id, :batch_token => params[:batch_token])
       return
     end
