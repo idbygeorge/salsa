@@ -14,7 +14,7 @@ services:
     stdin_open: true
     environment:
       - TRUSTED_IP=0.0.0.0/0
-      - RAILS_ENV=development
+      - RAILS_ENV=test
     build: .
     command: bundle exec rails s -p 3000 -b '0.0.0.0'
     volumes:

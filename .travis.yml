@@ -11,7 +11,8 @@ before_script:
   - cp config/deploy/travis-ci/database.yml config/database.yml
   - cp config/deploy/travis-ci/config.yml config/config.yml
   - cp config/deploy/travis-ci/secrets.yml config/secrets.yml
-  - cp config/deploy/docker/* ../
+  - cp config/deploy/travis-ci/Dockerfile ../
+  - cp config/deploy/travis-ci/docker-compose ../
   - psql -c 'create database travis_ci_test;' -U postgres
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
