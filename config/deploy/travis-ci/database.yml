@@ -1,4 +1,6 @@
 test:
+  host: db
   adapter: postgresql
   database: travis_ci_test
   encoding: unicode
+  username: postgres
