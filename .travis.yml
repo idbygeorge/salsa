@@ -17,6 +17,8 @@ before_script:
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
   - sudo docker-compose build
+  - sudo docker-compose run salsa rake db:migrate
+  - sudo docker-compose run salsa rake db:seed
 
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
