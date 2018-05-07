@@ -3,21 +3,29 @@ addons:
 after_success:
   - bundle exec codeclimate-test-reporter
 before_script:
+  - mkdir tmp/db/postgres-data -p
+  - mkdir tmp/log -p
   - cp config/deploy/travis-ci/database.yml config/database.yml
   - cp config/deploy/travis-ci/config.yml config/config.yml
   - cp config/deploy/travis-ci/secrets.yml config/secrets.yml
+  - cp config/deploy/docker/* ../
   - psql -c 'create database travis_ci_test;' -U postgres
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
   - ./cc-test-reporter before-build
+  - sudo docker-compose build
+  - sudo docker-compose run salsa rake db:create RAILS_ENV=test
+  - sudo docker-compose run salsa rake db:migrate RAILS_ENV=test
+
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 script:
-  - bundle exec rails db:migrate RAILS_ENV=test
-  - bundle exec cucumber RAILS_ENV=test
+  - sudo docker-compose run salsa cucumber RAILS_ENV=test
 dist: trusty
 language: ruby
 rvm:
   - 2.4.1
 services:
   - redis-server
+  - docker
+sudo: required

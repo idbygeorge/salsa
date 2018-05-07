@@ -1,0 +1,27 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./salsa/tmp/db/postgres-data:/var/lib/postgresql/data
+    ports:
+      - "54321:5432"
+    environment:
+      - POSTGRES_USER:'postgres'
+      - POSTGRES_PASSWORD:'postgres'
+  salsa:
+    tty: true
+    stdin_open: true
+    environment:
+      - TRUSTED_IP=0.0.0.0/0
+      - RAILS_ENV=development
+    build: .
+    command: bundle exec rails s -p 3000 -b '0.0.0.0'
+    volumes:
+      - .:/home/apps
+      - ./salsa/tmp:/tmp
+    ports:
+      - "80:3000"
+      - "3000:3000"
+    depends_on:
+      - db
