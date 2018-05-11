@@ -57,12 +57,6 @@ function liteOff(x){
             $(this).remove();
         });
 
-        $("a[href='#togglenext']").on("click", function(e){
-            $(this).siblings().toggle();
-
-            e.preventDefault();
-        });
-
         $("a.click_on_init").not('[href^="#"]').on('click', function(){
             window.location = $(this).attr('href');
         });
@@ -111,40 +105,6 @@ function liteOff(x){
                 }
             });
         });
-        // dropdown
-        $(".dropbtn").on('click', function() {
-            $(this).next(".dropdown-content").toggleClass("show")}
-        );
-        // left sidebar section selector
-        $("#tabs a").on("click", function(){
-            var listItem = $(this).closest("li");
-            var list = listItem.closest("ul");
-
-            // section selector
-            list.find(".selected").removeClass("selected");
-            $(this).closest("li").addClass("selected");
-
-            var section = $(this).attr("href");
-
-            // content
-            $("section.active").removeClass("active");
-            $(section).removeClass('hide');
-            $(section).addClass("active");
-
-            // set the view state messages
-            syncViewState(section, $(this).text());
-
-            // control panel
-            $("aside.active").removeClass("active").hide();
-            $("#controlPanel " + section.replace('#', '.')).addClass("active").show();
-
-            $("body").attr("class", section.replace('#', ''));
-
-            $("#topBar").remove();
-            $("#container").removeAttr("style");
-
-            initEditor(editor, document);
-        });
 
         // control panel
         var getTarget = function(source) {
@@ -167,16 +127,6 @@ function liteOff(x){
 
             return $(targetSelector);
         };
-
-        $("#controlPanel").on("click", ".toggler", function(){
-            $(this).closest("section").toggleClass("ui-state-active ui-state-default");
-            $(this).closest("header").next().toggle().find("dt.ui-state-active").removeClass("ui-state-active");
-
-            $("#topBar").remove();
-            $("#container").removeAttr("style");
-
-            return false;
-        });
 
         $("body").on("click", "#topBar a", function(){
           var context = $("#topBar").data('context');
@@ -393,84 +343,9 @@ function liteOff(x){
             $("#container").append(viewMessageElement);
         };
 
-        $("#preview_control a").on("click", function(){
-            $("#preview,#preview_control").hide();
-            $(".masthead, #wrapper, footer").show();
-            $("#preview_control .previewLabel").remove();
-            return false;
-        });
+        $.getScript("onclick.js");
 
-        // example
-        $("#tb_example").on("click", function(){
-            return previewPage('#example','Example');
-            $(".editable, .editableHtml", previewPage).removeClass("editable editableHtml").removeAttr("tabindex");
-        });
-
-        $("#content_example_link").on("click", function(){
-            return previewSection('example','Example');
-            $(".editable, .editableHtml", previewSection).removeClass("editable editableHtml").removeAttr("tabindex");
-        });
-
-        // help
-        $("#tb_help").on("click", function (e){
-            e.preventDefault();
-            return previewPage("#help_page",'Help');
-        });
-
-        $('#tb_resources').on('click', function() {
-            $('#help_viewer').removeClass('hidden').dialog({
-                modal:true,
-                maxHeight: $('body').innerHeight() * .8,
-                width: 800,
-                closeOnEscape: true,
-                title: 'Resources',
-                position: 'center ',
-                open: function() {
-                    $('#compilation_tabs').tabs();
-
-                    $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-button-icon-only");
-                }
-            });
-        });
-
-        $("#content_help_link").on("click", function(){
-            return previewSection('help','Help');
-        });
-
-        // disable view
-        $("#content_disable_link").on("click", function(){
-             var active_page = $('section.active');
-             var active_link = $("#tabs .selected a");
-
-             active_page.toggleClass("disabled");
-             $("span", this).toggleClass("fi-minus-circle fi-eye");
-
-             syncViewState(active_page, active_link.text());
-        });
-
-        // My SALSA
-        $("#tb_link").on("click", function (e){
-            e.preventDefault();
-            var myUrl = document.URL.split('#');
-            $("#custom-url").html(myUrl[0]);
-            return previewPage("#mySalsa",'Bookmark Your Editable SALSA');
-        });
-
-        $("#tb_login_lms").on("click", function(e) {
-            $("#choose_institution_prompt").dialog({
-                modal: true,
-                title: "Login to your institution",
-                width: "600px",
-                draggable: false,
-                create: function() {
-                    $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-button-icon-only");
-                }
-            });
-
-            e.preventDefault();
-        });
-
-        // save
+        // save1
         var publishing = false;
 
         $('#tb_save').on('ajax:beforeSend', function(event, xhr, settings) {
@@ -503,66 +378,6 @@ function liteOff(x){
               $("#save_prompt").css({display: 'block', zIndex: 999999999, top: 30, position: 'fixed', width: '100%', textAlign: 'center', backgroundColor: '#f99', borderBottom: 'solid 1px #ddd'}).html(data.message).delay(5000).fadeOut(1000);
             }
 
-        });
-
-        // preview
-        $('#tb_preview').click(function() {
-            if($('.dialog-preview').length) {
-                $('#previewWrapper').dialog('close');
-            } else {
-
-                var url = $('#tb_save').attr('href');
-
-                if(!url) {
-                    url = $('#tb_share').prop('href');
-                }
-
-                var content = $('#page-data').html();
-                $.ajax({
-                    type:'PUT',
-                    url:url,
-                    data:content,
-                    async:false,
-                    beforeSend: function(xhr, settings) {
-                        xhr.setRequestHeader("Accept", "application/json");
-                        var token = $('#tb_save').attr('authenticity_token');
-                        xhr.setRequestHeader('X-CSRF-Token',token );
-                    }
-                });
-
-                var previewHTML = $('<div id="preview-data"/>').append(content);
-                var preview = $('#preview').html(previewHTML);
-
-                var previewWrapper = $('#previewWrapper').clone().css({ backgroundColor: "#F5F5F5" });
-
-                $("#preview", previewWrapper).show();
-                $("#spacer", previewWrapper).show();
-                $('body').addClass('dialog-preview');
-
-
-
-                $(".content", previewWrapper).show();
-                $(".example", previewWrapper).hide();
-
-                $(".editable, .editableHtml", previewWrapper).removeClass("editable editableHtml").removeAttr("tabindex");
-                previewWrapper.html(cleanupDocument(previewWrapper));
-
-                previewWrapper.dialog({
-                    modal:true,
-                    width:'10.75in',
-                    title:'Preview',
-                    maxHeight: $(window).innerHeight() - 150,
-                    close: function() {
-                        $('body').removeClass('dialog-preview');
-                        $('#preview').html('').hide();
-                        $(this).dialog("destroy");
-                    }
-                });
-
-                $(".ui-dialog-titlebar-close").html("close | x").removeClass("ui-button-icon-only").focus();
-            }
-
-            return false;
         });
 
         $('#extra_credit').on('blur', '.editing :input', function() {
@@ -812,244 +627,12 @@ function liteOff(x){
 
             });
 
-            // cascade down
+            $.getScript("control_menthods.js");
 
         }
     };
 
-    controlMethods = {
-        toggleContent: function(args) {
-            var existingElements = args.target.find(args.element);
-            var visibleElements = existingElements.filter(":visible");
-            var newText;
-            var element;
-
-            if(args.action === "+") {
-
-                if((args.max === undefined || visibleElements.length < args.max) && existingElements.length > visibleElements.length) {
-                    var activateElement = args.target.find(args.element+":hidden").first();
-
-                    if(activateElement.text() === '') {
-                        if(args.text instanceof Array) {
-                            newText = args.text[activateElement.index()];
-                        } else {
-                            newText = args.text;
-                        }
-
-                        activateElement.html(newText);
-                    }
-
-                    activateElement.show().removeClass('hide');
-
-                    element = activateElement;
-                } else if(args.max === undefined || existingElements.length < args.max) {
-                    var newElement;
-
-                    if(args.template && $(args.template, "#templates").length) {
-                        newElement = $(args.template, "#templates").clone();
-                        newElement.removeAttr('id');
-
-                        $(".editableHtml,.editable", newElement).attr({ tabIndex: 0 });
-                    } else {
-                        if(args.text instanceof Array) {
-                            newText = args.text[existingElements.length];
-                        } else {
-                            newText = args.text;
-                        }
-                        newElement = $("<"+args.element+"/>").html(newText);
-                        if (!args.source.is('dt'))
-                            newElement.addClass("editable");
-                    }
-                    if ($(args.target).is('table')) {
-                        $('tbody', args.target).append(newElement);
-                    } else {
-                        args.target.append(newElement);
-                    }
-
-                    element = newElement;
-                }
-            } else if(args.action === "-") {
-                if(args.min === undefined || visibleElements.length > args.min){
-                    var target = args.target.find(args.element+":visible").last()
-                    $("#controlPanel").contents().find( "[data-meta='"+target.data('meta')+"']").prevAll("dt").first().addClass("ui-state-default").removeClass("ui-state-disabled")
-                    target.remove();
-                    $('aside:visible:has([data-method="taxonomy"][data-unique])', "#controlPanel").find("dt.ui-state-active").trigger("click")
-                }
-            } else {
-                args.target.toggleClass('hide');
-                args.source.closest("section").toggleClass("ui-state-active ui-state-default");
-
-                element = argsTarget;
-            }
-
-            if(args.meta) {
-                $(element).attr('data-meta', args.meta);
-            }
-
-            if(args.editable) {
-                $(element).addClass('editable', true);
-            }
-
-            // a callback was defined for this control
-            if(args.callback) {
-                // create a local alias to the callback method
-                var callbackFunction = callbacks[args.callback];
-
-                // if the callback method exists and is a function, execute it
-                if(callbackFunction) {
-                    // pass along the controlMethod's arguments to the callback
-                    callbackFunction(args);
-                } else {
-                    console.log('callback not found', args.callback, callbackFunction);
-                }
-            }
-
-            return true;
-        },
-        scaleCss: function(args) {
-            var originalMargin = args.target.css(args.property);
-
-            args.target.css(args.property, args.action + "=" + args.step);
-
-            var newValue = parseFloat(args.target.css(args.property));
-
-            if(newValue > args.max * parseFloat(args.step) || newValue < args.min * parseFloat(args.step)) {
-                args.target.css(args.property, originalMargin);
-            }
-        },
-        toggleTemplate: function(args) {
-            var existingElements = args.target.children();
-            var visibleElements;
-
-            if(args.action === '+') {
-                args.target.append($("#templates #" + args.template).clone());
-            } else if (args.action === '-') {
-                args.target.children(":visible").last().hide();
-            }
-        },
-        radiodropdown: function(args) {
-
-            var option = $('input[name=choose]:checked').val()
-            args.source.parent().contents().find("dt").each(function(){
-              $(this).hide();
-              if ($(this).is("#"+option) || $(this).is(".dropbtn")){
-                $(this).show();
-              }
-            });
-
-            if (!args.source.is('.radio, .dropbtn')){
-              if(args.text && args.element) {
-                  var newArgs = $.extend({}, args);
-                  newArgs.action = "+";
-                  controlMethods.toggleContent(newArgs);
-
-                  args.text = undefined;
-                  args.element = undefined;
-              }
-              var list = args.source.nextUntil("dt");
-
-              if(list.length == 0) {
-                  return;
-              }
-
-              var topBar = $("<div id='topBar'><ul class='inner'/></div>");
-              topBar.data('context', args);
-              topBar.prepend($("<h2/>").text(args.source.text()));
-
-              list.each(function(){
-                  if ( args.unique && $("#container").contents().find( "[data-meta='"+$(this).data('meta')+"']" ).length == 0) {
-
-                      var newItem = $("<li><a href='#'/></li>");
-                      $("a", newItem).text($(this).text()).attr('data-meta', $(this).data('meta'));
-
-                      newItem.appendTo($(".inner", topBar));
-                } else if (!args.unique) {
-                  var newItem = $("<li><a href='#'/></li>");
-                  $("a", newItem).text($(this).text()).attr('data-meta', $(this).data('meta'));
-
-                  newItem.appendTo($(".inner", topBar));
-                }
-
-              });
-              $("#topBar").remove();
-              $("#container").before($(topBar)).css({ top: (parseInt(topBar.css("top"), 10) + parseInt(topBar.outerHeight(), 10) + 5) + "px" });
-
-              if(args.uiClass) {
-                  topBar.addClass(args.uiClass);
-              }
-
-              if(args.unique) {
-                  topBar.data('unique', args.unique);
-              }
-
-              args.source.siblings(".ui-state-active").removeClass("ui-state-active");
-              args.source.addClass("ui-state-active");
-            }
-        },
-        taxonomy: function(args) {
-            if(args.text && args.element) {
-                var newArgs = $.extend({}, args);
-                newArgs.action = "+";
-                controlMethods.toggleContent(newArgs);
-
-                args.text = undefined;
-                args.element = undefined;
-            }
-            var list = args.source.nextUntil("dt");
-            if(list.length == 0) {
-                return;
-            }
-
-            var topBar = $("<div id='topBar'><ul class='inner'/></div>");
-            topBar.data('context', args);
-            topBar.prepend($("<h2/>").text(args.source.text()));
-
-            list.each(function(){
-                if ( args.unique && $("#container").contents().find( "[data-meta='"+$(this).data('meta')+"']" ).length == 0) {
-
-                    var newItem = $("<li><a href='#'/></li>");
-                    $("a", newItem).text($(this).text()).attr('data-meta', $(this).data('meta'));
-
-                    newItem.appendTo($(".inner", topBar));
-              } else if (!args.unique) {
-                var newItem = $("<li><a href='#'/></li>");
-                $("a", newItem).text($(this).text()).attr('data-meta', $(this).data('meta'));
-
-                newItem.appendTo($(".inner", topBar));
-              }
-
-            });
-
-            $("#topBar").remove();
-            $("#container").before($(topBar)).css({ top: (parseInt(topBar.css("top"), 10) + parseInt(topBar.outerHeight(), 10) + 5) + "px" });
-
-            if(args.uiClass) {
-                topBar.addClass(args.uiClass);
-            }
-
-            if(args.unique) {
-                topBar.data('unique', args.unique);
-            }
-
-            args.source.siblings(".ui-state-active").removeClass("ui-state-active");
-            args.source.addClass("ui-state-active");
-        },
-        specifyGradingUnits: function(args) {
-            if(args.action === 'points') {
-                $('th:last', args.target).text('Points');
-                $('tr.total td:first-child', args.target).text('Total Points');
-                $('th:last-child,td:last-child', '#grade_scale').show();
-            }
-            else if(args.action === 'percent') {
-                $('th:last', args.target).text('Percentage');
-                $('tr.total td:first-child', args.target).text('Total');
-                $('th:last-child,td:last-child', '#grade_scale').hide();
-            }
-
-            updateGradeScale($('#grade_scale'), $('#grade_components .total td:last').text());
-        }
-    };
-
+    //TODO add in control method call
     var focusEditor = function(editor, context) {
         return window[editor + '_focus'](context);
     }
