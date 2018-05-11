@@ -34,18 +34,19 @@ class DocumentsController < ApplicationController
   end
 
   def show
-    case @document
-    when !Document.find_by_view_id(params[:id])
-    when !document = Document.find_by_edit_id(params[:id])
-    when document_template = Document.find_by_template_id(params[:id])
+    document = Document.find_by_edit_id(params[:id])
+    document_template = Document.find_by_template_id(params[:id])
+    @document = Document.find_by_view_id(params[:id])
+    if @document != nil
+    elsif document != nil
+    elsif document_template != nil
       document = document_template.dup
       document.reset_ids
       document.save!
-    else
-      raise ActionController::RoutingError.new('Not Found') unless document
-      redirect_to edit_document_path(:id => document.edit_id, :batch_token => params[:batch_token])
-      return
     end
+    raise ActionController::RoutingError.new('Not Found') unless document && @document
+    redirect_to edit_document_path(:id => document.edit_id, :batch_token => params[:batch_token])
+    return
 
     @calendar_only = params[:calendar_only] ? true : false
 
