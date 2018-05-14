@@ -1,6 +1,6 @@
 $(function() {
   var editorMaxHeight = $('body').innerHeight() * .6;
-
+  var canvasImage = $("#tb_save_canvas").data('originaltext', $("#tb_save_canvas").text()).html('<img src="https://lms.instructure.com/favicon.ico" height="16" alt="Canvas"> &nbsp;' + courseData.name.slice(0, 15) + (courseData.name.length > 15 ? '...' : '')).removeClass('highlight');
   var tinymceOptions = {
     toolbar: "bold italic underline | undo redo | bullist numlist | link unlink",
     statusbar: false,
@@ -69,8 +69,7 @@ $(function() {
 
       $('#editor_view').data('lmsCourse', courseData);
 
-      $("#tb_save_canvas").data('originaltext', $("#tb_save_canvas").text()).html('<img src="https://lms.instructure.com/favicon.ico" height="16" alt="Canvas"> &nbsp;' + courseData.name.slice(0, 15) + (courseData.name.length > 15 ? '...' : '')).removeClass('highlight');
-
+      canvasImage
       if(courseData.syllabus_body && courseData.syllabus_body.length) {
         // store syllabus_body content in the clipboard
 
@@ -112,8 +111,7 @@ $(function() {
 
       $('#editor_view').data('lmsCourse', courseData);
 
-      $("#tb_save_canvas").data('originaltext', $("#tb_save_canvas").text()).html('<img src="https://lms.instructure.com/favicon.ico" height="16" alt="Canvas"> &nbsp;' + courseData.name.slice(0, 15) + (courseData.name.length > 15 ? '...' : '')).removeClass('highlight');
-
+      canvasImage
       if(courseData.syllabus_body && courseData.syllabus_body.length) {
         // store syllabus_body content in the clipboard
 
