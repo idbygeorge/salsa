@@ -138,18 +138,11 @@ var controlMethods = {
         topBar.prepend($("<h2/>").text(args.source.text()));
 
         list.each(function(){
-            if ( args.unique && $("#container").contents().find( "[data-meta='"+$(this).data('meta')+"']" ).length == 0) {
-
+            if ( !args.unique || (args.unique && $("#container").contents().find( "[data-meta='"+$(this).data('meta')+"']" ).length == 0)) {
                 var newItem = $("<li><a href='#'/></li>");
                 $("a", newItem).text($(this).text()).attr('data-meta', $(this).data('meta'));
-
                 newItem.appendTo($(".inner", topBar));
-          } else if (!args.unique) {
-            var newItem = $("<li><a href='#'/></li>");
-            $("a", newItem).text($(this).text()).attr('data-meta', $(this).data('meta'));
-
-            newItem.appendTo($(".inner", topBar));
-          }
+            }
 
         });
 
