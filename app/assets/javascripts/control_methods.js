@@ -1,4 +1,4 @@
-export var controlMethods = {
+var controlMethods = {
     toggleContent: function(args) {
         var existingElements = args.target.find(args.element);
         var visibleElements = existingElements.filter(":visible");

@@ -44,7 +44,7 @@ class DocumentsController < ApplicationController
       document.reset_ids
       document.save!
     end
-    raise ActionController::RoutingError.new('Not Found') unless document && @document
+    raise ActionController::RoutingError.new('Not Found') unless document && !@document
     redirect_to edit_document_path(:id => document.edit_id, :batch_token => params[:batch_token])
     return
 

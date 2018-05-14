@@ -22,6 +22,7 @@
 //= require editor/tinymce_init.js
 
 //= require script
+//= require control_methods
 //= require canvas
 
 //= require moment.min
