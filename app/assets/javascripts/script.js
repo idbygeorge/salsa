@@ -138,7 +138,7 @@ function liteOff(x){
             settings.url = settings.url + '&meta_data_from_doc=' + '[' + meta_data_from_doc + ']';
             settings.url = encodeURI(settings.url);
 
-            $('#save_prompt').stop().removeAttr('style').removeClass('hidden').css({display: 'block', zIndex: 999999999, top: 30, position: 'fixed', width: '100%', textAlign: 'center', backgroundColor: '#ffe', borderBottom: 'solid 1px #ddd'}).html('Saving...');
+            notification('Saving...');
         });
 
         $('#tb_save').on('ajax:success', function(event, data, xhr, settings) {
@@ -192,7 +192,7 @@ function liteOff(x){
               }, 15000
             );
           } else {
-            $('#save_prompt').stop().removeAttr('style').removeClass('hidden').css({display: 'block', zIndex: 999999999, top: 30, position: 'fixed', width: '100%', textAlign: 'center', backgroundColor: '#f99', borderBottom: 'solid 1px #ddd'}).html(data.message);
+            notification(data.message);
           }
         });
 
