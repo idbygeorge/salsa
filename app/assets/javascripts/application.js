@@ -21,8 +21,12 @@
 //= require editor/ckeditor_init.js
 //= require editor/tinymce_init.js
 
-//= require script
+//= require update_grade_scale
+//= require callbacks
+//= require methods
 //= require control_methods
+//= require on_click
+//= require script
 //= require canvas
 
 //= require moment.min

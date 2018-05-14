@@ -114,7 +114,7 @@
         });
 
 
-        $("#controlPanel").on("click", "input,dt", function() {
+        $("#controlPanel").on("click", "input:not(:radio),dt", function() {
             var result = "";
             var controlParent = $(this).closest("[data-method]");
             var control = controlParent.data();
@@ -150,7 +150,6 @@
         // left sidebar section selector
 
         $("#tabs a").on("click", function(){
-            debugger
             var listItem = $(this).closest("li");
             var list = listItem.closest("ul");
 
@@ -244,11 +243,6 @@
             return false;
         });
 
-        var enableButton = $("<button class='enable_view'></button>").text("Enable the " + view_name + " view").on("click", function(){
-            $("#content_disable_link").trigger('click');
-            initEditor(editor, document);
-        });
-
         // edit a simple value (no html)
         $("#page").on("click keypress", ".editable", function(){
             var text = $(this).toggleClass("editable editing").text()
@@ -282,5 +276,5 @@
 
             editor.focus().select();
         });
-    }
+    })
 })(jQuery);
