@@ -177,7 +177,7 @@ class DocumentsController < ApplicationController
     saved = false
     republishing = true
     verify_org
-    if can_use_edit_token(@document.lms_course_id) && check_lock @organization[:slug], params[:batch_token]
+    if (check_lock @organization[:slug], params[:batch_token]) && can_use_edit_token(@document.lms_course_id)
       republishing = false;
       if canvas_course_id && !@organization.skip_lms_publish
         # publishing to canvas should not save in the Document model, the canvas version has been modified
@@ -351,7 +351,7 @@ class DocumentsController < ApplicationController
     raise ActionController::RoutingError.new('Not Found') unless @document
     @view_pdf_url = view_pdf_url
     @view_url = view_url
-    @template_url = template_url
+    @template_url = template_url(@document)
 
     # use the component that was used when this document was created
     if @document.component_version
