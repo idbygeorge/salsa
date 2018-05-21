@@ -106,50 +106,7 @@ class DocumentsController < ApplicationController
       end
     end
 
-    if @lms_course
-      @document = Document.find_by lms_course_id: params[:lms_course_id], organization: @organization
 
-      # flag to see if there is a match on the token id
-      token_matches = false
-
-      # if no document_token is in the params, but there is a relink value matching the current course, use that, then clear it
-      if session['relink_'+params[:lms_course_id]] && !params[:document_token]
-        params[:document_token] = session['relink_'+params[:lms_course_id]]
-      end
-
-      if params[:document_token]
-        # check if the supplied token matches the document view_id
-        if @document && @document[:view_id] == params[:document_token]
-          token_matches = true
-        end
-      else
-        # no token, proceed as normal
-        token_matches = true
-      end
-
-      unless @document && token_matches
-        find_or_create_document(session, params, @organization, @lms_course)
-      end
-
-      @document.revert_to params[:version].to_i if params[:version]
-
-      @view_pdf_url = view_pdf_url
-      @view_url = view_url
-      @template_url = template_url(@document)
-
-      # backwards compatibility alias
-      @syllabus = @document
-
-      render :layout => 'edit', :template => '/documents/content'
-    else
-      session[:redirect_course_id] = params[:lms_course_id]
-
-      if params[:document_token]
-        redirect_to '/oauth2/login', lms_course_id: params[:lms_course_id], document_token: params[:document_token]
-      else
-        redirect_to '/oauth2/login', lms_course_id: params[:lms_course_id]
-      end
-    end
   end
 
   def course_list
@@ -221,6 +178,51 @@ class DocumentsController < ApplicationController
   end
 
   protected
+  def lms_course
+    if @lms_course
+      @document = Document.find_by lms_course_id: params[:lms_course_id], organization: @organization
+
+      # flag to see if there is a match on the token id
+      token_matches = false
+
+      # if no document_token is in the params, but there is a relink value matching the current course, use that, then clear it
+      if session['relink_'+params[:lms_course_id]] && !params[:document_token]
+        params[:document_token] = session['relink_'+params[:lms_course_id]]
+      end
+
+      # check if the supplied token matches the document view_id
+      if params[:document_token] && @document&[:view_id] == params[:document_token]
+        token_matches = true
+      elsif !params[:document_token]
+        # no token, proceed as normal
+        token_matches = true
+      end
+
+      unless @document && token_matches
+        find_or_create_document(session, params, @organization, @lms_course)
+      end
+
+      @document.revert_to params[:version].to_i if params[:version]
+
+      @view_pdf_url = view_pdf_url
+      @view_url = view_url
+      @template_url = template_url(@document)
+
+      # backwards compatibility alias
+      @syllabus = @document
+
+      render :layout => 'edit', :template => '/documents/content'
+    else
+      session[:redirect_course_id] = params[:lms_course_id]
+
+      if params[:document_token]
+        redirect_to '/oauth2/login', lms_course_id: params[:lms_course_id], document_token: params[:document_token]
+      else
+        redirect_to '/oauth2/login', lms_course_id: params[:lms_course_id]
+      end
+    end
+  end
+
   def create_meta_data_from_document meta_data_from_doc, document, organization
     count = Hash.new 0
     meta_data_from_doc = meta_data_from_doc.tr('[]','').split(',')
@@ -252,7 +254,7 @@ class DocumentsController < ApplicationController
       @document.save!
 
       return redirect_to lms_course_document_path(lms_course_id: params[:lms_course_id])
-    elsif @document && params[:document_token]
+    elsif params[:document_token] && @document
       # show options to user (make child, make new)
       @template_url = template_url(@document)
 
@@ -269,7 +271,7 @@ class DocumentsController < ApplicationController
   end
 
   def can_use_edit_token(lms_course_id = nil)
-    is_authorized = is_lms_authenticated_user? && has_canvas_access_token && lms_course_id
+    is_authorized = is_lms_authenticated_user? && has_canvas_access_token? && lms_course_id
     if @organization[:enable_anonymous_actions]
       true
     elsif has_role('designer')
