@@ -159,10 +159,9 @@ class DocumentsController < ApplicationController
 
     verify_org
 
+    @page = 1
     if params[:page]
       @page = params[:page].to_i if params[:page]
-    else
-      @page = 1
     end
 
     @lms_courses = @lms_client.get("/api/v1/courses", per_page: 20, page: @page) if @lms_client.token
@@ -247,24 +246,22 @@ class DocumentsController < ApplicationController
   end
 
   def find_or_create_document session, params, organization, lms_course
-    if params[:document_token]
-      @document = Document.find_by view_id: params[:document_token]
+    @document = Document.find_by view_id: params[:document_token]
 
-        # we need to setup the course and associate it with canvas
-      if params[:canvas] && @document
-        @document = Document.new(name: lms_course['name'], lms_course_id: params[:lms_course_id], organization: organization, payload: @document[:payload])
-        @document.save!
+      # we need to setup the course and associate it with canvas
+    if params[:document_token] && params[:canvas] && @document
+      @document = Document.new(name: lms_course['name'], lms_course_id: params[:lms_course_id], organization: organization, payload: @document[:payload])
+      @document.save!
 
-        return redirect_to lms_course_document_path(lms_course_id: params[:lms_course_id])
-      elsif @document
-        # show options to user (make child, make new)
-        @template_url = template_url(@document)
+      return redirect_to lms_course_document_path(lms_course_id: params[:lms_course_id])
+    elsif @document && params[:document_token]
+      # show options to user (make child, make new)
+      @template_url = template_url(@document)
 
-        #clear the document token out
-        session.delete('relink_'+params[:lms_course_id])
+      #clear the document token out
+      session.delete('relink_'+params[:lms_course_id])
 
-        return render :layout => 'relink', :template => '/documents/relink'
-      end
+      return render :layout => 'relink', :template => '/documents/relink'
     end
 
     @document = Document.new(name: @lms_course['name'], lms_course_id: params[:lms_course_id], organization: @organization)
