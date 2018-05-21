@@ -49,7 +49,7 @@ class DocumentsController < ApplicationController
       redirect_to edit_document_path(:id => document.edit_id, :batch_token => params[:batch_token])
       return
     end
-    
+
     @calendar_only = params[:calendar_only] ? true : false
 
     @action = 'show'
@@ -120,7 +120,7 @@ class DocumentsController < ApplicationController
       end
 
       if params[:document_token]
-        # check if the supplied token token_matches the document view_id
+        # check if the supplied token matches the document view_id
         if @document && @document[:view_id] == params[:document_token]
           token_matches = true
         end
@@ -130,40 +130,14 @@ class DocumentsController < ApplicationController
       end
 
       unless @document && token_matches
-        # if they have a document token (read only token for now) then see if it exists
-        if params[:document_token]
-          @document = Document.find_by view_id: params[:document_token]
-
-          if @document
-            # we need to setup the course and associate it with canvas
-            if params[:canvas]
-              @document = Document.new(name: @lms_course['name'], lms_course_id: params[:lms_course_id], organization: @organization, payload: @document[:payload])
-              @document.save!
-
-              return redirect_to lms_course_document_path(lms_course_id: params[:lms_course_id])
-            else
-              # show options to user (make child, make new)
-              @template_url = template_url
-
-              #clear the document token out
-              session.delete('relink_'+params[:lms_course_id])
-
-              return render :layout => 'relink', :template => '/documents/relink'
-            end
-          end
-        end
-
-        @document = Document.new(name: @lms_course['name'], lms_course_id: params[:lms_course_id], organization: @organization)
-        @document.save!
-
-        session.delete('relink_'+params[:lms_course_id]) if session['relink_'+params[:lms_course_id]]
+        find_or_create_document(session, params, @organization)
       end
 
       @document.revert_to params[:version].to_i if params[:version]
 
       @view_pdf_url = view_pdf_url
       @view_url = view_url
-      @template_url = template_url
+      @template_url = template_url(@document)
 
       # backwards compatibility alias
       @syllabus = @document
@@ -270,6 +244,35 @@ class DocumentsController < ApplicationController
   end
 
   protected
+  def find_or_create_document session, params, organization
+    if params[:document_token]
+      @document = Document.find_by view_id: params[:document_token]
+
+      if @document
+        # we need to setup the course and associate it with canvas
+        if params[:canvas]
+          @document = Document.new(name: @lms_course['name'], lms_course_id: params[:lms_course_id], organization: organization, payload: @document[:payload])
+          @document.save!
+
+          return redirect_to lms_course_document_path(lms_course_id: params[:lms_course_id])
+        else
+          # show options to user (make child, make new)
+          @template_url = template_url(@document)
+
+          #clear the document token out
+          session.delete('relink_'+params[:lms_course_id])
+
+          return render :layout => 'relink', :template => '/documents/relink'
+        end
+      end
+    end
+
+    @document = Document.new(name: @lms_course['name'], lms_course_id: params[:lms_course_id], organization: @organization)
+    @document.save!
+
+    session.delete('relink_'+params[:lms_course_id]) if session['relink_'+params[:lms_course_id]]
+  end
+
   def can_use_edit_token(lms_course_id = nil)
     if @organization[:enable_anonymous_actions]
       true
@@ -332,8 +335,8 @@ class DocumentsController < ApplicationController
     "http://#{request.env['SERVER_NAME']}#{redirect_port}/#{sub_org_slugs}SALSA/#{@document.view_id}"
   end
 
-  def template_url
-    "http://#{request.env['SERVER_NAME']}#{redirect_port}/#{sub_org_slugs}SALSA/#{@document.template_id}"
+  def template_url document
+    "http://#{request.env['SERVER_NAME']}#{redirect_port}/#{sub_org_slugs}SALSA/#{document.template_id}"
   end
 
   def sub_org_slugs

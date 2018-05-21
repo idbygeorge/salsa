@@ -49,13 +49,11 @@ var controlMethods = {
 
                 element = newElement;
             }
-        } else if(args.action === "-") {
-            if(args.min === undefined || visibleElements.length > args.min){
-                var target = args.target.find(args.element+":visible").last()
-                $("#controlPanel").contents().find( "[data-meta='"+target.data('meta')+"']").prevAll("dt").first().addClass("ui-state-default").removeClass("ui-state-disabled")
-                target.remove();
-                $('aside:visible:has([data-method="taxonomy"][data-unique])', "#controlPanel").find("dt.ui-state-active").trigger("click")
-            }
+        } else if(args.action === "-") && (args.min === undefined || visibleElements.length > args.min) {
+              var target = args.target.find(args.element+":visible").last()
+              $("#controlPanel").contents().find( "[data-meta='"+target.data('meta')+"']").prevAll("dt").first().addClass("ui-state-default").removeClass("ui-state-disabled")
+              target.remove();
+              $('aside:visible:has([data-method="taxonomy"][data-unique])', "#controlPanel").find("dt.ui-state-active").trigger("click")
         } else {
             args.target.toggleClass('hide');
             args.source.closest("section").toggleClass("ui-state-active ui-state-default");
