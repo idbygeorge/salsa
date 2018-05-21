@@ -113,10 +113,8 @@ class DocumentsController < ApplicationController
       token_matches = false
 
       # if no document_token is in the params, but there is a relink value matching the current course, use that, then clear it
-      unless params[:document_token]
-        if session['relink_'+params[:lms_course_id]]
-          params[:document_token] = session['relink_'+params[:lms_course_id]]
-        end
+      if session['relink_'+params[:lms_course_id]] && !params[:document_token]
+        params[:document_token] = session['relink_'+params[:lms_course_id]]
       end
 
       if params[:document_token]
