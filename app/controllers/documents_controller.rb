@@ -271,18 +271,17 @@ class DocumentsController < ApplicationController
   end
 
   def can_use_edit_token(lms_course_id = nil)
+    is_authorized = is_lms_authenticated_user? && has_canvas_access_token && lms_course_id
     if @organization[:enable_anonymous_actions]
       true
     elsif has_role('designer')
       true
-    elsif is_lms_authenticated_user? && has_canvas_access_token? && lms_course_id
-      if @document == nil
-        true
-      elsif lms_course_id == nil
-        true
-      elsif authorized_to_edit_course(lms_course_id)
-        true
-      end
+    elsif is_authorized && @document == nil
+      true
+    elsif is_authorized && lms_course_id == nil
+      true
+    elsif is_authorized && authorized_to_edit_course(lms_course_id)
+      true
     else
       false
     end
