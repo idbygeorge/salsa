@@ -473,7 +473,7 @@ function liteOff(x){
         // save
         var publishing = false;
 
-        $('#tb_save').on('ajax:beforeSend', function(event, xhr, settings) {
+        $('#tb_save, #tb_save').on('ajax:beforeSend', function(event, xhr, settings) {
             if($('body').hasClass('disable-save')) {
                 xhr.abort();
                 return false;
