@@ -488,7 +488,8 @@ function liteOff(x){
 
             var document_version = $('[data-document-version]').attr('data-document-version');
 
-            settings.url = settings.url + '?document_version=' + document_version;
+            var queryStringStart = settings.url.search(/\?/) < 0 ? '?' : '&';
+            settings.url = settings.url + queryStringStart + 'document_version=' + document_version;
             settings.url = settings.url + '&meta_data_from_doc=' + '[' + meta_data_from_doc + ']';
             settings.url = encodeURI(settings.url);
 
