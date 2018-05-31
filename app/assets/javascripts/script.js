@@ -481,7 +481,7 @@ function liteOff(x){
             meta_data_from_doc = []
             $("#page").find( '[data-meta]' ).each(function() {
               meta_data_from_doc.push("salsa_" + $( this ).attr( 'data-meta' ));
-              meta_data_from_doc.push($( this ).text().replace(/\s+/g, ' '));
+              meta_data_from_doc.push($( this ).text().replace(/\s+/mg, ' '));
             });
 
             settings.data = cleanupDocument($('#page-data').html());
