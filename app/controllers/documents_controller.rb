@@ -178,7 +178,7 @@ class DocumentsController < ApplicationController
   end
 
   protected
-  def lms_course
+  def lms_course organization, session, params, lms_course
     if @lms_course
       @document = Document.find_by lms_course_id: params[:lms_course_id], organization: @organization
 
