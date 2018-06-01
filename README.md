@@ -51,7 +51,7 @@ Replace the example name and email address in the following steps with the ones 
 
 	#example
 	git config --global color.ui true
-	git config --global user.name "idbygeorge"
+	git config --global user.name "oasis4hedev"
 	git config --global user.email "fakeuser@syllabustool.com"
 	ssh-keygen -t rsa -C "fakeuser@syllabustool.com"
 
@@ -83,7 +83,7 @@ Rails is now installed, but in order for us to use the rails executable, we need
 And now we can verify Rails is installed:
 
 	rails -v
-	
+
 should return
 
 	Rails 4.0.0
@@ -104,7 +104,7 @@ Once this command is finished, it gives you a couple commands to run. Follow the
 	By default the postgresql user is your current OS X username with no password. For example, my OS X user is named chris so I can login to postgresql with that username.
 
 
-Development Installation Notes OS X 
+Development Installation Notes OS X
 -------------------------------------------
 
 Requires Ruby 1.9+, Rails 4.0.0
@@ -113,7 +113,7 @@ Requires Ruby 1.9+, Rails 4.0.0
 
 Clone repository
 
-    git clone https://github.com/idbygeorge/salsa.git
+    git clone https://github.com/oasis4hedev/salsa.git
     cd salsa
 
 Install postgres database using Homebrew

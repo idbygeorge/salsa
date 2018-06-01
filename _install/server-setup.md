@@ -343,7 +343,7 @@ Node packages
 App setup
 
     mkdir ~/apps && cd $_
-    git clone https://github.com/idbygeorge/salsa.git
+    git clone https://github.com/oasis4hedev/salsa.git
     cd salsa
     git checkout upgrade/puma
     gem install bundler
