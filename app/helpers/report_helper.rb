@@ -43,7 +43,7 @@ module ReportHelper
     if File.exist?(zipfile_path(org_slug, report_id))
       File.delete(zipfile_path(org_slug, report_id))
     end
-    Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
+    Zip::File.open(zipfile_path(org_slug, report_id), Zip::File::CREATE) do |zipfile|
       zipfile.get_output_stream('content.css'){ |os| os.write CompassRails.sprockets.find_asset('application.css').to_s }
       document_metas = {}
       docs.each do |doc|
@@ -79,9 +79,15 @@ module ReportHelper
 
     org = Organization.find_by slug: org_slug
 
+    if !account_filter == nil || !account_filter == ''
+      account_filter_sql = "AND n.value LIKE '%#{account_filter}%' AND a.key = 'account_id'"
+    else
+      account_filter_sql = nil
+    end
+
     start_filter = ''
 
-    if params[:start]
+    if params[:st1art]
       start = params[:start] = params[:start].gsub(/[^\d-]/, '')
       if start != ''
         start_filter = "AND (start.value IS NULL OR CAST(start.value AS DATE) >= '#{start}')"
@@ -217,8 +223,7 @@ module ReportHelper
 
       WHERE
         a.root_organization_id = #{org[:id].to_s}
-        AND a.key = 'account_id'
-        AND n.value LIKE '%#{account_filter}%'
+        #{account_filter_sql}
 
       ORDER BY pn.value, acn.value, n.value, a.lms_course_id
     SQL
