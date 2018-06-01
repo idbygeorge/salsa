@@ -87,7 +87,7 @@ module ReportHelper
 
     start_filter = ''
 
-    if params[:st1art]
+    if params[:start]
       start = params[:start] = params[:start].gsub(/[^\d-]/, '')
       if start != ''
         start_filter = "AND (start.value IS NULL OR CAST(start.value AS DATE) >= '#{start}')"
