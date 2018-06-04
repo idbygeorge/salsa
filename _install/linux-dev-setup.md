@@ -84,11 +84,12 @@ Databse config (config/database.yml)
       pool: 5
 
 Environment variables (config/application.yml)
-  development:
-    ZIPFILE_FOLDER: /tmp/zipfiles/
 
-  production:
-    ZIPFILE_FOLDER: zipfiles/
+    development:
+      ZIPFILE_FOLDER: /tmp/zipfiles/
+
+    production:
+      ZIPFILE_FOLDER: zipfiles/
 
 Make the postgres data folder in the project's tmp folder
 
