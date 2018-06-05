@@ -72,14 +72,13 @@ module ReportHelper
   end
 
   def self.zipfile_path (org_slug, report_id)
-    "/tmp/#{org_slug}_#{report_id}.zip"
+    "#{ENV["ZIPFILE_FOLDER"]}/#{org_slug}_#{report_id}.zip"
   end
 
   def self.get_document_meta org_slug, account_filter, params
 
     org = Organization.find_by slug: org_slug
-
-    if !account_filter == nil && !account_filter == ''
+    if account_filter != nil && account_filter != '' && account_filter != {"account_filter"=>""}
       account_filter_sql = "AND n.value LIKE '%#{account_filter}%' AND a.key = 'account_id'"
     else
       account_filter_sql = nil

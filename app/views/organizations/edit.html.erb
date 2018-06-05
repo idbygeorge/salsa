@@ -11,12 +11,12 @@
 <% if @organization.lms_authentication_key != '' %>
     <div class="pull-right">
 
-      <a class="btn btn-info" href="<%= canvas_accounts_path %>">
+      <a class="btn btn-info" href="http://<%=@organization.slug + canvas_accounts_path %>">
         <span class="glyphicon glyphicon-refresh"></span>
         LMS Accounts
       </a>
 
-      <a class="btn btn-info" href="<%= canvas_courses_path %>">
+      <a class="btn btn-info" href="http://<%=@organization.slug + canvas_courses_path %>">
         <span class="glyphicon glyphicon-refresh"></span>
         LMS Courses
       </a>

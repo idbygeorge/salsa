@@ -83,6 +83,14 @@ Databse config (config/database.yml)
       password:
       pool: 5
 
+Environment variables (config/application.yml)
+
+    development:
+      ZIPFILE_FOLDER: /tmp/zipfiles
+
+    production:
+      ZIPFILE_FOLDER: zipfiles
+
 Make the postgres data folder in the project's tmp folder
 
     mkdir tmp/db/postgres-data -p
@@ -106,7 +114,7 @@ Database commands
 
     test:
       secret_key_base: < and put the result here too >
-  
+
 ## Running the application
 
     sudo docker-compose up
@@ -123,6 +131,21 @@ there are also documents created but you still need to publish them by going to 
 ## Stopping application
 
     sudo docker-compose down
+
+## Deploying with capistrano
+  you should have a file in `config/deploy/<server-name>.rb` that looks like:
+
+    server '<server-name>', roles: %w{app web db}, user: '<user>', key: '~/.ssh/<ssh-key-name>'
+    set :rails_env, 'production'
+
+  then run this command to deploy
+
+    cap <server-name> deploy
+
+  run this command whenever you change the production variables in `config/application.yml` and want to push them to the server
+  make sure to grab the latest `config/application.yml` from the server before Running the command below
+
+    cap production setup
 
 ## Other useful docker commands
 
@@ -148,6 +171,7 @@ there are also documents created but you still need to publish them by going to 
         get_documents params[:slug]
       end  
     end
+
 
 ### Running the queue (que gem)
    if no documents are published at the time of generating the report the que gem will add errors to the que_jobs table and no html files will be in the archive
