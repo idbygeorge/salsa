@@ -79,7 +79,7 @@ module ReportHelper
 
     org = Organization.find_by slug: org_slug
 
-    if !account_filter == nil && !account_filter == ''
+    if account_filter != nil && account_filter != ''
       account_filter_sql = "AND n.value LIKE '%#{account_filter}%' AND a.key = 'account_id'"
     else
       account_filter_sql = nil
