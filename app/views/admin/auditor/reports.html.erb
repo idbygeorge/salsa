@@ -21,7 +21,7 @@
           <% else %>
             <%= link_to "Archive Report #{report.id}", admin_auditor_archive_report_path(report: report.id), class: "btn btn-danger"%>
           <% end %>
-          <% if File.exist?("/tmp/#{@org.slug}_#{report.id}.zip")%>
+          <% if File.exist?(ReportHelper.zipfile_path(@org.slug, report.id))%>
             <%= link_to "Download Report #{report.id}", admin_auditor_download_path(report: report.id), class: "btn btn-success"%>
           <% end %>
         </div>
