@@ -106,17 +106,6 @@ var controlMethods = {
             args.target.children(":visible").last().hide();
         }
     },
-    radiodropdown: function(args) {
-
-        var option = $('input[name=choose]:checked').val()
-        args.source.parent().contents().find("dt").each(function(){
-          $(this).hide();
-          if ($(this).is("#"+option) || $(this).is(".dropbtn")){
-            $(this).show();
-          }
-        });
-
-    },
     taxonomy: function(args) {
         if(args.text && args.element) {
             var newArgs = $.extend({}, args);
