@@ -11,7 +11,7 @@
 #   stripe_publishable_key: pk_live_9lcthxpSIHbGwmdO941O1XVU
 
 development:
-  ZIPFILE_FOLDER: /tmp/zipfiles/
+  ZIPFILE_FOLDER: /tmp/zipfiles
 
 production:
-  ZIPFILE_FOLDER: zipfiles/
+  ZIPFILE_FOLDER: zipfiles
