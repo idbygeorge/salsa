@@ -119,22 +119,24 @@ function liteOff(x){
                 }
             }
         });
-        $('#tb_save').on('ajax:beforeSend', function(event, xhr, settings) {
+
+        $('#tb_save, #tb_share').on('ajax:beforeSend', function(event, xhr, settings) {
             if($('body').hasClass('disable-save')) {
                 xhr.abort();
                 return false;
             }
             meta_data_from_doc = []
             $("#page").find( '[data-meta]' ).each(function() {
-              meta_data_from_doc.push("salsa_" + $( this ).attr( 'data-meta' ))
-              meta_data_from_doc.push($( this ).text())
+              meta_data_from_doc.push("salsa_" + $( this ).attr( 'data-meta' ));
+              meta_data_from_doc.push($( this ).text().replace(/\s+/mg, ' '));
             });
 
             settings.data = cleanupDocument($('#page-data').html());
 
             var document_version = $('[data-document-version]').attr('data-document-version');
 
-            settings.url = settings.url + '?document_version=' + document_version;
+            var queryStringStart = settings.url.search(/\?/) < 0 ? '?' : '&';
+            settings.url = settings.url + queryStringStart + 'document_version=' + document_version;
             settings.url = settings.url + '&meta_data_from_doc=' + '[' + meta_data_from_doc + ']';
             settings.url = encodeURI(settings.url);
 
