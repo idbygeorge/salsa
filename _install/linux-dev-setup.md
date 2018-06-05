@@ -142,7 +142,7 @@ there are also documents created but you still need to publish them by going to 
 
     cap <server-name> deploy
 
-  run this command whenever you change `config/application.yml`  
+  run this command whenever you change the production variables in `config/application.yml` and want to push them to the server
   make sure to grab the latest `config/application.yml` from the server before Running the command below
 
     cap production setup
