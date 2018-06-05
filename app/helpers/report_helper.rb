@@ -72,7 +72,7 @@ module ReportHelper
   end
 
   def self.zipfile_path (org_slug, report_id)
-    "/tmp/#{org_slug}_#{report_id}.zip"
+    "#{ENV["ZIPFILE_FOLDER"]}/#{org_slug}_#{report_id}.zip"
   end
 
   def self.get_document_meta org_slug, account_filter, params

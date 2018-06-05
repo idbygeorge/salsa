@@ -17,6 +17,7 @@ group :development do
   gem 'capistrano-bundler', require: false
   gem 'capistrano3-puma',   require: false
   gem 'capistrano-rails-collection', require: false
+  gem 'capistrano-figaro-yml', '~> 1.0.2', require: false
   gem 'better_errors'
   gem 'binding_of_caller'
   gem 'listen'
@@ -57,6 +58,9 @@ gem 'awesome_nested_set'
 gem 'kaminari'
 # active record version control
 gem 'paper_trail'
+
+# for env variables
+gem 'figaro'
 
 # processing meta data for orgs and accounts
 gem 'pivot_table'

@@ -8,6 +8,7 @@ require 'capistrano/rvm'
 require 'capistrano/rails/collection'
 require 'capistrano/rails/assets'
 require 'capistrano/rails/migrations'
+require 'capistrano/figaro_yml'
 
 require 'capistrano/console'
 
