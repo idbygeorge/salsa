@@ -7,6 +7,14 @@
             return false;
         });
 
+        // $("#controlPanel label").mouseup(function(e){
+        //     if ($(this).children().is(":not(:checked)")){
+        //       $(this).parent().find("[name|='program']")
+        //       $(this).parent().siblings().first().before($(this).parent().siblings().last());
+        //       $(this).parent().siblings().toggleClass("hide");
+        //     }
+        // });
+
         // example
         $("#tb_example").on("click", function(){
             return previewPage('#example','Example');
