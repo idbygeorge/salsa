@@ -880,7 +880,7 @@ function liteOff(x){
                 args.target.toggleClass('hide');
                 args.source.closest("section").toggleClass("ui-state-active ui-state-default");
 
-                element = argsTarget;
+                element = args.target;
             }
 
             if(args.meta) {
