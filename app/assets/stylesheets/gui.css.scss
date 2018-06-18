@@ -16,6 +16,7 @@ $hover: lighten($base_color, $lighten_percent);
     $experimental-support-for-svg: true;
     @include background-image(linear-gradient(top, $button_top 0%, $button_bottom 100%));
 }
+dt.ui-state-active { color: black !important; }
 
 #share_prompt, #choose_institution_prompt {
     a.button, button {
