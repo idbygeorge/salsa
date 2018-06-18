@@ -190,26 +190,20 @@ function checkTotals() {
     }]
   });
 }
+var listToggle = function(e,c){
+  e.preventDefault();
+  $(c).removeClass('active');
+  $(this).addClass('active');
+  $('.panel-collapse').each(function () {
+    $(this).addClass('in');
+  });
+}
 $(function () {
   'use strict';
   $("[data-toggle=tooltip]").tooltip({html: true});
   checkTotals();
-  $('.expandList').click(function (e) {
-    e.preventDefault();
-    $('.collapseList').removeClass('active');
-    $(this).addClass('active');
-    $('.panel-collapse').each(function () {
-      $(this).addClass('in');
-    });
-  });
-  $('.collapseList').click(function (e) {
-    e.preventDefault();
-    $('.expandList').removeClass('active');
-    $(this).addClass('active');
-    $('.panel-collapse').each(function () {
-      $(this).removeClass('in');
-    });
-  });
+  $('.expandList').click(listToggle(event,".collapseList"));
+  $('.collapseList').click(listToggle(event,".expandList"));
 });
 
 (function($){

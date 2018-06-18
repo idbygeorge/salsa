@@ -40,11 +40,10 @@ module ReportHelper
     @organization = Organization.find_by slug: org_slug
     docs = Document.where(organization_id: @organization.id, id: report_data.map(&:document_id)).where('updated_at != created_at').all
 
-    zipfile_name = "/tmp/#{org_slug}_#{report_id}.zip"
-    if File.exist?(zipfile_name)
-      File.delete(zipfile_name)
+    if File.exist?(zipfile_path(org_slug, report_id))
+      File.delete(zipfile_path(org_slug, report_id))
     end
-    Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
+    Zip::File.open(zipfile_path(org_slug, report_id), Zip::File::CREATE) do |zipfile|
       zipfile.get_output_stream('content.css'){ |os| os.write CompassRails.sprockets.find_asset('application.css').to_s }
       document_metas = {}
       docs.each do |doc|
@@ -72,9 +71,18 @@ module ReportHelper
     end
   end
 
+  def self.zipfile_path (org_slug, report_id)
+    "#{ENV["ZIPFILE_FOLDER"]}/#{org_slug}_#{report_id}.zip"
+  end
+
   def self.get_document_meta org_slug, account_filter, params
 
     org = Organization.find_by slug: org_slug
+    if account_filter != nil && account_filter != '' && account_filter != {"account_filter"=>""}
+      account_filter_sql = "AND n.value LIKE '%#{account_filter}%' AND a.key = 'account_id'"
+    else
+      account_filter_sql = nil
+    end
 
     start_filter = ''
 
@@ -214,8 +222,7 @@ module ReportHelper
 
       WHERE
         a.root_organization_id = #{org[:id].to_s}
-        AND a.key = 'account_id'
-        AND n.value LIKE '%#{account_filter}%'
+        #{account_filter_sql}
 
       ORDER BY pn.value, acn.value, n.value, a.lms_course_id
     SQL

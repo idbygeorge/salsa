@@ -58,8 +58,12 @@ class OrganizationsController < AdminController
   def update
     @organization = find_org_by_path params[:slug]
 
-    if params['organization']['default_account_filter'] != ''
-      params['organization']['default_account_filter'] = JSON.parse(params['organization']['default_account_filter'])
+    if has_role('admin') && params['organization']['default_account_filter'] != nil
+      if params['organization']['default_account_filter'] != ''
+        params['organization']['default_account_filter'] = JSON.parse(params['organization']['default_account_filter'])
+      else
+        params['organization']['default_account_filter'] = ''
+      end
     end
 
     @organization.update organization_params

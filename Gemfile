@@ -1,90 +1,94 @@
-source 'https://rubygems.org'
+source "https://rubygems.org"
 
-# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-gem 'rails', '5.1.2'
+# Bundle edge Rails instead: gem "rails", github: "rails/rails"
+gem "rails", "5.1.2"
 
 group :development, :test do
-  gem 'sqlite3'
-  gem 'byebug'
-  gem 'rspec-rails'
+  gem "sqlite3"
+  gem "byebug"
+  gem "rspec-rails"
 end
 
 group :development do
   # Use Capistrano for deployment
-  gem 'capistrano',         require: false
-  gem 'capistrano-rvm',     require: false
-  gem 'capistrano-rails',   require: false
-  gem 'capistrano-bundler', require: false
-  gem 'capistrano3-puma',   require: false
-  gem 'capistrano-rails-collection', require: false
-  gem 'better_errors'
-  gem 'binding_of_caller'
-  gem 'listen'
+  gem "capistrano",         require: false
+  gem "capistrano-rvm",     require: false
+  gem "capistrano-rails",   require: false
+  gem "capistrano-bundler", require: false
+  gem "capistrano3-puma",   require: false
+  gem "capistrano-rails-collection", require: false
+  gem "capistrano-figaro-yml", "~> 1.0.2", require: false
+  gem "better_errors"
+  gem "binding_of_caller"
+  gem "listen"
 end
 
 #postgresql for db
-gem 'pg', '0.20'
+gem "pg", "0.20"
 
 group :production do
-  gem 'rails_12factor'
+  gem "rails_12factor"
 
   # Use puma as the app server
-  gem 'puma'
+  gem "puma"
 
   # newrelic for monitoring
-  gem 'newrelic_rpm'
+  gem "newrelic_rpm"
 end
 
 # preprocessors
-gem 'sass-rails'
-gem 'compass-rails'
-gem 'coffee-rails'
-gem 'uglifier'
+gem "sass-rails"
+gem "compass-rails"
+gem "coffee-rails"
+gem "uglifier"
 
 # bootstrap
-gem 'bootstrap-sass'
+gem "bootstrap-sass"
 
 # Use jquery as the JavaScript library
-gem 'jquery-rails'
-gem 'jquery-ui-rails'
+gem "jquery-rails"
+gem "jquery-ui-rails"
 
 #TODO: remove foundation
-gem 'zurb-foundation'
+gem "zurb-foundation"
 
 # Add awesome nested set
-gem 'awesome_nested_set'
+gem "awesome_nested_set"
 # pagination
-gem 'kaminari'
+gem "kaminari"
 # active record version control
-gem 'paper_trail'
+gem "paper_trail"
+
+# for env variables
+gem "figaro"
 
 # processing meta data for orgs and accounts
-gem 'pivot_table'
+gem "pivot_table"
 
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
-gem 'turbolinks'
+gem "turbolinks"
 
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
-gem 'jbuilder'
+gem "jbuilder"
 
 # for aws bucket usage
-gem 'uber-s3'
+gem "uber-s3"
 
 # instructure canvas api
-gem 'canvas-api', '0.7'
+gem "canvas-api", "0.7"
 
-gem 'nokogiri'
+gem "nokogiri"
 
 # background gem for long runnning tasks
-gem 'que'
+gem "que"
 
 #gem for creating zip files
-gem 'rubyzip'
+gem "rubyzip"
 
 # Use ActiveModel has_secure_password
-gem 'bcrypt'
+gem "bcrypt"
 
 group :doc do
   # bundle exec rake doc:rails generates the API under doc/api.
-  gem 'sdoc', require: false
+  gem "sdoc", require: false
 end

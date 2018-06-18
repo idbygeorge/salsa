@@ -6,13 +6,14 @@ Rails.application.routes.draw do
 
   get '/:alias/:document', to: redirect('/SALSA/%{document}'), constraints: { alias: /(syllabuses|salsas?)/ }
   get '/:alias/:document/:action', to: redirect('/SALSA/%{document}/%{action}'), constraints: { alias: /(syllabuses|salsas?)/, action: /(edit|template)?/ }
+  
+  get '/status/server', to: 'default#status_server'
 
   get '/admin', to: 'admin#landing', as: 'admin'
 
   namespace :admin do
     get "report", to: 'auditor#report', as: 'auditor_report'
     post "report", to: 'auditor#report', as: 'auditor_generate_report'
-    get "archive", to: 'auditor#archive', as: 'auditor_archive'
     get "download", to: 'auditor#download', as: 'auditor_download'
 
     get "report-status", to: 'auditor#reportStatus', as: 'auditor_report_status'
