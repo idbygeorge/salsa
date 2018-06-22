@@ -15,7 +15,7 @@ module CanvasHelper
 
       if canvas_client
         if account_ids !=nil
-          canvas_accounts = OrganizationMeta.where(root_id: org['id'], key: ['id', 'parent_id'],lms_account_id: account_ids.split(/,/)).order :key
+          canvas_accounts = OrganizationMeta.where(root_id: org['id'], key: ['id', 'parent_id'],lms_organization_id: account_ids.split(/,/)).order :key
         else
           canvas_accounts = OrganizationMeta.where(root_id: org['id'], key: ['id', 'parent_id']).order :key
         end
