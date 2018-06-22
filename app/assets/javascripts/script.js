@@ -128,7 +128,13 @@ function liteOff(x){
             $("#page").find( '[data-meta]' ).each(function() {
               var key = "salsa_" + $( this ).attr( 'data-meta' )
               var value = $( this ).text().replace(/\s+/mg, ' ')
-              meta_data_from_doc.push({[key] :value });
+              meta_data_from_doc.push({
+                [key] : value ,
+                lms_account : "lms_account",
+                lms_course_id : "lms_course_id",
+                root_organization_slug : window.location.hostname,
+                document_id: "doc_id"
+              });
 
             });
             if(meta_data_from_doc){
