@@ -1,10 +1,10 @@
 module CanvasHelper
 
-  def self.courses_sync_as_job (org_slug, canvas_token)
-    CanvasSyncCourseMeta.enqueue(org_slug, canvas_token)
+  def self.courses_sync_as_job (org_slug, canvas_token, account_ids=nil)
+    CanvasSyncCourseMeta.enqueue(org_slug, canvas_token, account_ids)
   end
 
-  def self.courses_sync (org_slug, canvas_token)
+  def self.courses_sync (org_slug, canvas_token, account_ids=nil)
     org = Organization.find_by slug: org_slug
     canvas_access_token = canvas_token
 
@@ -14,7 +14,11 @@ module CanvasHelper
       canvas_client = Canvas::API.new(:host => canvas_endpoint, :token => canvas_access_token)
 
       if canvas_client
-        canvas_accounts = OrganizationMeta.where(root_id: org['id'], key: ['id', 'parent_id']).order :key
+        if account_ids !=nil
+          canvas_accounts = OrganizationMeta.where(root_id: org['id'], key: ['id', 'parent_id'],lms_account_id: acocunt_ids.split(/,/)).order :key
+        else
+          canvas_accounts = OrganizationMeta.where(root_id: org['id'], key: ['id', 'parent_id']).order :key
+        end
         sync_canvas_courses canvas_accounts, org[:id], canvas_client
       else
         throw "Failed to initialize canvas client: #{canvas_endpoint}"
