@@ -139,11 +139,9 @@ class AdminController < ApplicationController
           sync_canvas_accounts canvas_root_account, @org[:id]
         end
       else
-        debugger
         false
       end
     else
-      debugger
       false
     end
 
@@ -152,10 +150,10 @@ class AdminController < ApplicationController
 
   def canvas_courses_sync
     @canvas_access_token = params[:canvas_token]
-
+    accounts = params[:account_ids]
     org_slug = request.env['SERVER_NAME']
 
-    CanvasHelper.courses_sync_as_job org_slug, @canvas_access_token
+    CanvasHelper.courses_sync_as_job org_slug, @canvas_access_token, accounts
 
     redirect_to canvas_courses_path
   end
