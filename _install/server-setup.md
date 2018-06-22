@@ -453,7 +453,8 @@ to find the pid of the que worker run
 
 one of the outputs should look something like this
 
-    ubuntu   <pid>  1.5 18.6 743144 189560 ?       Sl   Jun21  26:23 /home/ubuntu/apps/salsa/shared/bundle/ruby/2.4.0/bin/que/home/ubuntu/apps/salsa/current/config/environment.rb
+    ubuntu   <pid>  1.5 18.6 743144 189560 ?       Sl   Jun21  26:23
+     /home/ubuntu/apps/salsa/shared/bundle/ruby/2.4.0/bin/que /home/ubuntu/apps/salsa/current/config/environment.rb
 
 with the pid from that task run this command to tail the que worker
 
