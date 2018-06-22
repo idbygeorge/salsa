@@ -34,21 +34,18 @@ class DocumentsController < ApplicationController
   end
 
   def show
+    document = Document.find_by_edit_id(params[:id])
+    document_template = Document.find_by_template_id(params[:id])
     @document = Document.find_by_view_id(params[:id])
-    unless @document
-      document = Document.find_by_edit_id(params[:id])
-
-      unless document
-        document_template = Document.find_by_template_id(params[:id])
-        if document_template
-          document = document_template.dup
-          document.reset_ids
-          document.save!
-        end
-
-      end
-
-      raise ActionController::RoutingError.new('Not Found') unless document
+    if document_template != nil
+      document = document_template.dup
+      document.reset_ids
+      document.save!
+      redirect_to edit_document_path(:id => document.edit_id, :batch_token => params[:batch_token])
+      return
+    end
+    raise ActionController::RoutingError.new('Not Found') unless document || @document
+    if document
       redirect_to edit_document_path(:id => document.edit_id, :batch_token => params[:batch_token])
       return
     end
@@ -116,57 +113,27 @@ class DocumentsController < ApplicationController
       token_matches = false
 
       # if no document_token is in the params, but there is a relink value matching the current course, use that, then clear it
-      unless params[:document_token]
-        if session['relink_'+params[:lms_course_id]]
-          params[:document_token] = session['relink_'+params[:lms_course_id]]
-        end
+      if session['relink_'+params[:lms_course_id]] && !params[:document_token]
+        params[:document_token] = session['relink_'+params[:lms_course_id]]
       end
 
-      if params[:document_token]
-        # check if the supplied token token_matches the document view_id
-        if @document && @document[:view_id] == params[:document_token]
-          token_matches = true
-        end
-      else
+      # check if the supplied token matches the document view_id
+      if params[:document_token] && @document&[:view_id] == params[:document_token]
+        token_matches = true
+      elsif !params[:document_token]
         # no token, proceed as normal
         token_matches = true
       end
 
       unless @document && token_matches
-        # if they have a document token (read only token for now) then see if it exists
-        if params[:document_token]
-          @document = Document.find_by view_id: params[:document_token]
-
-          if @document
-            # we need to setup the course and associate it with canvas
-            if params[:canvas]
-              @document = Document.new(name: @lms_course['name'], lms_course_id: params[:lms_course_id], organization: @organization, payload: @document[:payload])
-              @document.save!
-
-              return redirect_to lms_course_document_path(lms_course_id: params[:lms_course_id])
-            else
-              # show options to user (make child, make new)
-              @template_url = template_url
-
-              #clear the document token out
-              session.delete('relink_'+params[:lms_course_id])
-
-              return render :layout => 'relink', :template => '/documents/relink'
-            end
-          end
-        end
-
-        @document = Document.new(name: @lms_course['name'], lms_course_id: params[:lms_course_id], organization: @organization)
-        @document.save!
-
-        session.delete('relink_'+params[:lms_course_id]) if session['relink_'+params[:lms_course_id]]
+        find_or_create_document(session, params, @organization, @lms_course)
       end
 
       @document.revert_to params[:version].to_i if params[:version]
 
       @view_pdf_url = view_pdf_url
       @view_url = view_url
-      @template_url = template_url
+      @template_url = template_url(@document)
 
       # backwards compatibility alias
       @syllabus = @document
@@ -181,6 +148,7 @@ class DocumentsController < ApplicationController
         redirect_to '/oauth2/login', lms_course_id: params[:lms_course_id]
       end
     end
+
   end
 
   def course_list
@@ -188,10 +156,9 @@ class DocumentsController < ApplicationController
 
     verify_org
 
+    @page = 1
     if params[:page]
       @page = params[:page].to_i if params[:page]
-    else
-      @page = 1
     end
 
     @lms_courses = @lms_client.get("/api/v1/courses", per_page: 20, page: @page) if @lms_client.token
@@ -206,51 +173,31 @@ class DocumentsController < ApplicationController
     saved = false
     republishing = true
     verify_org
-    if can_use_edit_token(@document.lms_course_id)
-      if check_lock @organization[:slug], params[:batch_token]
-        republishing = false;
-        if canvas_course_id && !@organization.skip_lms_publish
-          # publishing to canvas should not save in the Document model, the canvas version has been modified
-          saved = update_course_document(canvas_course_id, request.raw_post, @organization[:lms_info_slug]) if params[:canvas] && canvas_course_id
-        else
-          if(params[:canvas_relink_course_id])
-            #find old document in this org with this id, set to null
-            old_document = Document.find_by lms_course_id: params[:canvas_relink_course_id], organization: @organization
-            old_document.update(lms_published_at: nil, lms_course_id: nil)
+    if (check_lock @organization[:slug], params[:batch_token]) && can_use_edit_token(@document.lms_course_id)
+      republishing = false;
+      if canvas_course_id && !@organization.skip_lms_publish
+        # publishing to canvas should not save in the Document model, the canvas version has been modified
+        saved = update_course_document(canvas_course_id, request.raw_post, @organization[:lms_info_slug]) if params[:canvas] && canvas_course_id
+      else
+        if(params[:canvas_relink_course_id])
+          #find old document in this org with this id, set to null
+          old_document = Document.find_by lms_course_id: params[:canvas_relink_course_id], organization: @organization
+          old_document.update(lms_published_at: nil, lms_course_id: nil)
 
-            #set this document's canvas_course_id
-            @document.lms_course_id = params[:canvas_relink_course_id]
-          end
-          if meta_data_from_doc && @document.lms_course_id && @organization.lms_authentication_id && @organization.track_meta_info_from_document
-            count = Hash.new 0
-            meta_data_from_doc = meta_data_from_doc.tr('[]','').split(',')
-            meta_data_from_doc.each_slice(2) do |k,v|
-              count[k.to_s] +=1
-              k = "#{k.to_s}_#{count[k]}"
-              if dm = DocumentMeta.find_by(key: k, document_id: @document.id)
-                dm.value = v
-                dm.save
-              elsif !DocumentMeta.exists?(key:k, document_id: @document.id)
-                DocumentMeta.create(
-                  :key => k,
-                  :value => v.to_s,
-                  :document_id => @document.id,
-                  :root_organization_id => @document.organization_id,
-                  :lms_course_id => @document.lms_course_id,
-                  :lms_organization_id => @organization.lms_authentication_id
-                )
-              end
-            end
-          end
-          if document_version && @document.versions.count == document_version.to_i
-            @document.payload = request.raw_post
+          #set this document's canvas_course_id
+          @document.lms_course_id = params[:canvas_relink_course_id]
+        end
+        if meta_data_from_doc && @document.lms_course_id && @organization.lms_authentication_id && @organization.track_meta_info_from_document
+          create_meta_data_from_document(meta_data_from_doc, @document, @organization)
+        end
+        if document_version && @document.versions.count == document_version.to_i
+          @document.payload = request.raw_post
 
-            @document.payload = nil if @document.payload == ''
-            @document.lms_published_at = DateTime.now
+          @document.payload = nil if @document.payload == ''
+          @document.lms_published_at = DateTime.now
 
-            @document.save!
-            saved = true;
-          end
+          @document.save!
+          saved = true;
         end
       end
     end
@@ -273,19 +220,65 @@ class DocumentsController < ApplicationController
   end
 
   protected
+  def create_meta_data_from_document meta_data_from_doc, document, organization
+    count = Hash.new 0
+    meta_data_from_doc = meta_data_from_doc.tr('[]','').split(',')
+    meta_data_from_doc.each_slice(2) do |k,v|
+      count[k.to_s] +=1
+      k = "#{k.to_s}_#{count[k]}"
+      if dm = DocumentMeta.find_by(key: k, document_id: document.id)
+        dm.value = v
+        dm.save
+      elsif !DocumentMeta.exists?(key:k, document_id: document.id)
+        DocumentMeta.create(
+          :key => k,
+          :document_id => document.id,
+          :value => v.to_s,
+          :root_organization_id => document.organization_id,
+          :lms_course_id => document.lms_course_id,
+          :lms_organization_id => organization.lms_authentication_id
+        )
+      end
+    end
+  end
+
+  def find_or_create_document session, params, organization, lms_course
+    @document = Document.find_by view_id: params[:document_token]
+
+      # we need to setup the course and associate it with canvas
+    if params[:document_token] && params[:canvas] && @document
+      @document = Document.new(name: lms_course['name'], lms_course_id: params[:lms_course_id], organization: organization, payload: @document[:payload])
+      @document.save!
+
+      return redirect_to lms_course_document_path(lms_course_id: params[:lms_course_id])
+    elsif params[:document_token] && @document
+      # show options to user (make child, make new)
+      @template_url = template_url(@document)
+
+      #clear the document token out
+      session.delete('relink_'+params[:lms_course_id])
+
+      return render :layout => 'relink', :template => '/documents/relink'
+    end
+
+    @document = Document.new(name: @lms_course['name'], lms_course_id: params[:lms_course_id], organization: @organization)
+    @document.save!
+
+    session.delete('relink_'+params[:lms_course_id]) if session['relink_'+params[:lms_course_id]]
+  end
+
   def can_use_edit_token(lms_course_id = nil)
+    is_authorized = is_lms_authenticated_user? && has_canvas_access_token? && lms_course_id
     if @organization[:enable_anonymous_actions]
       true
     elsif has_role('designer')
       true
-    elsif is_lms_authenticated_user? && has_canvas_access_token? && lms_course_id
-      if @document == nil
-        true
-      elsif lms_course_id == nil
-        true
-      elsif authorized_to_edit_course(lms_course_id)
-        true
-      end
+    elsif is_authorized && @document == nil
+      true
+    elsif is_authorized && lms_course_id == nil
+      true
+    elsif is_authorized && authorized_to_edit_course(lms_course_id)
+      true
     else
       false
     end
@@ -335,8 +328,8 @@ class DocumentsController < ApplicationController
     "http://#{request.env['SERVER_NAME']}#{redirect_port}/#{sub_org_slugs}SALSA/#{@document.view_id}"
   end
 
-  def template_url
-    "http://#{request.env['SERVER_NAME']}#{redirect_port}/#{sub_org_slugs}SALSA/#{@document.template_id}"
+  def template_url document
+    "http://#{request.env['SERVER_NAME']}#{redirect_port}/#{sub_org_slugs}SALSA/#{document.template_id}"
   end
 
   def sub_org_slugs
@@ -349,7 +342,7 @@ class DocumentsController < ApplicationController
     raise ActionController::RoutingError.new('Not Found') unless @document
     @view_pdf_url = view_pdf_url
     @view_url = view_url
-    @template_url = template_url
+    @template_url = template_url(@document)
 
     # use the component that was used when this document was created
     if @document.component_version
