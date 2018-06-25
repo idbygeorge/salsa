@@ -84,6 +84,12 @@ module ReportHelper
 
     org = Organization.find_by slug: org_slug
 
+    if account_filter != nil && account_filter != '' && account_filter != {"account_filter"=>""}
+      account_filter_sql = "AND n.value LIKE '%#{account_filter}%' AND a.key = 'account_id'"
+    else
+      account_filter_sql = nil
+    end
+
     start_filter = ''
     if params[:start]
       start = params[:start] = params[:start].gsub(/[^\d-]/, '')
@@ -221,8 +227,7 @@ module ReportHelper
 
       WHERE
         a.root_organization_id = #{org[:id].to_s}
-        AND n.value LIKE '#{account_filter}'
-        AND a.key = 'account_id'
+        #{account_filter_sql}
 
       ORDER BY pn.value, acn.value, n.value, a.lms_course_id
     SQL
