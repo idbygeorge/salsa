@@ -189,6 +189,7 @@ class DocumentsController < ApplicationController
         end
         if meta_data_from_doc && @document.lms_course_id && @organization.lms_authentication_id && @organization.track_meta_info_from_document
           create_meta_data_from_document(meta_data_from_doc, @document, @organization)
+          meta_data_from_doc_saved = true
         end
         if document_version && @document.versions.count == document_version.to_i
           @document.payload = request.raw_post
@@ -207,7 +208,7 @@ class DocumentsController < ApplicationController
         msg = { :status => "error", :message => "You do not have permisson to save this document"}
       elsif republishing
        msg = { :status => "error", :message => "Documents for this organization are currently being republished. Please copy your changes and try again later.", :version => @document.versions.count }
-      elsif !saved
+     elsif !saved && !meta_data_from_doc_saved
         msg = { :status => "error", :message => "This is not a current version of this document! Please copy your changes and refresh the page to get the current version.", :version => @document.versions.count }
       else
         msg = { :status => "ok", :message => "Success!", :version => @document.versions.count }
@@ -222,19 +223,19 @@ class DocumentsController < ApplicationController
   protected
   def create_meta_data_from_document meta_data_from_doc, document, organization
     count = Hash.new 0
-    meta_data_from_doc.values do |md|
-      count[k.to_s] +=1
-      k = "#{k.to_s}_#{count[k]}"
+    meta_data_from_doc.values.each do |md|
+      count[md.fetch(:key).to_s] +=1
+      k = "#{md.fetch(:key).to_s}_#{count[md.fetch(:key)]}"
       if dm = DocumentMeta.find_by(key: k, document_id: document.id)
-        dm.value = v
+        dm.value = md.fetch(:value)
         dm.save
       elsif !DocumentMeta.exists?(key:k, document_id: document.id)
         DocumentMeta.create(
           :key => k,
           :document_id => document.id,
-          :value => v.to_s,
+          :value => md.fetch(:value).to_s,
           :root_organization_id => document.organization_id,
-          :lms_course_id => document.lms_course_id,
+          :lms_course_id => md.fetch(:lms_course_id) || document.lms_course_id,
           :lms_organization_id => organization.lms_authentication_id
         )
       end

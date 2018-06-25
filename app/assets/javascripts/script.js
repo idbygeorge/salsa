@@ -124,6 +124,13 @@ function liteOff(x){
                 xhr.abort();
                 return false;
             }
+            settings.data = cleanupDocument($('#page-data').html());
+
+            var document_version = $('[data-document-version]').attr('data-document-version');
+            var queryStringStart = settings.url.search(/\?/) < 0 ? '?' : '&';
+            settings.url = settings.url + queryStringStart + 'document_version=' + document_version;
+            settings.url = encodeURI(settings.url);
+
             var meta_data_from_doc = []
             $("#page").find( '[data-meta]' ).each(function() {
               var key = "salsa_" + $( this ).attr( 'data-meta' )
@@ -132,7 +139,7 @@ function liteOff(x){
                 key : key,
                 value : value,
                 lms_account : "lms_account",
-                lms_course_id : "lms_course_id",
+                lms_course_id : jQuery.parseJSON($("body").find( '[data-lms-course]' ).attr("data-lms-course")).id,
                 root_organization_slug : window.location.hostname,
                 document_id: "doc_id"
               });
@@ -146,12 +153,6 @@ function liteOff(x){
                 method: "PUT"
               });
             }
-            settings.data = cleanupDocument($('#page-data').html());
-
-            var document_version = $('[data-document-version]').attr('data-document-version');
-            var queryStringStart = settings.url.search(/\?/) < 0 ? '?' : '&';
-            settings.url = settings.url + queryStringStart + 'document_version=' + document_version;
-            settings.url = encodeURI(settings.url);
 
             notification('Saving...');
         });
