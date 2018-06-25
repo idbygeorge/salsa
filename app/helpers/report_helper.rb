@@ -81,11 +81,13 @@ module ReportHelper
   end
 
   def self.get_document_meta org_slug, account_filter, params
+    query_parameters = {}
 
     org = Organization.find_by slug: org_slug
 
     if account_filter != nil && account_filter != '' && account_filter != {"account_filter"=>""}
-      account_filter_sql = "AND n.value LIKE '%#{account_filter}%' AND a.key = 'account_id'"
+      query_parameters[:account_filter] = "%#{account_filter}%"
+      account_filter_sql = "AND n.value LIKE :account_filter AND a.key = 'account_id'"
     else
       account_filter_sql = nil
     end
@@ -94,9 +96,20 @@ module ReportHelper
     if params[:start]
       start = params[:start] = params[:start].gsub(/[^\d-]/, '')
       if start != ''
-        start_filter = "AND (start.value IS NULL OR CAST(start.value AS DATE) >= '#{start}')"
+        query_parameters[:start]
+        start_filter = "AND (start.value IS NULL OR CAST(start.value AS DATE) >= :start)"
       end
     end
+
+    limit_sql = nil
+    if params[:page]
+        query_parameters[:offset] = (params[:page] || 1).to_i
+        query_parameters[:limit] = (params[:per] || 1).to_i
+        limit_sql = 'offset :offset limit :limit'
+    end
+
+    query_parameters[:org_id] = org[:id]
+    query_parameters[:org_id_string] = org[:id].to_s
 
     query_string =
     <<-SQL.gsub(/^ {4}/, '')
@@ -170,9 +183,6 @@ module ReportHelper
           a.lms_course_id = et.lms_course_id
           AND a.root_organization_id = et.root_organization_id
           AND et.key = 'enrollment_term_id'
-          -- whitelist for enrollment term id
-          -- TODO: (move this to a filter option...)
-
         )
 
       -- join the sis course id meta information
@@ -221,17 +231,18 @@ module ReportHelper
       LEFT JOIN
         documents as d ON (
           a.lms_course_id = d.lms_course_id
-          --TODO: docuemnts need root organization tracked to make this faster
-          AND d.organization_id IN (#{org[:id]})
+          AND d.organization_id IN (:org_id)
         )
 
       WHERE
-        a.root_organization_id = #{org[:id].to_s}
+        a.root_organization_id = :org_id_string
         #{account_filter_sql}
 
       ORDER BY pn.value, acn.value, n.value, a.lms_course_id
+
+      #{limit_sql}
     SQL
 
-    DocumentMeta.find_by_sql query_string
+    DocumentMeta.find_by_sql([query_string, query_parameters])
   end
 end
