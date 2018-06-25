@@ -4,17 +4,11 @@ source "https://rubygems.org"
 gem "rails", "5.1.2"
 
 group :development, :test do
-<<<<<<< HEAD
   gem 'sqlite3'
   gem 'byebug'
   gem 'rspec-rails'
   gem 'factory_bot'
   gem "factory_bot_rails", "~> 4.0"
-=======
-  gem "sqlite3"
-  gem "byebug"
-  gem "rspec-rails"
->>>>>>> d360cfa9f83b89a58e2e5ec6fd87132fb3fb62d8
 end
 
 group :development do
