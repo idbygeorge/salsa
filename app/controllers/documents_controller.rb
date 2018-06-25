@@ -169,8 +169,7 @@ class DocumentsController < ApplicationController
   def update
     canvas_course_id = params[:canvas_course_id]
     document_version = params[:document_version]
-    meta_data_from_doc = params[:data]
-    debugger
+    meta_data_from_doc = params[:meta_data_from_doc]
     saved = false
     republishing = true
     verify_org
@@ -223,7 +222,7 @@ class DocumentsController < ApplicationController
   protected
   def create_meta_data_from_document meta_data_from_doc, document, organization
     count = Hash.new 0
-    meta_data_from_doc do |k,v|
+    meta_data_from_doc.values do |md|
       count[k.to_s] +=1
       k = "#{k.to_s}_#{count[k]}"
       if dm = DocumentMeta.find_by(key: k, document_id: document.id)
