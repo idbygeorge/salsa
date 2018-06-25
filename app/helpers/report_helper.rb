@@ -35,11 +35,14 @@ module ReportHelper
     self.archive org_slug, report_id, @report_data
   end
 
-  def self.archive (org_slug, report_id, report_data)
+  def self.archive (org_slug, report_id, report_data, account_filter=nil)
     report = ReportArchive.find_by id: report_id
     @organization = Organization.find_by slug: org_slug
-    docs = Document.where(organization_id: @organization.id, id: report_data.map(&:document_id)).where('updated_at != created_at').all
-
+    unless account_filter != nil && account_filter != '' && account_filter != {"account_filter"=>""}
+      docs = Document.where(organization_id: @organization.id).where('updated_at != created_at').all
+    else
+      docs = Document.where(organization_id: @organization.id, id: report_data.map(&:document_id)).where('updated_at != created_at').all
+    end
     if File.exist?(zipfile_path(org_slug, report_id))
       File.delete(zipfile_path(org_slug, report_id))
     end
@@ -78,11 +81,6 @@ module ReportHelper
   def self.get_document_meta org_slug, account_filter, params
 
     org = Organization.find_by slug: org_slug
-    if account_filter != nil && account_filter != '' && account_filter != {"account_filter"=>""}
-      account_filter_sql = "AND n.value LIKE '%#{account_filter}%' AND a.key = 'account_id'"
-    else
-      account_filter_sql = nil
-    end
 
     start_filter = ''
 
@@ -222,7 +220,8 @@ module ReportHelper
 
       WHERE
         a.root_organization_id = #{org[:id].to_s}
-        #{account_filter_sql}
+        AND n.value LIKE #{account_filter}
+        AND a.key = 'account_id'
 
       ORDER BY pn.value, acn.value, n.value, a.lms_course_id
     SQL
