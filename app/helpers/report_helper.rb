@@ -51,14 +51,16 @@ module ReportHelper
       document_metas = {}
       docs.each do |doc|
         @document = doc
-        lms_identifier = @document.name.gsub(/[^A-Za-z0-9]+/, '_')
+        identifier = @document.name.gsub(/[^A-Za-z0-9]+/, '_')
         if @document.lms_course_id
-          lms_identifier = "#{@document.lms_course_id}".gsub(/[^A-Za-z0-9]+/, '_')
+          identifier = "#{@document.lms_course_id}".gsub(/[^A-Za-z0-9]+/, '_')
         end
         if @organization.track_meta_info_from_document
           dm = "#{DocumentMeta.where("key LIKE :prefix AND document_id IN (:document_id)", prefix: "salsa_%", document_id: doc.id).select(:key, :value).to_json(:except => :id)}"
-          document_metas["lms_course-#{@document.lms_course_id}"] = JSON.parse(dm)
-          zipfile.get_output_stream("#{lms_identifier}_#{@document.id}_document_meta.json"){ |os| os.write JSON.pretty_generate(JSON.parse(dm))   }
+          if dm != "[]"
+            document_metas["lms_course-#{@document.lms_course_id}"] = JSON.parse(dm)
+            zipfile.get_output_stream("#{identifier}_#{@document.id}_document_meta.json"){ |os| os.write JSON.pretty_generate(JSON.parse(dm)) }
+          end
         end
         # Two arguments:
         # - The name of the file as it will appear in the archive
@@ -66,9 +68,9 @@ module ReportHelper
         #rendered_doc = render_to_string :layout => "archive", :template => "documents/content"
         rendered_doc = ApplicationController.new.render_to_string(layout: 'archive',partial: 'documents/content', locals: {doc: @document, organization: @organization})
 
-        zipfile.get_output_stream("#{lms_identifier}_#{@document.id}.html") { |os| os.write rendered_doc }
+        zipfile.get_output_stream("#{identifier}_#{@document.id}.html") { |os| os.write rendered_doc }
       end
-      if @organization.track_meta_info_from_document
+      if @organization.track_meta_info_from_document && document_metas != {}
         zipfile.get_output_stream("document_meta.json"){ |os| os.write document_metas.to_json  }
       end
     end
@@ -83,7 +85,6 @@ module ReportHelper
     org = Organization.find_by slug: org_slug
 
     start_filter = ''
-
     if params[:start]
       start = params[:start] = params[:start].gsub(/[^\d-]/, '')
       if start != ''
@@ -220,7 +221,7 @@ module ReportHelper
 
       WHERE
         a.root_organization_id = #{org[:id].to_s}
-        AND n.value LIKE #{account_filter}
+        AND n.value LIKE '#{account_filter}'
         AND a.key = 'account_id'
 
       ORDER BY pn.value, acn.value, n.value, a.lms_course_id
