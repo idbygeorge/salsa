@@ -23,7 +23,7 @@
 
 <% if !@document_meta %>
     <a href="/admin/canvas/courses?show_course_meta=true">Show course meta</a>
-<% elsif @document_meta.count > 0 %>
+<% elsif @document_meta.length > 0 %>
 <table class="table table-responsive table-striped">
   <thead>
     <tr>
@@ -42,6 +42,7 @@
     <% end %>
   </tbody>
 </table>
+<%= paginate @document_meta %>
 <% else %>
 <div class="alert alert-warning">
   No courses have been synced to Salsa for this canvas account.
