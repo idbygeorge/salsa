@@ -131,15 +131,24 @@
           </div>
         </div>
 
+
         <div class="form-group">
           <div class="controls">
             <%= f.check_box :track_meta_info_from_document, class: '' %>
             <%= f.label :track_meta_info_from_document, class: "control-label" %>
-            <div class="help-block">
-              requires all data-meta tags in the document to have unique values
-            </div>
+          </div>
+          <div class="help-block">
+            requires all data-meta tags in the document to have unique values
           </div>
         </div>
+
+        <div class="form-group hide">
+          <div class="controls">
+            <%= f.check_box :enable_anonymous_actions, class: '' %>
+            <%= f.label :enable_program_outcome_exporter, 'Enable alternate exporter for the report zipfile json', class: "control-label" %>
+          </div>
+        </div>
+
     </fieldset>
 
     <div class="form-group">

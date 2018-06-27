@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180309210710) do
+ActiveRecord::Schema.define(version: 20180627220531) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -121,6 +121,8 @@ ActiveRecord::Schema.define(version: 20180309210710) do
     t.boolean "skip_lms_publish"
     t.boolean "enable_anonymous_actions", default: true
     t.boolean "track_meta_info_from_document"
+    t.boolean "enable_workflows"
+    t.boolean "enable_program_outcome_exporter"
     t.index ["depth"], name: "index_organizations_on_depth"
     t.index ["lft"], name: "index_organizations_on_lft"
     t.index ["lms_id"], name: "index_organizations_on_lms_id"
@@ -225,6 +227,14 @@ ActiveRecord::Schema.define(version: 20180309210710) do
     t.index ["user_id", "user_type"], name: "index_vestal_versions_on_user_id_and_user_type"
     t.index ["user_name"], name: "index_vestal_versions_on_user_name"
     t.index ["versioned_id", "versioned_type"], name: "index_vestal_versions_on_versioned_id_and_versioned_type"
+  end
+
+  create_table "workflow_steps", force: :cascade do |t|
+    t.integer "document_id"
+    t.string "email"
+    t.boolean "read_only"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end
