@@ -34,6 +34,8 @@ Rails.application.configure do
   config.action_mailer.perform_caching = false
 
   # Print deprecation notices to the Rails logger.
+  config.logger = ActiveSupport::TaggedLogging.new(ActiveSupport::Logger.new(STDOUT))
+  config.logger.level = ActiveSupport::Logger::DEBUG
   config.active_support.deprecation = :log
 
   # Raise an error on page load if there are pending migrations.
