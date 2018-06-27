@@ -261,6 +261,6 @@ module ApplicationHelper
 
   def get_document_meta
     org_slug = request.env['SERVER_NAME']
-    ReportHelper.get_document_meta org_slug, 'FL16', params
+    ReportHelper.get_document_meta org_slug, nil, params
   end
 end
