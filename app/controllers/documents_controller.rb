@@ -118,7 +118,7 @@ class DocumentsController < ApplicationController
       end
 
       # check if the supplied token matches the document view_id
-      if params[:document_token] && @document&[:view_id] == params[:document_token]
+      if params[:document_token] && @document && @document[:view_id] == params[:document_token]
         token_matches = true
       elsif !params[:document_token]
         # no token, proceed as normal
