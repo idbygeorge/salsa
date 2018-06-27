@@ -15,12 +15,16 @@ end
 # Default to production
 environment rails_env
 
-# Set up socket location (if using a webserver such as nginx)
-bind "unix://#{shared_dir}/tmp/sockets/puma.sock"
 
-# Logging
 if rails_env != "development"
+  # Set up socket location (if using a webserver such as nginx)
+  bind "unix:///tmp/sockets/puma.sock"
+# Logging
   stdout_redirect "#{shared_dir}/log/puma.stdout.log", "#{shared_dir}/log/puma.stderr.log", true
+else
+  # Set up socket location (if using a webserver such as nginx)
+  bind "unix://#{shared_dir}/tmp/sockets/puma.sock"
+
 end
 
 # Set master PID and state locations
