@@ -131,29 +131,29 @@ function liteOff(x){
             settings.url = settings.url + queryStringStart + 'document_version=' + document_version;
             settings.url = encodeURI(settings.url);
 
-            var meta_data_from_doc = []
-            $("#page").find( '[data-meta]' ).each(function() {
-              var key = "salsa_" + $( this ).attr( 'data-meta' )
-              var value = $( this ).text().replace(/\s+/mg, ' ')
-              meta_data_from_doc.push({
-                key : key,
-                value : value,
-                lms_account : "lms_account",
-                lms_course_id : jQuery.parseJSON($("body").find( '[data-lms-course]' ).attr("data-lms-course")).id,
-                root_organization_slug : window.location.hostname,
-                document_id: "doc_id"
-              });
+            var lms_course_id = jQuery.parseJSON($("body").find( '[data-lms-course]' ).attr("data-lms-course")).id;
+            if (lms_course_id){
+              var meta_data_from_doc = [];
+              $("#page").find( '[data-meta]' ).each(function() {
+                var key = "salsa_" + $( this ).attr( 'data-meta' )
+                var value = $( this ).text().replace(/\s+/mg, ' ')
+                meta_data_from_doc.push({
+                  key : key,
+                  value : value,
+                  lms_course_id : lms_course_id,
+                  root_organization_slug : window.location.hostname
+                });
 
-            });
-            if(meta_data_from_doc){
-              $.ajax({
-                url: settings.url,
-                data: {meta_data_from_doc},
-                dataType: "json",
-                method: "PUT"
               });
+              if(meta_data_from_doc){
+                $.ajax({
+                  url: settings.url,
+                  data: {meta_data_from_doc},
+                  dataType: "json",
+                  method: "PUT"
+                });
+              }
             }
-
             notification('Saving...');
         });
 
