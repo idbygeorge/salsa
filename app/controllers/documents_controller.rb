@@ -105,7 +105,6 @@ class DocumentsController < ApplicationController
         raise ActionController::RoutingError.new('Not Authorized')
       end
     end
-
     if @lms_course
       @document = Document.find_by lms_course_id: params[:lms_course_id], organization: @organization
 
