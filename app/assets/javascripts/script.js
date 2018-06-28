@@ -119,27 +119,41 @@ function liteOff(x){
                 }
             }
         });
-
         $('#tb_save, #tb_share').on('ajax:beforeSend', function(event, xhr, settings) {
             if($('body').hasClass('disable-save')) {
                 xhr.abort();
                 return false;
             }
-            meta_data_from_doc = []
-            $("#page").find( '[data-meta]' ).each(function() {
-              meta_data_from_doc.push("salsa_" + $( this ).attr( 'data-meta' ));
-              meta_data_from_doc.push($( this ).text().replace(/\s+/mg, ' '));
-            });
-
             settings.data = cleanupDocument($('#page-data').html());
 
             var document_version = $('[data-document-version]').attr('data-document-version');
-
             var queryStringStart = settings.url.search(/\?/) < 0 ? '?' : '&';
             settings.url = settings.url + queryStringStart + 'document_version=' + document_version;
-            settings.url = settings.url + '&meta_data_from_doc=' + '[' + meta_data_from_doc + ']';
             settings.url = encodeURI(settings.url);
 
+            var lms_course_id = jQuery.parseJSON($("body").find( '[data-lms-course]' ).attr("data-lms-course")).id;
+            if (lms_course_id){
+              var meta_data_from_doc = [];
+              $("#page").find( '[data-meta]' ).each(function() {
+                var key = "salsa_" + $( this ).attr( 'data-meta' )
+                var value = $( this ).text().replace(/\s+/mg, ' ')
+                meta_data_from_doc.push({
+                  key : key,
+                  value : value,
+                  lms_course_id : lms_course_id,
+                  root_organization_slug : window.location.hostname
+                });
+
+              });
+              if(meta_data_from_doc){
+                $.ajax({
+                  url: settings.url,
+                  data: {meta_data_from_doc},
+                  dataType: "json",
+                  method: "PUT"
+                });
+              }
+            }
             notification('Saving...');
         });
 
