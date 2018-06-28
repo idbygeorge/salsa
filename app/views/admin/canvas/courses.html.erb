@@ -42,7 +42,7 @@
     <% end %>
   </tbody>
 </table>
-<%#TODO figure out why paginate @document_meta is failing %>
+<%= paginate @document_meta %>
 <% else %>
 <div class="alert alert-warning">
   No courses have been synced to Salsa for this canvas account.
