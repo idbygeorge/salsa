@@ -42,7 +42,7 @@ function updateLock(expire) {
   }
 
   slug = $('.page-header a').html();
-  $.get('/admin/organization/republish/' + slug + '?expire=' + expire, function(data){ });
+  $.get('/admin/organization/republish/' + slug + '?expire=' + expire);
 
 }
 
