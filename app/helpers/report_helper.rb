@@ -48,7 +48,7 @@ module ReportHelper
     end
     Zip::File.open(zipfile_path(org_slug, report_id), Zip::File::CREATE) do |zipfile|
       zipfile.get_output_stream('content.css'){ |os| os.write CompassRails.sprockets.find_asset('application.css').to_s }
-      if @organization.enable_program_outcome_exporter
+      if @organization.export_type == "Program Outcomes"
         document_metas = []
       else
         document_metas = {}
@@ -59,18 +59,23 @@ module ReportHelper
         if @document.lms_course_id
           identifier = "#{@document.lms_course_id}".gsub(/[^A-Za-z0-9]+/, '_')
         end
-        if @organization.track_meta_info_from_document && @organization.enable_program_outcome_exporter
+        if @organization.track_meta_info_from_document && @organization.export_type == "Program Outcomes"
           dms = DocumentMeta.where("key LIKE :prefix AND document_id IN (:document_id)", prefix: "salsa_%", document_id: doc.id)
 
           if dms != []
             dms.each do |dm|
               salsa_hash = Hash.new
               salsa_outcome = dm.key.split("_")[1].split("-")
-              if salsa_outcome.length == 3
+              if salsa_outcome.length >= 3
+                if salsa_outcome.length > 3
+                  salsa_outcome_type = "#{salsa_outcome[1]}: " + salsa_outcome[2..-2].join(' ')
+                else
+                  salsa_outcome_type = salsa_outcome[1]
+                end
                 salsa_hash[:lms_course_id] = "#{dm.lms_course_id}"
                 salsa_hash[:salsa_outcome] = salsa_outcome[0]
-                salsa_hash[:salsa_outcome_type] = salsa_outcome[1]
-                salsa_hash[:salsa_outcome_id] = salsa_outcome[2]
+                salsa_hash[:salsa_outcome_type] = salsa_outcome_type
+                salsa_hash[:salsa_outcome_id] = salsa_outcome.last
                 salsa_hash[:salsa_outcome_text] = dm.value
                 salsa_hash[:key] = ""
                 salsa_hash[:value] = ""

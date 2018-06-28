@@ -122,7 +122,7 @@ ActiveRecord::Schema.define(version: 20180627220531) do
     t.boolean "enable_anonymous_actions", default: true
     t.boolean "track_meta_info_from_document"
     t.boolean "enable_workflows"
-    t.boolean "enable_program_outcome_exporter"
+    t.string "export_type", default: "default"
     t.index ["depth"], name: "index_organizations_on_depth"
     t.index ["lft"], name: "index_organizations_on_lft"
     t.index ["lms_id"], name: "index_organizations_on_lms_id"

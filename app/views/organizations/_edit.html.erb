@@ -143,9 +143,10 @@
         </div>
 
         <div class="form-group hide">
+          <%= f.label :export_type, 'Export Types for report zipfile json', class: "control-label" %>
           <div class="controls">
-            <%= f.check_box :enable_program_outcome_exporter, class: '' %>
-            <%= f.label :enable_program_outcome_exporter, 'Enable alternate exporter for the report zipfile json', class: "control-label" %>
+            <%= f.select :export_type, options_for_select(@export_types,  @organization.export_type), { class: 'form-control' }%>
+
           </div>
         </div>
 

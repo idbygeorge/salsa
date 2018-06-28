@@ -124,7 +124,7 @@ class DocumentsController < ApplicationController
         token_matches = true
       end
 
-      unless @document && token_matches || 1==2
+      unless @document && token_matches
         find_or_create_document(session, params, @organization, @lms_course)
       end
 
