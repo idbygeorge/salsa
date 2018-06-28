@@ -105,7 +105,6 @@ class DocumentsController < ApplicationController
         raise ActionController::RoutingError.new('Not Authorized')
       end
     end
-
     if @lms_course
       @document = Document.find_by lms_course_id: params[:lms_course_id], organization: @organization
 
@@ -125,7 +124,7 @@ class DocumentsController < ApplicationController
         token_matches = true
       end
 
-      unless @document && token_matches
+      unless @document && token_matches || 1==2
         find_or_create_document(session, params, @organization, @lms_course)
       end
 
