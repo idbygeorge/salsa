@@ -168,7 +168,7 @@ class DocumentsController < ApplicationController
       # backwards compatibility alias
       @syllabus = @document
 
-      render :layout => 'edit', :template => '/documents/content'
+      return render :layout => 'edit', :template => '/documents/content'
     else
       session[:redirect_course_id] = params[:lms_course_id]
 
