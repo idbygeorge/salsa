@@ -54,14 +54,14 @@ module ReportHelper
         document_metas = {}
       end
       docs.each do |doc|
-        @document = doc
-        identifier = @document.name.gsub(/[^A-Za-z0-9]+/, '_')
-        if @document.lms_course_id
-          identifier = "#{@document.lms_course_id}".gsub(/[^A-Za-z0-9]+/, '_')
+        identifier = doc.id
+        identifier = doc.name.gsub(/[^A-Za-z0-9]+/, '_') if doc.name
+        if doc.lms_course_id
+          identifier = "#{doc.lms_course_id}".gsub(/[^A-Za-z0-9]+/, '_')
         end
         if @organization.track_meta_info_from_document && @organization.export_type == "Program Outcomes"
           dms = DocumentMeta.where("key LIKE :prefix AND document_id IN (:document_id)", prefix: "salsa_%", document_id: doc.id)
-
+          dms_array = []
           if dms != []
             dms.each do |dm|
               salsa_hash = Hash.new
@@ -90,23 +90,25 @@ module ReportHelper
 
               end
               document_metas.push JSON.parse(salsa_hash.to_json)
+              dms_array.push JSON.parse(salsa_hash.to_json)
             end
           end
+          zipfile.get_output_stream("#{identifier}_#{doc.id}_document_meta.json"){ |os| os.write JSON.pretty_generate(JSON.parse(dms_array)) }
 
         elsif @organization.track_meta_info_from_document
           dm = "#{DocumentMeta.where("key LIKE :prefix AND document_id IN (:document_id)", prefix: "salsa_%", document_id: doc.id).select(:key, :value).to_json(:except => :id)}"
           if dm != "[]"
-            document_metas["lms_course-#{@document.lms_course_id}"] = JSON.parse(dm)
-            zipfile.get_output_stream("#{identifier}_#{@document.id}_document_meta.json"){ |os| os.write JSON.pretty_generate(JSON.parse(dm)) }
+            document_metas["lms_course-#{doc.lms_course_id}"] = JSON.parse(dm)
+            zipfile.get_output_stream("#{identifier}_#{doc.id}_document_meta.json"){ |os| os.write JSON.pretty_generate(JSON.parse(dm)) }
           end
         end
         # Two arguments:
         # - The name of the file as it will appear in the archive
         # - The original file, including the path to find it
         #rendered_doc = render_to_string :layout => "archive", :template => "documents/content"
-        rendered_doc = ApplicationController.new.render_to_string(layout: 'archive',partial: 'documents/content', locals: {doc: @document, organization: @organization})
+        rendered_doc = ApplicationController.new.render_to_string(layout: 'archive',partial: 'documents/content', locals: {doc: doc, organization: @organization})
 
-        zipfile.get_output_stream("#{identifier}_#{@document.id}.html") { |os| os.write rendered_doc }
+        zipfile.get_output_stream("#{identifier}_#{doc.id}.html") { |os| os.write rendered_doc }
       end
       if @organization.track_meta_info_from_document && document_metas != {}
         zipfile.get_output_stream("document_meta.json"){ |os| os.write document_metas.to_json  }
