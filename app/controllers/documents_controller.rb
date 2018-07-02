@@ -233,7 +233,7 @@ class DocumentsController < ApplicationController
           :document_id => document.id,
           :value => md.fetch(:value).to_s,
           :root_organization_id => document.organization_id,
-          :lms_course_id => md.fetch(:lms_course_id) || document.lms_course_id,
+          :lms_course_id => md.fetch(:lms_course_id),
           :lms_organization_id => organization.lms_authentication_id
         )
       end
