@@ -118,7 +118,7 @@ class DocumentsController < ApplicationController
       end
 
       # check if the supplied token matches the document view_id
-      if params[:document_token] && @document[:view_id] == params[:document_token]
+      if params[:document_token] && @document && @document[:view_id] == params[:document_token]
         token_matches = true
       elsif !params[:document_token]
         # no token, proceed as normal
@@ -126,7 +126,7 @@ class DocumentsController < ApplicationController
       end
 
       unless @document && token_matches
-        find_or_create_document(session, params, @organization, @lms_course)
+        return find_or_create_document(session, params, @organization, @lms_course)
       end
 
       @document.revert_to params[:version].to_i if params[:version]
@@ -138,7 +138,7 @@ class DocumentsController < ApplicationController
       # backwards compatibility alias
       @syllabus = @document
 
-      render :layout => 'edit', :template => '/documents/content'
+      return render :layout => 'edit', :template => '/documents/content'
     else
       session[:redirect_course_id] = params[:lms_course_id]
 
@@ -245,8 +245,13 @@ class DocumentsController < ApplicationController
   def find_or_create_document session, params, organization, lms_course
     @document = Document.find_by view_id: params[:document_token]
 
+    existing_doc = Document.find_by(organization: organization, lms_course_id: lms_course["id"])
       # we need to setup the course and associate it with canvas
     if params[:document_token] && params[:canvas] && @document
+      if existing_doc
+        existing_doc.lms_course_id = nil
+        existing_doc.save!
+      end
       @document = Document.new(name: lms_course['name'], lms_course_id: params[:lms_course_id], organization: organization, payload: @document[:payload])
       @document.save!
 
@@ -254,17 +259,22 @@ class DocumentsController < ApplicationController
     elsif params[:document_token] && @document
       # show options to user (make child, make new)
       @template_url = template_url(@document)
-
+      if existing_doc && existing_doc.id != @document.id
+        has_existing_document = true
+      else
+        #existing_doc same as current_document
+        has_existing_document = false
+      end
       #clear the document token out
       session.delete('relink_'+params[:lms_course_id])
-
-      return render :layout => 'relink', :template => '/documents/relink'
+      return render :layout => 'relink', :template => '/documents/relink', locals: {has_existing_document: has_existing_document, lms_course_id: params[:lms_course_id]}
     end
 
     @document = Document.new(name: @lms_course['name'], lms_course_id: params[:lms_course_id], organization: @organization)
     @document.save!
 
     session.delete('relink_'+params[:lms_course_id]) if session['relink_'+params[:lms_course_id]]
+    return render :layout => 'edit', :template => '/documents/content'
   end
 
   def can_use_edit_token(lms_course_id = nil)

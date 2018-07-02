@@ -1,6 +1,11 @@
 
 
-
+<% if has_existing_document %>
+  <div class="btn-horizontal">
+    <% params.permit! %>
+    <%= link_to 'Go to existing SALSA', lms_course_document_path(lms_course_id), {class: 'btn btn-primary'} %>
+  </div>
+<%end%>
 <div class="btn-horizontal">
   <% params.permit! %>
   <%= link_to 'Use this SALSA syllabus as my template', lms_course_document_path(params.merge({ canvas_course_id: @document[:lms_course_id], canvas: true })), {class: 'btn btn-primary'} %>

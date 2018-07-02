@@ -153,15 +153,8 @@ there are also documents created but you still need to publish them by going to 
     sudo docker rmi ########    #remove docker image id from above command (useful to recreate db or application image if needed)
 
 ##### debuging
-  attach to rails app for debugger
-
-    docker attach salsadockercompose_salsa_1
-
-  to get name
-
-    docker-compose images
-
-  ctrl + p + q will detatch without exiting the process (ctrl + c) will cacnel the process
+  to run server in development mode
+    sudo docker-compose run --service-ports salsa
 
   example of how to use debugger that will activate the debugger when trying to load admin/organization/show page
 
