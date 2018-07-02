@@ -19,12 +19,14 @@ before_script:
   - ./cc-test-reporter before-build
   - sudo docker-compose build
   - sudo docker-compose run salsa rake db:create
-  - sudo docker-compose run salsa rake db:migrate
+  - sudo docker-compose run salsa rake db:schema:load
   - sudo docker-compose run salsa rake db:seed
 
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 script:
+  - sudo docker-compose run salsa rake db:schema:load RAILS_ENV=test
+  - bundle exec rspec
   - sudo docker-compose run salsa cucumber RAILS_ENV=test
 dist: trusty
 language: ruby
