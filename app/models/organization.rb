@@ -3,6 +3,7 @@ class Organization < ApplicationRecord
 
   has_many :documents
   has_many :components
+  has_many :workflow_steps
 
   default_scope { order('lft, rgt') }
   validates :slug, presence: true

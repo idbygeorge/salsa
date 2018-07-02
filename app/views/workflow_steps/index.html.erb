@@ -1,0 +1,33 @@
+<% if notice %>
+  <p id="notice" class="alert alert-info"><%= notice %></p>
+<% end %>
+
+<h1>Workflow Steps</h1>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>name</th>
+      <th>Slug</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @workflow_steps.each do |workflow_step| %>
+      <tr>
+        <td><%= workflow_step.name %></td>
+        <td><%= workflow_step.slug %></td>
+        <td>
+          <%= link_to 'Show', workflow_step_path(params[:slug], workflow_step), class: "btn btn-outline-secondary btn-sm" %>
+          <%= link_to 'Edit', edit_workflow_step_path(params[:slug], workflow_step), class: "btn btn-outline-secondary btn-sm" %>
+          <%= link_to 'Destroy', workflow_step_path(params[:slug], workflow_step), class: "btn btn-outline-danger btn-sm", method: :delete, data: { confirm: 'Are you sure?' } %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Workflow Step', new_workflow_step_path %>

@@ -1,0 +1,33 @@
+<%= form_for(workflow_step, url: workflow_step_form_path,  local: true, :html => { :class => "form-horizontal col-md-9" }) do |f| %>
+  <% if workflow_step.errors.any? %>
+    <div id="error_explanation" class="alert alert-danger">
+
+      <ul>
+      <% workflow_step.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :name %>
+    <div class="controls">
+      <%= f.text_field :name, id: :workflow_step_name %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :slug %>
+    <div class="controls">
+      <%= f.text_field :slug, id: :workflow_step_slug %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= f.submit class: 'btn btn-default' %>
+    &nbsp;
+    &nbsp;
+    &nbsp;
+  </div>
+<% end %>

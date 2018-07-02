@@ -6,7 +6,7 @@ Rails.application.routes.draw do
 
   get '/:alias/:document', to: redirect('/SALSA/%{document}'), constraints: { alias: /(syllabuses|salsas?)/ }
   get '/:alias/:document/:action', to: redirect('/SALSA/%{document}/%{action}'), constraints: { alias: /(syllabuses|salsas?)/, action: /(edit|template)?/ }
-  
+
   get '/status/server', to: 'default#status_server'
 
   get '/admin', to: 'admin#landing', as: 'admin'
@@ -55,7 +55,7 @@ Rails.application.routes.draw do
     get "organization/republish/:slug", to: 'republish#update_lock', as: 'republish_update', constraints: { slug: /.*/ }
 
     scope 'organization/:slug' do
-
+      resources :workflow_steps, constraints: { slug: /.+/ }
       resources :components, param: :component_slug, constraints: { component_slug: /.*/, slug: /.+/ }
       resources :reports, param: :component_slug, constraints: { component_slug: /.*/, slug: /.+/ }
     end

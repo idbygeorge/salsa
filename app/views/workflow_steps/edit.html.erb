@@ -1,0 +1,6 @@
+<h1>Editing Workflow Step</h1>
+
+<%= render 'form', workflow_step: @workflow_step, workflow_step_form_path: workflow_step_path(params[:slug],@workflow_step) %>
+
+<%= link_to 'Show', workflow_step_path(params[:slug], @workflow_step) %> |
+<%= link_to 'Back', workflow_steps_path %>

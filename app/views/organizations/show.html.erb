@@ -41,6 +41,13 @@
             View Dashboard
           </a>
       <% end %>
+
+      <% if @organization.enable_workflows %>
+          <a class="btn btn-default" href="<%= workflow_steps_path(params[:slug]) %>">
+            Workflow Steps
+          </a>
+      <% end %>
+
     </p>
     <hr>
   <% end %>

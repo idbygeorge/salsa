@@ -1,0 +1,17 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @workflow_step.name %>
+</p>
+<p>
+  <strong>Slug:</strong>
+  <%= @workflow_step.slug %>
+</p>
+<p>
+  <strong>Organization ID:</strong>
+  <%= @workflow_step.organization_id %>
+</p>
+
+<%= link_to 'Edit', edit_workflow_step_path(params[:slug], @workflow_step) %> |
+<%= link_to 'Back', workflow_steps_path %>
