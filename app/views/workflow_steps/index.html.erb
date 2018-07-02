@@ -1,33 +1,38 @@
-<% if notice %>
-  <p id="notice" class="alert alert-info"><%= notice %></p>
-<% end %>
-
-<h1>Workflow Steps</h1>
-
-<table class="table">
+<%- model_class = WorkflowStep -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+</div>
+<table class="table table-striped">
   <thead>
     <tr>
-      <th>name</th>
-      <th>Slug</th>
-      <th colspan="3"></th>
+      <th><%= model_class.human_attribute_name(:name) %></th>
+      <th><%= model_class.human_attribute_name(:slug) %></th>
+      <th><%= model_class.human_attribute_name(:next_workflow_step_id) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
-
   <tbody>
     <% @workflow_steps.each do |workflow_step| %>
       <tr>
-        <td><%= workflow_step.name %></td>
-        <td><%= workflow_step.slug %></td>
+        <td><%= link_to workflow_step.name, workflow_step_path(params[:slug],workflow_step) %></td>
+        <td><%= link_to workflow_step.slug, workflow_step_path(params[:slug],workflow_step) %></td>
+        <td><%= workflow_step.next_workflow_step_id %></td>
         <td>
-          <%= link_to 'Show', workflow_step_path(params[:slug], workflow_step), class: "btn btn-outline-secondary btn-sm" %>
-          <%= link_to 'Edit', edit_workflow_step_path(params[:slug], workflow_step), class: "btn btn-outline-secondary btn-sm" %>
-          <%= link_to 'Destroy', workflow_step_path(params[:slug], workflow_step), class: "btn btn-outline-danger btn-sm", method: :delete, data: { confirm: 'Are you sure?' } %>
+          <%= link_to t('.show', :default => t("helpers.links.show")),
+                      workflow_step_path(params[:slug],workflow_step), :class => 'btn btn-default btn-xs' %>
+          <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                      edit_workflow_step_path(params[:slug],workflow_step), :class => 'btn btn-default btn-xs' %>
+          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                      workflow_step_path(params[:slug],workflow_step),
+                      :method => :delete,
+                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                      :class => 'btn btn-xs btn-danger' %>
         </td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
-<br>
-
-<%= link_to 'New Workflow Step', new_workflow_step_path %>
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_workflow_step_path,
+            :class => 'btn btn-primary' %>

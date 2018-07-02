@@ -1,5 +1,6 @@
 class WorkflowStepsController < OrganizationsController
   before_action :set_workflow_step, only: [:show, :edit, :update, :destroy]
+  before_action :set_workflow_steps
 
   # GET /workflow_steps
   # GET /workflow_steps.json
@@ -70,8 +71,13 @@ class WorkflowStepsController < OrganizationsController
       @workflow_step = WorkflowStep.find(params[:id])
     end
 
+    def set_workflow_steps
+      organization = Organization.find_by(slug: params[:slug])
+      @workflow_steps = WorkflowStep.where(organization_id: organization.id)
+    end
+
     # Never trust parameters from the scary internet, only allow the white list through.
     def workflow_step_params
-      params.require(:workflow_step).permit(:slug, :name, :organization_id)
+      params.require(:workflow_step).permit(:slug, :name, :organization_id, :next_workflow_step_id)
     end
 end

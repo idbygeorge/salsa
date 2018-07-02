@@ -1,5 +1,5 @@
-<h1>New Workflow Step</h1>
-
-<%= render 'form', workflow_step: @workflow_step, workflow_step_form_path: workflow_steps_path %>
-
-<%= link_to 'Back', workflow_steps_path %>
+<%- model_class = WorkflowStep -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => [:'helpers.titles.new', 'New %{model}'], :model => model_class.model_name.human.titleize %></h1>
+</div>
+<%= render :partial => 'form', locals:{workflow_step_form_path: workflow_steps_path} %>
