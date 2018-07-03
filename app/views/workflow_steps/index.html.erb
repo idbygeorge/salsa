@@ -16,7 +16,7 @@
       <tr>
         <td><%= link_to workflow_step.name, workflow_step_path(params[:slug],workflow_step) %></td>
         <td><%= link_to workflow_step.slug, workflow_step_path(params[:slug],workflow_step) %></td>
-        <td><%= workflow_step.next_workflow_step_id %></td>
+        <td><%= WorkflowStep.find(workflow_step.next_workflow_step_id).slug if workflow_step&.next_workflow_step_id %></td>
         <td>
           <%= link_to t('.show', :default => t("helpers.links.show")),
                       workflow_step_path(params[:slug],workflow_step), :class => 'btn btn-default btn-xs' %>

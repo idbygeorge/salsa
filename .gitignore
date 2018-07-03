@@ -28,7 +28,7 @@ salsa_test
 
 /config/deploy/config/
 /config/config.yml
-/config/database.yml
+/config/database.yml*
 /config/deploy.rb
 /config/newrelic.yml
 /config/puma.rb
