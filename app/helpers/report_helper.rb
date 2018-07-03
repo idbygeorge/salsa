@@ -93,7 +93,6 @@ module ReportHelper
               dms_array.push JSON.parse(salsa_hash.to_json)
             end
           end
-          zipfile.get_output_stream("#{identifier}_#{doc.id}_document_meta.json"){ |os| os.write JSON.pretty_generate(JSON.parse(dms_array.to_json)) }
 
         elsif @organization.track_meta_info_from_document
           dm = "#{DocumentMeta.where("key LIKE :prefix AND document_id IN (:document_id)", prefix: "salsa_%", document_id: doc.id).select(:key, :value).to_json(:except => :id)}"

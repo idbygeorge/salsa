@@ -206,7 +206,7 @@ class DocumentsController < ApplicationController
         msg = { :status => "error", :message => "You do not have permisson to save this document"}
       elsif republishing
        msg = { :status => "error", :message => "Documents for this organization are currently being republished. Please copy your changes and try again later.", :version => @document.versions.count }
-     elsif !saved || !meta_data_from_doc_saved
+     elsif !saved && !meta_data_from_doc_saved
         msg = { :status => "error", :message => "This is not a current version of this document! Please copy your changes and refresh the page to get the current version.", :version => @document.versions.count }
       else
         msg = { :status => "ok", :message => "Success!", :version => @document.versions.count }
@@ -233,7 +233,7 @@ class DocumentsController < ApplicationController
           :document_id => document.id,
           :value => md.fetch(:value).to_s,
           :root_organization_id => document.organization_id,
-          :lms_course_id => md.fetch(:lms_course_id) || document.lms_course_id,
+          :lms_course_id => md.fetch(:lms_course_id),
           :lms_organization_id => organization.lms_authentication_id
         )
       end
