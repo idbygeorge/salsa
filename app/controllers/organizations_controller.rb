@@ -40,6 +40,7 @@ class OrganizationsController < AdminController
   end
 
   def edit
+    @export_types = Organization.export_types
     get_documents params[:slug]
 
     @organization.default_account_filter = '{"account_filter":""}' unless @organization.default_account_filter
@@ -106,9 +107,9 @@ class OrganizationsController < AdminController
 
   def organization_params
     if has_role 'admin'
-        params.require(:organization).permit(:name, :slug, :parent_id, :lms_authentication_source, :lms_authentication_id, :lms_authentication_key, :lms_info_slug, :home_page_redirect, :skip_lms_publish, :enable_anonymous_actions, :track_meta_info_from_document, default_account_filter: [:account_filter])
+        params.require(:organization).permit(:name, :export_type, :slug, :parent_id, :lms_authentication_source, :lms_authentication_id, :lms_authentication_key, :lms_info_slug, :home_page_redirect, :skip_lms_publish, :enable_anonymous_actions, :track_meta_info_from_document, default_account_filter: [:account_filter])
     elsif has_role 'organization_admin'
-        params.require(:organization).permit(:name,  :lms_authentication_source, :lms_authentication_id, :lms_authentication_key, :lms_info_slug, :home_page_redirect, :skip_lms_publish, :enable_anonymous_actions, :track_meta_info_from_document)
+        params.require(:organization).permit(:name, :export_type, :lms_authentication_source, :lms_authentication_id, :lms_authentication_key, :lms_info_slug, :home_page_redirect, :skip_lms_publish, :enable_anonymous_actions, :track_meta_info_from_document)
     end
   end
 end
