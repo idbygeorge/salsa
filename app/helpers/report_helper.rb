@@ -48,27 +48,66 @@ module ReportHelper
     end
     Zip::File.open(zipfile_path(org_slug, report_id), Zip::File::CREATE) do |zipfile|
       zipfile.get_output_stream('content.css'){ |os| os.write CompassRails.sprockets.find_asset('application.css').to_s }
-      document_metas = {}
+      if @organization.export_type == "Program Outcomes"
+        document_metas = []
+      else
+        document_metas = {}
+      end
       docs.each do |doc|
-        @document = doc
-        identifier = @document.name.gsub(/[^A-Za-z0-9]+/, '_')
-        if @document.lms_course_id
-          identifier = "#{@document.lms_course_id}".gsub(/[^A-Za-z0-9]+/, '_')
+        identifier = doc.id
+        identifier = doc.name.gsub(/[^A-Za-z0-9]+/, '_') if doc.name
+        if doc.lms_course_id
+          identifier = "#{doc.lms_course_id}".gsub(/[^A-Za-z0-9]+/, '_')
         end
-        if @organization.track_meta_info_from_document
+        if @organization.track_meta_info_from_document && @organization.export_type == "Program Outcomes"
+          dms = DocumentMeta.where("key LIKE :prefix AND document_id IN (:document_id)", prefix: "salsa_%", document_id: doc.id)
+          dms_array = []
+          if dms != []
+            dms.each do |dm|
+              salsa_hash = Hash.new
+              salsa_outcome = dm.key.split("_")[1].split("-")
+              if salsa_outcome.length >= 3
+                if salsa_outcome.length > 3
+                  salsa_outcome_type = "#{salsa_outcome[1]}: " + salsa_outcome[2..-2].join(' ')
+                else
+                  salsa_outcome_type = salsa_outcome[1]
+                end
+                salsa_hash[:lms_course_id] = "#{dm.lms_course_id}"
+                salsa_hash[:salsa_outcome] = salsa_outcome[0]
+                salsa_hash[:salsa_outcome_type] = salsa_outcome_type
+                salsa_hash[:salsa_outcome_id] = salsa_outcome.last
+                salsa_hash[:salsa_outcome_text] = dm.value
+                salsa_hash[:key] = ""
+                salsa_hash[:value] = ""
+              else
+                salsa_hash[:lms_course_id] = "#{dm.lms_course_id}"
+                salsa_hash[:salsa_outcome] = ""
+                salsa_hash[:salsa_outcome_type] = ""
+                salsa_hash[:salsa_outcome_id] = ""
+                salsa_hash[:salsa_outcome_text] = ""
+                salsa_hash[:key] = dm.key
+                salsa_hash[:value] = dm.value
+
+              end
+              document_metas.push JSON.parse(salsa_hash.to_json)
+              dms_array.push JSON.parse(salsa_hash.to_json)
+            end
+          end
+
+        elsif @organization.track_meta_info_from_document
           dm = "#{DocumentMeta.where("key LIKE :prefix AND document_id IN (:document_id)", prefix: "salsa_%", document_id: doc.id).select(:key, :value).to_json(:except => :id)}"
           if dm != "[]"
-            document_metas["lms_course-#{@document.lms_course_id}"] = JSON.parse(dm)
-            zipfile.get_output_stream("#{identifier}_#{@document.id}_document_meta.json"){ |os| os.write JSON.pretty_generate(JSON.parse(dm)) }
+            document_metas["lms_course-#{doc.lms_course_id}"] = JSON.parse(dm)
+            zipfile.get_output_stream("#{identifier}_#{doc.id}_document_meta.json"){ |os| os.write JSON.pretty_generate(JSON.parse(dm)) }
           end
         end
         # Two arguments:
         # - The name of the file as it will appear in the archive
         # - The original file, including the path to find it
         #rendered_doc = render_to_string :layout => "archive", :template => "documents/content"
-        rendered_doc = ApplicationController.new.render_to_string(layout: 'archive',partial: 'documents/content', locals: {doc: @document, organization: @organization})
+        rendered_doc = ApplicationController.new.render_to_string(layout: 'archive',partial: 'documents/content', locals: {doc: doc, organization: @organization})
 
-        zipfile.get_output_stream("#{identifier}_#{@document.id}.html") { |os| os.write rendered_doc }
+        zipfile.get_output_stream("#{identifier}_#{doc.id}.html") { |os| os.write rendered_doc }
       end
       if @organization.track_meta_info_from_document && document_metas != {}
         zipfile.get_output_stream("document_meta.json"){ |os| os.write document_metas.to_json  }

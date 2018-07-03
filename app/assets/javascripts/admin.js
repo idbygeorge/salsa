@@ -1,10 +1,14 @@
 //= require jquery
 //= require jquery_ujs
 //= require bootstrap
+//= require organization
 
 var batch_token = "";
 
+
+
 $(function(){
+
   $('#toggleChecked').on('click', function() {
     var isChecked = $('#salsaDocuments :checkbox:first').is(':checked');
 
@@ -38,7 +42,7 @@ function updateLock(expire) {
   }
 
   slug = $('.page-header a').html();
-  $.get('/admin/organization/republish/' + slug + '?expire=' + expire, function(data){ });
+  $.get('/admin/organization/republish/' + slug + '?expire=' + expire);
 
 }
 
