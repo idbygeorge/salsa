@@ -12,23 +12,25 @@
     </tr>
   </thead>
   <tbody>
-    <% @workflow_steps.each do |workflow_step| %>
-      <tr>
-        <td><%= link_to workflow_step.name, workflow_step_path(params[:slug],workflow_step) %></td>
-        <td><%= link_to workflow_step.slug, workflow_step_path(params[:slug],workflow_step) %></td>
-        <td><%= WorkflowStep.find(workflow_step.next_workflow_step_id).slug if workflow_step&.next_workflow_step_id %></td>
-        <td>
-          <%= link_to t('.show', :default => t("helpers.links.show")),
-                      workflow_step_path(params[:slug],workflow_step), :class => 'btn btn-default btn-xs' %>
-          <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                      edit_workflow_step_path(params[:slug],workflow_step), :class => 'btn btn-default btn-xs' %>
-          <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                      workflow_step_path(params[:slug],workflow_step),
-                      :method => :delete,
-                      :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
-                      :class => 'btn btn-xs btn-danger' %>
-        </td>
-      </tr>
+    <% @workflows.each do |workflow| %>
+      <% workflow.each do |workflow_step| %>
+        <tr>
+          <td><%= link_to workflow_step.name, workflow_step_path(params[:slug],workflow_step) %></td>
+          <td><%= link_to workflow_step.slug, workflow_step_path(params[:slug],workflow_step) %></td>
+          <td><%= WorkflowStep.find(workflow_step.next_workflow_step_id).slug if workflow_step&.next_workflow_step_id %></td>
+          <td>
+            <%= link_to t('.show', :default => t("helpers.links.show")),
+                        workflow_step_path(params[:slug],workflow_step), :class => 'btn btn-default btn-xs' %>
+            <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                        edit_workflow_step_path(params[:slug],workflow_step), :class => 'btn btn-default btn-xs' %>
+            <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
+                        workflow_step_path(params[:slug],workflow_step),
+                        :method => :delete,
+                        :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
+                        :class => 'btn btn-xs btn-danger' %>
+          </td>
+        </tr>
+      <% end %>
     <% end %>
   </tbody>
 </table>

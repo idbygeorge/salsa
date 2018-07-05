@@ -21,6 +21,13 @@
     </div>
   </div>
 
+  <div class="form-group">
+    <%= f.label :workflow_step_id, class: "control-label" %>
+    <div class="controls">
+      <%= f.collection_select :workflow_step_id,@workflow_steps, class: 'form-control input-xxlarge' %>
+    </div>
+  </div>
+
 <div class="form-group">
   <%= f.submit class: 'btn btn-default' %>
 </div>

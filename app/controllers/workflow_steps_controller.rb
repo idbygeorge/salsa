@@ -8,6 +8,7 @@ class WorkflowStepsController < OrganizationsController
   def index
     org_id = Organization.find_by(slug: params[:slug]).id
     @workflow_steps = WorkflowStep.where(organization_id: org_id).order(slug: :asc, next_workflow_step_id: :asc)
+    @workflows = WorkflowStep.workflows org_id
     return
   end
 
@@ -82,9 +83,10 @@ class WorkflowStepsController < OrganizationsController
 
     def check_organization_workflow_enabled
       organization = Organization.find_by(slug: params[:slug])
-      true if organization.enable_workflows == true
-      flash[:error] = "that page does not exist"
-      redirect_to organization_path(params[:slug])
+      if organization.enable_workflows != true
+        flash[:error] = "that page does not exist"
+        redirect_to organization_path(params[:slug])
+      end
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

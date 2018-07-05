@@ -1,21 +1,21 @@
 class WorkflowStep < ApplicationRecord
-  validate :not_start_and_end_step
   validate :not_end_step_and_next_step
   validates :slug, presence: true
   validates :slug, uniqueness: { scope: :organization_id, message: "is already in use for this organization" }, allow_nil: false
-  validates :next_workflow_step_id, uniqueness: { scope: :organization_id, message: "is already in use for this organization" }, allow_nil: false
+  validates :next_workflow_step_id, uniqueness: { scope: :organization_id, message: "is already in use for this organization" }, allow_nil: true
   belongs_to :organization
   belongs_to :parent, :class_name => 'WorkflowStep'
   has_one :children, :class_name => 'WorkflowStep', :foreign_key => 'parent_id'
 
-  def self.workflows
+  def self.workflows organization_id
     workflows = []
-    wf_steps = WorkflowStep.where(start_step: true)
+    wf_steps = WorkflowStep.where(start_step: true, organization_id: organization_id)
     wf_steps.each do |wf_step|
+      wf_done = false
       workflow = []
       workflow.push wf_step
-      wf_done = false
       next_wf_step_id = wf_step.next_workflow_step_id
+      wf_done = true if next_wf_step_id == nil
       while wf_done != true do
         wfs = WorkflowStep.find(next_wf_step_id)
         workflow.push wfs
@@ -24,7 +24,9 @@ class WorkflowStep < ApplicationRecord
           wf_done = true
         end
       end
+      workflows.push workflow
     end
+      return workflows
   end
 
   def not_end_step_and_next_step
@@ -36,14 +38,5 @@ class WorkflowStep < ApplicationRecord
       return
     end
 
-  end
-  def not_start_and_end_step
-    h = @attributes.to_h
-    if h.fetch("start_step") ==true && h.fetch("end_step") == true
-      errors.add(:start_step, 'cant select start and end step')
-      errors.add(:end_step, 'cant select start and end step')
-
-      return
-    end
   end
 end

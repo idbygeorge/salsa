@@ -9,7 +9,6 @@ class OrganizationsController < AdminController
   layout 'admin'
   def index
     get_documents
-
     @roots = @organizations.roots
 
     if @roots.count == 1
@@ -18,6 +17,7 @@ class OrganizationsController < AdminController
   end
 
   def new
+    @export_types = Organization.export_types
     @organization = Organization.new
   end
 
@@ -51,12 +51,14 @@ class OrganizationsController < AdminController
 
   # commit actions
   def create
+    @export_types = Organization.export_types
     @organization = Organization.create organization_params
 
     redirect_to organization_path(slug: full_org_path(@organization))
   end
 
   def update
+    @export_types = Organization.export_types
     @organization = find_org_by_path params[:slug]
 
     if has_role('admin') && params['organization']['default_account_filter'] != nil
