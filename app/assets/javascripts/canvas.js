@@ -128,10 +128,15 @@ $(function() {
           buttons: {
             Relink: function() {
               $('#editor_view').data('lmsCourse', courseData);
-              var originalUrl = $('#tb_save').attr('href');
-              $('#tb_save').attr('href', originalUrl + "?canvas_relink_course_id=" + courseData.id).trigger("click");
-              $('#tb_save').attr('href', originalUrl);
-
+              if($("#tb_save")){
+                var originalUrl = $('#tb_save').attr('href');
+                $('#tb_save').attr('href', originalUrl + "?canvas_relink_course_id=" + courseData.id).trigger("click");
+                $('#tb_save').attr('href', originalUrl);
+              } else {
+                var originalUrl = $('#tb_share').attr('href');
+                $('#tb_share').attr('href', originalUrl + "?canvas_relink_course_id=" + courseData.id).trigger("click");
+                $('#tb_share').attr('href', originalUrl);
+              }
               // generate message
               var newMessage = $('<div class="courseSyllabusRetrieved"/>').html('This SALSA is being connected to <em><b>' + courseData.name + '</em>...</b>');
 
