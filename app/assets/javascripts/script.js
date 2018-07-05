@@ -150,7 +150,7 @@ function liteOff(x){
                   url: settings.url,
                   data: {meta_data_from_doc},
                   dataType: "json",
-                  method: "PUT"
+                  method: "PATCH"
                 });
               }
             }
