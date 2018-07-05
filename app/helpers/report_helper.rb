@@ -105,7 +105,7 @@ module ReportHelper
         # - The name of the file as it will appear in the archive
         # - The original file, including the path to find it
         #rendered_doc = render_to_string :layout => "archive", :template => "documents/content"
-        rendered_doc = ApplicationController.new.render_to_string(layout: 'archive',partial: 'documents/content', locals: {doc: doc, organization: @organization})
+        rendered_doc = ApplicationController.new.render_to_string(layout: 'archive',partial: 'documents/content', locals: {doc: doc, organization: @organization, :@organization => @organization})
 
         zipfile.get_output_stream("#{identifier}_#{doc.id}.html") { |os| os.write rendered_doc }
       end
