@@ -11,5 +11,5 @@
     <%= @document.payload.html_safe %>
   <% end %>
 <% else %>
-  <%= salsa_partial("salsa", organization) %>
+  <%= salsa_partial("salsa", @organization) %>
 <% end %>

@@ -23,11 +23,10 @@ class AdminController < ApplicationController
   ]
 
   def landing
-    if has_role 'designer'
-      return redirect_to organizations_path
+    if has_role 'designer' || has_role 'supervisor'
+      return redirect_to organizations_path, notice: flash[:notice]
     elsif has_role 'auditor'
-      return redirect_to admin_auditor_reports_path
-    else
+      return redirect_to admin_auditor_reports_path, notice: flash[:notice]
       return redirect_or_error
     end
   end
@@ -78,8 +77,7 @@ class AdminController < ApplicationController
     end
 
     session[:authenticated_user] = user.id
-
-    return redirect_to admin_path
+    return redirect_to admin_path, notice: 'Logged in successfully'
   end
 
   def canvas_accounts
