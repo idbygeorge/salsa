@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180627173735) do
+ActiveRecord::Schema.define(version: 20180703161619) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -122,6 +122,8 @@ ActiveRecord::Schema.define(version: 20180627173735) do
     t.boolean "enable_anonymous_actions", default: true
     t.boolean "track_meta_info_from_document"
     t.string "export_type", default: "default"
+    t.boolean "enable_workflows"
+    t.boolean "inherit_workflows_from_parents"
     t.index ["depth"], name: "index_organizations_on_depth"
     t.index ["lft"], name: "index_organizations_on_lft"
     t.index ["lms_id"], name: "index_organizations_on_lms_id"
@@ -226,6 +228,17 @@ ActiveRecord::Schema.define(version: 20180627173735) do
     t.index ["user_id", "user_type"], name: "index_vestal_versions_on_user_id_and_user_type"
     t.index ["user_name"], name: "index_vestal_versions_on_user_name"
     t.index ["versioned_id", "versioned_type"], name: "index_vestal_versions_on_versioned_id_and_versioned_type"
+  end
+
+  create_table "workflow_steps", force: :cascade do |t|
+    t.string "name"
+    t.string "slug"
+    t.integer "organization_id"
+    t.integer "next_workflow_step_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.boolean "start_step", default: false
+    t.boolean "end_step", default: false
   end
 
 end

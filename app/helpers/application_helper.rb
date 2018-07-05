@@ -2,6 +2,7 @@ module ApplicationHelper
   include ActionView::Helpers::UrlHelper
 
   def salsa_partial(name, org=@organization)
+    @organization = org
     path_info = name.split '/'
 
     path = ''
@@ -11,7 +12,6 @@ module ApplicationHelper
       partial = path_info.pop
       path = path_info.join('/') + '/'
     end
-
     view_folder = get_view_folder org
 
     #phase 2, make this dynamic?
