@@ -128,7 +128,7 @@ $(function() {
           buttons: {
             Relink: function() {
               $('#editor_view').data('lmsCourse', courseData);
-              if($("#tb_save")){
+              if($("#tb_save").length > 0){
                 var originalUrl = $('#tb_save').attr('href');
                 $('#tb_save').attr('href', originalUrl + "?canvas_relink_course_id=" + courseData.id).trigger("click");
                 $('#tb_save').attr('href', originalUrl);
