@@ -3,13 +3,15 @@ class WorkflowStep < ApplicationRecord
   validates :slug, presence: true
   validates :slug, uniqueness: { scope: :organization_id, message: "is already in use for this organization" }, allow_nil: false
   validates :next_workflow_step_id, uniqueness: { scope: :organization_id, message: "is already in use for this organization" }, allow_nil: true
+  belongs_to :role
   belongs_to :organization
-  belongs_to :parent, :class_name => 'WorkflowStep'
-  has_one :children, :class_name => 'WorkflowStep', :foreign_key => 'parent_id'
+  belongs_to :next_step, :class_name => 'WorkflowStep'
+  has_one :previous_step, :class_name => 'WorkflowStep', :foreign_key => 'parent_id'
+  has_many :documents
 
-  def self.workflows organization_id
+  def self.workflows organization_ids
     workflows = []
-    wf_steps = WorkflowStep.where(start_step: true, organization_id: organization_id)
+    wf_steps = WorkflowStep.where(start_step: true, organization_id: organization_ids)
     wf_steps.each do |wf_step|
       wf_done = false
       workflow = []
@@ -37,6 +39,13 @@ class WorkflowStep < ApplicationRecord
 
       return
     end
+  end
 
+  def previous_step
+    Workflow.find_by(self.next_workflow_step_id)
+  end
+
+  def to_s
+    return "#{self.slug} from organization: #{self.organization.slug} "
   end
 end

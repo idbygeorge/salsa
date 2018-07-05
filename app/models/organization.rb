@@ -14,4 +14,14 @@ class Organization < ApplicationRecord
     ["default","Program Outcomes"]
   end
   validates :export_type, :inclusion=> { :in => self.export_types }
+
+  def parents
+    parents = []
+    parent = self.parent
+    while parent != nil do
+      parents.push parent
+      parent = parent.parent
+    end
+    return parents
+  end
 end

@@ -45,7 +45,7 @@
       <% permission[:role] = 'auditor' %>
     <% end %>
 
-    <%= f.select(:role, {'Global Administrator'=>'admin', 'Organization Administrator'=>'organization_admin', 'Auditor'=>'auditor', 'Designer'=>'designer'}, {:include_blank => ''}) %>
+    <%= f.select(:role, {'Global Administrator'=>'admin', 'Organization Administrator'=>'organization_admin', 'Auditor'=>'auditor', 'Designer'=>'designer', 'Supervisor'=>'supervisor','Staff'=>'staff'}, {:include_blank => ''}) %>
   </td>
   <td>
     <% if @organizations %>

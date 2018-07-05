@@ -10,6 +10,11 @@ class AdminDocumentsController < AdminController
 
   def edit
     get_document params[:id]
+    if @document.organization.inherit_workflows_from_parents
+      @workflow_steps = WorkflowStep.where(organization_id: @document.organization.parents.map{|x| x[:id]}).order(start_step: :desc)
+    else
+      @workflow_steps = WorkflowStep.where(organization_id: @document.organization_id, start_step: true)
+    end
   end
 
   def update
@@ -46,6 +51,6 @@ class AdminDocumentsController < AdminController
   end
 
   def document_params
-    params.require(:document).permit(:name, :lms_course_id, :organization_id)
+    params.require(:document).permit(:name, :lms_course_id, :workflow_step_id, :organization_id, :user_id)
   end
 end
