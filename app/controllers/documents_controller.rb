@@ -128,7 +128,7 @@ class DocumentsController < ApplicationController
         return find_or_create_document(session, params, @organization, @lms_course)
       end
 
-      @document.versions[params[:version].to_i].reify if params[:version]
+      @document = @document.versions[params[:version].to_i].reify if params[:version]
 
       @view_pdf_url = view_pdf_url
       @view_url = view_url
