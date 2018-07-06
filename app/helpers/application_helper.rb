@@ -59,6 +59,14 @@ module ApplicationHelper
     "instances/custom/#{org.slug}" if File.directory?("app/views/instances/custom/#{org.slug}")
   end
 
+  def require_supervisor_permissions
+    check_for_admin_password
+
+    unless has_role 'supervisor'
+      return redirect_or_error
+    end
+  end
+
   def require_admin_permissions
     check_for_admin_password
 
@@ -114,6 +122,13 @@ module ApplicationHelper
       session[:admin_authorized] = true
     elsif params[:admin_password] && params[:admin_password] != ''
       session[:admin_authorized] = params[:admin_password] == APP_CONFIG['admin_password']
+    end
+  end
+
+  def get_user_assignment_org user_id, role
+    if user_id != nil
+      current_user = User.find(user_id)
+      current_user.user_assignments.find_by(role: role).organization
     end
   end
 

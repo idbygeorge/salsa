@@ -1,18 +1,26 @@
 class WorkflowStepsController < OrganizationsController
+  skip_before_action :require_designer_permissions
+  skip_before_action :require_admin_permissions
+  skip_before_action :require_organization_admin_permissions
   before_action :check_organization_workflow_enabled
   before_action :set_workflow_step, only: [:show, :edit, :update, :destroy]
   before_action :set_workflow_steps
-
+  before_action :require_supervisor_permissions
   # GET /workflow_steps
   # GET /workflow_steps.json
   def index
     org = Organization.find_by(slug: params[:slug])
     if org.inherit_workflows_from_parents
       org_ids = org.parents.map{|x| x[:id]}
+      org_ids.push org.id
     else
       org_ids = org.id
     end
     @workflows = WorkflowStep.workflows org_ids
+    workflow_array = []
+    @workflows.each do |wf|
+      workflow_array.push wf.map(&:id)
+    end
     @workflow_steps = WorkflowStep.where(organization_id: org_ids).where.not(id: @workflows).order(slug: :asc, next_workflow_step_id: :asc)
     return
   end

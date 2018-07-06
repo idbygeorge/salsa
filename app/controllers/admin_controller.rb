@@ -7,7 +7,8 @@ class AdminController < ApplicationController
     :canvas_accounts,
     :canvas_courses,
     :canvas_accounts_sync,
-    :canvas_courses_sync
+    :canvas_courses_sync,
+    :workflows
   ]
   before_action :require_organization_admin_permissions, only: [
     :canvas_accounts,
@@ -23,10 +24,13 @@ class AdminController < ApplicationController
   ]
 
   def landing
-    if has_role 'designer' || has_role 'supervisor'
+    if has_role 'designer'
       return redirect_to organizations_path, notice: flash[:notice]
     elsif has_role 'auditor'
       return redirect_to admin_auditor_reports_path, notice: flash[:notice]
+    elsif has_role('supervisor', assignment_org = get_user_assignment_org(session[:authenticated_user],'supervisor')) && assignment_org.enable_workflows == true
+      return redirect_to workflow_steps_path(assignment_org.slug), notice: flash[:notice]
+    else
       return redirect_or_error
     end
   end

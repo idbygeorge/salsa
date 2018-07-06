@@ -6,32 +6,38 @@ I want to have a defined set of workflow steps to go thrugh
    Background:
       Given there is a organization
       And the organization enable_workflows option is enabled
-      And that I am logged in as a supervisor
-      And I am on the admin workflow steps page for organization
+      And that I am logged in as a supervisor on the organization
+      And I am on the workflow steps page for the organization
 
    Scenario: create workflow step
-      Given I click the create workflow step button
-      When I fill in the workflow step form with:
+      When I click the "New" link
+      And I fill in the workflow_step form with:
          | slug | step_1 |
          | name | Step 1 |
-         | next_step_id | nil|
-      And I click create workflow step
-      Then I should see "created workflow step"
+         | next_workflow_step_id | |
+         | start_step | true |
+         | end_step | true |
+      And I click the "Create Workflow step" button
+      Then I should see "Workflow step was successfully created."
 
    Scenario: update workflow step
-      Given there are a workflow step
-      And I click the edit workflow step button
-      When I fill in the workflow step form with:
+      Given there is a workflow_step on the organization
+      And I am on the workflow steps page for the organization
+      And I click the "Edit" link
+      When I fill in the workflow_step form with:
          | slug | step_54|
          | name | Step 54 |
-         | next_step_id | nil |
-      And I click create workflow step
-      Then I should see "updated workflow step"
+         | next_workflow_step_id | |
+         | start_step | false |
+         | end_step | false |
+      And I click the "Update Workflow step" button
+      Then I should see "Workflow step was successfully updated."
 
    Scenario: delete workflow step
-      Given there is a workflow step
-      When I click the delete workflow step button
-      Then I should see "deleted workflow step"
+      Given there is a workflow_step on the organization
+      And I am on the workflow steps page for the organization
+      When I click the "Delete" link
+      Then I should see "Workflow step was successfully destroyed."
 
 
    Scenario: review employee's document

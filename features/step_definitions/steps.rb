@@ -1,5 +1,14 @@
-Given(/^that I am logged in as a (\w+)$/) do |role|
+Given(/^that I am logged in as a (\w+) on the organization$/) do |role|
+  visit "/admin/login"
+  user = create(role)
+  user_assignment = create(:user_assignment, user_id: user.id, role: role, organization_id: @organization.id)
+  fill_in "user_email", :with => user.email
+  fill_in "user_password", :with => user.password
+  click_button("Log in")
+  expect(page).to have_content("Logged in successfully")
+end
 
+Given(/^that I am logged in as a (\w+)$/) do |role|
   visit "/admin/login"
   user = create(role)
   user_assignment = create(:user_assignment, user_id: user.id, role: role)
@@ -7,6 +16,16 @@ Given(/^that I am logged in as a (\w+)$/) do |role|
   fill_in "user_password", :with => user.password
   click_button("Log in")
   expect(page).to have_content("Logged in successfully")
+end
+
+Given("there is a workflow_step on the organization") do
+  record = create(:workflow_step, organization_id: @organization.id)
+  instance_variable_set("@workflow_step",record)
+end
+
+Given(/^there is a (\w+)$ with a (\w+) of (\w+)/) do |class_name, field, value|
+  record = create(class_name, feild => value)
+  instance_variable_set("@#{class_name}",record)
 end
 
 Given(/^there is a (\w+)$/) do |class_name|
@@ -40,6 +59,10 @@ When("I click the {string} link") do |string|
   click_link(string)
 end
 
+When("I click the {string} button") do |string|
+  click_on(string)
+end
+
 Then("I should receive the report file") do
   filename = "#{@organization.slug}"
   page.response_headers['Content-Disposition'].to_s.include?(/filename=\"#{filename}_.*\.zip\"/.to_s)
@@ -61,17 +84,29 @@ Given("that i am logged in as a supervisor") do
   pending # Write code here that turns the phrase above into concrete actions
 end
 
-Given("I am on the admin workflow steps page for organization") do
-  pending # Write code here that turns the phrase above into concrete actions
+Given("I am on the workflow steps page for the organization") do
+  visit workflow_steps_path(@organization.slug)
+  expect(page).to have_content("Workflow Steps")
 end
 
-Given("I click the create workflow step button") do
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-When("I fill in the workflow step form with:") do |table|
-  # table is a Cucumber::MultilineArgument::DataTable
-  pending # Write code here that turns the phrase above into concrete actions
+When(/^I fill in the (\w+) form with:$/) do |record_name, table|
+  # table is a Cucumber::Ast::Table
+  table.raw.each do |field,value|
+    id = "##{record_name}_#{field}"
+    e = first(id)
+    expect(e).not_to be_nil, "Unable to find #{id}"
+    case tag = e.tag_name
+    when 'input','textarea'
+      e.set(value)
+    when 'select'
+      option = e.first(:option, value)
+      expect(option).not_to be_nil, "Unable to find option #{value}"
+      option.select_option
+    else
+      puts "pending: #{tag}"
+      pending # duno how to handle that type of element
+    end
+  end
 end
 
 When("I click create workflow step") do
@@ -79,18 +114,10 @@ When("I click create workflow step") do
 end
 
 Then("I should see {string}") do |string|
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-Given("there are a workflow step") do
-  pending # Write code here that turns the phrase above into concrete actions
+  expect(page).to have_content(string)
 end
 
 Given("I click the edit workflow step button") do
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-Given("there is a workflow step") do
   pending # Write code here that turns the phrase above into concrete actions
 end
 
