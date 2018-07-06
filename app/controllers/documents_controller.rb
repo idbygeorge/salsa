@@ -180,7 +180,7 @@ class DocumentsController < ApplicationController
       elsif canvas_course_id && !@organization.skip_lms_publish
         # publishing to canvas should not save in the Document model, the canvas version has been modified
         saved = update_course_document(canvas_course_id, request.raw_post, @organization[:lms_info_slug]) if params[:canvas] && canvas_course_id
-      else
+      elsif !meta_data_from_doc
         if(params[:canvas_relink_course_id])
           #find old document in this org with this id, set to null
           old_document = Document.find_by lms_course_id: params[:canvas_relink_course_id], organization: @organization
@@ -191,7 +191,6 @@ class DocumentsController < ApplicationController
         end
         if document_version && @document.versions.count == document_version.to_i
           @document.payload = request.raw_post
-
           @document.payload = nil if @document.payload == ''
           @document.lms_published_at = DateTime.now
 
@@ -200,12 +199,13 @@ class DocumentsController < ApplicationController
         end
       end
     end
-
     respond_to do |format|
       if can_use_edit_token(@document.lms_course_id) != true
         msg = { :status => "error", :message => "You do not have permisson to save this document"}
       elsif republishing
        msg = { :status => "error", :message => "Documents for this organization are currently being republished. Please copy your changes and try again later.", :version => @document.versions.count }
+     elsif @organization.track_meta_info_from_document == false && meta_data_from_doc != nil
+        msg = { :status => "error", :message => "Tried to save document meta when document meta not enabled for this organization", :version => @document.versions.count }
      elsif !saved && !meta_data_from_doc_saved
         msg = { :status => "error", :message => "This is not a current version of this document! Please copy your changes and refresh the page to get the current version.", :version => @document.versions.count }
       else
