@@ -4,6 +4,7 @@ source "https://rubygems.org"
 gem "rails", "5.1.2"
 
 group :development, :test do
+  gem 'faker', :git => 'https://github.com/stympy/faker.git', :branch => 'master'
   gem 'sqlite3'
   gem 'byebug'
   gem 'rspec-rails'

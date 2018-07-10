@@ -10,18 +10,15 @@ class WorkflowStepsController < OrganizationsController
   # GET /workflow_steps.json
   def index
     org = Organization.find_by(slug: params[:slug])
-    if org.inherit_workflows_from_parents
-      org_ids = org.parents.map{|x| x[:id]}
-      org_ids.push org.id
-    else
-      org_ids = org.id
-    end
+    org_ids = org.organization_ids
     @workflows = WorkflowStep.workflows org_ids
     workflow_array = []
-    @workflows.each do |wf|
-      workflow_array.push wf.map(&:id)
+    @workflows.each do|wf|
+      wf.map(&:id).each do |wfid|
+        workflow_array.push wfid
+      end
     end
-    @workflow_steps = WorkflowStep.where(organization_id: org_ids).where.not(id: @workflows).order(slug: :asc, next_workflow_step_id: :asc)
+    @workflow_steps = WorkflowStep.where(organization_id: org_ids).where.not(id: workflow_array).order(slug: :asc, next_workflow_step_id: :asc)
     return
   end
 

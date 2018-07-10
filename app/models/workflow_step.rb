@@ -1,6 +1,7 @@
 class WorkflowStep < ApplicationRecord
   validate :not_end_step_and_next_step
   validates :slug, presence: true
+  validates :slug, format: { with: /\A[a-zA-Z0-9\-_]+\Z/, message: "only allows letters, numers, _ and -" }
   validates :slug, uniqueness: { scope: :organization_id, message: "is already in use for this organization" }, allow_nil: false
   validates :next_workflow_step_id, uniqueness: { scope: :organization_id, message: "is already in use for this organization" }, allow_nil: true
   belongs_to :role
@@ -8,6 +9,7 @@ class WorkflowStep < ApplicationRecord
   belongs_to :next_step, :class_name => 'WorkflowStep'
   has_one :previous_step, :class_name => 'WorkflowStep', :foreign_key => 'parent_id'
   has_many :documents
+  has_many :organizations
 
   def self.workflows organization_ids
     workflows = []

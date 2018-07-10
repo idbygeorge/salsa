@@ -1,6 +1,6 @@
 Given(/^that I am logged in as a (\w+) on the organization$/) do |role|
   visit "/admin/login"
-  user = create(role)
+  user = create(:user)
   user_assignment = create(:user_assignment, user_id: user.id, role: role, organization_id: @organization.id)
   fill_in "user_email", :with => user.email
   fill_in "user_password", :with => user.password
@@ -10,7 +10,7 @@ end
 
 Given(/^that I am logged in as a (\w+)$/) do |role|
   visit "/admin/login"
-  user = create(role)
+  user = create(:user)
   user_assignment = create(:user_assignment, user_id: user.id, role: role)
   fill_in "user_email", :with => user.email
   fill_in "user_password", :with => user.password
@@ -29,8 +29,23 @@ Given(/^there is a (\w+)$ with a (\w+) of (\w+)/) do |class_name, field, value|
 end
 
 Given(/^there is a (\w+)$/) do |class_name|
-  record = create(class_name)
-  instance_variable_set("@#{class_name}",record)
+  case class_name
+  when /workflow/
+    recordA = create(:workflow_step, slug:Faker::Types.unique.rb_string, end_step: true, organization_id: @organization.id)
+    recordB = create(:workflow_step, slug:Faker::Types.unique.rb_string, next_workflow_step_id: recordA.id, organization_id: @organization.id)
+    recordC = create(:workflow_step, slug:Faker::Types.unique.rb_string, next_workflow_step_id: recordB.id, organization_id: @organization.id)
+    recordD = create(:workflow_step, slug:Faker::Types.unique.rb_string, next_workflow_step_id: recordC.id, start_step: true, organization_id: @organization.id)
+    @workflows = WorkflowStep.workflows(@organization.id)
+  else
+    record = create(class_name)
+    instance_variable_set("@#{class_name}",record)
+  end
+end
+
+Given(/^there is a user with the role of (\w+)/) do |role|
+  user = create(:user, email: Faker::Internet.free_email)
+  user_assignment = create(:user_assignment, user_id: user.id, role: role, organization_id: @organization.id)
+  instance_variable_set("@user",user)
 end
 
 Given("there are documents with document_metas that match the filter") do
@@ -109,20 +124,16 @@ When(/^I fill in the (\w+) form with:$/) do |record_name, table|
   end
 end
 
-When("I click create workflow step") do
-  pending # Write code here that turns the phrase above into concrete actions
+Then("I should be able to see all the workflow_steps for the organization") do
+  slugs = WorkflowStep.where(organization_id: @organization.id).map(&:slug)
+  save_page
+  slugs.each do |s|
+    expect(page).to have_content(s)
+  end
 end
 
 Then("I should see {string}") do |string|
   expect(page).to have_content(string)
-end
-
-Given("I click the edit workflow step button") do
-  pending # Write code here that turns the phrase above into concrete actions
-end
-
-When("I click the delete workflow step button") do
-  pending # Write code here that turns the phrase above into concrete actions
 end
 
 Given("there is a {string}") do |table|
@@ -130,20 +141,24 @@ Given("there is a {string}") do |table|
   pending # Write code here that turns the phrase above into concrete actions
 end
 
-Given("the employee has a document with a workflow step") do
-  pending # Write code here that turns the phrase above into concrete actions
+Given("the user has a document with a workflow step") do
+  wf_start_step = @workflows[1].detect {|wf| wf["start_step"] == true}
+  @document = create(:document, organization_id: @organization.id, user_id: @user, workflow_step_id: wf_start_step.id )
+  expect(@document.workflow_step_id).to have_content(wf_start_step.id)
 end
 
-Given("the employee has completed a workflow step") do
-  pending # Write code here that turns the phrase above into concrete actions
+Given("the user has completed a workflow step") do
+  @document.workflow_step_id = WorkflowStep.find(@document.workflow_step_id).next_workflow_step_id
+  @document.save
 end
 
-When("I go to the review page for the employee") do
-  pending # Write code here that turns the phrase above into concrete actions
+When("I go to the document edit page for the users document") do
+  visit edit_document_path(:id => @document.edit_id)
 end
 
 Then("I should not be able to edit the employee section") do
-  pending # Write code here that turns the phrase above into concrete actions
+  puts "##### Cant test beyond this point before we have components and permissions setup #####"
+  pending
 end
 
 When("I fill in the form with:") do |table|

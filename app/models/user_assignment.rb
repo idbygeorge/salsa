@@ -8,4 +8,5 @@ class UserAssignment < ApplicationRecord
     scope: :organization_id,
     message: "already has a role for the specified organization"
   }
+  validates :organization_id, presence: true, unless: Proc.new { |ua| ua == 'admin' }
 end

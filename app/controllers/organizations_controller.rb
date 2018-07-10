@@ -43,6 +43,7 @@ class OrganizationsController < AdminController
     @export_types = Organization.export_types
     get_documents params[:slug]
 
+    @workflow_steps = WorkflowStep.where(organization_id: @organization.organization_ids)
     @organization.default_account_filter = '{"account_filter":""}' unless @organization.default_account_filter
     @organization.default_account_filter = '{"account_filter":""}' if @organization.default_account_filter == ''
 
@@ -51,6 +52,7 @@ class OrganizationsController < AdminController
 
   # commit actions
   def create
+    @workflow_steps = WorkflowStep.where(organization_id: org_ids).where.not(id: workflow_array).order(slug: :asc, next_workflow_step_id: :asc)
     @export_types = Organization.export_types
     @organization = Organization.create organization_params
 
