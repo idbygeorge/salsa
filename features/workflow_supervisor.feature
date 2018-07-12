@@ -45,14 +45,14 @@ I want to have a defined set of workflow steps to go thrugh
      Then I should see "Workflow step was successfully destroyed."
 
 
-  Scenario: review employee's document
-     Given there is a user with the role of staff
-     And there is a workflow
-     And the user has a document with a workflow step
-     And the user has completed a workflow step
-     When I go to the document edit page for the users document
-     Then I should not be able to edit the employee section
-     When I fill in the form with:
-        | comments | this employee has done good job writing tests for this project |
-     And I click the complete review button
-     Then I should see "review completed"
+  # Scenario: review employee's document
+  #    Given there is a user with the role of staff
+  #    And there is a workflow
+  #    And the user has a document with a workflow step
+  #    And the user has completed a workflow step
+  #    When I go to the document edit page for the users document
+  #    Then I should not be able to edit the employee section
+  #    When I fill in the form with:
+  #       | comments | this employee has done good job writing tests for this project |
+  #    And I click the complete review button
+  #    Then I should see "review completed"
