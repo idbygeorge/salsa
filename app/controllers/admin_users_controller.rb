@@ -101,7 +101,8 @@ class AdminUsersController < AdminController
 
   private
   def get_roles
-    @roles = {'Global Administrator'=>'admin', 'Organization Administrator'=>'organization_admin', 'Auditor'=>'auditor', 'Designer'=>'designer', 'Supervisor'=>'supervisor','Staff'=>'staff'}
+    @roles = UserAssignment.roles
+    {'Global Administrator'=>'admin', 'Organization Administrator'=>'organization_admin', 'Auditor'=>'auditor', 'Designer'=>'designer', 'Supervisor'=>'supervisor','Staff'=>'staff'}
   end
 
   def user_params

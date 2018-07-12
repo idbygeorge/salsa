@@ -11,7 +11,7 @@ class AdminDocumentsController < AdminController
   def edit
     get_document params[:id]
     if @document.organization.inherit_workflows_from_parents
-      @workflow_steps = WorkflowStep.where(organization_id: @document.organization.parents.map{|x| x[:id]}).order(start_step: :desc)
+      @workflow_steps = WorkflowStep.where(organization_id: @document.organization.organization_ids).order(start_step: :desc)
     else
       @workflow_steps = WorkflowStep.where(organization_id: @document.organization_id, start_step: true)
     end
