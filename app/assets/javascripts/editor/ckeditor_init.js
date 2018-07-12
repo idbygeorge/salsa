@@ -5,7 +5,7 @@ CKEditor_configs = {
       ['Bold', 'Italic', '-', 'RemoveFormat'],
       ['Link', 'Unlink'],
       ['BulletedList', 'NumberedList', '-', 'Outdent', 'Indent'],
-      
+
       // these buttons don't work with the config.allowedContent specified...
       // ['JustifyLeft', 'JustifyCenter', 'JustifyRight']
     ],
@@ -31,7 +31,7 @@ CKEditor_configs = {
 }
 
 function CKEditor_focus(context) {
-  
+
 }
 
 function CKEditor_blur(context) {
@@ -42,10 +42,11 @@ function CKEditor_blur(context) {
 function CKEditor_cleanup(context) {
   // remove each editor
   jQuery.each(CKEDITOR.instances, function(){
-    var editorElement = this.container.$;
-
-    if($(context).has(editorElement).length || $(context).is(editorElement)) {
-      this.destroy();
+    if(this.container){
+      var editorElement = this.container.$;
+      if($(context).has(editorElement).length || $(context).is(editorElement)) {
+        this.destroy();
+      }
     }
   });
 

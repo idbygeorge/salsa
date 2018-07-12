@@ -3,7 +3,7 @@ FactoryBot.define do
   factory :document do
     organization_id 1
     name "Document"
-    lms_course_id "32342"
+    lms_course_id "323423432"
     lms_published_at DateTime.now
     created_at DateTime.now.ago(10)
     updated_at DateTime.now

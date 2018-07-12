@@ -146,10 +146,11 @@ function liteOff(x){
                   root_organization_slug : window.location.hostname
                 });
               });
+              meta_hash = new Object(meta_data_from_doc);
               if(meta_data_from_doc){
                 $.ajax({
                   url: settings.url,
-                  data: {meta_data_from_doc},
+                  data: meta_hash,
                   dataType: "json",
                   method: "PATCH"
                 });

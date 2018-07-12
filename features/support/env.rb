@@ -5,13 +5,26 @@
 # files.
 
 require 'cucumber/rails'
-
+require 'capybara/mechanize/cucumber'
+require 'fakeweb'
 
 # Capybara defaults to CSS3 selectors rather than XPath.
 # If you'd prefer to use XPath, just uncomment this line and adjust any
 # selectors in your step definitions to use the XPath syntax.
 # Capybara.default_selector = :xpath
+Capybara.javascript_driver = :webkit
+Capybara.app_host = "http://localhost"
+Capybara.always_include_port = true
 
+Capybara.register_driver :mechanize do |app|
+  driver = Capybara::Mechanize::Driver.new(app)
+  driver.configure do |agent|
+    # Configure other Mechanize options here.
+    agent.log = Logger.new "mech.log"
+    agent.user_agent_alias = 'Mac Safari'
+  end
+  driver
+end
 # By default, any exception happening in your Rails application will bubble up
 # to Cucumber so that your scenario will fail. This is a different from how
 # your application behaves in the production environment, where an error page will
@@ -66,3 +79,28 @@ end
 # See https://github.com/cucumber/cucumber-rails/blob/master/features/choose_javascript_database_strategy.feature
 Cucumber::Rails::Database.javascript_strategy = :truncation
 World(FactoryBot::Syntax::Methods)
+
+Capybara::Webkit.configure do |config|
+  # Enable debug mode. Prints a log of everything the driver is doing.
+  config.debug = false
+
+  # By default, requests to outside domains (anything besides localhost) will
+  # result in a warning. Several methods allow you to change this behavior.
+
+  # Allow pages to make requests to any URL without issuing a warning.
+  config.allow_unknown_urls
+
+  # Silently return an empty 200 response for any requests to the given URL.
+
+  # Timeout if requests take longer than 5 seconds
+  config.timeout = 5
+
+  # Don't raise errors when SSL certificates can't be validated
+  config.ignore_ssl_errors
+
+  # Don't load images
+  config.skip_image_loading
+
+  # Raise JavaScript errors as exceptions
+  config.raise_javascript_errors = true
+end
