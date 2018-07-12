@@ -9,7 +9,7 @@ class UserAssignment < ApplicationRecord
   default_scope { order('user_id, organization_id, role') }
 
   validates :role, inclusion: {
-    in: roles,
+    in: roles.values,
     message: "you cant create that role"
   }
   validates :user_id, uniqueness: {

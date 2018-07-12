@@ -100,10 +100,6 @@ class AdminUsersController < AdminController
   end
 
   private
-  def get_roles
-    @roles = UserAssignment.roles
-    {'Global Administrator'=>'admin', 'Organization Administrator'=>'organization_admin', 'Auditor'=>'auditor', 'Designer'=>'designer', 'Supervisor'=>'supervisor','Staff'=>'staff'}
-  end
 
   def user_params
     params.require(:user).require(:name)
