@@ -18,12 +18,17 @@ Given(/^that I am logged in as a (\w+)$/) do |role|
   expect(page).to have_content("Logged in successfully")
 end
 
-Given("there is a workflow_step on the organization") do
-  record = create(:workflow_step, organization_id: @organization.id)
-  instance_variable_set("@workflow_step",record)
+Given(/^there is a (\w+) on the organization$/) do |class_name|
+  record = create(class_name, organization_id: @organization.id)
+  instance_variable_set("@#{class_name}",record)
 end
 
-Given(/^there is a (\w+)$ with a (\w+) of (\w+)/) do |class_name, field, value|
+Given(/^there are (\d+) (\w+) for the organization/) do | number, class_name|
+  record = create(class_name.singularize, organization: @organization)
+  instance_variable_set("@#{class_name}",record)
+end
+
+Given(/^there is a (\w+) with a (\w+) of (\w+)$/) do |class_name, field, value|
   record = create(class_name, feild => value)
   instance_variable_set("@#{class_name}",record)
 end
@@ -70,11 +75,17 @@ Given("I am on the admin reports page for organization") do
   expect(page).to have_content("Reports for")
 end
 
-When("I click the {string} link") do |string|
-  click_link(string)
+When(/^I click the "(.*?)" link$/) do |string|
+  case string
+  when /Edit Component/
+    click_on("edit_#{@component.slug}")
+  else
+    save_page
+    click_link(string)
+  end
 end
 
-When("I click the {string} button") do |string|
+When(/^I click on "(.*?)"$/) do |string|
   click_on(string)
 end
 
@@ -99,9 +110,10 @@ Given("that i am logged in as a supervisor") do
   pending # Write code here that turns the phrase above into concrete actions
 end
 
-Given("I am on the workflow steps page for the organization") do
-  visit workflow_steps_path(@organization.slug)
-  expect(page).to have_content("Workflow Steps")
+Given(/^I am on the (\w+) index page for the organization$/) do |controller|
+  @controller = controller
+  url = "/admin/organization/#{@organization.slug}/#{controller}"
+  visit url
 end
 
 When(/^I fill in the (\w+) form with:$/) do |record_name, table|
@@ -124,11 +136,16 @@ When(/^I fill in the (\w+) form with:$/) do |record_name, table|
   end
 end
 
-Then("I should be able to see all the workflow_steps for the organization") do
-  slugs = WorkflowStep.where(organization_id: @organization.id).map(&:slug)
+Then(/^I should be able to see all the (\w+) for the organization$/) do |class_name|
+  case class_name
+  when /components/
+    slugs = Component.where(organization_id: @organization.id).map(&:slug)
+  when /workflow/
+    slugs = WorkflowStep.where(organization_id: @organization.id).map(&:slug)
+  end
   save_page
-  slugs.each do |s|
-    expect(page).to have_content(s)
+  slugs.each do |slug|
+    expect(page).to have_content(slug)
   end
 end
 

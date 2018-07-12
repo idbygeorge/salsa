@@ -11,7 +11,7 @@ I want to have a defined set of workflow steps to go thrugh
   Scenario: View all workflow_steps for the organization
     Given there is a workflow
     And there is a workflow_step on the organization
-    And I am on the workflow steps page for the organization
+    And I am on the workflow_steps index page for the organization
     Then I should be able to see all the workflow_steps for the organization
 
   Scenario: create workflow step
@@ -22,12 +22,12 @@ I want to have a defined set of workflow steps to go thrugh
         | next_workflow_step_id | |
         | start_step | true |
         | end_step | true |
-     And I click the "Create Workflow step" button
+     And I click on "Create Workflow step"
      Then I should see "Workflow step was successfully created."
 
   Scenario: update workflow step
      Given there is a workflow_step on the organization
-     And I am on the workflow steps page for the organization
+     And I am on the workflow_steps index page for the organization
      And I click the "Edit" link
      When I fill in the workflow_step form with:
         | slug | step_54|
@@ -35,12 +35,12 @@ I want to have a defined set of workflow steps to go thrugh
         | next_workflow_step_id | |
         | start_step | false |
         | end_step | false |
-     And I click the "Update Workflow step" button
+     And I click on "Update Workflow step"
      Then I should see "Workflow step was successfully updated."
 
   Scenario: delete workflow step
      Given there is a workflow_step on the organization
-     And I am on the workflow steps page for the organization
+     And I am on the workflow_steps index page for the organization
      When I click the "Delete" link
      Then I should see "Workflow step was successfully destroyed."
 
@@ -54,5 +54,5 @@ I want to have a defined set of workflow steps to go thrugh
      Then I should not be able to edit the employee section
      When I fill in the form with:
         | comments | this employee has done good job writing tests for this project |
-     And I click the complete review button
+     And I click on "complete review"
      Then I should see "review completed"

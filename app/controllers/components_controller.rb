@@ -34,7 +34,7 @@ class ComponentsController < ApplicationController
       if @component.valid?
         if valid_slug?(params[:slug])
           @component.save
-          return redirect_to components_path
+          return redirect_to components_path, notice: "Component was successfully created."
         else
           flash[:error] = "Invalid Slug"
           return render action: :new
@@ -55,7 +55,7 @@ class ComponentsController < ApplicationController
     if available_component_formats.include? component_params[:format]
       if @component.valid? && valid_slug?(@component.slug) == true
         @component.update component_params
-        return redirect_to components_path
+        return redirect_to components_path, notice: "Component was successfully updated."
       end
     end
 
