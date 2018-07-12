@@ -4,6 +4,16 @@
   <% post_url = component_path(@organization[:slug], '') %>
 <% end %>
 
+<% if @component.errors.any? %>
+  <div class="alert alert-danger">
+    <ul>
+        <% @component.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+        <% end %>
+    </ul>
+</div>
+<% end %>
+
 <%= form_for(@component, url: post_url, html: { class: "form-horizontal" } ) do |f| %>
 <fieldset class="col-md-9">
   <legend>Info</legend>
@@ -35,6 +45,13 @@
       <%= f.text_area :description, class: 'form-control' %>
     </div>
   </div>
+
+  <% if @available_component_formats.include? 'erb' %>
+    <div class="form-group">
+      <%= f.label :role, class: "control-label" %>
+      <%= f.select(:role, @roles, {:include_blank => ''}, {class: 'form-control'}) %>
+    </div>
+  <% end %>
 
   <% if @available_component_formats.length > 1 %>
     <div class="form-group">

@@ -5,6 +5,7 @@ class ComponentsController < ApplicationController
 
   before_action :get_organizations
   before_action :get_organization
+  before_action :get_roles
 
   def index
     @components = @organization.components
@@ -29,7 +30,6 @@ class ComponentsController < ApplicationController
     @component[:organization_id] = @organization[:id]
 
     available_component_formats
-
     if available_component_formats.include? @component.format
       if @component.valid?
         if valid_slug?(params[:slug])
@@ -113,6 +113,7 @@ class ComponentsController < ApplicationController
       :category,
       :layout,
       :format,
+      :role,
     )
   end
 end
