@@ -28,7 +28,6 @@ after_script:
 script:
   - sudo docker-compose run salsa rake db:schema:load RAILS_ENV=test
   - sudo docker-compose run salsa rake db:migrate RAILS_ENV=test
-  - bundle exec rspec
   - sudo docker-compose run salsa cucumber RAILS_ENV=test
 dist: trusty
 language: ruby
