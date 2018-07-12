@@ -152,6 +152,18 @@ there are also documents created but you still need to publish them by going to 
     docker images #list all docker images
     sudo docker rmi ########    #remove docker image id from above command (useful to recreate db or application image if needed)
 
+##### testing with cucumber
+
+  to run all cucumber tests
+
+    sudo docker-compose run salsa bash ./cucumber.sh
+
+  to run a specific test
+
+    sudo docker-compose run salsa bash
+    cucumber features/name_of_test.feature RAILS_ENV=test
+
+
 ##### debuging
   to run server in development mode
     sudo docker-compose run --service-ports salsa
