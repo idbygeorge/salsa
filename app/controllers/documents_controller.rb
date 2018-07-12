@@ -173,13 +173,16 @@ class DocumentsController < ApplicationController
     republishing = true
     verify_org
     if (check_lock @organization[:slug], params[:batch_token]) && can_use_edit_token(@document.lms_course_id)
+      if params[:publish] == "true" && @organization.enable_workflows
+        @document.workflow_step_id = @document.workflow_step.next_workflow_step_id if @document.workflow_step&.next_workflow_step_id
+      end
       republishing = false;
       if meta_data_from_doc && @document.lms_course_id && @organization.lms_authentication_id && @organization.track_meta_info_from_document
         create_meta_data_from_document(meta_data_from_doc, @document, @organization)
         meta_data_from_doc_saved = true
       elsif canvas_course_id && !@organization.skip_lms_publish
         # publishing to canvas should not save in the Document model, the canvas version has been modified
-        saved = update_course_document(canvas_course_id, request.raw_post, @organization[:lms_info_slug]) if params[:canvas] && canvas_course_id
+        saved = update_course_document(canvas_course_id, request.raw_post, @organization[:lms_info_slug], @lms_client, @document) if params[:canvas] && canvas_course_id
       elsif !meta_data_from_doc
         if(params[:canvas_relink_course_id])
           #find old document in this org with this id, set to null
@@ -361,17 +364,17 @@ class DocumentsController < ApplicationController
     @syllabus = @document
   end
 
-  def update_course_document course_id, html, lms_info_slug
+  def update_course_document course_id, html, lms_info_slug, lms_client, document=nil
     lms_connection_information
 
-    @lms_client.put("/api/v1/courses/#{course_id}", { course: { syllabus_body: html } })
+    lms_client.put("/api/v1/courses/#{course_id}", { course: { syllabus_body: html } })
 
     if(lms_info_slug)
-      @lms_client.put("/api/v1/courses/#{course_id}/#{lms_info_slug}", { wiki_page: { body: "<p><a id='edit-gui-salsa' href='#{ document_url(@document[:edit_id]) }' target='_blank'>Edit your <abbr title='Styled and Accessible Learning Service Agreement'>SALSA</abbr></a></p>", hide_from_students: true } })
+      lms_client.put("/api/v1/courses/#{course_id}/#{lms_info_slug}", { wiki_page: { body: "<p><a id='edit-gui-salsa' href='#{ document_url(@document[:edit_id]) }' target='_blank'>Edit your <abbr title='Styled and Accessible Learning Service Agreement'>SALSA</abbr></a></p>", hide_from_students: true } })
     end
 
-    if @document
-      @document.update(lms_published_at: DateTime.now, lms_course_id: course_id)
+    if document
+      document.update(lms_published_at: DateTime.now, lms_course_id: course_id)
     end
   end
 

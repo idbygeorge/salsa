@@ -9,7 +9,6 @@ class OrganizationsController < AdminController
   layout 'admin'
   def index
     get_documents
-
     @roots = @organizations.roots
 
     if @roots.count == 1
@@ -18,6 +17,7 @@ class OrganizationsController < AdminController
   end
 
   def new
+    @export_types = Organization.export_types
     @organization = Organization.new
   end
 
@@ -43,6 +43,7 @@ class OrganizationsController < AdminController
     @export_types = Organization.export_types
     get_documents params[:slug]
 
+    @workflow_steps = WorkflowStep.where(organization_id: @organization.organization_ids)
     @organization.default_account_filter = '{"account_filter":""}' unless @organization.default_account_filter
     @organization.default_account_filter = '{"account_filter":""}' if @organization.default_account_filter == ''
 
@@ -51,12 +52,15 @@ class OrganizationsController < AdminController
 
   # commit actions
   def create
+    @workflow_steps = WorkflowStep.where(organization_id: org_ids).where.not(id: workflow_array).order(slug: :asc, next_workflow_step_id: :asc)
+    @export_types = Organization.export_types
     @organization = Organization.create organization_params
 
     redirect_to organization_path(slug: full_org_path(@organization))
   end
 
   def update
+    @export_types = Organization.export_types
     @organization = find_org_by_path params[:slug]
 
     if has_role('admin') && params['organization']['default_account_filter'] != nil
@@ -107,9 +111,9 @@ class OrganizationsController < AdminController
 
   def organization_params
     if has_role 'admin'
-        params.require(:organization).permit(:name, :export_type, :slug, :parent_id, :lms_authentication_source, :lms_authentication_id, :lms_authentication_key, :lms_info_slug, :home_page_redirect, :skip_lms_publish, :enable_anonymous_actions, :track_meta_info_from_document, default_account_filter: [:account_filter])
+        params.require(:organization).permit(:name, :export_type, :slug, :enable_workflows, :inherit_workflows_from_parents, :parent_id, :lms_authentication_source, :lms_authentication_id, :lms_authentication_key, :lms_info_slug, :home_page_redirect, :skip_lms_publish, :enable_anonymous_actions, :track_meta_info_from_document, default_account_filter: [:account_filter])
     elsif has_role 'organization_admin'
-        params.require(:organization).permit(:name, :export_type, :lms_authentication_source, :lms_authentication_id, :lms_authentication_key, :lms_info_slug, :home_page_redirect, :skip_lms_publish, :enable_anonymous_actions, :track_meta_info_from_document)
+        params.require(:organization).permit(:name, :export_type, :enable_workflows, :lms_authentication_source, :lms_authentication_id, :lms_authentication_key, :lms_info_slug, :home_page_redirect, :skip_lms_publish, :enable_anonymous_actions, :track_meta_info_from_document)
     end
   end
 end

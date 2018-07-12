@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180703161619) do
+ActiveRecord::Schema.define(version: 20180709190100) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -68,6 +68,8 @@ ActiveRecord::Schema.define(version: 20180703161619) do
     t.integer "component_version"
     t.string "term_id"
     t.integer "version"
+    t.integer "workflow_step_id"
+    t.integer "user_id"
     t.index ["component_id"], name: "index_documents_on_component_id"
     t.index ["edit_id"], name: "index_documents_on_edit_id", unique: true
     t.index ["lms_course_id"], name: "index_documents_on_lms_course_id"
@@ -124,6 +126,7 @@ ActiveRecord::Schema.define(version: 20180703161619) do
     t.string "export_type", default: "default"
     t.boolean "enable_workflows"
     t.boolean "inherit_workflows_from_parents"
+    t.integer "default_workflow_step_id"
     t.index ["depth"], name: "index_organizations_on_depth"
     t.index ["lft"], name: "index_organizations_on_lft"
     t.index ["lms_id"], name: "index_organizations_on_lms_id"
