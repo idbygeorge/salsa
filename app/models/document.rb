@@ -16,9 +16,17 @@ class Document < ApplicationRecord
   end
 
   def ensure_ids
-    self.view_id = Document.generate_id unless view_id
-    self.edit_id = Document.generate_id unless edit_id
-    self.template_id = Document.generate_id unless template_id
+    ids_match = nil
+    while ids_match != true do
+      self.view_id = Document.generate_id unless view_id || ids_match == false
+      self.edit_id = Document.generate_id unless edit_id || ids_match == false
+      self.template_id = Document.generate_id unless template_id || ids_match == false
+      unless Document.where(view_id: self.view_id).where.not(id: self.id).exists? || Document.where(edit_id: self.edit_id).where.not(id: self.id).exists? || Document.where(template_id: self.template_id).where.not(id: self.id).exists?
+        ids_match = true
+      else
+        ids_match = false
+      end
+    end
   end
 
   def reset_ids
