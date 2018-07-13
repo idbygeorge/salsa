@@ -4,6 +4,7 @@ source "https://rubygems.org"
 gem "rails", "5.1.2"
 
 group :development, :test do
+  gem 'faker', :git => 'https://github.com/stympy/faker.git', :branch => 'master'
   gem 'sqlite3'
   gem 'byebug'
   gem 'rspec-rails'
@@ -27,7 +28,7 @@ group :development do
 end
 group :test do
   gem 'capybara-mechanize'
-  gem "fakeweb", :git => 'git://github.com/chrisk/fakeweb.git'
+  gem "fakeweb", :git => 'https://github.com/chrisk/fakeweb.git', :branch => 'master'
   gem 'capybara-webkit'
   gem 'launchy'
   gem 'cucumber-rails', :require => false
