@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180712174215) do
+ActiveRecord::Schema.define(version: 20180713165407) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -38,6 +38,7 @@ ActiveRecord::Schema.define(version: 20180712174215) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string "role"
+    t.integer "role_organization_id"
     t.index ["category"], name: "index_components_on_category"
     t.index ["organization_id"], name: "index_components_on_organization_id"
     t.index ["slug", "organization_id"], name: "index_components_on_slug_and_organization_id", unique: true
