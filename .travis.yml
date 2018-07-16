@@ -1,16 +1,8 @@
 addons:
   postgresql: 9.6
   apt:
-    sources:
-      - ubuntu-sdk-team
     packages:
       - docker-ce
-      - qtbase5-dev
-      - qtdeclarative5-dev
-      - libqt5webkit5-dev
-      - libsqlite3-dev
-      - qt5-default
-      - qttools5-dev-tools
 after_success:
   - bundle exec codeclimate-test-reporter
 before_script:
