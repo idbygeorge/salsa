@@ -1,8 +1,19 @@
+sudo: required
+env:
+  global:
+    - BUNDLE_JOBS=4
+    - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
+    - QMAKE=/usr/lib/x86_64-linux-gnu/qt5/bin/qmake
+    - JAVA_OPTS=-Djava.security.egd=file:/dev/urandom
 addons:
   postgresql: 9.6
   apt:
+    sources:
+      - ubuntu-sdk-team
     packages:
       - docker-ce
+      - libqt5webkit5-dev
+      - qtdeclarative5-dev
 after_success:
   - bundle exec codeclimate-test-reporter
 before_script:
