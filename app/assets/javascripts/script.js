@@ -133,7 +133,8 @@ function liteOff(x){
             if( $("body").find( '[data-lms-course]' ).attr("data-lms-course")) {
               var lms_course_id =  jQuery.parseJSON($("body").find( '[data-lms-course]' ).attr("data-lms-course")).id;
             }
-            if (lms_course_id){
+            var organizationConfig = $("[data-organization-config]").data("organization-config");
+            if (lms_course_id && organizationConfig["track_meta_info_from_document"]){
               var meta_data_from_doc = [];
               $("#page").find( '[data-meta]' ).each(function() {
                 var key = "salsa_" + $( this ).attr( 'data-meta' )
