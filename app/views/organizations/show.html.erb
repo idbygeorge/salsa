@@ -42,14 +42,16 @@
           </a>
       <% end %>
 
-      <% if @organization.enable_workflows %>
-          <a class="btn btn-default" href="<%= workflow_steps_path(params[:slug]) %>">
-            Workflow Steps
-          </a>
-      <% end %>
 
     </p>
     <hr>
+  <% end %>
+  <% if @organization.enable_workflows && has_role('supervisor', get_org) %>
+    <p>
+      <a class="btn btn-default" href="<%= workflow_steps_path(params[:slug]) %>">
+        Workflow Steps
+      </a>
+    </p>
   <% end %>
 
 </div>

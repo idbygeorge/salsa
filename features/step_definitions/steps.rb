@@ -1,19 +1,19 @@
 Given(/^that I am logged in as a (\w+) on the organization$/) do |role|
   visit "/admin/login"
-  user = create(:user)
-  user_assignment = create(:user_assignment, user_id: user.id, role: role, organization_id: @organization.id)
-  fill_in "user_email", :with => user.email
-  fill_in "user_password", :with => user.password
+  @current_user = create(:user)
+  user_assignment = create(:user_assignment, user_id: @current_user.id, role: role, organization_id: @organization.id)
+  fill_in "user_email", :with => @current_user.email
+  fill_in "user_password", :with => @current_user.password
   click_button("Log in")
   expect(page).to have_content("Logged in successfully")
 end
 
 Given(/^that I am logged in as a (\w+)$/) do |role|
   visit "/admin/login"
-  user = create(:user)
-  user_assignment = create(:user_assignment, user_id: user.id, role: role)
-  fill_in "user_email", :with => user.email
-  fill_in "user_password", :with => user.password
+  @current_user = create(:user)
+  user_assignment = create(:user_assignment, user_id: @current_user.id, role: role)
+  fill_in "user_email", :with => @current_user.email
+  fill_in "user_password", :with => @current_user.password
   click_button("Log in")
   expect(page).to have_content("Logged in successfully")
 end
@@ -55,6 +55,10 @@ end
 
 Given("there are documents with document_metas that match the filter") do
   doc = create(:document, organization_id: @organization.id)
+end
+
+Given("there is a document with the first step in the workflow and assigned to the user") do
+  @document = create(:document, workflow_step_id: @workflows.first.first.id, user_id: @current_user.id)
 end
 
 Given("the reports are generated") do

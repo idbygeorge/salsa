@@ -6,7 +6,13 @@ class ApplicationController < ActionController::Base
   include ApplicationHelper
 
   protected
-  
+
+  def current_user
+    if session[:authenticated_user]
+      User.find(session[:authenticated_user])
+    end
+  end
+
   def get_roles
     @roles = UserAssignment.roles
   end
