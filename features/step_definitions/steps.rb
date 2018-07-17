@@ -57,8 +57,15 @@ Given("there are documents with document_metas that match the filter") do
   doc = create(:document, organization_id: @organization.id)
 end
 
-Given("there is a document with the first step in the workflow and assigned to the user") do
-  @document = create(:document, workflow_step_id: @workflows.first.first.id, user_id: @current_user.id)
+Given(/^there is a document on the (\w+) step in the workflow and assigned to the user$/) do |step|
+  case step
+  when /first/
+    @document = create(:document, workflow_step_id: @workflows.first.first.id, user_id: @current_user.id)
+  when /last/
+    @document = create(:document, workflow_step_id: @workflows.first.last.id, user_id: @current_user.id)
+  else
+    pending
+  end
 end
 
 Given("the reports are generated") do
@@ -157,6 +164,10 @@ Then("I should see {string}") do |string|
   expect(page).to have_content(string)
 end
 
+Given(/^I am on the "(.*?)" page$/) do |page|
+  visit page
+end
+
 Given("there is a {string}") do |table|
   create
   pending # Write code here that turns the phrase above into concrete actions
@@ -171,6 +182,10 @@ end
 Given("the user has completed a workflow step") do
   @document.workflow_step_id = WorkflowStep.find(@document.workflow_step_id).next_workflow_step_id
   @document.save
+end
+
+Then(/^the document should be on (\w+)$/) do |step|
+  expect(@document.workflow_step.slug).to have_content(step)
 end
 
 When("I go to the document edit page for the users document") do
