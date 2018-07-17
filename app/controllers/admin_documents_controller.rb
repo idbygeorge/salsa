@@ -1,5 +1,6 @@
 class AdminDocumentsController < AdminController
   before_action :get_organizations, only: [:new, :edit, :update, :index]
+  before_action :require_designer_permissions
   before_action :require_admin_permissions, only: [:index]
 
   layout 'admin'
