@@ -44,12 +44,14 @@ I want to have a defined set of workflow steps to go thrugh
      When I click the "Delete" link
      Then I should see "Workflow step was successfully destroyed."
 
+  @javascript
   Scenario: review employee's document
      Given there is a user with the role of staff
      And there is a workflow
-     And the user has a document with a workflow_step of 2
-     When I go to the workflow documents page
+     And the user has a document with a workflow_step of 4
+     And I am on the "/workflow/documents" page
+     And I save the page
      When I click the "Edit" link
-     Then I should not be able to edit the employee section
+     # Then I should not be able to edit the employee section
      And I click the "tb_share" link
-     Then the document workflow step should be blank
+     Then the document workflow_step_id should be nil

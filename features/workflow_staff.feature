@@ -8,6 +8,7 @@ I want to complete a workflow step
     And the organization enable_workflows option is enabled
     And there is a workflow
 
+  @javascript
   Scenario: complete step 1
     Given that I am logged in as a staff on the organization
     And there is a document on the first step in the workflow and assigned to the user
@@ -17,6 +18,7 @@ I want to complete a workflow step
     And I click the "tb_share" link
     Then the document should be on step_2
 
+  @javascript
   Scenario: complete last step
     Given that I am logged in as a staff on the organization
     And there is a document on the last step in the workflow and assigned to the user
@@ -24,4 +26,4 @@ I want to complete a workflow step
     When I click the "Edit" link
     # TODO add javascript tag so we can save the document
     And I click the "tb_share" link
-    Then the document should be on step_2
+    Then the document workflow_step_id should be nil

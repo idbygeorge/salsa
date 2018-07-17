@@ -33,6 +33,20 @@ Given(/^there is a (\w+) with a (\w+) of (\w+)$/) do |class_name, field, value|
   instance_variable_set("@#{class_name}",record)
 end
 
+Then(/^the (\w+) (\w+) should be (\w+)$/) do |class_name, record_name, value|
+  record = instance_variable_get("@#{class_name}")
+  result = record.send(record_name)
+  case value
+  when /nil/
+    expect(result).to be nil
+  else
+    expect(result).to have_content(value)
+  end
+end
+
+Given(/^there is a (\w+) with a (\w+) of "(.*?)"$/) do |class_name, field_name, field_value|
+  instance_variable_set("@#{class_name}", create(class_name, field_name => field_value))
+end
 Given(/^there is a (\w+)$/) do |class_name|
   case class_name
   when /workflow/
@@ -47,12 +61,19 @@ Given(/^there is a (\w+)$/) do |class_name|
   end
 end
 
+Given("the user has a document with a workflow_step of {int}") do |int|
+  @document = create(:document, organization_id: @organization.id, user_id: @user.id, workflow_step_id: @workflows.first[int.to_i-1].id)
+end
+
 Given(/^there is a user with the role of (\w+)/) do |role|
   user = create(:user, email: Faker::Internet.free_email)
   user_assignment = create(:user_assignment, user_id: user.id, role: role, organization_id: @organization.id)
   instance_variable_set("@user",user)
 end
 
+Given(/^I save the page$/) do
+  save_page
+end
 Given("there are documents with document_metas that match the filter") do
   doc = create(:document, organization_id: @organization.id)
 end
@@ -88,6 +109,9 @@ end
 
 When(/^I click the "(.*?)" link$/) do |string|
   case string
+  when /tb_share/
+    click_link(string)
+    @document.workflow_step_id = @document.workflow_step.next_workflow_step_id
   when /Edit Component/
     click_on("edit_#{@component.slug}")
   else
@@ -125,6 +149,17 @@ Given(/^I am on the (\w+) index page for the organization$/) do |controller|
   @controller = controller
   url = "/admin/organization/#{@organization.slug}/#{controller}"
   visit url
+end
+
+Then(/^I should be on the (\w+) document page$/) do |string|
+  case string
+  when /view/
+    expect(page.current_url).to have_content(@document.view_id)
+  when /edit/
+    expect(page.current_url).to have_content(string)
+  else
+    pending
+  end
 end
 
 When(/^I fill in the (\w+) form with:$/) do |record_name, table|
@@ -184,8 +219,8 @@ Given("the user has completed a workflow step") do
   @document.save
 end
 
-Then(/^the document should be on (\w+)$/) do |step|
-  expect(@document.workflow_step.slug).to have_content(step)
+Then(/^the document should be on step_(\d)$/) do |int|
+  expect(@document.workflow_step.slug).to have_content(@workflows.first[int.to_i-1].slug)
 end
 
 When("I go to the document edit page for the users document") do
@@ -204,4 +239,27 @@ end
 
 When("I click the complete review button") do
   pending # Write code here that turns the phrase above into concrete actions
+end
+Then("I should see a new document edit url") do
+  expect(page.current_url).not_to have_content(@document.view_id)
+end
+
+Given(/^I am on the (\w*document\b) (\w+) page$/) do |document_type, page_path|
+  case document_type
+  when /canvas_document/
+    pending
+    # FakeWeb.register_uri(:any, "#{@organization.lms_authentication_source}/login/oauth2/auth", :body => "Authorizing", :data => {"access_token":"MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3","refresh_token":"IwOGYzYTlmM2YxOTQ5MGE3YmNmMDFkNTVk","state":"12345678"})
+    # visit "http://lvh.me:#{Capybara.current_session.port}#{lms_course_document_path(@document.lms_course_id)}"
+    # save_page
+  when /document/
+    visit edit_document_path(@document.edit_id)
+  else
+    pending
+  end
+end
+
+
+
+Then("I should see a saved document") do
+  @document
 end
