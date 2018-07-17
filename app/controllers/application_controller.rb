@@ -17,10 +17,6 @@ class ApplicationController < ActionController::Base
     @roles = UserAssignment.roles
   end
 
-  def get_roles
-    @roles = UserAssignment.roles
-  end
-
   def init_view_folder
     @google_analytics_id = APP_CONFIG['google_analytics_id'] if APP_CONFIG['google_analytics_id']
 
