@@ -5,6 +5,7 @@ class ComponentsController < ApplicationController
 
   before_action :get_organizations
   before_action :get_organization
+  before_action :get_organization_levels
   before_action :get_roles
 
   def index
@@ -95,6 +96,10 @@ class ComponentsController < ApplicationController
     @organization = Organization.find_by slug: params[:slug]
   end
 
+  def get_organization_levels
+     organization_levels = @organization.parents.map(&:level) + [@organization.level] + @organization.children.map(&:level)
+     @organization_levels = organization_levels.sort
+  end
   def available_component_formats
     if has_role('admin')
       @available_component_formats = ['html','erb','haml'];
@@ -114,6 +119,7 @@ class ComponentsController < ApplicationController
       :layout,
       :format,
       :role,
+      :role_organization_level
     )
   end
 end

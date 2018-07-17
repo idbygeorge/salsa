@@ -4,6 +4,10 @@ class WorkflowDocumentsController < ApplicationController
   before_action :require_staff_permissions, only: [:index]
 
   def index
+    if session[:admin_authorized]
+      @documents = Document.where.not(view_id: nil)
+      return
+    end
     org = get_org
     user_assignment = current_user.user_assignments.find_by organization_id: org.id
     if user_assignment && user_assignment.role == "staff"

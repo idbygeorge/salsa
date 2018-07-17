@@ -15,81 +15,91 @@
 <% end %>
 
 <%= form_for(@component, url: post_url, html: { class: "form-horizontal" } ) do |f| %>
-<fieldset class="col-md-9">
-  <legend>Info</legend>
+  <fieldset class="col-md-9">
+    <legend>Info</legend>
 
-  <div class="form-group">
-    <%= f.label :name, class: "control-label" %>
-    <div class="controls">
-      <%= f.text_field :name, class: 'form-control input-xxlarge' %>
+    <div class="form-group">
+      <%= f.label :name, class: "control-label" %>
+      <div class="controls">
+        <%= f.text_field :name, class: 'form-control input-xxlarge' %>
+      </div>
     </div>
-  </div>
 
-  <% if @available_component_formats.include? 'erb' %>
+    <% if @available_component_formats.include? 'erb' %>
+        <div class="form-group">
+          <%= f.label :slug, class: "control-label" %>
+          <div class="controls">
+            <%= f.text_field :slug, class: 'form-control' %>
+          </div>
+        </div>
+    <% else %>
       <div class="form-group">
         <%= f.label :slug, class: "control-label" %>
-        <div class="controls">
-          <%= f.text_field :slug, class: 'form-control' %>
+        <%= f.select :slug, @valid_slugs, { include_blank: '--'}, { class: 'form-control' } %>
+      </div>
+    <% end %>
+
+    <div class="form-group">
+      <%= f.label :description, class: "control-label" %>
+      <div class="controls">
+        <%= f.text_area :description, class: 'form-control' %>
+      </div>
+    </div>
+
+    <% if @available_component_formats.include? 'erb' %>
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <%= f.label :role, class: "control-label" %>
+            <%= f.select(:role, @roles, {:include_blank => ''}, {class: 'form-control'}) %>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <%= f.label :role_organization_level, class: "control-label" %>
+            <%= f.select(:role_organization_level,@organization_levels, {:include_blank => ''}, {class: 'form-control'}) %>
+          </div>
         </div>
       </div>
-  <% else %>
+    <% end %>
+
+    <% if @available_component_formats.length > 1 %>
+      <div class="form-group">
+        <%= f.label :category, class: "control-label" %>
+        <%= f.select :category, ['document','section','element'], { include_blank: '--'}, { class: 'form-control' } %>
+      </div>
+    <% else %>
+      <%= f.hidden_field :category, :value => 'element' %>
+    <% end %>
+  </fieldset>
+
+  <div class="col-md-12">
     <div class="form-group">
-      <%= f.label :slug, class: "control-label" %>
-      <%= f.select :slug, @valid_slugs, { include_blank: '--'}, { class: 'form-control' } %>
-    </div>
-  <% end %>
-
-  <div class="form-group">
-    <%= f.label :description, class: "control-label" %>
-    <div class="controls">
-      <%= f.text_area :description, class: 'form-control' %>
-    </div>
-  </div>
-
-  <% if @available_component_formats.include? 'erb' %>
-    <div class="form-group">
-      <%= f.label :role, class: "control-label" %>
-      <%= f.select(:role, @roles, {:include_blank => ''}, {class: 'form-control'}) %>
-    </div>
-  <% end %>
-
-  <% if @available_component_formats.length > 1 %>
-    <div class="form-group">
-      <%= f.label :category, class: "control-label" %>
-      <%= f.select :category, ['document','section','element'], { include_blank: '--'}, { class: 'form-control' } %>
-    </div>
-  <% else %>
-    <%= f.hidden_field :category, :value => 'element' %>
-  <% end %>
-</fieldset>
-
-<div class="col-md-12">
-  <div class="form-group">
-    <%= f.label :layout, class: "control-label" %>
-    <div class="info pull-right" id="componentVersion">Version: <%= @component.versions.count %></div>
-    <div class="controls">
-      <div id="editor" class="hidden"></div>
-      <%= f.text_area :layout, class: 'form-control', rows: 12 %>
-    </div>
-  </div>
-</div>
-
-<div class="col-md-9">
-  <% if @available_component_formats.length > 1 %>
-    <div class="form-group">
-      <%= f.label :format, class: "control-label" %>
-        <div class="controls">
-          <%= f.select :format, @available_component_formats, { include_blank: '--'}, { class: 'form-control' } %>
+      <%= f.label :layout, class: "control-label" %>
+      <div class="info pull-right" id="componentVersion">Version: <%= @component.versions.count %></div>
+      <div class="controls">
+        <div id="editor" class="hidden"></div>
+        <%= f.text_area :layout, class: 'form-control', rows: 12 %>
       </div>
     </div>
-  <% else %>
-    <%= f.hidden_field :format, :value => @available_component_formats[0] %>
-  <% end %>
-
-  <div class="form-group">
-      <%= f.submit class: 'btn btn-default' %>
   </div>
-</div>
+
+  <div class="col-md-9">
+    <% if @available_component_formats.length > 1 %>
+      <div class="form-group">
+        <%= f.label :format, class: "control-label" %>
+          <div class="controls">
+            <%= f.select :format, @available_component_formats, { include_blank: '--'}, { class: 'form-control' } %>
+        </div>
+      </div>
+    <% else %>
+      <%= f.hidden_field :format, :value => @available_component_formats[0] %>
+    <% end %>
+
+    <div class="form-group">
+        <%= f.submit class: 'btn btn-default' %>
+    </div>
+  </div>
 
 <% end %>
 
