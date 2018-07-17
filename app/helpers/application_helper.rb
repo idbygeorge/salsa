@@ -168,7 +168,9 @@ module ApplicationHelper
 
       if user_assignments.count > 0
         user_assignments.each do |ua|
-          if ua[:role] == role or ua[:role] == 'admin'
+          if (ua[:role] == role || ua[:role] == 'admin') && (ua.cascades == false && ua.organization_id == org.id)
+            result = true
+          elsif (ua[:role] == role || ua[:role] == 'admin') && ua.cascades == true
             result = true
           end
 
