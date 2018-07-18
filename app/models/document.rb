@@ -17,7 +17,9 @@ class Document < ApplicationRecord
 
   def ensure_ids
     ids_match = nil
-    while ids_match != true do
+    counter = 0
+    while ids_match != true && counter < 5 do
+      counter += 1
       self.view_id = Document.generate_id unless view_id || ids_match == false
       self.edit_id = Document.generate_id unless edit_id || ids_match == false
       self.template_id = Document.generate_id unless template_id || ids_match == false
