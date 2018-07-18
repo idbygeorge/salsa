@@ -1,6 +1,8 @@
 class AdminDocumentsController < AdminController
-  before_action :get_organizations, only: [:new, :edit, :update]
+  before_action :get_organizations, only: [:new, :edit, :update, :index, :show]
   before_action :require_designer_permissions
+  before_action :require_admin_permissions, only: [:index]
+  before_action :set_paper_trail_whodunnit
 
   layout 'admin'
 
@@ -15,6 +17,17 @@ class AdminDocumentsController < AdminController
     else
       @workflow_steps = WorkflowStep.where(organization_id: @document.organization_id, start_step: true)
     end
+  end
+
+  def versions
+    get_document params[:id]
+    @document_versions = @document.versions.where(event: "update")
+  end
+
+  def revert_document
+    get_document params[:id]
+    @document = @document.versions.find(params[:version_id]).reify
+    @document.save
   end
 
   def update

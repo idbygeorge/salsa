@@ -1,0 +1,27 @@
+<div class="page-header">
+  <h1>Document Versions</h1>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Document Version ID</th>
+      <th>Document Version</th>
+      <th>Document Event</th>
+      <th>User that edited document</th>
+      <th>Step Slug</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @document_versions.each do |dv| %>
+      <tr>
+        <td><%= dv.id %></td>
+        <td><%= dv.index %></td>
+        <td><%= dv.event %></td>
+        <td><%= User.find(dv.whodunnit).email if dv.whodunnit %></td>
+        <td><%= dv.reify.workflow_step.slug if dv.reify&.workflow_step_id %></td>
+        <td><%= link_to 'Revert to this version', workflow_revert_document_path(@document, dv.id), method: :post, class:"btn btn-xs btn-danger" %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
