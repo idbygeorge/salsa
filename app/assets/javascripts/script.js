@@ -146,8 +146,8 @@ function liteOff(x){
                   root_organization_slug : window.location.hostname
                 });
               });
-              $("#page").find( 'input' ).each(function() {
-                var key = "salsa_" + $( this ).id
+              $("#page").find( ':input' ).each(function() {
+                var key = "salsa_" + $( this ).attr("id")
                 var value = $( this ).val()
                 meta_data_from_doc.push({
                   key : key,
