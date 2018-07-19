@@ -55,6 +55,9 @@ Given(/^there is a (\w+)$/) do |class_name|
     recordC = create(:workflow_step, slug:Faker::Types.unique.rb_string, next_workflow_step_id: recordB.id, organization_id: @organization.id)
     recordD = create(:workflow_step, slug:Faker::Types.unique.rb_string, next_workflow_step_id: recordC.id, start_step: true, organization_id: @organization.id)
     @workflows = WorkflowStep.workflows(@organization.id)
+  when /document/ || /canvas_document/
+    record = create(class_name, organization_id: @organization.id)
+    instance_variable_set("@#{class_name}",record)
   else
     record = create(class_name)
     instance_variable_set("@#{class_name}",record)
@@ -74,6 +77,11 @@ end
 Given(/^I save the page$/) do
   save_page
 end
+
+Given(/^there is a (\w+) with a (\w+) of "(.*?)"$/) do |class_name, field_name, field_value|
+  instance_variable_set("@#{class_name}", create(class_name, field_name => field_value))
+end
+
 Given("there are documents with document_metas that match the filter") do
   doc = create(:document, organization_id: @organization.id)
 end
@@ -151,17 +159,6 @@ Given(/^I am on the (\w+) index page for the organization$/) do |controller|
   visit url
 end
 
-Then(/^I should be on the (\w+) document page$/) do |string|
-  case string
-  when /view/
-    expect(page.current_url).to have_content(@document.view_id)
-  when /edit/
-    expect(page.current_url).to have_content(string)
-  else
-    pending
-  end
-end
-
 When(/^I fill in the (\w+) form with:$/) do |record_name, table|
   # table is a Cucumber::Ast::Table
   table.raw.each do |field,value|
@@ -189,18 +186,36 @@ Then(/^I should be able to see all the (\w+) for the organization$/) do |class_n
   when /workflow/
     slugs = WorkflowStep.where(organization_id: @organization.id).map(&:slug)
   end
-  save_page
   slugs.each do |slug|
     expect(page).to have_content(slug)
   end
 end
 
-Then("I should see {string}") do |string|
-  expect(page).to have_content(string)
-end
-
 Given(/^I am on the "(.*?)" page$/) do |page|
   visit page
+end
+
+Then(/^I should see "(.*?)" in the url$/) do |string|
+  expect(page.current_url).to have_content(string)
+end
+
+Then(/^I should be on the (\w+) document page$/) do |string|
+  case string
+  when /view/
+    expect(page.current_url).to have_content(@document.view_id)
+  when /edit/
+    expect(page.current_url).to have_content(string)
+  else
+    pending
+  end
+end
+
+Then(/^I should be on the (\w+) page$/) do |string|
+  expect(page.current_url).to have_content(string)
+end
+
+Then("I should see {string}") do |string|
+  expect(page).to have_content(string)
 end
 
 Given("there is a {string}") do |table|
