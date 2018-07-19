@@ -21,7 +21,7 @@ in order to define what my class will be doing
   Scenario: edit document
     Given there is a document
     And I am on the document edit page
-    And I click the SALSA Save link
+    And I click the "tb_save" link
     Then I should see "saved at:"
 
   Scenario: template document

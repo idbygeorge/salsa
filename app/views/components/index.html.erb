@@ -1,4 +1,4 @@
-<%= link_to 'Add Component', new_component_path, class: 'btn btn-success pull-right' %>
+<%= link_to "Add Component", new_component_path, class: 'btn btn-success pull-right', id: 'Add Component' %>
 <h1>
   <small><%= @organization.name %></small>
   <br>
@@ -24,13 +24,14 @@
 
 <% if @components.count > 0 %>
   <ul class="media-list">
+    <hr>
     <% @components.each do |component| %>
       <li class="media">
-        <a class="pull-left" href="<%= edit_component_path @organization[:slug], component.slug %>">
-          <img data-src="holder.js/64x64" class="media-object">
-        </a>
 
-        <h2><%= link_to component.name, edit_component_path(@organization[:slug], component.slug, category: component.category) %></h2>
+        <h2>
+          <%= link_to component.name, edit_component_path(@organization[:slug], component.slug, category: component.category) %>
+          <a class="clearfix pull-right btn btn-default" href="<%= edit_component_path @organization[:slug], component.slug %>">Edit</a>
+        </h2>
         <p><%= component.description %></p>
         <em>
           /<%= component.slug %>
@@ -38,6 +39,7 @@
         <%= component.category %>
         <%= component.format %>
       </li>
+      <hr>
     <% end %>
   </ul>
 
