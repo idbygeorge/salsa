@@ -21,7 +21,7 @@ CKEditor_configs = {
       '$1': {
         elements: 'p strong em ol li ul div',
         classes: '*',
-        attributes: 'style'
+        attributes: 'data-*,style'
       },
       'a': {
         attributes: 'href'
