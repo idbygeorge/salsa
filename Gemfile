@@ -4,6 +4,7 @@ source "https://rubygems.org"
 gem "rails", "5.1.2"
 
 group :development, :test do
+  gem 'faker', :git => 'https://github.com/stympy/faker.git', :branch => 'master'
   gem 'sqlite3'
   gem 'byebug'
   gem 'rspec-rails'
@@ -26,6 +27,9 @@ group :development do
   gem 'meta_request'
 end
 group :test do
+  gem 'capybara-mechanize'
+  gem "fakeweb", :git => 'https://github.com/chrisk/fakeweb.git', :branch => 'master'
+  gem 'capybara-webkit'
   gem 'launchy'
   gem 'cucumber-rails', :require => false
   # database_cleaner is not required, but highly recommended
