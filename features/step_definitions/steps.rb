@@ -142,6 +142,7 @@ Then("I should be able to see all the workflow_steps for the organization") do
     expect(page).to have_content(s)
   end
 end
+
 Then(/^I should see "(.*?)" in the url$/) do |string|
   expect(page.current_url).to have_content(string)
 end
