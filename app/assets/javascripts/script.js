@@ -159,7 +159,7 @@ function liteOff(x){
               if(meta_data_from_doc && meta_data_from_doc.length > 0){
                 $.ajax({
                   url: settings.url,
-                  data: {meta_data_from_doc},
+                  data: {meta_data_from_doc: meta_data_from_doc},
                   dataType: "json",
                   method: "PATCH"
                 });
