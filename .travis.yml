@@ -29,9 +29,6 @@ script:
   - sudo docker-compose run salsa rake db:schema:load RAILS_ENV=test
   - sudo docker-compose run salsa rake db:migrate RAILS_ENV=test
   - sudo docker-compose run salsa bash ./cucumber.sh
-=======
-  - sudo docker-compose run salsa bash ./cucumber.sh
->>>>>>> 8d1c8b445d3970066d5b534c48a23af736b82faf
 dist: trusty
 language: ruby
 rvm:
