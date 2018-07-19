@@ -67,6 +67,14 @@ module ApplicationHelper
     end
   end
 
+  def require_staff_permissions
+    check_for_admin_password
+
+    unless has_role('staff') || has_role('supervisor')
+      return redirect_or_error
+    end
+  end
+
   def require_admin_permissions
     check_for_admin_password
 
@@ -84,7 +92,7 @@ module ApplicationHelper
   end
 
   def require_designer_permissions
-    unless has_role('designer') || has_role('organization_admin')
+    unless has_role('designer') || has_role('organization_admin') || has_role('supervisor')
       return redirect_or_error
     end
   end
@@ -128,7 +136,11 @@ module ApplicationHelper
   def get_user_assignment_org user_id, role
     if user_id != nil
       current_user = User.find(user_id)
-      current_user.user_assignments.find_by(role: role).organization
+      if current_assignment = current_user.user_assignments.find_by(role: role)
+        current_assignment.organization
+      else
+        nil
+      end
     end
   end
 
@@ -151,12 +163,14 @@ module ApplicationHelper
         username = session[:lms_authenticated_user]['id'].to_s
         user_assignments = UserAssignment.where('organization_id = ? OR (role = ?)', org[:id], 'admin').where(username: username)
       else
-        user_assignments = UserAssignment.where('organization_id = ? OR (role = ?)', org[:id], 'admin').where(user_id: session[:authenticated_user])
+        user_assignments = UserAssignment.where('organization_id IN (?) OR (role = ?)', org.organization_ids + [org.id], 'admin').where(user_id: session[:authenticated_user])
       end
 
       if user_assignments.count > 0
         user_assignments.each do |ua|
-          if ua[:role] == role or ua[:role] == 'admin'
+          if (ua[:role] == role || ua[:role] == 'admin') && (ua.cascades == false && ua.organization_id == org.id)
+            result = true
+          elsif (ua[:role] == role || ua[:role] == 'admin') && ua.cascades == true
             result = true
           end
 

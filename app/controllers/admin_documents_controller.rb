@@ -1,10 +1,14 @@
 class AdminDocumentsController < AdminController
-  before_action :get_organizations, only: [:new, :edit, :update, :index, :show]
+  before_action :get_organizations, only: [:new, :edit, :update, :index, :versions]
   before_action :require_designer_permissions
   before_action :require_admin_permissions, only: [:index]
   before_action :set_paper_trail_whodunnit
 
   layout 'admin'
+
+  def index
+    @documents = Document.where.not(view_id: nil).page(params[:page]).per(params[:per])
+  end
 
   def new
     @document = Document.new

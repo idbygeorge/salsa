@@ -26,8 +26,8 @@
     </a>
   </div>
 
-  <% if has_role 'organization_admin' %>
-    <p>
+  <p>
+    <% if has_role 'organization_admin' %>
       <a class="btn btn-default" href="<%= edit_organization_path(id: @organization[:id]) %>">
         Update Organization
       </a>
@@ -42,15 +42,15 @@
           </a>
       <% end %>
 
-      <% if @organization.enable_workflows %>
-          <a class="btn btn-default" href="<%= workflow_steps_path(params[:slug]) %>">
-            Workflow Steps
-          </a>
-      <% end %>
 
-    </p>
+    <% end %>
+    <% if @organization.enable_workflows && has_role('supervisor', get_org) %>
+      <a class="btn btn-default" href="<%= workflow_steps_path(params[:slug]) %>">
+        Workflow Steps
+      </a>
+    <% end %>
     <hr>
-  <% end %>
+  </p>
 
 </div>
 
