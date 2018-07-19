@@ -6,6 +6,7 @@ class WorkflowStepsController < OrganizationsController
   before_action :set_workflow_step, only: [:show, :edit, :update, :destroy]
   before_action :set_workflow_steps
   before_action :require_supervisor_permissions
+  before_action :redirect_if_wrong_organization, only: [:show, :edit, :update, :destroy]
   # GET /workflow_steps
   # GET /workflow_steps.json
   def index
@@ -78,14 +79,23 @@ class WorkflowStepsController < OrganizationsController
   end
 
   private
+    def redirect_if_wrong_organization
+      if params[:slug] != @workflow_step.organization.slug
+        if params[:action] != 'index'
+          redirect_to "/admin/organization/#{@workflow_step.organization.slug}/workflow_steps/#{params[:id]}/#{params[:action]}"
+        else
+          redirect_to workflow_steps_path(@workflow_steps.organization.slug)
+        end
+      end
+    end
     # Use callbacks to share common setup or constraints between actions.
     def set_workflow_step
       @workflow_step = WorkflowStep.find(params[:id])
     end
 
     def set_workflow_steps
-      organization = Organization.find_by(slug: params[:slug])
-      @workflow_steps = WorkflowStep.where(organization_id: organization.id)
+      organization_ids = Organization.find_by(slug: params[:slug]).organization_ids
+      @workflow_steps = WorkflowStep.where(organization_id: organization_ids)
       if @workflow_step
         @workflow_steps = @workflow_steps.where.not(id: @workflow_step.id)
       end

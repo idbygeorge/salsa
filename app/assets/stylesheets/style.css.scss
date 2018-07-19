@@ -20,6 +20,10 @@ a { color: #176c9a; text-decoration: underline }
 .top-bar .name a { padding: 0 15px; font-weight: bold; }
 .top-bar a:focus, .top-bar a:hover { background: #1F93D2; color: #fff; }
 .top-bar section { padding: 0; }
+.navbar-inverse { background-color: #222; color: #999}
+a.navbar-brand {text-decoration: none; color: #999}
+a.navbar-nav {text-decoration: none; color: #999; font-size: 16px;}
+ul.navbar-nav {margin-top: 0}
 
 a:visited {  }
 a:hover { color: #777; }
@@ -120,7 +124,7 @@ td { vertical-align: top; }
 
 .ui-state-active legend {
     color: #000;
-} 
+}
 
 #controlPanel dt {color: #454545}
 

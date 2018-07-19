@@ -1,0 +1,28 @@
+<%- model_class = Document -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %> You are assigned to</h1>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:name) %></th>
+      <th><%= model_class.human_attribute_name(:organization) %></th>
+      <th><%= model_class.human_attribute_name(:workflow_step_id) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @documents.each do |document| %>
+
+        <tr>
+          <td><%= link_to document.name, edit_document_path(document.edit_id) %></td>
+          <td><%= link_to(document.organization.slug, document_path(document.edit_id)) if document.organization %></td>
+          <td><%= link_to(document.workflow_step.slug, document_path(document.edit_id)) if document.workflow_step_id %></td>
+          <td>
+            <%= link_to t('.edit', :default => t("helpers.links.edit")),
+                        edit_document_path(document.edit_id), :class => 'btn btn-default btn-xs' %>
+          </td>
+        </tr>
+    <% end %>
+  </tbody>
+</table>

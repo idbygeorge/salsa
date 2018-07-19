@@ -3,6 +3,9 @@ Rails.application.routes.draw do
   root 'default#index'
 
   resources :documents, path: 'SALSA', constraints: { slug: /.*/ }
+  scope 'workflow' do
+    resources :documents, as: 'workflow_document', controller: 'workflow_documents'
+  end
 
   get '/:alias/:document', to: redirect('/SALSA/%{document}'), constraints: { alias: /(syllabuses|salsas?)/ }
   get '/:alias/:document/:action', to: redirect('/SALSA/%{document}/%{action}'), constraints: { alias: /(syllabuses|salsas?)/, action: /(edit|template)?/ }
