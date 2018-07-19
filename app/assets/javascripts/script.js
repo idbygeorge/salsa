@@ -146,10 +146,10 @@ function liteOff(x){
                   root_organization_slug : window.location.hostname
                 });
               });
-              if(meta_data_from_doc){
+              if(meta_data_from_doc && meta_data_from_doc.length > 0){
                 $.ajax({
                   url: settings.url,
-                  data: {meta_data_from_doc},
+                  data: {meta_data_from_doc: meta_data_from_doc},
                   dataType: "json",
                   method: "PATCH"
                 });

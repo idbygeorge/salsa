@@ -17,6 +17,7 @@
 
 # Ignore all logfiles and tempfiles.
 /log/*.log
+mech.log
 /tmp
 salsa_development
 salsa_production
