@@ -1,5 +1,6 @@
 class WorkflowDocumentsController < ApplicationController
   layout :set_layout
+  before_action :check_organization_workflow_enabled
   before_action :set_paper_trail_whodunnit, only: [:revert_document]
   before_action :get_organizations_if_supervisor
   before_action :require_staff_permissions, only: [:index]
@@ -14,8 +15,10 @@ class WorkflowDocumentsController < ApplicationController
     user_assignment = current_user.user_assignments.find_by organization_id: org.id
     if user_assignment && user_assignment.role == "staff"
       @documents = Document.where.not(view_id: nil).where(user_id: current_user.id)
-    elsif user_assignment && user_assignment.role == "supervisor" && user_assignment.cascades
+    elsif user_assignment && has_role("supervisor") && user_assignment.cascades
       @documents = Document.where.not(view_id: nil).where(organization_id: org.children.map(&:id) + [org.id]).order(:workflow_step_id)
+    elsif user_assignment && has_role("supervisor")
+      @documents = Document.where.not(view_id: nil).where(organization_id: org.id).order(:workflow_step_id)
     end
   end
 
