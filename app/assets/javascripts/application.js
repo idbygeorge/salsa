@@ -28,6 +28,7 @@
 //= require methods
 //= require control_methods
 //= require on_click
+//= require on_change
 //= require script
 //= require canvas
 

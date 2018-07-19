@@ -147,8 +147,8 @@ function liteOff(x){
                 });
               });
               $("#page").find( 'input' ).each(function() {
-                var key = "salsa_" + $( this ).attr( 'name' )
-                var value = $( this ).attr('value')
+                var key = "salsa_" + $( this ).id
+                var value = $( this ).val()
                 meta_data_from_doc.push({
                   key : key,
                   value : value,
