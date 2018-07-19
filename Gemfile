@@ -27,6 +27,9 @@ group :development do
   gem 'meta_request'
 end
 group :test do
+  gem 'capybara-mechanize'
+  gem "fakeweb", :git => 'https://github.com/chrisk/fakeweb.git', :branch => 'master'
+  gem 'capybara-webkit'
   gem 'launchy'
   gem 'cucumber-rails', :require => false
   # database_cleaner is not required, but highly recommended
