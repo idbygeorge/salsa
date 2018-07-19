@@ -7,6 +7,18 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  def check_organization_workflow_enabled
+    if params[:slug]
+      organization = Organization.find_by(slug: params[:slug])
+    else
+      organization = Organization.find_by(slug: request.env["SERVER_NAME"])
+    end
+    if organization.enable_workflows != true
+      flash[:error] = "that page does not exist"
+      redirect_to organization_path(params[:slug])
+    end
+  end
+
   def current_user
     if session[:authenticated_user]
       User.find(session[:authenticated_user])

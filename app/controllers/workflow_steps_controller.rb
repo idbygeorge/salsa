@@ -7,6 +7,7 @@ class WorkflowStepsController < OrganizationsController
   before_action :set_workflow_steps
   before_action :require_supervisor_permissions
   before_action :redirect_if_wrong_organization, only: [:show, :edit, :update, :destroy]
+  
   # GET /workflow_steps
   # GET /workflow_steps.json
   def index
@@ -98,14 +99,6 @@ class WorkflowStepsController < OrganizationsController
       @workflow_steps = WorkflowStep.where(organization_id: organization_ids)
       if @workflow_step
         @workflow_steps = @workflow_steps.where.not(id: @workflow_step.id)
-      end
-    end
-
-    def check_organization_workflow_enabled
-      organization = Organization.find_by(slug: params[:slug])
-      if organization.enable_workflows != true
-        flash[:error] = "that page does not exist"
-        redirect_to organization_path(params[:slug])
       end
     end
 
