@@ -136,7 +136,7 @@ function liteOff(x){
             var organizationConfig = $("[data-organization-config]").data("organization-config");
             if (lms_course_id && organizationConfig["track_meta_info_from_document"]){
               var meta_data_from_doc = [];
-              $("#page").find( '[data-meta]:not(input)' ).each(function() {
+              $("#page").find( '[data-meta]:not(:input)' ).each(function() {
                 var key = "salsa_" + $( this ).attr( 'data-meta' )
                 var value = $( this ).text().replace(/\s+/mg, ' ')
                 meta_data_from_doc.push({
@@ -146,7 +146,7 @@ function liteOff(x){
                   root_organization_slug : window.location.hostname
                 });
               });
-              $("#page").find( ':input' ).each(function() {
+              $("#page").find( ':input:not([data-meta])' ).each(function() {
                 var key = "salsa_" + $( this ).attr("id")
                 var value = $( this ).val()
                 meta_data_from_doc.push({
