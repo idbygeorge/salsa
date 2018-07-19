@@ -36,6 +36,9 @@ Given(/^there is a (\w+)$/) do |class_name|
     recordC = create(:workflow_step, slug:Faker::Types.unique.rb_string, next_workflow_step_id: recordB.id, organization_id: @organization.id)
     recordD = create(:workflow_step, slug:Faker::Types.unique.rb_string, next_workflow_step_id: recordC.id, start_step: true, organization_id: @organization.id)
     @workflows = WorkflowStep.workflows(@organization.id)
+  when /document/ || /canvas_document/
+    record = create(class_name, organization_id: @organization.id)
+    instance_variable_set("@#{class_name}",record)
   else
     record = create(class_name)
     instance_variable_set("@#{class_name}",record)
@@ -50,17 +53,6 @@ end
 
 Given(/^there is a (\w+) with a (\w+) of "(.*?)"$/) do |class_name, field_name, field_value|
   instance_variable_set("@#{class_name}", create(class_name, field_name => field_value))
-end
-
-Given(/^there is a (\w+)$/) do |class_name|
-  case class_name
-  when /document/ || /canvas_document/
-    record = create(class_name, organization_id: @organization.id)
-    instance_variable_set("@#{class_name}",record)
-  else
-    record = create(class_name)
-    instance_variable_set("@#{class_name}",record)
-  end
 end
 
 Given("there are documents with document_metas that match the filter") do
