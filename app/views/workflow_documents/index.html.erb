@@ -19,8 +19,10 @@
           <td><%= link_to(document.organization.slug, document_path(document.edit_id)) if document.organization %></td>
           <td><%= link_to(document.workflow_step.slug, document_path(document.edit_id)) if document.workflow_step_id %></td>
           <td>
-            <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                        edit_document_path(document.edit_id), :class => 'btn btn-default btn-xs' %>
+            <% if has_role 'supervisor' %>
+              <%= link_to "Versions", workflow_document_versions_path(document), :class => 'btn btn-default btn-xs' %>
+            <% end %>
+            <%= link_to t('.edit', :default => t("helpers.links.edit")), edit_document_path(document.edit_id), :class => 'btn btn-default btn-xs' %>
           </td>
         </tr>
     <% end %>

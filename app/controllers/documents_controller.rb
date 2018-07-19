@@ -7,6 +7,7 @@ class DocumentsController < ApplicationController
   before_action :lms_connection_information, :only => [:edit, :course, :course_list]
   before_action :lookup_document, :only => [:edit, :update]
   before_action :init_view_folder, :only => [:new, :edit, :update, :show, :course]
+  before_action :set_paper_trail_whodunnit
 
   def index
     redirect_to :new

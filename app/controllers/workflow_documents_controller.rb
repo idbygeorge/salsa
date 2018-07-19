@@ -1,7 +1,9 @@
 class WorkflowDocumentsController < ApplicationController
   layout :set_layout
+  before_action :set_paper_trail_whodunnit, only: [:revert_document]
   before_action :get_organizations_if_supervisor
   before_action :require_staff_permissions, only: [:index]
+  before_action :require_supervisor_permissions, only: [:versions, :revert_document]
 
   def index
     if session[:admin_authorized]
@@ -17,7 +19,26 @@ class WorkflowDocumentsController < ApplicationController
     end
   end
 
+  def versions
+    get_document params[:id]
+    if session[:admin_authorized] || has_role('admin')
+      @document_versions = @document.versions.where(event: "update")
+    else
+      @document_versions = @document.versions.where("object ~ ?",".*organization_id: #{get_org.id}.*").where(event: "update")
+    end
+  end
+
+  def revert_document
+    get_document params[:id]
+    @document = @document.versions.find(params[:version_id]).reify
+    @document.save
+  end
+
   private
+    def get_document id=params[:id]
+    @document = Document.find_by id: id
+  end
+
   def get_organizations_if_supervisor
     if has_role('supervisor')
       get_organizations

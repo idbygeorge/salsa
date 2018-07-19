@@ -17,14 +17,14 @@
     <% @documents.each do |document| %>
 
         <tr>
-          <td><%= link_to document.name, document_path(document) %></td>
-          <td><%= link_to(document.organization.slug, document_path(document)) if document.organization %></td>
-          <td><%= link_to(document.lms_course_id, document_path(document)) if document.lms_course_id %></td>
-          <td><%= link_to(document.workflow_step_id, document_path(document)) if document.workflow_step_id %></td>
-          <td><%= link_to(document.user_id, document_path(document)) if document.user_id %></td>
+          <td><%= link_to document.name, document_path(document.view_id) %></td>
+          <td><%= link_to(document.organization.slug, document_path(document.view_id)) if document.organization %></td>
+          <td><%= link_to(document.lms_course_id, document_path(document.view_id)) if document.lms_course_id %></td>
+          <td><%= link_to(document.workflow_step_id, document_path(document.view_id)) if document.workflow_step_id %></td>
+          <td><%= link_to(document.user_id, document_path(document.view_id)) if document.user_id %></td>
           <td>
-            <%= link_to t('.show', :default => t("helpers.links.show")),
-                        admin_document_path(document), :class => 'btn btn-default btn-xs' %>
+            <%= link_to "Versions",
+                        admin_document_versions_path(document), :class => 'btn btn-default btn-xs' %>
             <%= link_to t('.edit', :default => t("helpers.links.edit")),
                         edit_admin_document_path(document), :class => 'btn btn-default btn-xs' %>
             <%= link_to t('.destroy', :default => t("helpers.links.destroy")),

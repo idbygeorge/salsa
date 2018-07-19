@@ -5,6 +5,8 @@ Rails.application.routes.draw do
   resources :documents, path: 'SALSA', constraints: { slug: /.*/ }
   scope 'workflow' do
     resources :documents, as: 'workflow_document', controller: 'workflow_documents'
+    get "documents/:id/versions", as: 'workflow_document_versions', to: 'workflow_documents#versions'
+    post "documents/:id/revert_document/:version_id", as: 'workflow_revert_document', to: 'workflow_documents#revert_document'
   end
 
   get '/:alias/:document', to: redirect('/SALSA/%{document}'), constraints: { alias: /(syllabuses|salsas?)/ }
@@ -45,6 +47,8 @@ Rails.application.routes.draw do
     get 'user/edit_assignment/:id', as: 'admin_edit_assignment', to: 'admin_users#edit_assignment'
 
     resources :documents, as: 'admin_document', controller: 'admin_documents'
+    get "documents/:id/versions", as: 'admin_document_versions', to: 'admin_documents#versions'
+    post "documents/:id/revert_document/:version_id", as: 'admin_revert_document', to: 'admin_documents#revert_document'
 
     post "organizations/documents"
 
