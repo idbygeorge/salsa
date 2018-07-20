@@ -8,17 +8,17 @@ class WorkflowDocumentsController < ApplicationController
 
   def index
     if session[:admin_authorized]
-      @documents = Document.where.not(view_id: nil)
+      @documents = Document.page(params[:page]).per(params[:per]).where.not(view_id: nil)
       return
     end
     org = get_org
     user_assignment = current_user.user_assignments.find_by organization_id: org.id
     if user_assignment && user_assignment.role == "staff"
-      @documents = Document.where.not(view_id: nil).where(user_id: current_user.id)
+      @documents = Document.page(params[:page]).per(params[:per]).where.not(view_id: nil).where(user_id: current_user.id)
     elsif user_assignment && has_role("supervisor") && user_assignment.cascades
-      @documents = Document.where.not(view_id: nil).where(organization_id: org.children.map(&:id) + [org.id]).order(:workflow_step_id)
+      @documents = Document.page(params[:page]).per(params[:per]).where.not(view_id: nil).where(organization_id: org.children.map(&:id) + [org.id]).order(:workflow_step_id)
     elsif user_assignment && has_role("supervisor")
-      @documents = Document.where.not(view_id: nil).where(organization_id: org.id).order(:workflow_step_id)
+      @documents = Document.page(params[:page]).per(params[:per]).where.not(view_id: nil).where(organization_id: org.id).order(:workflow_step_id)
     end
   end
 
