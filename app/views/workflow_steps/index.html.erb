@@ -1,0 +1,28 @@
+<%- model_class = WorkflowStep -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:name) %></th>
+      <th><%= model_class.human_attribute_name(:slug) %></th>
+      <th><%= model_class.human_attribute_name(:next_workflow_step_id) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @workflows.each do |workflow| %>
+      <% workflow.each do |workflow_step| %>
+        <%= render partial: "workflow_step", locals: {workflow_step: workflow_step} %>
+      <% end %>
+    <% end %>
+    <% @workflow_steps.each do |workflow_step| %>
+        <%= render partial: "workflow_step", locals: {workflow_step: workflow_step} %>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_workflow_step_path,
+            :class => 'btn btn-primary' %>

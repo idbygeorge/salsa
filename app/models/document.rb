@@ -5,6 +5,8 @@ class Document < ApplicationRecord
 
   belongs_to :organization
   belongs_to :component, optional: true
+  belongs_to :workflow_step, optional: true
+  belongs_to :user, optional: true
 
   validates :lms_course_id, uniqueness: { scope: :organization_id, message: "is already in use for this organization" }, allow_nil: true
   validates_uniqueness_of [:view_id, :edit_id, :template_id]

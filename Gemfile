@@ -54,6 +54,10 @@ gem "compass-rails"
 gem "coffee-rails"
 gem "uglifier"
 
+
+#twitter bootstrap
+gem "twitter-bootstrap-rails"
+
 # bootstrap
 gem "bootstrap-sass"
 

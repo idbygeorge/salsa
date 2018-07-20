@@ -1,7 +1,7 @@
 FactoryBot.define do
-  factory :admin, class: User do
-    name "gloadmin"
-    email "gloadmin@localhost.org"
+  factory :user, class: User do
+    name Faker::Name.name
+    email Faker::Internet.email
     password "password"
     created_at Time.now.ago(10)
   end
