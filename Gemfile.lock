@@ -7,10 +7,10 @@ GIT
 
 GIT
   remote: https://github.com/stympy/faker.git
-  revision: ad3856bd5424cc636aaefde5a96c8636da0b5d47
+  revision: 00be118fc07fe19309b87d1863c12941ad161651
   branch: master
   specs:
-    faker (1.9.1)
+    faker (1.8.7)
       i18n (>= 0.7)
 
 GEM
@@ -109,7 +109,7 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (>= 2.0, < 4.0)
-    capybara-mechanize (1.10.1)
+    capybara-mechanize (1.11.0)
       capybara (>= 2.4.4, < 4)
       mechanize (~> 2.7.0)
     capybara-webkit (1.15.0)
@@ -124,6 +124,7 @@ GEM
       coffee-script-source
       execjs
     coffee-script-source (1.12.2)
+    commonjs (0.2.7)
     compass (1.0.3)
       chunky_png (~> 1.2)
       compass-core (~> 1.0.2)
@@ -212,6 +213,13 @@ GEM
     launchy (2.4.3)
       addressable (~> 2.3)
     liquid (4.0.0)
+    less (2.6.0)
+      commonjs (~> 0.2.7)
+    less-rails (2.8.0)
+      actionpack (>= 4.0)
+      less (~> 2.6.0)
+      sprockets (> 2, < 4)
+      tilt
     listen (3.1.5)
       rb-fsevent (~> 0.9, >= 0.9.4)
       rb-inotify (~> 0.9, >= 0.9.7)
@@ -348,6 +356,11 @@ GEM
     turbolinks (5.1.1)
       turbolinks-source (~> 5.1)
     turbolinks-source (5.1.0)
+    twitter-bootstrap-rails (4.0.0)
+      actionpack (~> 5.0, >= 5.0.1)
+      execjs (~> 2.7)
+      less-rails (~> 2.8, >= 2.8.0)
+      railties (~> 5.0, >= 5.0.1)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
     uber-s3 (0.2.4)
@@ -418,6 +431,7 @@ DEPENDENCIES
   sdoc
   sqlite3
   turbolinks
+  twitter-bootstrap-rails
   uber-s3
   uglifier
   zurb-foundation

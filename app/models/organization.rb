@@ -3,6 +3,7 @@ class Organization < ApplicationRecord
 
   has_many :documents
   has_many :components
+  has_many :workflow_steps
 
   default_scope { order('lft, rgt') }
   validates :slug, presence: true
@@ -13,4 +14,22 @@ class Organization < ApplicationRecord
     ["default","Program Outcomes"]
   end
   validates :export_type, :inclusion=> { :in => self.export_types }
+
+  def parents
+    parents = []
+    parent = self.parent
+    while parent != nil do
+      parents.push parent
+      parent = parent.parent
+    end
+    return parents
+  end
+
+  def organization_ids
+    org_ids = [self.id]
+    if self.inherit_workflows_from_parents
+      org_ids = self.parents.map{|x| x[:id]}
+    end
+    return org_ids
+  end
 end

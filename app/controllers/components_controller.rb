@@ -5,6 +5,8 @@ class ComponentsController < ApplicationController
 
   before_action :get_organizations
   before_action :get_organization
+  before_action :get_organization_levels
+  before_action :get_roles
 
   def index
     @components = @organization.components
@@ -29,12 +31,11 @@ class ComponentsController < ApplicationController
     @component[:organization_id] = @organization[:id]
 
     available_component_formats
-
     if available_component_formats.include? @component.format
       if @component.valid?
         if valid_slug?(params[:slug])
           @component.save
-          return redirect_to components_path
+          return redirect_to components_path, notice: "Component was successfully created."
         else
           flash[:error] = "Invalid Slug"
           return render action: :new
@@ -55,7 +56,7 @@ class ComponentsController < ApplicationController
     if available_component_formats.include? component_params[:format]
       if @component.valid? && valid_slug?(@component.slug) == true
         @component.update component_params
-        return redirect_to components_path
+        return redirect_to components_path, notice: "Component was successfully updated."
       end
     end
 
@@ -95,6 +96,10 @@ class ComponentsController < ApplicationController
     @organization = Organization.find_by slug: params[:slug]
   end
 
+  def get_organization_levels
+     organization_levels = @organization.parents.map(&:level) + [@organization.level] + @organization.children.map(&:level)
+     @organization_levels = organization_levels.sort
+  end
   def available_component_formats
     if has_role('admin')
       @available_component_formats = ['html','erb','haml','liquid'];
@@ -113,6 +118,8 @@ class ComponentsController < ApplicationController
       :category,
       :layout,
       :format,
+      :role,
+      :role_organization_level
     )
   end
 end

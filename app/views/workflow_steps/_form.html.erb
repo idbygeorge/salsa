@@ -1,0 +1,59 @@
+<%= form_for @workflow_step, url: workflow_step_form_path, :html => { :class => "form-horizontal @workflow_step" } do |f| %>
+
+  <% if @workflow_step.errors.any? %>
+    <div id="error_expl" class="alert alert-danger">
+      <ul>
+      <% @workflow_step.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <div class="col-lg-10">
+    <%= f.label :name, :class => 'control-label' %>
+      <%= f.text_field :name, :class => 'form-control' %>
+    </div>
+    <%=f.error_span(:name) %>
+  </div>
+
+  <div class="form-group">
+    <div class="col-lg-10">
+    <%= f.label :slug, :class => 'control-label' %>
+      <%= f.text_field :slug, :class => 'form-control' %>
+    </div>
+    <%=f.error_span(:slug) %>
+  </div>
+
+  <div class="form-group">
+    <div class="col-sm-3">
+    <%= f.label :next_workflow_step_id, :class => 'control-label' %>
+      <%= f.collection_select :next_workflow_step_id, @workflow_steps, :id, :slug, {include_blank: true},{class:"form-control"} %>
+    </div>
+    <%=f.error_span(:next_workflow_step_id) %>
+  </div>
+
+  <div class="form-group">
+    <div class="col-lg-3">
+      <%= f.check_box :start_step, :class => 'col-lg-1'  %>
+      <%= f.label :start_step, :class => 'control-label col-lg-2' %>
+      <%=f.error_span(:start_step) %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <div class="col-lg-3">
+      <%= f.check_box :end_step, :class => 'col-lg-1' %>
+      <%= f.label :end_step, :class => 'control-label col-lg-2' %>
+      <%=f.error_span(:end_step) %>
+    </div>
+  </div>
+  <div class="form-group">
+    <div class="col-lg-offset-2 col-lg-10">
+      <%= f.submit nil, :class => 'btn btn-primary' %>
+      <%= link_to 'Cancel', workflow_steps_path(params[:slug]), :class => 'btn btn-default' %>
+    </div>
+  </div>
+
+<% end %>
