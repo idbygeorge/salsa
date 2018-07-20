@@ -130,11 +130,12 @@ function liteOff(x){
             var queryStringStart = settings.url.search(/\?/) < 0 ? '?' : '&';
             settings.url = settings.url + queryStringStart + 'document_version=' + document_version;
             settings.url = encodeURI(settings.url);
+            var lms_course_id = null;
             if( $("body").find( '[data-lms-course]' ).attr("data-lms-course")) {
-              var lms_course_id =  jQuery.parseJSON($("body").find( '[data-lms-course]' ).attr("data-lms-course")).id;
+              lms_course_id =  jQuery.parseJSON($("body").find( '[data-lms-course]' ).attr("data-lms-course")).id;
             }
             var organizationConfig = $("[data-organization-config]").data("organization-config");
-            if (lms_course_id && organizationConfig["track_meta_info_from_document"]){
+            if (organizationConfig["track_meta_info_from_document"]){
               var meta_data_from_doc = [];
               $("#page").find( '[data-meta]:not(:input)' ).each(function() {
                 var key = "salsa_" + $( this ).attr( 'data-meta' )
