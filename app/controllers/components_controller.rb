@@ -97,9 +97,9 @@ class ComponentsController < ApplicationController
 
   def available_component_formats
     if has_role('admin')
-      @available_component_formats = ['html','erb','haml'];
+      @available_component_formats = ['html','erb','haml','liquid'];
     else
-      @available_component_formats = ['html'];
+      @available_component_formats = ['html','liquid'];
     end
   end
 
