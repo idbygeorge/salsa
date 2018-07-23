@@ -95,7 +95,9 @@ class WorkflowStepsController < OrganizationsController
     end
 
     def set_workflow_steps
-      organization_ids = Organization.find_by(slug: params[:slug]).organization_ids
+
+      org = Organization.find_by(slug: params[:slug])
+      organization_ids = org.organization_ids + [org.id] 
       @workflow_steps = WorkflowStep.where(organization_id: organization_ids)
       if @workflow_step
         @workflow_steps = @workflow_steps.where.not(id: @workflow_step.id)
