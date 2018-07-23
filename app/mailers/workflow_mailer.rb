@@ -1,10 +1,10 @@
 class WorkflowMailer < ApplicationMailer
   default from: 'notifications@example.com'
 
-  def welcome_email
-    @component = Component.find_by(section: "mailer")
+  def welcome_email user, organization
+    @component = Component.find_by(category: "mailer", slug: "welcome_email")
     @template = Liquid::Template.parse(@component.layout)
-    @template.render({user_name:"John Doe"})
-    mail(to: @user.email, subject: 'Welcome to My Awesome Site')
+    @welcome_email = @template.render({"user" => user, "organization" => organization, })
+    mail(to: "keith@ferney.org", subject: "Welcome to #{organization.name}")
   end
 end

@@ -175,7 +175,10 @@ class DocumentsController < ApplicationController
     verify_org
     if (check_lock @organization[:slug], params[:batch_token]) && can_use_edit_token(@document.lms_course_id)
       if params[:publish] == "true" && @organization.enable_workflows
-        @document.workflow_step_id = @document.workflow_step.next_workflow_step_id if @document.workflow_step&.next_workflow_step_id
+          WorkflowMailer.welcome_email.deliver_later
+        if @document.workflow_step&.next_workflow_step_id
+          @document.workflow_step_id = @document.workflow_step.next_workflow_step_id
+        end
       end
       republishing = false;
       if meta_data_from_doc && @document.lms_course_id && @organization.lms_authentication_id && @organization.track_meta_info_from_document

@@ -66,19 +66,12 @@
     <% if @available_component_formats.length > 1 %>
       <div class="form-group">
         <%= f.label :category, class: "control-label" %>
-        <%= f.select :category, ['document','section','element'], { include_blank: '--'}, { class: 'form-control' } %>
+        <%= f.select :category, ['document','section','element','mailer'], { include_blank: '--'}, { class: 'form-control' } %>
       </div>
     <% else %>
       <%= f.hidden_field :category, :value => 'element' %>
     <% end %>
   </fieldset>
-
-  <div class="col-md-12">
-    <div class="form-group">
-      <%= f.label :category, class: "control-label" %>
-      <%= f.select :category, ['document','section','element','mailer'], { include_blank: '--'}, { class: 'form-control' } %>
-    </div>
-    <%= f.hidden_field :category, :value => 'element' %>
 </fieldset>
 
 <div class="col-md-12">
