@@ -29,7 +29,7 @@
         <div class="form-group">
           <%= f.label :slug, class: "control-label" %>
           <div class="controls">
-            <%= f.text_field :slug, class: 'form-control' %>
+            <%= f.text_field :slug, class: 'form-control', value: params[:component_slug] || @component.slug %>
           </div>
         </div>
     <% else %>
