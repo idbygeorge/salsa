@@ -244,8 +244,6 @@ ActiveRecord::Schema.define(version: 20180717200300) do
     t.datetime "updated_at", null: false
     t.boolean "start_step", default: false
     t.boolean "end_step", default: false
-    t.string "role"
-    t.integer "role_organization_id"
   end
 
 end
