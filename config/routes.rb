@@ -65,6 +65,7 @@ Rails.application.routes.draw do
       resources :workflow_steps, constraints: { slug: /.+/ }
       resources :components, param: :component_slug, constraints: { component_slug: /.*/, slug: /.+/ }
       get 'load_components', to: 'components#load_components', as: 'load_components', constraints: { slug: /.+/ }
+      post 'import_components', to: 'components#import_components', as: 'import_components', constraints: { slug: /.+/ }
       get 'export_components', to: 'components#export_components', as: 'export_components', constraints: { slug: /.+/ }
       resources :reports, param: :component_slug, constraints: { component_slug: /.*/, slug: /.+/ }
     end

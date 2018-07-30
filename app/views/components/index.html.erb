@@ -2,6 +2,15 @@
 <% if has_role('admin') %>
   <%= link_to "Load Default Components To Database", load_components_path, class: 'btn btn-danger'%>
   <%= link_to "Export Components To Zipfile", export_components_path, class: 'btn btn-danger'%>
+
+  <%= form_tag import_components_path(@organization.slug), multipart: true, :html => { :class => "form-horizontal col-md-9" } do %>
+    <div class="form-group">
+      <div class="controls">
+        <%= file_field_tag :file, accept: '.zip', class: "btn btn-default" %>
+      </div>
+    </div>
+    <%= submit_tag "Import Components", class: "btn btn-default" %>
+  <% end %>
 <% end %>
 <h1>
   <small><%= @organization.name %></small>

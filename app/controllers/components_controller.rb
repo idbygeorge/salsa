@@ -2,7 +2,7 @@ class ComponentsController < ApplicationController
   layout 'components'
 
   before_action :require_organization_admin_permissions
-  before_action :require_admin_permissions, only: [:load_components]
+  before_action :require_admin_permissions, only: [:load_components, :export_components, :import_components]
 
   before_action :get_organizations
   before_action :get_organization
@@ -91,6 +91,24 @@ class ComponentsController < ApplicationController
       end
     end
     send_file (zipfile_path)
+  end
+
+  def import_components
+    Zip::File.open(params[:file].path) do |zipfile|
+      zipfile.each do |file|
+        content = file.get_input_stream.read
+        Component.create(
+          organization_id: @organization.id,
+          name: file.name.delete(".html.erb"),
+          slug: file.name[1..-1].delete(".html.erb"),
+          description: "",
+          category: "document",
+          layout: content,
+          format: File.extname(file.name).delete('.')
+        )
+      end
+    end
+    return redirect_to components_path, notice: "Imported Components"
   end
 
   def load_components
