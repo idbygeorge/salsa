@@ -1,4 +1,8 @@
 <%= link_to "Add Component", new_component_path, class: 'btn btn-success pull-right', id: 'Add Component' %>
+<% if has_role('admin') %>
+  <%= link_to "Load Default Components To Database", load_components_path, class: 'btn btn-danger'%>
+  <%= link_to "Export Components To Zipfile", export_components_path, class: 'btn btn-danger'%>
+<% end %>
 <h1>
   <small><%= @organization.name %></small>
   <br>

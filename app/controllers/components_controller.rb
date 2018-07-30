@@ -2,6 +2,7 @@ class ComponentsController < ApplicationController
   layout 'components'
 
   before_action :require_organization_admin_permissions
+  before_action :require_admin_permissions, only: [:load_components]
 
   before_action :get_organizations
   before_action :get_organization
@@ -72,6 +73,41 @@ class ComponentsController < ApplicationController
     available_component_formats
     @component = Component.find_by! slug: params[:component_slug], organization: @organization, format: @available_component_formats
     @valid_slugs = valid_slugs(@component.slug)
+  end
+
+  def export_components
+    @components = @organization.components
+    zipfile_path = "#{ENV["ZIPFILE_FOLDER"]}/#{@organization.slug}_components.zip"
+    if File.exist?(zipfile_path)
+      File.delete(zipfile_path)
+    end
+    Zip::File.open(zipfile_path, Zip::File::CREATE) do |zipfile|
+      @components.each do |component|
+        if component.format == "erb"
+          zipfile.get_output_stream("#{component.name}.html.#{component.format}"){ |os| os.write component.layout }
+        else
+          zipfile.get_output_stream("#{component.name}.#{component.format}"){ |os| os.write component.layout }
+        end
+      end
+    end
+    send_file (zipfile_path)
+  end
+
+  def load_components
+    org = @organization
+    file_paths = Dir.glob("app/views/instances/default/*.erb")
+    file_paths.each do |file_path|
+      Component.create(
+        organization_id: org.id,
+        name: File.basename(file_path, ".html.erb"),
+        slug: File.basename(file_path, ".html.erb")[1..-1],
+        description: "",
+        category: "document",
+        layout: File.read(file_path),
+        format: File.extname(file_path).delete('.')
+      )
+    end
+    return redirect_to components_path, notice: "Loaded Default Components"
   end
 
   private
