@@ -10,7 +10,7 @@ class WorkflowMailer < ApplicationMailer
       @template = Liquid::Template.parse(@component.layout)
       @step_email = @template.render({"user_name" => "#{user.name}","user_email" => "#{user.email}", "organization_name" => "#{organization.name}", "step_slug" => "#{step_slug}"}).html_safe
       user = user.find_by(organization.parents.find_by(level: next_component.organization_level))
-      mail(to: user.email, subject: "you are on step #{step_slug}")
+      mail(to: user.email, subject: "you have been assigned to #{step_slug} on #{user.name}'s review document'")
     end
   end
 
