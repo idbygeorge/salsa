@@ -7,7 +7,7 @@ class WorkflowDocumentsController < ApplicationController
   before_action :require_supervisor_permissions, only: [:versions, :revert_document]
 
   def index
-    if session[:admin_authorized]
+    if session[:admin_authorized] || has_role("organization_admin")
       @documents = Document.page(params[:page]).per(params[:per]).where.not(view_id: nil)
       return
     end
