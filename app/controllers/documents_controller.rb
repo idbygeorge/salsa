@@ -4,7 +4,7 @@ class DocumentsController < ApplicationController
 
   layout 'view'
 
-  before_action :lms_connection_information, :only => [:edit, :course, :course_list]
+  before_action :lms_connection_information, :only => [:update, :edit, :course, :course_list]
   before_action :lookup_document, :only => [:edit, :update]
   before_action :init_view_folder, :only => [:new, :edit, :update, :show, :course]
   before_action :set_paper_trail_whodunnit
@@ -182,7 +182,7 @@ class DocumentsController < ApplicationController
         end
       end
       republishing = false;
-      if meta_data_from_doc && @document.lms_course_id && @organization.lms_authentication_id && @organization.track_meta_info_from_document
+      if meta_data_from_doc && @organization.lms_authentication_id && @organization.track_meta_info_from_document
         create_meta_data_from_document(meta_data_from_doc, @document, @organization)
         meta_data_from_doc_saved = true
       elsif canvas_course_id && !@organization.skip_lms_publish
@@ -231,6 +231,11 @@ class DocumentsController < ApplicationController
     count = Hash.new 0
     meta_data_from_doc.values.each do |md|
       count[md.fetch(:key).to_s] +=1
+      if md.fetch(:lms_course_id) != ""
+        lms_course_id = md.fetch(:lms_course_id)
+      else
+        lms_course_id = "nil"
+      end
       k = "#{md.fetch(:key).to_s}_#{count[md.fetch(:key)]}"
       if dm = DocumentMeta.find_by(key: k, document_id: document.id)
         dm.value = md.fetch(:value)
@@ -241,7 +246,7 @@ class DocumentsController < ApplicationController
           :document_id => document.id,
           :value => md.fetch(:value).to_s,
           :root_organization_id => document.organization_id,
-          :lms_course_id => md.fetch(:lms_course_id),
+          :lms_course_id => lms_course_id,
           :lms_organization_id => organization.lms_authentication_id
         )
       end

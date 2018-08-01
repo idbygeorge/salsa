@@ -7,12 +7,12 @@ class WorkflowStepsController < OrganizationsController
   before_action :set_workflow_steps
   before_action :require_supervisor_permissions
   before_action :redirect_if_wrong_organization, only: [:show, :edit, :update, :destroy]
-  
+
   # GET /workflow_steps
   # GET /workflow_steps.json
   def index
     org = Organization.find_by(slug: params[:slug])
-    org_ids = org.organization_ids
+    org_ids = org.organization_ids + [org.id]
     @workflows = WorkflowStep.workflows org_ids
     workflow_array = []
     @workflows.each do|wf|
@@ -95,7 +95,9 @@ class WorkflowStepsController < OrganizationsController
     end
 
     def set_workflow_steps
-      organization_ids = Organization.find_by(slug: params[:slug]).organization_ids
+
+      org = Organization.find_by(slug: params[:slug])
+      organization_ids = org.organization_ids + [org.id] 
       @workflow_steps = WorkflowStep.where(organization_id: organization_ids)
       if @workflow_step
         @workflow_steps = @workflow_steps.where.not(id: @workflow_step.id)
