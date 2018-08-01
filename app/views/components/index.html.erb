@@ -13,7 +13,9 @@
   <% end %>
 <% end %>
 <h1>
-  <small><%= @organization.name %></small>
+  <%= link_to organization_path(@organization.slug) do %>
+    <small><%= @organization.name %></small>
+  <% end %>
   <br>
   Components
 </h1>

@@ -1,6 +1,7 @@
 class AdminUsersController < AdminController
-  before_action :require_admin_permissions
-  before_action :get_organizations, only: [:index, :new, :edit, :show, :edit_assignment]
+  before_action :require_admin_permissions, exept:[:import_users]
+  before_action :require_supervisor_permissions, only:[:import_users]
+  before_action :get_organizations, only: [:index, :new, :edit, :show, :edit_assignment, :import_users]
   before_action :get_roles, only: [:edit_assignment, :assign, :index ,:show]
 
   def index
@@ -97,6 +98,26 @@ class AdminUsersController < AdminController
     @user.destroy
 
     redirect_to admin_users_path
+  end
+
+  def create_users
+    org = get_org
+    users_emails = params[:users][:emails].delete(' ').split(/,|\r\n/).delete_if {|x| x == "\r" }
+    user_errors = Array.new
+    users_emails.each do |user_email|
+      user = User.create(name: "New User", email:user_email, password: "#{rand(36**40).to_s(36)}", activated:false)
+      UserAssignment.create(role:"staff",user_id:user.id,organization_id:org.id) if user
+      user.errors.messages.each do |error|
+        user_errors.push "Could not create user with email: '#{user.email}' because: #{error[0]} #{error[1][0]}" if user.errors
+      end
+      UserMailer.welcome_email.deliver_later
+    end
+    flash[:notice] = "Users created successfully" if user_errors == [] && users_emails != []
+    flash[:errors] = user_errors
+    redirect_to admin_import_users_path
+  end
+
+  def import_users
   end
 
   private

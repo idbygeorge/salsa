@@ -43,6 +43,9 @@ Rails.application.routes.draw do
     post 'user/assignment', as: 'admin_user_assignments', to: 'admin_users#assign'
     patch 'user/assignment/:id', as: 'admin_update_user_assignments', to: 'admin_users#update_assignment'
 
+    get "import_users", to: 'admin_users#import_users', as: 'admin_import_users'
+    post "import_users", to: 'admin_users#create_users', as: 'create_users'
+
     get 'user/remove_assignment/:id', as: 'admin_remove_assignment', to: 'admin_users#remove_assignment'
     get 'user/edit_assignment/:id', as: 'admin_edit_assignment', to: 'admin_users#edit_assignment'
 
