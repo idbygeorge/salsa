@@ -1,6 +1,8 @@
 <%= link_to "Add Component", new_component_path, class: 'btn btn-success pull-right', id: 'Add Component' %>
 <h1>
-  <small><%= @organization.name %></small>
+  <%= link_to organization_path(@organization.slug) do %>
+    <small><%= @organization.name %></small>
+    <%end%>
   <br>
   Components
 </h1>
