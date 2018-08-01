@@ -178,7 +178,7 @@ class DocumentsController < ApplicationController
         if @document.workflow_step_id
           user = current_user if current_user
           WorkflowMailer.step_email(user, @organization, @document.workflow_step.slug).deliver_later if user
-          @document.workflow_step_id = @document.workflow_step.next_workflow_step_id if @document.workflow_step_id
+          @document.workflow_step_id = @document.workflow_step.next_workflow_step_id if @document.workflow_step&.next_workflow_step_id
         end
       end
       republishing = false;

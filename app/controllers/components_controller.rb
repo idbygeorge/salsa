@@ -94,7 +94,7 @@ class ComponentsController < ApplicationController
       wfsteps = WorkflowStep.where(organization_id: org.organization_ids+[org.id])
       slugs += wfsteps.map(&:slug).map! {|x| x + "_mailer" }
     end
-    return slugs
+    return slugs.delete_if { |a| org.components.map(&:slug).include?(a) }
   end
 
   def get_organization

@@ -59,6 +59,6 @@
 <% end %>
 <% if Component.find_by(slug:"#{@workflow_step.slug}_email") %>
   <%= link_to 'Edit Step Email', edit_component_path(@workflow_step.organization.slug, "#{@workflow_step.slug}_email"), :class => 'btn btn-default', target: "_blank" %>
-  <% else %>
+<% else %>
   <%= link_to 'Add Step Email', new_component_path(@workflow_step.organization.slug, :component_slug => "#{@workflow_step.slug}_email"), :class => 'btn btn-default', target: "_blank" %>
 <% end %>

@@ -5,7 +5,6 @@
   Components
 </h1>
 
-<% if session[:admin_authorized] %>
 <ul class="nav nav-pills">
   <li <% if current_page? components_path category: 'document' %>class="active"<% end %>>
     <%= link_to 'Documents', components_path(category: 'document') %>
@@ -23,7 +22,6 @@
     <%= link_to 'All Components', components_path %>
   </li>
 </ul>
-<% end %>
 
 <% if @components.count > 0 %>
   <ul class="media-list">
