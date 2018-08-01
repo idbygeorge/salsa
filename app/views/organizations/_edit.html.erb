@@ -35,15 +35,6 @@
 
         <fieldset class="default_account_filter">
           <legend>Defaults</legend>
-          <% if params[:action] != 'new' || params[:action] == 'create' %>
-            <div class="form-group">
-              <div>
-              <%= f.label :default_workflow_step_id, :class => 'control-label' %>
-                <%= f.collection_select :default_workflow_step_id, @workflow_steps.where(start_step: true), :id, :slug, {include_blank: true},{class:"form-control"} %>
-              </div>
-              <%=f.error_span(:next_workflow_step_id) %>
-            </div>
-          <% end %>
 
           <div class="form-group">
             <%= f.label :default_account_filter, class: "control-label" %>
@@ -123,6 +114,15 @@
 
     <fieldset>
         <legend>Settings</fieldset>
+        <% if params[:action] != 'new' || params[:action] == 'create' %>
+          <div class="form-group">
+            <div>
+            <%= f.label :default_workflow_step_id, :class => 'control-label' %>
+              <%= f.collection_select :default_workflow_step_id, @workflow_steps.where(start_step: true), :id, :slug, {include_blank: true},{class:"form-control"} %>
+            </div>
+            <%=f.error_span(:next_workflow_step_id) %>
+          </div>
+        <% end %>
         <div class="form-group">
           <%= f.label :home_page_redirect, class: "control-label" %>
           <div class="controls">

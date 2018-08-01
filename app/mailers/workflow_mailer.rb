@@ -1,7 +1,4 @@
 class WorkflowMailer < ApplicationMailer
-  default from: 'notifications@example.com'
-
-
   def step_email user, organization, step_slug
     workflow_step = WorkflowStep.find_by(slug: step_slug)
     @mail_component = Component.find_by(category: "mailer", slug: "#{step_slug}_email", format: "liquid")

@@ -85,11 +85,16 @@ class ComponentsController < ApplicationController
   end
 
   def valid_slugs component_slug
-    if action_name == "new"
-      ['salsa', 'section_nav', 'control_panel', 'footer', 'dynamic_content_1', 'dynamic_content_2', 'dynamic_content_3']
-    else
-      [component_slug, 'salsa', 'section_nav', 'control_panel', 'footer', 'dynamic_content_1', 'dynamic_content_2', 'dynamic_content_3']
+    org = get_org
+    slugs = ['salsa', 'section_nav', 'control_panel', 'footer', 'dynamic_content_1', 'dynamic_content_2', 'dynamic_content_3', 'welcome_email']
+    if action_name != "new"
+      slugs.push component_slug
     end
+    if org.enable_workflows
+      wfsteps = WorkflowStep.where(organization_id: org.organization_ids+[org.id])
+      slugs += wfsteps.map(&:slug).map! {|x| x + "_mailer" }
+    end
+    return slugs
   end
 
   def get_organization
