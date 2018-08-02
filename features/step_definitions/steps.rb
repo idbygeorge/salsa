@@ -50,10 +50,13 @@ end
 Given(/^there is a (\w+)$/) do |class_name|
   case class_name
   when /workflow/
-    recordA = create(:workflow_step, slug:Faker::Types.unique.rb_string, end_step: true, organization_id: @organization.id)
-    recordB = create(:workflow_step, slug:Faker::Types.unique.rb_string, next_workflow_step_id: recordA.id, organization_id: @organization.id)
-    recordC = create(:workflow_step, slug:Faker::Types.unique.rb_string, next_workflow_step_id: recordB.id, organization_id: @organization.id)
-    recordD = create(:workflow_step, slug:Faker::Types.unique.rb_string, next_workflow_step_id: recordC.id, start_step: true, organization_id: @organization.id)
+    recordA = create(:workflow_step, slug: "step_4", end_step: true, organization_id: @organization.id)
+    recordB = create(:workflow_step, slug: "step_3", next_workflow_step_id: recordA.id, organization_id: @organization.id)
+    recordC = create(:workflow_step, slug: "step_2", next_workflow_step_id: recordB.id, organization_id: @organization.id)
+    component = recordC.component
+    component.role = "supervisor"
+    component.save
+    recordD = create(:workflow_step, slug: "step_1", next_workflow_step_id: recordC.id, start_step: true, organization_id: @organization.id)
     @workflows = WorkflowStep.workflows(@organization.id)
   when /document/ || /canvas_document/
     record = create(class_name, organization_id: @organization.id)
@@ -90,6 +93,8 @@ Given(/^there is a document on the (\w+) step in the workflow and assigned to th
   case step
   when /first/
     @document = create(:document, workflow_step_id: @workflows.first.first.id, user_id: @current_user.id)
+  when /second/
+    @document = create(:document, workflow_step_id: @workflows.first[1].id, user_id: @current_user.id)
   when /last/
     @document = create(:document, workflow_step_id: @workflows.first.last.id, user_id: @current_user.id)
   else

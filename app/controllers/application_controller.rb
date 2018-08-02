@@ -7,13 +7,17 @@ class ApplicationController < ActionController::Base
 
   protected
 
+  def component_allowed_liquid_variables user=nil, organization=nil, step_slug=nil
+    {"user_name" => "#{user&.name}","user_email" => "#{user&.email}", "organization_name" => "#{organization&.name}", "step_slug" => "#{step_slug}"}
+  end
+
   def check_organization_workflow_enabled
     if params[:slug]
       organization = Organization.find_by(slug: params[:slug])
     else
       organization = Organization.find_by(slug: request.env["SERVER_NAME"])
     end
-    if organization.enable_workflows != true
+    if organization&.enable_workflows != true
       flash[:error] = "that page does not exist"
       redirect_to organization_path(params[:slug])
     end

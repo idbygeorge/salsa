@@ -93,7 +93,7 @@
             <div class="help-block">
               when using liquid format refer to <a href="https://github.com/Shopify/liquid/wiki/Liquid-for-Designers" target="_blank">Liquid guide for designers</a>
               <br>
-              and the available variables are user_name, user_email, step_slug and organization_slug
+              and the available variables are <%= @available_liquid_variables.keys.join(', ') %>
             </div>
         </div>
       </div>

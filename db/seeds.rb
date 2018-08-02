@@ -41,6 +41,27 @@ orgs.each do |org|
     wfs.save
     wfsteps.push wfs
   end
+  wfsteps.each do |workflow_step|
+    Component.find_or_create_by(
+      organization_id: org.id,
+      name: workflow_step.slug,
+      slug: workflow_step.slug,
+      description: "",
+      category: "document",
+      layout: "this is a step layout",
+      format: "html"
+    )
+    Component.find_or_create_by(
+      organization_id: org.id,
+      name: workflow_step.slug + " Mailer",
+      slug: workflow_step.slug + "_mailer",
+      description: "",
+      category: "document",
+      layout: "this is a step email",
+      format: "html"
+    )
+  end
+
   file_paths.each do |file_path|
     Component.create(
       organization_id: org.id,

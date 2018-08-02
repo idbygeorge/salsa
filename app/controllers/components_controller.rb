@@ -10,6 +10,7 @@ class ComponentsController < ApplicationController
   before_action :get_roles
 
   def index
+    @available_liquid_variables = component_allowed_liquid_variables
     @components = @organization.components
 
     available_component_formats
@@ -22,11 +23,13 @@ class ComponentsController < ApplicationController
   def new
     @component = Component.new
     @valid_slugs = valid_slugs(@component.slug)
-
+    @available_liquid_variables = component_allowed_liquid_variables
     available_component_formats
   end
 
   def create
+
+    @available_liquid_variables = component_allowed_liquid_variables
     @component = Component.new component_params
     @valid_slugs = valid_slugs(@component.slug)
     @component[:organization_id] = @organization[:id]
@@ -49,6 +52,7 @@ class ComponentsController < ApplicationController
   end
 
   def update
+    @available_liquid_variables = component_allowed_liquid_variables
     available_component_formats
 
     @component = Component.find_by! slug: params[:component_slug], organization: @organization, format: @available_component_formats
@@ -66,10 +70,12 @@ class ComponentsController < ApplicationController
   end
 
   def show
+    @available_liquid_variables = component_allowed_liquid_variables
     edit
   end
 
   def edit
+    @available_liquid_variables = component_allowed_liquid_variables
     available_component_formats
     @component = Component.find_by! slug: params[:component_slug], organization: @organization, format: @available_component_formats
     @valid_slugs = valid_slugs(@component.slug)
@@ -84,9 +90,9 @@ class ComponentsController < ApplicationController
     Zip::File.open(zipfile_path, Zip::File::CREATE) do |zipfile|
       @components.each do |component|
         if component.format == "erb"
-          zipfile.get_output_stream("#{component.name}.html.#{component.format}"){ |os| os.write component.layout }
+          zipfile.get_output_stream("#{component.slug}.html.#{component.format}"){ |os| os.write component.layout }
         else
-          zipfile.get_output_stream("#{component.name}.#{component.format}"){ |os| os.write component.layout }
+          zipfile.get_output_stream("#{component.slug}.#{component.format}"){ |os| os.write component.layout }
         end
       end
     end
@@ -99,8 +105,8 @@ class ComponentsController < ApplicationController
         content = file.get_input_stream.read
         Component.create(
           organization_id: @organization.id,
-          name: file.name.delete(".html.erb"),
-          slug: file.name[1..-1].delete(".html.erb"),
+          name: file.name.remove(/\..*/),
+          slug: file.name.remove(/\..*/, /\b_/).gsub!(/ /, '_'),
           description: "",
           category: "document",
           layout: content,
@@ -161,9 +167,9 @@ class ComponentsController < ApplicationController
   end
   def available_component_formats
     if has_role('admin')
-      @available_component_formats = ['html','erb','haml','liquid'];
+      @available_component_formats = ['html','erb','haml','liquid',nil];
     else
-      @available_component_formats = ['html','liquid'];
+      @available_component_formats = ['html','liquid',nil];
     end
   end
 

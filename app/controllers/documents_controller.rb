@@ -78,7 +78,16 @@ class DocumentsController < ApplicationController
 
       verify_org
       @can_use_edit_token = can_use_edit_token(@document.lms_course_id)
-      render :layout => 'edit', :template => '/documents/content'
+      user = current_user
+      workflow_authorized = @organization.enable_workflows && user && @document.workflow_step_id && @document.assigned_to?(user)
+      if workflow_authorized
+        render :layout => 'edit', :template => '/documents/content'
+      elsif !workflow_authorized
+        redirect_to(admin_path, notice: "cant edit that document") if user
+        redirect_to(root_path, notice: "cant edit that document") if !user
+      elsif !@organization.enable_workflows
+        render :layout => 'edit', :template => '/documents/content'
+      end
     else
       render :layout => 'dialog', :template => '/documents/republishing'
     end
@@ -173,12 +182,14 @@ class DocumentsController < ApplicationController
     saved = false
     republishing = true
     verify_org
+    user = current_user if current_user
     if (check_lock @organization[:slug], params[:batch_token]) && can_use_edit_token(@document.lms_course_id)
-      if params[:publish] == "true" && @organization.enable_workflows
-        if @document.workflow_step_id
-          user = current_user if current_user
-          WorkflowMailer.step_email(user, @organization, @document.workflow_step.slug).deliver_later if user
+      if params[:publish] == "true" && @organization.enable_workflows && user
+          debugger
+        if @document.workflow_step_id && @document.assigned_to?(user)
+          WorkflowMailer.step_email(user, @organization, @document.workflow_step.slug, component_allowed_liquid_variables).deliver_later
           @document.workflow_step_id = @document.workflow_step.next_workflow_step_id if @document.workflow_step&.next_workflow_step_id
+          @document.save!
         end
       end
       republishing = false;
@@ -201,9 +212,13 @@ class DocumentsController < ApplicationController
           @document.payload = request.raw_post
           @document.payload = nil if @document.payload == ''
           @document.lms_published_at = DateTime.now
-
-          @document.save!
-          saved = true;
+          if !@organization.enable_workflows
+            @document.save!
+            saved = true;
+          elsif @organization.enable_workflows && user && @document.workflow_step_id && @document.assigned_to?(user)
+            @document.save!
+            saved = true;
+          end
         end
       end
     end
@@ -290,7 +305,13 @@ class DocumentsController < ApplicationController
 
   def can_use_edit_token(lms_course_id = nil)
     is_authorized = is_lms_authenticated_user? && has_canvas_access_token? && lms_course_id
-    if @organization[:enable_anonymous_actions]
+    user = current_user
+    workflow_authorized = @organization.enable_workflows && user && @document.workflow_step_id && @document.assigned_to?(user)
+    if workflow_authorized
+      true
+    elsif !workflow_authorized
+      false
+    elsif @organization[:enable_anonymous_actions]
       true
     elsif has_role('designer')
       true
@@ -307,7 +328,11 @@ class DocumentsController < ApplicationController
 
   def authorized_to_edit_course lms_course_id
     courses = get_canvas_courses
-    if courses.pluck("id").include?(lms_course_id.to_i)
+    user = current_user
+    workflow_authorized = @organization.enable_workflows && user && @document.workflow_step_id && @document.assigned_to?(user)
+    if workflow_authorized
+      true
+    elsif courses.pluck("id").include?(lms_course_id.to_i)
       true
     else
       false

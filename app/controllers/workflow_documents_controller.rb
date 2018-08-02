@@ -7,6 +7,7 @@ class WorkflowDocumentsController < ApplicationController
   before_action :require_supervisor_permissions, only: [:versions, :revert_document]
 
   def index
+    #TODO update so that you can only see assigned documents
     if session[:admin_authorized]
       @documents = Document.page(params[:page]).per(params[:per]).where.not(view_id: nil)
       return
@@ -38,7 +39,8 @@ class WorkflowDocumentsController < ApplicationController
   end
 
   private
-    def get_document id=params[:id]
+
+  def get_document id=params[:id]
     @document = Document.find_by id: id
   end
 
