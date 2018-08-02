@@ -57,7 +57,7 @@ orgs.each do |org|
     doc = Document.create(
       name:"Document #{d}",
       organization_id: org.id,
-      lms_course_id: "CS#{d}",
+      lms_course_id: "123#{d}",
       lms_published_at: DateTime.now,
       created_at: DateTime.now.ago(10),
       updated_at: DateTime.now,
@@ -67,7 +67,7 @@ orgs.each do |org|
     DocumentMeta.create(
       document_id: doc.id,
       key: "account_id",
-      value: "CLS",
+      value: "123123",
       lms_organization_id: "asdasfsgsadf",
       lms_course_id: doc.lms_course_id,
       root_organization_id: org[:id].to_s
