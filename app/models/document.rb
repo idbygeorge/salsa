@@ -12,11 +12,13 @@ class Document < ApplicationRecord
   validates_uniqueness_of [:view_id, :edit_id, :template_id]
 
   def assigned_to? user
-    if self.workflow_step&.component_id && user != nil
+    if self.workflow_step&.component_id && user != nil && !self.workflow_step.end_step 
       component = self.workflow_step.component
       user_assignment = user.user_assignments.find_by(organization_id:self.organization_id)
       user_org = user_assignment.organization
-      if component.role == "staff" && user_assignment.role == "staff" && self.user_id == user.id
+      if (component.role == nil || component.role == "") && ((user_assignment.role == "supervisor" && user_org.level == component.role_organization_level) || self.user_id == user.id)
+        true
+      elsif component.role == "staff" && user_assignment.role == "staff" && self.user_id == user.id
         true
       elsif component.role == "supervisor" && user_assignment.role == "supervisor" && user_assignment.cascades && user_org.level <= component.role_organization_level
         true

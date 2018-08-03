@@ -7,20 +7,9 @@ class WorkflowDocumentsController < ApplicationController
   before_action :require_supervisor_permissions, only: [:versions, :revert_document]
 
   def index
-    #TODO update so that you can only see assigned documents
-    if session[:admin_authorized]
-      @documents = Document.page(params[:page]).per(params[:per]).where.not(view_id: nil)
-      return
-    end
     org = get_org
-    user_assignment = current_user.user_assignments.find_by organization_id: org.id
-    if user_assignment && user_assignment.role == "staff"
-      @documents = Document.page(params[:page]).per(params[:per]).where.not(view_id: nil).where(user_id: current_user.id)
-    elsif user_assignment && has_role("supervisor") && user_assignment.cascades
-      @documents = Document.page(params[:page]).per(params[:per]).where.not(view_id: nil).where(organization_id: org.children.map(&:id) + [org.id]).order(:workflow_step_id)
-    elsif user_assignment && has_role("supervisor")
-      @documents = Document.page(params[:page]).per(params[:per]).where.not(view_id: nil).where(organization_id: org.id).order(:workflow_step_id)
-    end
+    user_assignment = current_user.user_assignments.find_by organization_id: org.id if current_user
+    @documents = get_documents(current_user, Document.where(organization_id: org.id)).page(params[:page]).per(params[:per])
   end
 
   def versions
@@ -40,6 +29,16 @@ class WorkflowDocumentsController < ApplicationController
 
   private
 
+  def get_documents user, documents
+    documents.each do |document|
+      if !document.assigned_to? user
+        documents = documents.drop(document.id)
+      end
+    end
+    return Document.where(id: documents.map(&:id))
+  end
+
+  end
   def get_document id=params[:id]
     @document = Document.find_by id: id
   end
@@ -57,4 +56,3 @@ class WorkflowDocumentsController < ApplicationController
       return 'workflow'
     end
   end
-end

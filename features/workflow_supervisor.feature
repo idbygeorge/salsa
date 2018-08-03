@@ -45,13 +45,18 @@ I want to have a defined set of workflow steps to go thrugh
      Then I should see "Workflow step was successfully destroyed."
 
   @javascript
-  Scenario: review employee's document
-     Given there is a user with the role of staff
-     And there is a workflow
-     And the user has a document with a workflow_step of 4
-     And I am on the "/workflow/documents" page
-     And I save the page
-     When I click the "Edit" link
-     # Then I should not be able to edit the employee section
-     And I click the "tb_share" link
-     Then the document workflow_step_id should be nil
+  Scenario: complete step_4
+    Given there is a workflow
+    And there is a document on the fourth step in the workflow and assigned to the user
+    And I am on the "/workflow/documents" page
+    When I click the "Edit" link
+    # TODO add javascript tag so we can save the document
+    And I click the "tb_share" link
+    Then the document should be on step_5
+
+  @javascript
+  Scenario: fail to complete complete final_step
+    Given there is a workflow
+    And there is a document on the last step in the workflow and assigned to the user
+    And I am on the "/workflow/documents" page
+    Then I should not see "Edit"
