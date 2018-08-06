@@ -38,6 +38,11 @@ class DocumentsController < ApplicationController
     document = Document.find_by_edit_id(params[:id])
     document_template = Document.find_by_template_id(params[:id])
     @document = Document.find_by_view_id(params[:id])
+
+    if params[:version].to_i > 0 && @document
+      @document = @document.versions[params[:version].to_i].reify
+    end
+
     if document_template != nil
       document = document_template.dup
       document.reset_ids

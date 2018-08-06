@@ -57,7 +57,7 @@
         <div class="col-md-6">
           <div class="form-group">
             <%= f.label :role_organization_level, class: "control-label" %>
-            <%= f.select(:role_organization_level,@organization_levels, {:include_blank => ''}, {class: 'form-control'}) %>
+            <%= f.collection_select(:role_organization_level,@organization_levels, :last, :first, {:include_blank => ''}, {class: 'form-control'}) %>
           </div>
         </div>
       </div>
@@ -76,6 +76,19 @@
 
   <div class="col-md-12">
     <div class="form-group">
+      <%= f.label :subject, class: "control-label" %>
+      <div class="controls">
+      <%= f.text_field :subject, class: 'form-control', rows: 12 %>
+      </div>
+      <div class="help-block">
+        when using liquid format refer to <a href="https://github.com/Shopify/liquid/wiki/Liquid-for-Designers" target="_blank">Liquid guide for designers</a>
+        <br>
+        and the available variables are <%= @available_liquid_variables.keys.join(', ') %>
+      </div>
+    </div>
+  </div>
+  <div class="col-md-12">
+    <div class="form-group">
       <%= f.label :layout, class: "control-label" %>
       <div class="info pull-right" id="componentVersion">Version: <%= @component.versions.count %></div>
       <div class="controls">
@@ -90,11 +103,6 @@
         <%= f.label :format, class: "control-label" %>
           <div class="controls">
             <%= f.select :format, @available_component_formats, { include_blank: '--'}, { class: 'form-control' } %>
-            <div class="help-block">
-              when using liquid format refer to <a href="https://github.com/Shopify/liquid/wiki/Liquid-for-Designers" target="_blank">Liquid guide for designers</a>
-              <br>
-              and the available variables are <%= @available_liquid_variables.keys.join(', ') %>
-            </div>
         </div>
       </div>
     <% else %>

@@ -50,8 +50,8 @@ end
 Given(/^there is a (\w+)$/) do |class_name|
   case class_name
   when /workflow/
-    recordA = create(:workflow_step, slug: "final_step", end_step: true, organization_id: @organization.id)
-    recordB = create(:workflow_step, slug: "step_4", next_workflow_step_id:recordA.id, end_step: false, organization_id: @organization.id)
+    recordA = create(:workflow_step, slug: "final_step", step_type: "end_step", organization_id: @organization.id)
+    recordB = create(:workflow_step, slug: "step_4", next_workflow_step_id:recordA.id, organization_id: @organization.id)
     componentB = recordB.component
     componentB.role = ""
     componentB.save
@@ -60,7 +60,7 @@ Given(/^there is a (\w+)$/) do |class_name|
     componentD = recordD.component
     componentD.role = "supervisor"
     componentD.save
-    recordE = create(:workflow_step, slug: "step_1", next_workflow_step_id: recordD.id, start_step: true, organization_id: @organization.id)
+    recordE = create(:workflow_step, slug: "step_1", next_workflow_step_id: recordD.id, step_type: "start_step", organization_id: @organization.id)
     @workflows = WorkflowStep.workflows(@organization.id)
   when /document/ || /canvas_document/
     record = create(class_name, organization_id: @organization.id)
@@ -242,7 +242,7 @@ Given("there is a {string}") do |table|
 end
 
 Given("the user has a document with a workflow step") do
-  wf_start_step = @workflows[1].detect {|wf| wf["start_step"] == true}
+  wf_start_step = @workflows[1].detect {|wf| wf["step_type"] == "start_step"}
   @document = create(:document, organization_id: @organization.id, user_id: @user, workflow_step_id: wf_start_step.id )
   expect(@document.workflow_step_id).to have_content(wf_start_step.id)
 end

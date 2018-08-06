@@ -20,8 +20,7 @@ I want to have a defined set of workflow steps to go thrugh
         | slug | step_1 |
         | name | Step 1 |
         | next_workflow_step_id | |
-        | start_step | true |
-        | end_step | true |
+        | step_type | default_step |
      And I click on "Create Workflow step"
      Then I should see "Workflow step was successfully created."
 
@@ -33,8 +32,7 @@ I want to have a defined set of workflow steps to go thrugh
         | slug | step_54|
         | name | Step 54 |
         | next_workflow_step_id | |
-        | start_step | false |
-        | end_step | false |
+        | step_type | default_step |
      And I click on "Update Workflow step"
      Then I should see "Workflow step was successfully updated."
 

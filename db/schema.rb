@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180802194506) do
+ActiveRecord::Schema.define(version: 20180806202221) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -39,6 +39,7 @@ ActiveRecord::Schema.define(version: 20180802194506) do
     t.datetime "updated_at"
     t.string "role"
     t.integer "role_organization_level"
+    t.string "subject"
     t.index ["category"], name: "index_components_on_category"
     t.index ["organization_id"], name: "index_components_on_organization_id"
     t.index ["slug", "organization_id"], name: "index_components_on_slug_and_organization_id", unique: true
@@ -242,9 +243,8 @@ ActiveRecord::Schema.define(version: 20180802194506) do
     t.integer "next_workflow_step_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "start_step", default: false
-    t.boolean "end_step", default: false
     t.integer "component_id"
+    t.string "step_type", default: "default_step"
   end
 
 end

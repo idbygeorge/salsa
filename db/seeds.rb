@@ -36,8 +36,8 @@ orgs.each do |org|
 
     )
     wfs.next_workflow_step_id = wfsteps.last.id if wfsteps.last
-    wfs.start_step = true if d==1
-    wfs.end_step = true if d==4
+    wfs.step_type = "start_step" if d==1
+    wfs.step_type = "end_step" if d==4
     wfs.save
     wfsteps.push wfs
   end

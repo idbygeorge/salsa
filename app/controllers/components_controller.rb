@@ -162,9 +162,11 @@ class ComponentsController < ApplicationController
   end
 
   def get_organization_levels
-     organization_levels = @organization.parents.map(&:level) + [@organization.level] + @organization.children.map(&:level)
-     @organization_levels = organization_levels.sort
+     @orgs = @organization.parents.push(@organization) + @organization.children
+     organization_levels = @orgs.map { |h| h.slice(:slug, :level).values }
+     @organization_levels = organization_levels.sort {|a,b|  a[1] <=> b[1] }
   end
+
   def available_component_formats
     if has_role('admin')
       @available_component_formats = ['html','erb','haml','liquid',nil];
@@ -181,6 +183,7 @@ class ComponentsController < ApplicationController
       :slug,
       :description,
       :category,
+      :subject,
       :layout,
       :format,
       :role,

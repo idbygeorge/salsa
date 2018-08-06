@@ -2,6 +2,11 @@
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %> You are assigned to</h1>
 </div>
+<% if has_role("supervisor") %>
+  <%= link_to "Completed Documents", "?show_completed=true", class:"btn btn-default pull-right" %>
+  <%= link_to "Incomplete Documents", "?show_completed=false", class:"btn btn-default pull-right" %>
+  <%= link_to "Assigned Documents", workflow_document_index_path, class:"btn btn-default pull-right" %>
+<% end %>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -22,7 +27,7 @@
             <% if has_role 'supervisor' %>
               <%= link_to "Versions", workflow_document_versions_path(document), :class => 'btn btn-default btn-xs' %>
             <% end %>
-            <%= link_to t('.edit', :default => t("helpers.links.edit")), edit_document_path(document.edit_id), :class => 'btn btn-default btn-xs' %>
+            <%= link_to t('.edit', :default => t("helpers.links.edit")), edit_workflow_document_path(document.id), :class => 'btn btn-default btn-xs' %>
           </td>
         </tr>
     <% end %>

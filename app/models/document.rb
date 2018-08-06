@@ -12,7 +12,7 @@ class Document < ApplicationRecord
   validates_uniqueness_of [:view_id, :edit_id, :template_id]
 
   def assigned_to? user
-    if self.workflow_step&.component_id && user != nil && !self.workflow_step.end_step 
+    if self.workflow_step&.component_id && user != nil && self.workflow_step.step_type != "end_step"
       component = self.workflow_step.component
       user_assignment = user.user_assignments.find_by(organization_id:self.organization_id)
       user_org = user_assignment.organization
