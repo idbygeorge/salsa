@@ -94,18 +94,28 @@ class ComponentsController < ApplicationController
   end
 
   def import_components
+    if !params[:file]
+      flash[:error] = "You must select a file before importing components"
+      return redirect_to components_path
+    end
     Zip::File.open(params[:file].path) do |zipfile|
       zipfile.each do |file|
-        content = file.get_input_stream.read
-        Component.create(
-          organization_id: @organization.id,
-          name: file.name.delete(".html.erb"),
-          slug: file.name[1..-1].delete(".html.erb"),
-          description: "",
-          category: "document",
-          layout: content,
-          format: File.extname(file.name).delete('.')
-        )
+        component = Component.find_by(organization_id: @organization.id, slug: file.name.remove(/\..*/, /\b_/).gsub(/ /, '_'))
+        if params[:overwrite] == "true"
+          component.try(:destroy)
+        end
+        if params[:overwrite] == "true" || component == nil
+          content = file.get_input_stream.read
+          Component.create(
+            organization_id: @organization.id,
+            name: file.name.remove(/\..*/),
+            slug: file.name.remove(/\..*/, /\b_/).gsub(/ /, '_'),
+            description: "",
+            category: "document",
+            layout: content,
+            format: File.extname(file.name).delete('.')
+          )
+        end
       end
     end
     return redirect_to components_path, notice: "Imported Components"
@@ -115,10 +125,12 @@ class ComponentsController < ApplicationController
     org = @organization
     file_paths = Dir.glob("app/views/instances/default/*.erb")
     file_paths.each do |file_path|
+      component = Component.find_by(organization_id: @organization.id, slug: File.basename(file_path).remove(/\..*/, /\b_/).gsub(/ /, '_'))
+      component.try(:destroy)
       Component.create(
         organization_id: org.id,
-        name: File.basename(file_path, ".html.erb"),
-        slug: File.basename(file_path, ".html.erb")[1..-1],
+        name: File.basename(file_path).remove(/\..*/),
+        slug: File.basename(file_path).remove(/\..*/, /\b_/).gsub(/ /, '_'),
         description: "",
         category: "document",
         layout: File.read(file_path),
