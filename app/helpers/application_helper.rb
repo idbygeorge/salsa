@@ -20,9 +20,7 @@ module ApplicationHelper
 
     # if this document is using a configuration and that configuration has the partial being requested, use it
     if org && org.components && org.components.find_by(slug: name)
-      orgs = org.parents.push(org)
-      debugger
-      component = organization.components.find_by(slug: name)
+      component = org.components.find_by(slug: name)
       output = component.layout
 
       if APP_CONFIG['allow_erb_components'] && component.format == 'erb'
@@ -52,7 +50,6 @@ module ApplicationHelper
     if output == '' && has_role('admin') && partial != 'analytics'
       output = "#{path}#{partial} does not exist"
     end
-
     return output.html_safe
   end
 
