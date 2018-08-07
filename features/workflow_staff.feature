@@ -14,6 +14,7 @@ I want to complete a workflow step
     And there is a document on the first step in the workflow and assigned to the user
     And I am on the "/workflow/documents" page
     Then I click the "Edit" link
+    Then I save the page
     And I click the "tb_share" link
     Then the document should be on step_2
 

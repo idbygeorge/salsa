@@ -26,8 +26,10 @@
           <td>
             <% if has_role 'supervisor' %>
               <%= link_to "Versions", workflow_document_versions_path(document), :class => 'btn btn-default btn-xs' %>
+              <%= link_to t('.edit', :default => t("helpers.links.edit")), edit_workflow_document_path(document.id), :class => 'btn btn-default btn-xs' %>
+            <% else %>
+              <%= link_to t('.edit', :default => t("helpers.links.edit")), document_path(document.edit_id), :class => 'btn btn-default btn-xs' %>
             <% end %>
-            <%= link_to t('.edit', :default => t("helpers.links.edit")), edit_workflow_document_path(document.id), :class => 'btn btn-default btn-xs' %>
           </td>
         </tr>
     <% end %>
