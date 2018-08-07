@@ -224,6 +224,7 @@ class DocumentsController < ApplicationController
           @document.workflow_step_id = @document.workflow_step.next_workflow_step_id if @document.workflow_step&.next_workflow_step_id
           @document.save!
         end
+        return render :js => "window.location = '#{admin_path}'"
       end
     end
     respond_to do |format|

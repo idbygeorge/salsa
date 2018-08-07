@@ -4,7 +4,7 @@ class WorkflowDocumentsController < ApplicationController
   before_action :set_paper_trail_whodunnit, only: [:revert_document]
   before_action :get_organizations_if_supervisor
   before_action :require_staff_permissions, only: [:index]
-  before_action :require_supervisor_permissions, exept: [:index]
+  before_action :require_supervisor_permissions, except: [:index]
 
   def index
     org = get_org
@@ -35,7 +35,6 @@ class WorkflowDocumentsController < ApplicationController
       wfs = WorkflowStep.find(params[:document][:workflow_step_id])
       if wfs.step_type == "start_step"
         user = User.find(params[:document][:user_id])
-        debugger
         WorkflowMailer.welcome_email(user,@organization,wfs.slug,component_allowed_liquid_variables).deliver_later
       end
     end
@@ -77,12 +76,13 @@ class WorkflowDocumentsController < ApplicationController
   end
 
   def get_documents user, documents
-    documents.each do |document|
-      if !document.assigned_to? user
-        documents = documents.drop(document.id)
+    docs = []
+    documents.each_with_index do |document, index|
+      if document.assigned_to? user
+        docs.push document.id
       end
     end
-    return Document.where(id: documents.map(&:id))
+    return Document.where(id: docs)
   end
 
   def get_document id=params[:id]
