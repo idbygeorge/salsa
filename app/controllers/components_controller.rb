@@ -100,16 +100,14 @@ class ComponentsController < ApplicationController
     end
     Zip::File.open(params[:file].path) do |zipfile|
       zipfile.each do |file|
-        component = Component.find_by(organization_id: @organization.id, slug: file.name.remove(/\..*/, /\b_/).gsub(/ /, '_'))
-        if params[:overwrite] == "true"
-          component.try(:destroy)
-        end
-        if params[:overwrite] == "true" || component == nil
-          content = file.get_input_stream.read
-          Component.create(
-            organization_id: @organization.id,
+        content = file.get_input_stream.read
+        component = Component.find_or_initialize_by(
+          organization_id: @organization.id,
+          slug: file.name.remove(/\..*/, /\b_/).gsub(/ /, '_'),
+        )
+        if params[:overwrite] == "true" || component.new_record?
+          component.update(
             name: file.name.remove(/\..*/),
-            slug: file.name.remove(/\..*/, /\b_/).gsub(/ /, '_'),
             description: "",
             category: "document",
             layout: content,
@@ -125,17 +123,17 @@ class ComponentsController < ApplicationController
     org = @organization
     file_paths = Dir.glob("app/views/instances/default/*.erb")
     file_paths.each do |file_path|
-      component = Component.find_by(organization_id: @organization.id, slug: File.basename(file_path).remove(/\..*/, /\b_/).gsub(/ /, '_'))
-      component.try(:destroy)
-      Component.create(
-        organization_id: org.id,
-        name: File.basename(file_path).remove(/\..*/),
-        slug: File.basename(file_path).remove(/\..*/, /\b_/).gsub(/ /, '_'),
-        description: "",
-        category: "document",
-        layout: File.read(file_path),
-        format: File.extname(file_path).delete('.')
-      )
+        component = Component.find_or_initialize_by(
+          organization_id: @organization.id,
+          slug: File.basename(file_path).remove(/\..*/, /\b_/).gsub(/ /, '_'),
+        )
+        component.update(
+          name: File.basename(file_path).remove(/\..*/),
+          description: "",
+          category: "document",
+          layout: File.read(file_path),
+          format: File.extname(file_path).delete('.')
+        )
     end
     return redirect_to components_path, notice: "Loaded Default Components"
   end
