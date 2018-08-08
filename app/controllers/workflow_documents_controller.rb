@@ -35,7 +35,7 @@ class WorkflowDocumentsController < ApplicationController
       wfs = WorkflowStep.find(params[:document][:workflow_step_id])
       if wfs.step_type == "start_step"
         user = User.find(params[:document][:user_id])
-        WorkflowMailer.welcome_email(user,@organization,wfs.slug,component_allowed_liquid_variables).deliver_later
+        WorkflowMailer.welcome_email(user,@organization,wfs.slug,component_allowed_liquid_variables(@document.workflow_step,@organization,User.find(params[:document][:user_id]))).deliver_later
       end
     end
 

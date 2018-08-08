@@ -10,7 +10,7 @@ class ComponentsController < ApplicationController
   before_action :get_roles
 
   def index
-    @available_liquid_variables = component_allowed_liquid_variables
+    @available_liquid_variables = component_allowed_liquid_variables true
     @components = @organization.components
 
     available_component_formats
@@ -23,13 +23,13 @@ class ComponentsController < ApplicationController
   def new
     @component = Component.new
     @valid_slugs = valid_slugs(@component.slug)
-    @available_liquid_variables = component_allowed_liquid_variables
+    @available_liquid_variables = component_allowed_liquid_variables true
     available_component_formats
   end
 
   def create
 
-    @available_liquid_variables = component_allowed_liquid_variables
+    @available_liquid_variables = component_allowed_liquid_variables true
     @component = Component.new component_params
     @valid_slugs = valid_slugs(@component.slug)
     @component[:organization_id] = @organization[:id]
