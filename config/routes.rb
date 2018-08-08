@@ -38,6 +38,8 @@ Rails.application.routes.draw do
     post "login/(:slug)", to: 'admin#authenticate', as: 'admin_authenticate', constraints: { slug: /.*/ }
 
     resources :users, as: 'admin_users', controller: 'admin_users'
+    get "user_activation/:id", to: 'admin#user_activation', as: 'admin_user_activation'
+    post "create_user/:id", to: 'admin#create_user', as: 'admin_create_user'
 
     # user assignment routes
     post 'user/assignment', as: 'admin_user_assignments', to: 'admin_users#assign'

@@ -106,11 +106,14 @@ class AdminUsersController < AdminController
     users_emails = params[:users][:emails].delete(' ').split(/,|\r\n/).delete_if {|x| x == "\r" }
     user_errors = Array.new
     users_emails.each do |user_email|
-      user = User.create(name: "New User", email:user_email, password: "#{rand(36**40).to_s(36)}", activated:false)
-      UserAssignment.create(role:"staff",user_id:user.id,organization_id:org.id) if user
+      user = User.new(name: "New User", email:user_email, password: "#{rand(36**40).to_s(36)}", activated:false)
+      user_activation_token user
+      user.save
+      UserAssignment.create(role:"staff",user_id:user.id,organization_id:org.id,cascades:true) if user
       user.errors.messages.each do |error|
         user_errors.push "Could not create user with email: '#{user.email}' because: #{error[0]} #{error[1][0]}" if user.errors
       end
+      next if !user.errors.empty?
       UserMailer.welcome_email(user,org,component_allowed_liquid_variables(nil,user,org)).deliver_later
     end
     flash[:notice] = "Users created successfully" if user_errors == [] && users_emails != []
@@ -122,6 +125,13 @@ class AdminUsersController < AdminController
   end
 
   private
+
+  def user_activation_token user
+    if user.activation_digest.blank?
+      user.activation_digest = SecureRandom.urlsafe_base64.to_s
+    end
+  end
+
 
   def user_params
     params.require(:user).require(:name)
