@@ -3,6 +3,8 @@ class AdminController < ApplicationController
     :landing,
     :login,
     :logout,
+    :user_activation,
+    :create_user,
     :authenticate,
     :canvas_accounts,
     :canvas_courses,
