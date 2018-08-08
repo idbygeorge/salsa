@@ -63,7 +63,7 @@ Rails.application.configure do
   config.action_mailer.perform_caching = false
 
 
-  # SMTP settings for gmail
+  # SMTP settings for amazon SES
   config.action_mailer.smtp_settings = {
     :address => ENV["SES_SMTP_ADDRESS"],
     :port => 587,
