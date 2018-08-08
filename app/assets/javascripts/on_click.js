@@ -200,7 +200,6 @@
                 var url = $('#tb_save').attr('href');
 
                 if(!url) {
-                  //TODO fix this so it will not get the publish part of the url
                     url = $('#tb_share').prop('href').split("?")[0];
                 }
 
