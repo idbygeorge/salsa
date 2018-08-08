@@ -1,6 +1,7 @@
 class AdminUsersController < AdminController
-  before_action :require_admin_permissions, exept:[:import_users]
-  before_action :require_supervisor_permissions, only:[:import_users]
+  skip_before_action :require_designer_permissions
+  before_action :require_admin_permissions, except:[:import_users,:create_users]
+  before_action :require_supervisor_permissions, only:[:import_users,:create_users]
   before_action :get_organizations, only: [:index, :new, :edit, :show, :edit_assignment, :import_users]
   before_action :get_roles, only: [:edit_assignment, :assign, :index ,:show]
 
@@ -110,7 +111,7 @@ class AdminUsersController < AdminController
       user.errors.messages.each do |error|
         user_errors.push "Could not create user with email: '#{user.email}' because: #{error[0]} #{error[1][0]}" if user.errors
       end
-      UserMailer.welcome_email.deliver_later
+      UserMailer.welcome_email(user,org,component_allowed_liquid_variables(nil,user,org)).deliver_later
     end
     flash[:notice] = "Users created successfully" if user_errors == [] && users_emails != []
     flash[:errors] = user_errors
