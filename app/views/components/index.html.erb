@@ -15,12 +15,15 @@
 <h1>
   <%= link_to organization_path(@organization.slug) do %>
     <small><%= @organization.name %></small>
+<<<<<<< HEAD
   <% end %>
+=======
+    <%end%>
+>>>>>>> workflow-notifications
   <br>
   Components
 </h1>
 
-<% if session[:admin_authorized] %>
 <ul class="nav nav-pills">
   <li <% if current_page? components_path category: 'document' %>class="active"<% end %>>
     <%= link_to 'Documents', components_path(category: 'document') %>
@@ -31,11 +34,13 @@
   <li <% if current_page? components_path category: 'element' %>class="active"<% end %>>
     <%= link_to 'Elements', components_path(category: 'element') %>
   </li>
+  <li <% if current_page? components_path category: 'mailer' %>class="active"<% end %>>
+    <%= link_to 'Mailers', components_path(category: 'mailer') %>
+  </li>
   <li <% if !params[:category] %>class="active"<% end %>>
     <%= link_to 'All Components', components_path %>
   </li>
 </ul>
-<% end %>
 
 <% if @components.count > 0 %>
   <ul class="media-list">

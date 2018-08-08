@@ -5,6 +5,7 @@ class WorkflowStepsController < OrganizationsController
   before_action :check_organization_workflow_enabled
   before_action :set_workflow_step, only: [:show, :edit, :update, :destroy]
   before_action :set_workflow_steps
+  before_action :get_step_types
   before_action :require_supervisor_permissions
   before_action :redirect_if_wrong_organization, only: [:show, :edit, :update, :destroy]
 
@@ -43,11 +44,12 @@ class WorkflowStepsController < OrganizationsController
   def create
     @workflow_step = WorkflowStep.new(workflow_step_params)
     @workflow_step.organization_id = Organization.find_by(slug: params[:slug]).id
+    find_or_create_component @workflow_step
 
     respond_to do |format|
       if @workflow_step.save
-        format.html { redirect_to workflow_step_path(params[:slug], @workflow_step), notice: 'Workflow step was successfully created.' }
-        format.json { render :show, status: :created, location: @workflow_step }
+        format.html { redirect_to workflow_steps_path(params[:slug]), notice: 'Workflow step was successfully created.' }
+        format.json { render :index, status: :created }
       else
         format.html { render :new }
         format.json { render json: @workflow_step.errors, status: :unprocessable_entity }
@@ -58,10 +60,11 @@ class WorkflowStepsController < OrganizationsController
   # PATCH/PUT /workflow_steps/1
   # PATCH/PUT /workflow_steps/1.json
   def update
+    find_or_create_component @workflow_step
     respond_to do |format|
       if @workflow_step.update(workflow_step_params)
-        format.html { redirect_to workflow_step_path(params[:slug], @workflow_step), notice: 'Workflow step was successfully updated.' }
-        format.json { render :show, status: :ok, location: @workflow_step }
+        format.html { redirect_to workflow_steps_path(params[:slug]), notice: 'Workflow step was successfully updated.' }
+        format.json { render :index, status: :ok}
       else
         format.html { render :edit }
         format.json { render json: @workflow_step.errors, status: :unprocessable_entity }
@@ -80,6 +83,19 @@ class WorkflowStepsController < OrganizationsController
   end
 
   private
+
+    def get_step_types
+      @step_types = WorkflowStep.step_types
+    end
+
+    def find_or_create_component workflow_step
+      if !Component.find_by(slug:workflow_step.slug, organization_id:workflow_step.organization_id)
+        workflow_step.component_id = Component.create(name: workflow_step.name, slug: workflow_step.slug, organization_id: workflow_step.organization_id).id
+      elsif workflow_step.component_id == nil
+        workflow_step.component_id = Component.find_by(slug: workflow_step.slug, organization_id: workflow_step.organization_id).id
+      end
+    end
+
     def redirect_if_wrong_organization
       if params[:slug] != @workflow_step.organization.slug
         if params[:action] != 'index'
@@ -97,7 +113,7 @@ class WorkflowStepsController < OrganizationsController
     def set_workflow_steps
 
       org = Organization.find_by(slug: params[:slug])
-      organization_ids = org.organization_ids + [org.id] 
+      organization_ids = org.organization_ids + [org.id]
       @workflow_steps = WorkflowStep.where(organization_id: organization_ids)
       if @workflow_step
         @workflow_steps = @workflow_steps.where.not(id: @workflow_step.id)
@@ -106,6 +122,6 @@ class WorkflowStepsController < OrganizationsController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def workflow_step_params
-      params.require(:workflow_step).permit(:slug, :name, :organization_id, :next_workflow_step_id, :start_step, :end_step)
+      params.require(:workflow_step).permit(:slug, :name, :organization_id, :next_workflow_step_id, :step_type)
     end
 end

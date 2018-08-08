@@ -1,1 +1,1 @@
-xvfb-run -a cucumber RAILS_ENV=test
+xvfb-run -a cucumber RAILS_ENV=test $1

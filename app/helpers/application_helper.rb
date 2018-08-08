@@ -50,7 +50,6 @@ module ApplicationHelper
     if output == '' && has_role('admin') && partial != 'analytics'
       output = "#{path}#{partial} does not exist"
     end
-
     return output.html_safe
   end
 
