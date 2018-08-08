@@ -137,6 +137,8 @@ When(/^I click the "(.*?)" link$/) do |string|
     @document.workflow_step_id = @document.workflow_step.next_workflow_step_id
   when /Edit Component/
     click_on("edit_#{@component.slug}")
+  when /#edit_document/
+    find(string).click
   else
     click_link(string)
   end

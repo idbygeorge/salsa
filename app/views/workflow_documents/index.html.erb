@@ -20,7 +20,7 @@
     <% @documents.each do |document| %>
 
         <tr>
-          <td><%= link_to document.name, edit_document_path(document.edit_id) %></td>
+          <td><%= link_to document.name, edit_document_path(document.edit_id), id:"edit_document" %></td>
           <td><%= link_to(document.organization.slug, document_path(document.edit_id)) if document.organization %></td>
           <td><%= link_to(document.workflow_step.slug, document_path(document.edit_id)) if document.workflow_step_id %></td>
           <td>
