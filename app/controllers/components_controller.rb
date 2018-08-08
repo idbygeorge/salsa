@@ -109,7 +109,11 @@ class ComponentsController < ApplicationController
         content = file.get_input_stream.read
         component = Component.find_or_initialize_by(
           organization_id: @organization.id,
+<<<<<<< HEAD
           slug: file.name.remove(/\..*/, /\b_/).gsub(/ /, '_'),
+=======
+          slug: file.name.remove(/\..*/, /\b_/).gsub(/ /, '_')
+>>>>>>> workflow-notifications
         )
         if params[:overwrite] == "true" || component.new_record?
           component.update(

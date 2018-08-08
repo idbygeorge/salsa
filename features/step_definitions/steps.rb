@@ -133,7 +133,7 @@ end
 When(/^I click the "(.*?)" link$/) do |string|
   case string
   when /tb_share/
-    click_link(string)
+    find(string).click
     @document.workflow_step_id = @document.workflow_step.next_workflow_step_id
   when /Edit Component/
     click_on("edit_#{@component.slug}")
