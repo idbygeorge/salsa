@@ -13,8 +13,7 @@ I want to complete a workflow step
     Given that I am logged in as a staff on the organization
     And there is a document on the first step in the workflow and assigned to the user
     And I am on the "/workflow/documents" page
-    Then I click the "Edit" link
-    Then I save the page
+    Then I click the "#edit_document" link
     And I click the "tb_share" link
     Then the document should be on step_2
 
