@@ -47,7 +47,7 @@ I want to have a defined set of workflow steps to go thrugh
     And I am on the "/workflow/documents" page
     When I click the "#edit_document" link
     # TODO add javascript tag so we can save the document
-    And I click the "tb_share" link
+    And I click the "#tb_share" link
     Then the document should be on step_5
 
   @javascript

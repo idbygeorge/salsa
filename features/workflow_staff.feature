@@ -14,7 +14,7 @@ I want to complete a workflow step
     And there is a document on the first step in the workflow and assigned to the user
     And I am on the "/workflow/documents" page
     Then I click the "#edit_document" link
-    And I click the "tb_share" link
+    And I click the "#tb_share" link
     Then the document should be on step_2
 
   @javascript
@@ -38,5 +38,5 @@ I want to complete a workflow step
     And I am on the "/workflow/documents" page
     When I click the "Edit" link
     # TODO add javascript tag so we can save the document
-    And I click the "tb_share" link
+    And I click the "#tb_share" link
     Then the document should be on step_5
