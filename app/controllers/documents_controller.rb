@@ -38,6 +38,11 @@ class DocumentsController < ApplicationController
     document = Document.find_by_edit_id(params[:id])
     document_template = Document.find_by_template_id(params[:id])
     @document = Document.find_by_view_id(params[:id])
+
+    if params[:version].to_i > 0 && @document
+      @document = @document.versions[params[:version].to_i].reify
+    end
+
     if document_template != nil
       document = document_template.dup
       document.reset_ids
@@ -78,7 +83,15 @@ class DocumentsController < ApplicationController
 
       verify_org
       @can_use_edit_token = can_use_edit_token(@document.lms_course_id)
-      render :layout => 'edit', :template => '/documents/content'
+      if @organization.enable_workflows && @document.assigned_to?(current_user) && @document.workflow_step_id
+        render :layout => 'edit', :template => '/documents/content'
+      elsif !@organization.enable_workflows || !@document.workflow_step_id || !@document.user_id
+        render :layout => 'edit', :template => '/documents/content'
+      elsif current_user != nil
+        redirect_to admin_path, notice:"you are not authorized to edit that document"
+      else
+        redirect_to root_path, notice:"you are not authorized to edit that document"
+      end
     else
       render :layout => 'dialog', :template => '/documents/republishing'
     end
@@ -173,10 +186,9 @@ class DocumentsController < ApplicationController
     saved = false
     republishing = true
     verify_org
+    user = current_user if current_user
+    assigned_to_user = @document.assigned_to? user
     if (check_lock @organization[:slug], params[:batch_token]) && can_use_edit_token(@document.lms_course_id)
-      if params[:publish] == "true" && @organization.enable_workflows
-        @document.workflow_step_id = @document.workflow_step.next_workflow_step_id if @document.workflow_step&.next_workflow_step_id
-      end
       republishing = false;
       if meta_data_from_doc && @organization.lms_authentication_id && @organization.track_meta_info_from_document
         create_meta_data_from_document(meta_data_from_doc, @document, @organization)
@@ -197,10 +209,22 @@ class DocumentsController < ApplicationController
           @document.payload = request.raw_post
           @document.payload = nil if @document.payload == ''
           @document.lms_published_at = DateTime.now
-
-          @document.save!
-          saved = true;
+          if !@organization.enable_workflows || !@document.workflow_step_id || !@document.user_id
+            @document.save!
+            saved = true;
+          elsif @organization.enable_workflows && user && @document.workflow_step_id && assigned_to_user
+            @document.save!
+            saved = true;
+          end
         end
+      end
+      if params[:publish] == "true" && @organization.enable_workflows && user
+        if @document.workflow_step_id && @document.assigned_to?(user)
+          WorkflowMailer.step_email(user, @organization, @document.workflow_step.slug, component_allowed_liquid_variables(user,@organization,@document.workflow_step)).deliver_later
+          @document.workflow_step_id = @document.workflow_step.next_workflow_step_id if @document.workflow_step&.next_workflow_step_id
+          @document.save!
+        end
+        return render :js => "window.location = '#{admin_path}'"
       end
     end
     respond_to do |format|
@@ -210,6 +234,8 @@ class DocumentsController < ApplicationController
        msg = { :status => "error", :message => "Documents for this organization are currently being republished. Please copy your changes and try again later.", :version => @document.versions.count }
      elsif @organization.track_meta_info_from_document == false && meta_data_from_doc != nil
         msg = { :status => "error", :message => "Tried to save document meta when document meta not enabled for this organization", :version => @document.versions.count }
+     elsif !(@organization.enable_workflows && user && @document.workflow_step_id && assigned_to_user)&& @document.user_id
+        msg = { :status => "error", :message => "You are not authorized to edit this document", :version => @document.versions.count }
      elsif !saved && !meta_data_from_doc_saved
         msg = { :status => "error", :message => "This is not a current version of this document! Please copy your changes and refresh the page to get the current version.", :version => @document.versions.count }
       else
@@ -286,7 +312,11 @@ class DocumentsController < ApplicationController
 
   def can_use_edit_token(lms_course_id = nil)
     is_authorized = is_lms_authenticated_user? && has_canvas_access_token? && lms_course_id
-    if @organization[:enable_anonymous_actions]
+    user = current_user
+    workflow_authorized = @organization.enable_workflows && user && @document&.workflow_step_id && @document.assigned_to?(user)
+    if workflow_authorized
+      true
+    elsif @organization[:enable_anonymous_actions]
       true
     elsif has_role('designer')
       true
@@ -303,7 +333,11 @@ class DocumentsController < ApplicationController
 
   def authorized_to_edit_course lms_course_id
     courses = get_canvas_courses
-    if courses.pluck("id").include?(lms_course_id.to_i)
+    user = current_user
+    workflow_authorized = @organization.enable_workflows && user && @document.workflow_step_id && @document.assigned_to?(user)
+    if workflow_authorized
+      true
+    elsif courses.pluck("id").include?(lms_course_id.to_i)
       true
     else
       false

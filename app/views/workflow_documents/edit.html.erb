@@ -1,0 +1,36 @@
+<%= form_for(@document, url: workflow_document_path, html: { class: "form-horizontal col-md-9" } ) do |f| %>
+
+  <div class="form-group">
+    <%= f.label :name, class: "control-label" %>
+    <div class="controls">
+      <%= f.text_field :name, class: 'form-control input-xxlarge' %>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :lms_course_id, class: "control-label" %>
+    <div class="controls">
+      <%= f.text_field :lms_course_id, class: 'form-control input-xxlarge' %>
+    </div>
+  </div>
+  <% if @workflow_steps && @document.organization.enable_workflows %>
+    <div class="form-group">
+      <%= f.label :workflow_step_id, class: "control-label" %>
+      <div class="controls">
+        <%= f.collection_select :workflow_step_id, @workflow_steps, :id, :to_s, {include_blank: true},{class:"form-control"} %>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <%= f.label :user_id, class: "control-label" %>
+      <div class="controls">
+        <%= f.collection_select :user_id, UserAssignment.where(organization_id:@organization.children.map(&:id) + [@organization.id]).map(&:user), :id, :email, {include_blank: true},{class:"form-control"} %>
+      </div>
+    </div>
+  <% end %>
+
+<div class="form-group">
+  <%= f.submit class: 'btn btn-default' %>
+</div>
+
+<% end %>

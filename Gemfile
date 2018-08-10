@@ -67,7 +67,8 @@ gem "jquery-ui-rails"
 
 #TODO: remove foundation
 gem "zurb-foundation"
-
+#for mailer templates
+gem "liquid"
 # Add awesome nested set
 gem "awesome_nested_set"
 # pagination

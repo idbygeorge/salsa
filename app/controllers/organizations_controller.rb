@@ -43,7 +43,7 @@ class OrganizationsController < AdminController
     @export_types = Organization.export_types
     get_documents params[:slug]
 
-    @workflow_steps = WorkflowStep.where(organization_id: @organization.organization_ids)
+    @workflow_steps = WorkflowStep.where(organization_id: @organization.organization_ids+[@organization.id])
     @organization.default_account_filter = '{"account_filter":""}' unless @organization.default_account_filter
     @organization.default_account_filter = '{"account_filter":""}' if @organization.default_account_filter == ''
 
