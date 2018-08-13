@@ -1,13 +1,19 @@
 class AdminUsersController < AdminController
-  before_action :require_admin_permissions
+  before_action :require_organization_admin_permissions
+  before_action :require_admin_permissions, only: [:destroy, :create, :new]
   before_action :get_organizations, only: [:index, :new, :edit, :show, :edit_assignment]
   before_action :get_roles, only: [:edit_assignment, :assign, :index ,:show]
 
   def index
     page = 1
     page = params[:page] if params[:page]
-
-    @users = User.order('name', 'email').all.page(params[:page]).per(15)
+    show_archived = params[:show_archived] == "true"
+    if has_role("admin")
+      @users = User.where(archived: show_archived).order('name', 'email').all.page(params[:page]).per(15)
+    else
+      user_ids = UserAssignment.where(organization_id: get_org.id).map(&:user_id)
+      @users = User.where(id: user_ids, archived: show_archived).order('name', 'email').all.page(params[:page]).per(15)
+    end
     @session = session
   end
 
@@ -22,21 +28,36 @@ class AdminUsersController < AdminController
     @user = User.find params[:id]
   end
 
+  def archive
+    @user = User.find params[:admin_user_id]
+    @user.update(archived: true)
+    return redirect_back(fallback_location: admin_users_path)
+  end
+
+  def restore
+    @user = User.find params[:admin_user_id]
+    @user.update(archived: false)
+    return redirect_back(fallback_location: admin_users_path)
+  end
+
   def assign
     @user = User.find params[:user_assignment][:user_id]
-      @user_assignment = UserAssignment.new user_assignment_params
-      get_organizations
-      @user_assignments = @user.user_assignments if @user.user_assignments.count > 0
-      @new_permission = @user_assignment
-      respond_to do |format|
-        if @user_assignment.save
-          format.html { redirect_to admin_user_path id: @user[:id], notice: 'User Assignment was successfully created.' }
-          format.json { render :show, status: :created, location: @user_assignment }
-        else
-          format.html { render :show }
-          format.json { render json: @user_assignment.errors, status: :unprocessable_entity }
-        end
+    @user_assignment = UserAssignment.new user_assignment_params
+    if !has_role("admin")
+      @user_assignment.organization_id = get_org.id
+    end
+    get_organizations
+    @user_assignments = @user.user_assignments if @user.user_assignments.count > 0
+    @new_permission = @user_assignment
+    respond_to do |format|
+      if @user_assignment.save
+        format.html { redirect_to admin_user_path id: @user[:id], notice: 'User Assignment was successfully created.' }
+        format.json { render :show, status: :created, location: @user_assignment }
+      else
+        format.html { render :show }
+        format.json { render json: @user_assignment.errors, status: :unprocessable_entity }
       end
+    end
   end
 
   def remove_assignment
@@ -47,6 +68,9 @@ class AdminUsersController < AdminController
   end
 
   def edit_assignment
+    if !has_role("admin")
+      @roles.delete("Global Administrator")
+    end
     @user_assignment = UserAssignment.find params[:id]
   end
 
@@ -117,7 +141,10 @@ class AdminUsersController < AdminController
       params[:user_assignment][:organization_id] = nil
       params[:user_assignment][:cascades] = true
     end
-
-    params.require(:user_assignment).permit(:user_id, :username, :role, :organization_id, :cascades)
+    if has_role("admin")
+      params.require(:user_assignment).permit(:user_id, :username, :role, :organization_id, :cascades)
+    else
+      params.require(:user_assignment).permit(:user_id, :username, :role, :cascades)
+    end
   end
 end
