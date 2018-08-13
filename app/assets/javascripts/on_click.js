@@ -200,7 +200,7 @@
                 var url = $('#tb_save').attr('href');
 
                 if(!url) {
-                    url = $('#tb_share').prop('href');
+                    url = $('#tb_share').prop('href').split("?")[0];
                 }
 
                 var content = $('#page-data').html();

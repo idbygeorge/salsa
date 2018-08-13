@@ -10,7 +10,7 @@ class Oauth2Controller < ApplicationController
     session[:oauth_endpoint] = @oauth_endpoint
 
     return redirect_to(@redirect_url) if @redirect_url
-    return redirect_to(:back)
+    return redirect_back(fallback_location: root_path)
   end
 
   def logout
