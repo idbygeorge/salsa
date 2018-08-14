@@ -11,7 +11,7 @@
   <% end %>
 
   <div class="form-group">
-    <div class="col-lg-10">
+    <div class="col-md-9">
     <%= f.label :name, :class => 'control-label' %>
       <%= f.text_field :name, :class => 'form-control' %>
     </div>
@@ -19,7 +19,7 @@
   </div>
 
   <div class="form-group">
-    <div class="col-lg-10">
+    <div class="col-md-9">
     <%= f.label :slug, :class => 'control-label' %>
       <%= f.text_field :slug, :class => 'form-control' %>
     </div>
@@ -27,28 +27,25 @@
   </div>
 
   <div class="form-group">
-    <div class="col-sm-3">
-    <%= f.label :next_workflow_step_id, :class => 'control-label' %>
+    <div class="col-md-9">
+      <%= f.label :next_workflow_step_id, :class => 'control-label' %>
       <%= f.collection_select :next_workflow_step_id, @workflow_steps, :id, :slug, {include_blank: true},{class:"form-control"} %>
     </div>
     <%=f.error_span(:next_workflow_step_id) %>
   </div>
 
   <div class="form-group">
-    <div class="col-lg-3">
-      <%= f.check_box :start_step, :class => 'col-lg-1'  %>
-      <%= f.label :start_step, :class => 'control-label col-lg-2' %>
-      <%=f.error_span(:start_step) %>
+    <div class="col-sm-3">
+      <%= f.label "Step_type", :class => 'control-label col-lg-2' %>
+      <br>
+      <% @step_types.each do |step_type| %>
+        <%= f.radio_button :step_type, step_type %>
+        <%= f.label :step_type, step_type.humanize %>
+      <% end %>
     </div>
+    <%=f.error_span(:step_type) %>
   </div>
 
-  <div class="form-group">
-    <div class="col-lg-3">
-      <%= f.check_box :end_step, :class => 'col-lg-1' %>
-      <%= f.label :end_step, :class => 'control-label col-lg-2' %>
-      <%=f.error_span(:end_step) %>
-    </div>
-  </div>
   <div class="form-group">
     <div class="col-lg-offset-2 col-lg-10">
       <%= f.submit nil, :class => 'btn btn-primary' %>
@@ -56,4 +53,9 @@
     </div>
   </div>
 
+<% end %>
+<% if @workflow&.slug && Component.find_by(slug:"#{@workflow_step.slug}_email") %>
+  <%= link_to 'Edit Step Email', edit_component_path(@workflow_step.organization.slug, "#{@workflow_step.slug}_email"), :class => 'btn btn-default', target: "_blank" %>
+<% elsif @workflow_step&.slug %>
+  <%= link_to 'Add Step Email', new_component_path(get_org_slug, :component_slug => "#{@workflow_step.slug}_email"), :class => 'btn btn-default', target: "_blank" %>
 <% end %>
