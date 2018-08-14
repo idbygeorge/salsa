@@ -5,7 +5,7 @@ class OrganizationsController < AdminController
       :show,
       :index
   ]
-  before_action :get_organizations, only: [:index, :new, :edit, :show]
+  before_action :get_organizations, only: [:index, :new, :edit, :show, :start_workflow_form]
   layout 'admin'
   def index
     get_documents
@@ -84,6 +84,27 @@ class OrganizationsController < AdminController
 
   def import
 
+  end
+
+  def start_workflow_form
+    @organization = get_org
+    @workflow_steps = WorkflowStep.where(organization_id: @organization.organization_ids+[@organization.id], step_type: "start_step")
+    user_ids = @organization.user_assignments.map(&:user_id)
+    @users = User.find_by(id: user_ids)
+    @periods = Period.where(organization_id: @organization.id)
+  end
+
+  def start_workflow
+    start_workflow = params["Start Workflow"]
+    organization = get_org
+    user_ids = organization.user_assignments.map(&:user_id)
+    users = User.where(id: user_ids)
+    if start_workflow[:period_id] == "" || start_workflow[:starting_workflow_step_id] == "" || start_workflow[:document_name] == ""
+      redirect_back(fallback_location: start_workflow_form_path)
+    end
+    users.each do |user|
+      Document.create(period_id: start_workflow[:period_id],user_id: user.id)
+    end
   end
 
   private

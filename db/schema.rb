@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180806202221) do
+ActiveRecord::Schema.define(version: 20180813215552) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -73,6 +73,7 @@ ActiveRecord::Schema.define(version: 20180806202221) do
     t.integer "version"
     t.integer "workflow_step_id"
     t.integer "user_id"
+    t.integer "period_id"
     t.index ["component_id"], name: "index_documents_on_component_id"
     t.index ["edit_id"], name: "index_documents_on_edit_id", unique: true
     t.index ["lms_course_id"], name: "index_documents_on_lms_course_id"
@@ -138,6 +139,20 @@ ActiveRecord::Schema.define(version: 20180806202221) do
     t.index ["slug", "parent_id"], name: "index_organizations_on_slug_and_parent_id", unique: true
   end
 
+  create_table "periods", id: :serial, force: :cascade do |t|
+    t.string "slug"
+    t.string "name"
+    t.integer "organization_id"
+    t.datetime "start_date"
+    t.integer "duration"
+    t.string "cycle"
+    t.integer "sequence"
+    t.boolean "is_default"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.index ["slug", "organization_id"], name: "index_periods_on_slug_and_organization_id", unique: true
+  end
+
   create_table "que_jobs", primary_key: ["queue", "priority", "run_at", "job_id"], force: :cascade, comment: "3" do |t|
     t.integer "priority", limit: 2, default: 100, null: false
     t.datetime "run_at", default: -> { "now()" }, null: false
@@ -169,20 +184,6 @@ ActiveRecord::Schema.define(version: 20180806202221) do
     t.index ["slug", "organization_id"], name: "index_templates_on_slug_and_organization_id", unique: true
   end
 
-  create_table "terms", id: :serial, force: :cascade do |t|
-    t.string "slug"
-    t.string "name"
-    t.integer "organization_id"
-    t.datetime "start_date"
-    t.integer "duration"
-    t.string "cycle"
-    t.integer "sequence"
-    t.boolean "is_default"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.index ["slug", "organization_id"], name: "index_terms_on_slug_and_organization_id", unique: true
-  end
-
   create_table "user_assignments", id: :serial, force: :cascade do |t|
     t.integer "user_id"
     t.integer "organization_id"
@@ -203,6 +204,7 @@ ActiveRecord::Schema.define(version: 20180806202221) do
     t.datetime "activated_at"
     t.string "reset_digest"
     t.datetime "reset_sent_at"
+    t.boolean "archived", default: false
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 

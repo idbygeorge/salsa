@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   get '/admin', to: 'admin#landing', as: 'admin'
 
   namespace :admin do
+    resources :periods
     get "report", to: 'auditor#report', as: 'auditor_report'
     post "report", to: 'auditor#report', as: 'auditor_generate_report'
     get "download", to: 'auditor#download', as: 'auditor_download'
@@ -63,6 +64,8 @@ Rails.application.routes.draw do
 
     scope 'organization/:slug' do
       resources :workflow_steps, constraints: { slug: /.+/ }
+      post 'start_workflow', to: 'organizations#start_workflow', as: 'start_workflow', action: "start_workflow", constraints: { slug: /.+/ }
+      get 'start_workflow_form', to: 'organizations#start_workflow_form', as: 'start_workflow_form', action: "start_workflow_form", constraints: { slug: /.+/ }
       resources :components, param: :component_slug, constraints: { component_slug: /.*/, slug: /.+/ }
       get 'load_components', to: 'components#load_components', as: 'load_components', constraints: { slug: /.+/ }
       post 'import_components', to: 'components#import_components', as: 'import_components', constraints: { slug: /.+/ }
