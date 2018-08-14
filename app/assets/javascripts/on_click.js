@@ -122,7 +122,7 @@
         });
 
 
-        $("#controlPanel").on("click", "input:not(:radio),dt", function() {
+        $("#controlPanel").on("click", ":not(.dropdown-control) input,dt", function() {
             var result = "";
             var controlParent = $(this).closest("[data-method]");
             var control = controlParent.data();
