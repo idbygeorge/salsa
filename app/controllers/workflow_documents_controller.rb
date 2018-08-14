@@ -72,7 +72,7 @@ class WorkflowDocumentsController < ApplicationController
   private
 
   def document_params
-    params.require(:document).permit(:name, :lms_course_id, :workflow_step_id, :user_id)
+    params.require(:document).permit(:name, :lms_course_id, :workflow_step_id, :user_id, :period_id)
   end
 
   def get_documents user, documents
