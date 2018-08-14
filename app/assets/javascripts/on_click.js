@@ -122,7 +122,7 @@
         });
 
 
-        $("#controlPanel").on("click", "input:not(:radio),dt", function() {
+        $("#controlPanel").on("click", "input:not(:radio),#gradeUnitsPercent,#gradeUnitsPoints,dt", function() {
             var result = "";
             var controlParent = $(this).closest("[data-method]");
             var control = controlParent.data();
