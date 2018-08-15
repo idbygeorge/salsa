@@ -107,14 +107,12 @@
           parentList.data({ element: "li", text: $(this).text(), meta: identifier }).find(".ui-state-active").click();
 
           if(context.unique) {
-              //$('[data-meta="'+identifier+'"]', parentList).remove();
               $('[data-meta="'+identifier+'"]', '#topBar').remove();
 
               if($('#topBar li a').length == 0) {
                   $('#topBar').remove();
                   $("#container").removeAttr("style");
 
-                  $(context.source).removeClass('ui-state-active').addClass('ui-state-disabled');
               }
           }
 
@@ -200,7 +198,7 @@
                 var url = $('#tb_save').attr('href');
 
                 if(!url) {
-                    url = $('#tb_share').prop('href');
+                    url = $('#tb_share').prop('href').split("?")[0];
                 }
 
                 var content = $('#page-data').html();
