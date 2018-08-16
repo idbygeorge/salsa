@@ -31,7 +31,7 @@ class WorkflowDocumentsController < ApplicationController
 
   def update
     get_document params[:id]
-    if params[:document][:workflow_step_id] != @document.workflow_step_id && params[:document][:user_id] != nil
+    if params[:document][:workflow_step_id] != @document.workflow_step_id && !params[:document][:workflow_step_id].blank? && !params[:document][:user_id].blank?
       wfs = WorkflowStep.find(params[:document][:workflow_step_id])
       if wfs.step_type == "start_step"
         user = User.find(params[:document][:user_id])
