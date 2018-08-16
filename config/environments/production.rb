@@ -64,6 +64,7 @@ Rails.application.configure do
 
 
   # SMTP settings for amazon SES
+  config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     :address => ENV["SES_SMTP_ADDRESS"],
     :port => 587,

@@ -107,14 +107,12 @@
           parentList.data({ element: "li", text: $(this).text(), meta: identifier }).find(".ui-state-active").click();
 
           if(context.unique) {
-              //$('[data-meta="'+identifier+'"]', parentList).remove();
               $('[data-meta="'+identifier+'"]', '#topBar').remove();
 
               if($('#topBar li a').length == 0) {
                   $('#topBar').remove();
                   $("#container").removeAttr("style");
 
-                  $(context.source).removeClass('ui-state-active').addClass('ui-state-disabled');
               }
           }
 
@@ -122,7 +120,7 @@
         });
 
 
-        $("#controlPanel").on("click", "input:not(:radio),dt", function() {
+        $("#controlPanel").on("click", ":not(.dropdown-control) input,dt", function() {
             var result = "";
             var controlParent = $(this).closest("[data-method]");
             var control = controlParent.data();
