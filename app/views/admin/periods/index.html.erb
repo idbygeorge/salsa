@@ -28,7 +28,7 @@
           <td><%= period.cycle %></td>
           <td><%= period.sequence %></td>
           <td><%= period.is_default %></td>
-          <td><%= link_to t('.edit', :default => t("helpers.links.edit")), admin_period_path(period.id), :class => 'btn btn-default btn-xs' %></td>
+          <td><%= link_to t('.edit', :default => t("helpers.links.edit")), edit_admin_period_path(period.id), :class => 'btn btn-default btn-xs' %></td>
         </tr>
     <% end %>
   </tbody>
