@@ -14,7 +14,7 @@ class Document < ApplicationRecord
 
   def assigned_to? user
     result = false
-    if self.workflow_step&.component_id && user != nil && self.workflow_step.step_type != "end_step"
+    if self.workflow_step&.component_id && user != nil && self.workflow_step.step_type != "end_step" && user.user_assignments.where.not(organization_id: nil).exists?
       component = self.workflow_step.component
       user_assignment = user.user_assignments.find_by(organization_id:self.organization_id)
       user_org = user_assignment.organization

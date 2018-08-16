@@ -49,9 +49,9 @@ var updateGradesPage = function(element){
     var args = {
         target: $('#grade_components')
     };
-    
+
     var grade_scale = $('#grade_scale');
-    
+
     if(grade_scale.has(element).length) {
         callbacks['validateGradeScale']({ target: grade_scale });
     }

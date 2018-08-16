@@ -9,10 +9,10 @@ class WorkflowDocumentsController < ApplicationController
   def index
     org = get_org
     user_assignment = current_user.user_assignments.find_by organization_id: org.id if current_user
-    @documents = Document.where(organization_id:org.id)
+    @documents = Document.where(organization_id:org.id).where('documents.updated_at != documents.created_at')
     if has_role("supervisor") && params[:show_completed] == "true"
       @documents = @documents.where(workflow_step_id: WorkflowStep.where(step_type:"end_step").map(&:id) )
-    elsif has_role("supervisor") && params[:show_completed] == "false"
+    elsif has_role("supervisor") && (params[:show_completed] == "false")
       @documents = @documents.where(workflow_step_id: WorkflowStep.where.not(step_type:"end_step").map(&:id) + [nil] )
     else
       @documents = get_documents(current_user, @documents)
@@ -35,7 +35,7 @@ class WorkflowDocumentsController < ApplicationController
       wfs = WorkflowStep.find(params[:document][:workflow_step_id])
       if wfs.step_type == "start_step"
         user = User.find(params[:document][:user_id])
-        WorkflowMailer.welcome_email(user,@organization,wfs.slug,component_allowed_liquid_variables).deliver_later
+        WorkflowMailer.welcome_email(user,@organization,wfs.slug,component_allowed_liquid_variables(user,@document.organization,wfs)).deliver_later
       end
     end
 

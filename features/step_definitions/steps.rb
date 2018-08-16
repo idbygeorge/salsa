@@ -96,6 +96,21 @@ end
 Given(/^there is a document on the (\w+) step in the workflow and assigned to the user$/) do |step|
   case step
   when /first/
+    @document = create(:document, workflow_step_id: @workflows.first.first.id, user_id: @user.id, organization_id: @organization.id)
+  when /second/
+    @document = create(:document, workflow_step_id: @workflows.first[1].id, user_id: @user.id, organization_id: @organization.id)
+  when /fourth/
+    @document = create(:document, workflow_step_id: @workflows.first[3].id, user_id: @user.id, organization_id: @organization.id)
+  when /last/
+    @document = create(:document, workflow_step_id: @workflows.first.last.id, user_id: @user.id, organization_id: @organization.id)
+  else
+    pending
+  end
+end
+
+Given(/^there is a document on the (\w+) step in the workflow and assigned to the current user$/) do |step|
+  case step
+  when /first/
     @document = create(:document, workflow_step_id: @workflows.first.first.id, user_id: @current_user.id, organization_id: @organization.id)
   when /second/
     @document = create(:document, workflow_step_id: @workflows.first[1].id, user_id: @current_user.id, organization_id: @organization.id)
