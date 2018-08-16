@@ -1,9 +1,9 @@
 <%= form_for(@period, url: admin_period_form_path, html: { class: "form-horizontal col-md-9" } ) do |f| %>
 
-  <% if permission.errors.any? %>
+  <% if @period.errors.any? %>
     <div class="alert alert-danger">
       <ul>
-          <% permission.errors.full_messages.each do |msg| %>
+          <% @period.errors.full_messages.each do |msg| %>
               <li><%= msg %></li>
           <% end %>
       </ul>
