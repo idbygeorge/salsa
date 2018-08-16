@@ -43,6 +43,9 @@
         <% if get_org&.enable_workflows %>
           <li class="active"><%= link_to "Workflow Documents", workflow_document_index_path %></li>
         <% end %>
+        <% if has_role('supervisor') %>
+          <li class="active"><%= link_to "Import Users", admin_import_users_path %></li>
+        <% end %>
         <li class="active"><%= link_to "Organizations", organizations_path %></li>
         <li class="logout"><%= link_to "Logout", admin_logout_path %></li>
       </ul>
