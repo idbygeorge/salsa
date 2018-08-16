@@ -10,4 +10,13 @@ class User < ApplicationRecord
     has_secure_password
 
     has_many :user_assignments
+
+    def activate
+      if !self.activated
+        self.activation_digest = nil
+        self.activated_at = DateTime.now
+        self.activated = true
+        self.save
+      end
+    end
 end

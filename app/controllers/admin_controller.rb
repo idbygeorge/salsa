@@ -3,6 +3,8 @@ class AdminController < ApplicationController
     :landing,
     :login,
     :logout,
+    :user_activation,
+    :create_user,
     :authenticate,
     :canvas_accounts,
     :canvas_courses,
@@ -193,6 +195,28 @@ class AdminController < ApplicationController
     redirect_to root_path;
   end
 
+  def create_user
+    user = User.find_by(activation_digest: (params[:id]))
+    if user
+      user.update user_params
+      user.activate
+      redirect_to admin_path
+    else
+      flash[:error] = "Sorry. User does not exist"
+      redirect_to root_url
+    end
+  end
+
+  def user_activation
+    user = User.find_by(activation_digest: (params[:id]))
+    if user
+  		render action: :user_activation, layout: false
+    else
+      flash[:error] = "Sorry. User does not exist"
+      redirect_to root_url
+    end
+  end
+
   def search page=params[:page], per=25
     search_document_text = ''
 
@@ -228,4 +252,10 @@ class AdminController < ApplicationController
       @redirect_url = "#{@lms_client.oauth_url(@callback_url)}"
     end
   end
+  private
+
+  def user_params
+    params.require(:user).permit(:name, :password, :password_confirmation)
+  end
+
 end
