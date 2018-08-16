@@ -188,8 +188,9 @@ class AdminController < ApplicationController
   end
 
   def logout
+    notice = flash[:notice]
     reset_session
-
+    flash[:notice] = notice
     redirect_to root_path;
   end
 

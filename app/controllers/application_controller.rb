@@ -2,10 +2,22 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
+  before_action :redirect_if_user_archived, except:[:logout]
 
   include ApplicationHelper
 
   protected
+
+  def redirect_if_user_archived
+    if session[:authenticated_user]
+      user = User.find_by(id: session[:authenticated_user], archived: false)
+      if !user
+        flash[:notice] = "You have been logged out because your account has been deactivated"
+        redirect_to admin_logout_path
+      end
+    end
+
+  end
 
   def component_allowed_liquid_variables user=nil, organization=nil, step_slug=nil
     {"user_name" => "#{user&.name}","user_email" => "#{user&.email}", "organization_name" => "#{organization&.name}", "step_slug" => "#{step_slug}"}
@@ -25,7 +37,7 @@ class ApplicationController < ActionController::Base
 
   def current_user
     if session[:authenticated_user]
-      User.find(session[:authenticated_user])
+      User.find_by(id: session[:authenticated_user], archived: false)
     end
   end
 
