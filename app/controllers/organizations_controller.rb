@@ -5,7 +5,7 @@ class OrganizationsController < AdminController
       :show,
       :index
   ]
-  before_action :get_organizations, only: [:index, :new, :edit, :show]
+  before_action :get_organizations, only: [:index, :new, :edit, :show, :start_workflow_form]
   layout 'admin'
   def index
     get_documents
@@ -84,6 +84,33 @@ class OrganizationsController < AdminController
 
   def import
 
+  end
+
+  def start_workflow_form
+    @organization = get_org
+    @workflow_steps = WorkflowStep.where(organization_id: @organization.organization_ids+[@organization.id], step_type: "start_step")
+    user_ids = @organization.user_assignments.map(&:user_id)
+    @users = User.find_by(id: user_ids)
+    @periods = Period.where(organization_id: @organization.id)
+  end
+
+  def start_workflow
+    params.require("Start Workflow").permit(:document_name,:starting_workflow_step_id,:period_id)
+    start_workflow_params = params["Start Workflow"]
+    if start_workflow_params[:period_id] == "" || start_workflow_params[:starting_workflow_step_id] == "" || start_workflow_params[:document_name] == ""
+      flash[:error] = "all fields must be filled"
+      return redirect_back(fallback_location: start_workflow_form_path)
+    end
+    organization = get_org
+    user_ids = organization.user_assignments.where(role:"staff").map(&:user_id)
+    users = User.where(id: user_ids)
+    users.each do |user|
+      document = Document.create(name: start_workflow_params[:document_name], workflow_step_id: start_workflow_params[:starting_workflow_step_id].to_i, organization_id: organization.id, period_id: start_workflow_params[:period_id].to_i, user_id: user.id)
+      WorkflowMailer.welcome_email(user,organization,document.workflow_step.slug,component_allowed_liquid_variables(user,organization,document.workflow_step.slug)).deliver_later
+    end
+
+    flash[:notice] = "successfully started workflow for period"
+    return redirect_back(fallback_location: start_workflow_form_path)
   end
 
   private

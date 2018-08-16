@@ -3,6 +3,8 @@ class Organization < ApplicationRecord
 
   has_many :documents
   has_many :components
+  has_many :periods
+  has_many :user_assignments
   has_many :workflow_steps
 
   default_scope { order('lft, rgt') }
