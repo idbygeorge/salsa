@@ -20,7 +20,7 @@
           <td><%= link_to document.name, document_path(document.view_id) %></td>
           <td><%= link_to(document.organization.slug, document_path(document.view_id)) if document.organization %></td>
           <td><%= link_to(document.lms_course_id, document_path(document.view_id)) if document.lms_course_id %></td>
-          <td><%= link_to(document.workflow_step_id, document_path(document.view_id)) if document.workflow_step_id %></td>
+          <td><%= link_to(document.workflow_step.slug, document_path(document.view_id)) if document.workflow_step_id %></td>
           <td><%= link_to(document.user_id, document_path(document.view_id)) if document.user_id %></td>
           <td>
             <%= link_to "Versions",

@@ -11,6 +11,45 @@ class Document < ApplicationRecord
   validates :lms_course_id, uniqueness: { scope: :organization_id, message: "is already in use for this organization" }, allow_nil: true
   validates_uniqueness_of [:view_id, :edit_id, :template_id]
 
+  def assigned_to? user
+    result = false
+    if self.workflow_step&.component_id && user != nil && self.workflow_step.step_type != "end_step" && user.user_assignments.where.not(organization_id: nil).exists?
+      component = self.workflow_step.component
+      user_assignment = user.user_assignments.find_by(organization_id:self.organization_id)
+      user_org = user_assignment.organization
+      if (component.role == nil || component.role == "") && ((user_assignment.role == "supervisor" && user_org.level == component.role_organization_level) || user.id == self.user_id)
+        result = true
+      elsif component.role == "staff" && user_assignment.role == "staff" && self.user_id == user.id && self.workflow_step_id != ""
+        result = true
+      elsif component.role == "supervisor" && user_assignment.role == "supervisor" && user_assignment.cascades && user_org.level <= component.role_organization_level
+        result = true
+      elsif component.role == "supervisor" && user_assignment.role == "supervisor" && !user_assignment.cascades && user_org.level == component.role_organization_level
+        result = true
+      else
+        result = false
+      end
+    else
+      result = false
+    end
+    result
+  end
+
+  def assignee
+    if self.workflow_step_id
+      component = self.workflow_step.component
+      if component.role == "staff"
+        self.user
+      elsif component.role == "supervisor"
+        uas = UserAssignment.find_by(organization_id: self.organization_id)
+        User.find_by(user_assignment_id:ua.id)
+      else
+        nil
+      end
+    else
+      nil
+    end
+  end
+
   def normalize_blank_values
     attributes.each do |column, value|
       self[column].present? || self[column] = nil

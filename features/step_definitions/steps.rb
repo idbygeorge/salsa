@@ -50,10 +50,17 @@ end
 Given(/^there is a (\w+)$/) do |class_name|
   case class_name
   when /workflow/
-    recordA = create(:workflow_step, slug:Faker::Types.unique.rb_string, end_step: true, organization_id: @organization.id)
-    recordB = create(:workflow_step, slug:Faker::Types.unique.rb_string, next_workflow_step_id: recordA.id, organization_id: @organization.id)
-    recordC = create(:workflow_step, slug:Faker::Types.unique.rb_string, next_workflow_step_id: recordB.id, organization_id: @organization.id)
-    recordD = create(:workflow_step, slug:Faker::Types.unique.rb_string, next_workflow_step_id: recordC.id, start_step: true, organization_id: @organization.id)
+    recordA = create(:workflow_step, slug: "final_step", step_type: "end_step", organization_id: @organization.id)
+    recordB = create(:workflow_step, slug: "step_4", next_workflow_step_id:recordA.id, organization_id: @organization.id)
+    componentB = recordB.component
+    componentB.role = ""
+    componentB.save
+    recordC = create(:workflow_step, slug: "step_3", next_workflow_step_id: recordB.id, organization_id: @organization.id)
+    recordD = create(:workflow_step, slug: "step_2", next_workflow_step_id: recordC.id, organization_id: @organization.id)
+    componentD = recordD.component
+    componentD.role = "supervisor"
+    componentD.save
+    recordE = create(:workflow_step, slug: "step_1", next_workflow_step_id: recordD.id, step_type: "start_step", organization_id: @organization.id)
     @workflows = WorkflowStep.workflows(@organization.id)
   when /document/ || /canvas_document/
     record = create(class_name, organization_id: @organization.id)
@@ -89,12 +96,35 @@ end
 Given(/^there is a document on the (\w+) step in the workflow and assigned to the user$/) do |step|
   case step
   when /first/
-    @document = create(:document, workflow_step_id: @workflows.first.first.id, user_id: @current_user.id)
+    @document = create(:document, workflow_step_id: @workflows.first.first.id, user_id: @user.id, organization_id: @organization.id)
+  when /second/
+    @document = create(:document, workflow_step_id: @workflows.first[1].id, user_id: @user.id, organization_id: @organization.id)
+  when /fourth/
+    @document = create(:document, workflow_step_id: @workflows.first[3].id, user_id: @user.id, organization_id: @organization.id)
   when /last/
-    @document = create(:document, workflow_step_id: @workflows.first.last.id, user_id: @current_user.id)
+    @document = create(:document, workflow_step_id: @workflows.first.last.id, user_id: @user.id, organization_id: @organization.id)
   else
     pending
   end
+end
+
+Given(/^there is a document on the (\w+) step in the workflow and assigned to the current user$/) do |step|
+  case step
+  when /first/
+    @document = create(:document, workflow_step_id: @workflows.first.first.id, user_id: @current_user.id, organization_id: @organization.id)
+  when /second/
+    @document = create(:document, workflow_step_id: @workflows.first[1].id, user_id: @current_user.id, organization_id: @organization.id)
+  when /fourth/
+    @document = create(:document, workflow_step_id: @workflows.first[3].id, user_id: @current_user.id, organization_id: @organization.id)
+  when /last/
+    @document = create(:document, workflow_step_id: @workflows.first.last.id, user_id: @current_user.id, organization_id: @organization.id)
+  else
+    pending
+  end
+end
+
+Given("debugger") do
+  debugger
 end
 
 Given("the reports are generated") do
@@ -118,12 +148,13 @@ end
 When(/^I click the "(.*?)" link$/) do |string|
   case string
   when /tb_share/
-    click_link(string)
+    find(string).click
     @document.workflow_step_id = @document.workflow_step.next_workflow_step_id
   when /Edit Component/
     click_on("edit_#{@component.slug}")
+  when /#edit_document/
+    find(string).click
   else
-    save_page
     click_link(string)
   end
 end
@@ -214,8 +245,12 @@ Then(/^I should be on the (\w+) page$/) do |string|
   expect(page.current_url).to have_content(string)
 end
 
-Then("I should see {string}") do |string|
+Then(/^I should see "(.*?)"$/) do |string|
   expect(page).to have_content(string)
+end
+
+Then(/^I should not see "(.*?)"$/) do |string|
+  expect(page).to have_no_content(string)
 end
 
 Given("there is a {string}") do |table|
@@ -224,7 +259,7 @@ Given("there is a {string}") do |table|
 end
 
 Given("the user has a document with a workflow step") do
-  wf_start_step = @workflows[1].detect {|wf| wf["start_step"] == true}
+  wf_start_step = @workflows[1].detect {|wf| wf["step_type"] == "start_step"}
   @document = create(:document, organization_id: @organization.id, user_id: @user, workflow_step_id: wf_start_step.id )
   expect(@document.workflow_step_id).to have_content(wf_start_step.id)
 end

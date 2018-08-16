@@ -20,21 +20,17 @@ I want to have a defined set of workflow steps to go thrugh
         | slug | step_1 |
         | name | Step 1 |
         | next_workflow_step_id | |
-        | start_step | true |
-        | end_step | true |
      And I click on "Create Workflow step"
      Then I should see "Workflow step was successfully created."
 
   Scenario: update workflow step
      Given there is a workflow_step on the organization
      And I am on the workflow_steps index page for the organization
-     And I click the "Edit" link
+    When I click the "Edit" link
      When I fill in the workflow_step form with:
         | slug | step_54|
         | name | Step 54 |
         | next_workflow_step_id | |
-        | start_step | false |
-        | end_step | false |
      And I click on "Update Workflow step"
      Then I should see "Workflow step was successfully updated."
 
@@ -45,13 +41,26 @@ I want to have a defined set of workflow steps to go thrugh
      Then I should see "Workflow step was successfully destroyed."
 
   @javascript
-  Scenario: review employee's document
-     Given there is a user with the role of staff
-     And there is a workflow
-     And the user has a document with a workflow_step of 4
-     And I am on the "/workflow/documents" page
-     And I save the page
-     When I click the "Edit" link
-     # Then I should not be able to edit the employee section
-     And I click the "tb_share" link
-     Then the document workflow_step_id should be nil
+  Scenario: complete step_4
+    Given there is a workflow
+    And there is a document on the fourth step in the workflow and assigned to the current user
+    And I am on the "/workflow/documents" page
+    When I click the "#edit_document" link
+    # TODO add javascript tag so we can save the document
+    And I click the "#tb_share" link
+    Then the document should be on step_5
+
+  @javascript
+  Scenario: fail to complete step_1
+    Given there is a workflow
+    And there is a user with the role of staff
+    And there is a document on the first step in the workflow and assigned to the user
+    And I am on the "/workflow/documents" page
+    Then I should not see "Edit"
+
+  @javascript
+  Scenario: fail to complete final_step
+    Given there is a workflow
+    And there is a document on the last step in the workflow and assigned to the current user
+    And I am on the "/workflow/documents" page
+    Then I should not see "Edit"

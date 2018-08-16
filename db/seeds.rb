@@ -36,11 +36,32 @@ orgs.each do |org|
 
     )
     wfs.next_workflow_step_id = wfsteps.last.id if wfsteps.last
-    wfs.start_step = true if d==1
-    wfs.end_step = true if d==4
+    wfs.step_type = "start_step" if d==1
+    wfs.step_type = "end_step" if d==4
     wfs.save
     wfsteps.push wfs
   end
+  wfsteps.each do |workflow_step|
+    Component.find_or_create_by(
+      organization_id: org.id,
+      name: workflow_step.slug,
+      slug: workflow_step.slug,
+      description: "",
+      category: "document",
+      layout: "this is a step layout",
+      format: "html"
+    )
+    Component.find_or_create_by(
+      organization_id: org.id,
+      name: workflow_step.slug + " Mailer",
+      slug: workflow_step.slug + "_mailer",
+      description: "",
+      category: "document",
+      layout: "this is a step email",
+      format: "html"
+    )
+  end
+
   file_paths.each do |file_path|
     Component.create(
       organization_id: org.id,
@@ -57,7 +78,7 @@ orgs.each do |org|
     doc = Document.create(
       name:"Document #{d}",
       organization_id: org.id,
-      lms_course_id: "CS#{d}",
+      lms_course_id: "123#{d}",
       lms_published_at: DateTime.now,
       created_at: DateTime.now.ago(10),
       updated_at: DateTime.now,
@@ -67,7 +88,7 @@ orgs.each do |org|
     DocumentMeta.create(
       document_id: doc.id,
       key: "account_id",
-      value: "CLS",
+      value: "123123",
       lms_organization_id: "asdasfsgsadf",
       lms_course_id: doc.lms_course_id,
       root_organization_id: org[:id].to_s

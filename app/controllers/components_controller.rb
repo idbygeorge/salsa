@@ -10,6 +10,7 @@ class ComponentsController < ApplicationController
   before_action :get_roles
 
   def index
+    @available_liquid_variables = component_allowed_liquid_variables
     @components = @organization.components
 
     available_component_formats
@@ -22,11 +23,13 @@ class ComponentsController < ApplicationController
   def new
     @component = Component.new
     @valid_slugs = valid_slugs(@component.slug)
-
+    @available_liquid_variables = component_allowed_liquid_variables
     available_component_formats
   end
 
   def create
+
+    @available_liquid_variables = component_allowed_liquid_variables
     @component = Component.new component_params
     @valid_slugs = valid_slugs(@component.slug)
     @component[:organization_id] = @organization[:id]
@@ -49,6 +52,7 @@ class ComponentsController < ApplicationController
   end
 
   def update
+    @available_liquid_variables = component_allowed_liquid_variables
     available_component_formats
 
     @component = Component.find_by! slug: params[:component_slug], organization: @organization, format: @available_component_formats
@@ -66,10 +70,12 @@ class ComponentsController < ApplicationController
   end
 
   def show
+    @available_liquid_variables = component_allowed_liquid_variables
     edit
   end
 
   def edit
+    @available_liquid_variables = component_allowed_liquid_variables
     available_component_formats
     @component = Component.find_by! slug: params[:component_slug], organization: @organization, format: @available_component_formats
     @valid_slugs = valid_slugs(@component.slug)
@@ -84,9 +90,9 @@ class ComponentsController < ApplicationController
     Zip::File.open(zipfile_path, Zip::File::CREATE) do |zipfile|
       @components.each do |component|
         if component.format == "erb"
-          zipfile.get_output_stream("#{component.name}.html.#{component.format}"){ |os| os.write component.layout }
+          zipfile.get_output_stream("#{component.slug}.html.#{component.format}"){ |os| os.write component.layout }
         else
-          zipfile.get_output_stream("#{component.name}.#{component.format}"){ |os| os.write component.layout }
+          zipfile.get_output_stream("#{component.slug}.#{component.format}"){ |os| os.write component.layout }
         end
       end
     end
@@ -103,7 +109,7 @@ class ComponentsController < ApplicationController
         content = file.get_input_stream.read
         component = Component.find_or_initialize_by(
           organization_id: @organization.id,
-          slug: file.name.remove(/\..*/, /\b_/).gsub(/ /, '_'),
+          slug: file.name.remove(/\..*/, /\b_/).gsub(/ /, '_')
         )
         if params[:overwrite] == "true" || component.new_record?
           component.update(
@@ -149,11 +155,16 @@ class ComponentsController < ApplicationController
   end
 
   def valid_slugs component_slug
-    if action_name == "new"
-      ['salsa', 'section_nav', 'control_panel', 'footer', 'dynamic_content_1', 'dynamic_content_2', 'dynamic_content_3']
-    else
-      [component_slug, 'salsa', 'section_nav', 'control_panel', 'footer', 'dynamic_content_1', 'dynamic_content_2', 'dynamic_content_3']
+    org = get_org
+    slugs = ['salsa', 'section_nav', 'control_panel', 'footer', 'dynamic_content_1', 'dynamic_content_2', 'dynamic_content_3', 'welcome_email']
+    if action_name != "new"
+      slugs.push component_slug
     end
+    if org.enable_workflows
+      wfsteps = WorkflowStep.where(organization_id: org.organization_ids+[org.id])
+      slugs += wfsteps.map(&:slug).map! {|x| x + "_mailer" }
+    end
+    return slugs.delete_if { |a| org.components.map(&:slug).include?(a) }
   end
 
   def get_organization
@@ -161,14 +172,16 @@ class ComponentsController < ApplicationController
   end
 
   def get_organization_levels
-     organization_levels = @organization.parents.map(&:level) + [@organization.level] + @organization.children.map(&:level)
-     @organization_levels = organization_levels.sort
+     @orgs = @organization.parents.push(@organization) + @organization.children
+     organization_levels = @orgs.map { |h| h.slice(:slug, :level).values }
+     @organization_levels = organization_levels.sort {|a,b|  a[1] <=> b[1] }
   end
+
   def available_component_formats
     if has_role('admin')
-      @available_component_formats = ['html','erb','haml'];
+      @available_component_formats = ['html','erb','haml','liquid',nil];
     else
-      @available_component_formats = ['html'];
+      @available_component_formats = ['html','liquid',nil];
     end
   end
 
@@ -180,6 +193,7 @@ class ComponentsController < ApplicationController
       :slug,
       :description,
       :category,
+      :subject,
       :layout,
       :format,
       :role,
