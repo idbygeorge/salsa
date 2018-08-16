@@ -68,7 +68,7 @@ Rails.application.routes.draw do
     get "organization/republish/:slug", to: 'republish#update_lock', as: 'republish_update', constraints: { slug: /.*/ }
 
     scope 'organization/:slug' do
-      resources :periods
+      resources :periods, constraints: {slug: /.+/ }
       resources :workflow_steps, constraints: { slug: /.+/ }
       post 'start_workflow', to: 'organizations#start_workflow', as: 'start_workflow', action: "start_workflow", constraints: { slug: /.+/ }
       get 'start_workflow_form', to: 'organizations#start_workflow_form', as: 'start_workflow_form', action: "start_workflow_form", constraints: { slug: /.+/ }
