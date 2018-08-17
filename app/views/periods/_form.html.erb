@@ -1,6 +1,7 @@
 <%= form_for(@period, url: period_form_path, html: { class: "form-horizontal col-md-9" } ) do |f| %>
+
   <% if @period.errors.any? %>
-    <div id="error_expl" class="alert alert-danger">
+    <div class="alert alert-danger">
       <ul>
       <% @period.errors.full_messages.each do |msg| %>
         <li><%= msg %></li>

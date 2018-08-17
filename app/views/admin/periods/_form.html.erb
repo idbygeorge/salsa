@@ -3,11 +3,11 @@
   <% if @period.errors.any? %>
     <div class="alert alert-danger">
       <ul>
-          <% @period.errors.full_messages.each do |msg| %>
-              <li><%= msg %></li>
-          <% end %>
+        <% @period.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+        <% end %>
       </ul>
-  </div>
+    </div>
   <% end %>
 
   <div class="form-group">

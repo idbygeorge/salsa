@@ -9,12 +9,12 @@
   <dd><%= @period.name %></dd>
   <dt><strong><%= model_class.human_attribute_name(:slug) %>:</strong></dt>
   <dd><%= @period.slug %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:organizaiton_id) %>:</strong></dt>
+  <dt><strong><%= model_class.human_attribute_name(:organization_id) %>:</strong></dt>
   <dd><%= @period.organization.slug if @period.organization_id %></dd>
   <dt><strong><%= model_class.human_attribute_name(:start_date) %>:</strong></dt>
   <dd><%= @period.start_date %></dd>
   <dt><strong><%= model_class.human_attribute_name(:duration) %>:</strong></dt>
-  <dd><%= @period.duration %></dd>
+  <dd><%= @period.duration.to_s + " days" if @period.duration %></dd>
   <dt><strong><%= model_class.human_attribute_name(:cycle) %>:</strong></dt>
   <dd><%= @period.cycle %></dd>
   <dt><strong><%= model_class.human_attribute_name(:sequence) %>:</strong></dt>
@@ -22,7 +22,7 @@
   <dt><strong><%= model_class.human_attribute_name(:is_default) %>:</strong></dt>
   <dd><%= @period.is_default %></dd
 </dl>
-
+orga
 <%= link_to t('.back', :default => t("helpers.links.back")),
               periods_path(params[:slug]), :class => 'btn btn-default'  %>
 <%= link_to t('.edit', :default => t("helpers.links.edit")),
