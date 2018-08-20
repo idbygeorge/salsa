@@ -10,8 +10,6 @@
       <th><%= model_class.human_attribute_name(:organization) %></th>
       <th><%= model_class.human_attribute_name(:start_date) %></th>
       <th><%= model_class.human_attribute_name(:duration) %></th>
-      <th><%= model_class.human_attribute_name(:cycle) %></th>
-      <th><%= model_class.human_attribute_name(:sequence) %></th>
       <th><%= model_class.human_attribute_name(:is_default) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
@@ -25,8 +23,6 @@
           <td><%= period.organization.slug if period.organization_id%></td>
           <td><%= period.start_date %></td>
           <td><%= period.duration.to_s + " days" if period.duration %></td>
-          <td><%= period.cycle %></td>
-          <td><%= period.sequence %></td>
           <td><%= period.is_default %></td>
           <td><%= link_to t('.edit', :default => t("helpers.links.edit")), edit_period_path(params[:slug],period.id), :class => 'btn btn-default btn-xs' %></td>
         </tr>

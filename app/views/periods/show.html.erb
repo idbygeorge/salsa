@@ -15,10 +15,6 @@
   <dd><%= @period.start_date %></dd>
   <dt><strong><%= model_class.human_attribute_name(:duration) %>:</strong></dt>
   <dd><%= @period.duration.to_s + " days" if @period.duration %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:cycle) %>:</strong></dt>
-  <dd><%= @period.cycle %></dd>
-  <dt><strong><%= model_class.human_attribute_name(:sequence) %>:</strong></dt>
-  <dd><%= @period.sequence %></dd>
   <dt><strong><%= model_class.human_attribute_name(:is_default) %>:</strong></dt>
   <dd><%= @period.is_default %></dd
 </dl>

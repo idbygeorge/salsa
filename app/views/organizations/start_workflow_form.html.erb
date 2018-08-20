@@ -21,6 +21,11 @@
       </div>
     </div>
 
+    <div class="form-group">
+      <%= f.label :start_for_sub_organizations, class: "control-label" %>
+      <%= f.check_box :start_for_sub_organizations, checked: true,class:"btn" %>
+    </div>
+
 <div class="form-group">
   <%= f.submit "Start Workflow for period", class: 'btn btn-default' %>
 </div>
