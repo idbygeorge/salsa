@@ -38,10 +38,10 @@ class WorkflowDocumentsController < ApplicationController
   def update
     get_document params[:id]
     if params[:document][:workflow_step_id] != @document.workflow_step_id && !params[:document][:workflow_step_id].blank? && !params[:document][:user_id].blank?
-      wfs = WorkflowStep.find(params[:document][:workflow_step_id])
-      if wfs.step_type == "start_step"
-        user = User.find(params[:document][:user_id])
-        WorkflowMailer.welcome_email(user,@organization,wfs.slug,component_allowed_liquid_variables(@document.workflow_step,User.find(params[:document][:user_id]),@organization)).deliver_later
+      @wfs = WorkflowStep.find(params[:document][:workflow_step_id])
+      if @wfs.step_type == "start_step"
+        @user = User.find(params[:document][:user_id])
+        WorkflowMailer.welcome_email(@user,@organization,@wfs.slug,component_allowed_liquid_variables(@document.workflow_step,User.find(params[:document][:user_id]),@organization)).deliver_later
       end
     end
 
