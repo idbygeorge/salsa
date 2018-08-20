@@ -46,6 +46,6 @@ class Admin::PeriodsController < AdminController
 
   private
   def period_params
-    params.require(:period).permit(:name, :slug, :organization_id, :start_date, :duration, :cycle, :sequence, :is_default)
+    params.require(:period).permit(:name, :slug, :organization_id, :start_date, :duration, :is_default)
   end
 end

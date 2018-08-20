@@ -95,22 +95,29 @@ class OrganizationsController < AdminController
   end
 
   def start_workflow
-    params.require("Start Workflow").permit(:document_name,:starting_workflow_step_id,:period_id)
+    params.require("Start Workflow").permit(:document_name,:starting_workflow_step_id,:period_id,:start_for_sub_organizations)
     start_workflow_params = params["Start Workflow"]
     if start_workflow_params[:period_id] == "" || start_workflow_params[:starting_workflow_step_id] == "" || start_workflow_params[:document_name] == ""
       flash[:error] = "all fields must be filled"
       return redirect_back(fallback_location: start_workflow_form_path)
     end
     organization = get_org
-    user_ids = organization.user_assignments.where(role:"staff").map(&:user_id)
-    users = User.where(id: user_ids)
-    users.each do |user|
-      document = Document.create(name: start_workflow_params[:document_name], workflow_step_id: start_workflow_params[:starting_workflow_step_id].to_i, organization_id: organization.id, period_id: start_workflow_params[:period_id].to_i, user_id: user.id)
-      WorkflowMailer.welcome_email(user,organization,document.workflow_step.slug,component_allowed_liquid_variables(document.workflow_step.slug, user, organization)).deliver_later
+    if start_workflow_params[:start_for_sub_organizations]
+      organizations = organization.children + [organization]
+    else
+      organizations = [organization]
+    end
+    organizations.each do |org|
+      user_ids = org.user_assignments.where(role:"staff").map(&:user_id)
+      users = User.where(id: user_ids)
+      users.each do |user|
+        document = Document.create(name: start_workflow_params[:document_name], workflow_step_id: start_workflow_params[:starting_workflow_step_id].to_i, organization_id: org.id, period_id: start_workflow_params[:period_id].to_i, user_id: user.id)
+        WorkflowMailer.welcome_email(document, request.env["SERVER_NAME"], user, org, document.workflow_step.slug,component_allowed_liquid_variables(document.workflow_step.slug, user, org)).deliver_later
+      end
     end
 
     flash[:notice] = "successfully started workflow for period"
-    return redirect_back(fallback_location: start_workflow_form_path)
+    return redirect_to start_workflow_form_path
   end
 
   private
