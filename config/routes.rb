@@ -38,7 +38,11 @@ Rails.application.routes.draw do
     get "login/(:slug)", to: 'admin#login', as: 'admin_login', constraints: { slug: /.*/ }
     post "login/(:slug)", to: 'admin#authenticate', as: 'admin_authenticate', constraints: { slug: /.*/ }
 
-    resources :users, as: 'admin_users', controller: 'admin_users'
+    resources :users, as: 'admin_users', controller: 'admin_users' do
+      post "archive"
+      post "restore"
+    end
+    
     get "user_activation/:id", to: 'admin#user_activation', as: 'admin_user_activation'
     post "create_user/:id", to: 'admin#create_user', as: 'admin_create_user'
 

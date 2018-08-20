@@ -67,7 +67,7 @@ class AdminController < ApplicationController
         return render action: :login, layout: false
     end
 
-    user = User.where(email: params[:user][:email]).first
+    user = User.where(archived: false,email: params[:user][:email]).first
 
     unless user
         flash[:error] = 'No account matches the email provided'
@@ -190,8 +190,9 @@ class AdminController < ApplicationController
   end
 
   def logout
+    notice = flash[:notice]
     reset_session
-
+    flash[:notice] = notice
     redirect_to root_path;
   end
 

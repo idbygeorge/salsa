@@ -26,11 +26,16 @@
     <th>
       Role
     </th>
-    <th>
-      Organization
-    </th>
+    <% if has_role("admin") %>
+      <th>
+        Organization
+      </th>
+    <% end %>
     <th>
       Cascades
+    </th>
+    <th>
+      Actions
     </th>
   </tr>
 </thead>
@@ -47,14 +52,16 @@
 
     <%= f.select(:role, @roles, {:include_blank => ''}) %>
   </td>
-  <td>
-    <% if @organizations %>
-      <%= f.select(:organization_id, @organizations.collect {|o| [ o.name + ' (' + o.slug + ')', o.id ] }, include_blank: true) %>
-    <% else %>
-      You don't seem to belong to any organizations... contact your admin to fix this.
-    <% end %>
-  </td>
+  <% if has_role("admin") %>
+    <td>
+      <% if @organizations %>
+        <%= f.select(:organization_id, @organizations.collect {|o| [ o.name + ' (' + o.slug + ')', o.id ] }, include_blank: true) %>
+      <% else %>
+        You don't seem to belong to any organizations... contact your admin to fix this.
+      <% end %>
+    </td>
 
+  <% end %>
   <td>
     <% if permission[:cascades] == nil %>
       <%= f.radio_button :cascades, true, checked: true %>
@@ -67,11 +74,10 @@
     <%= f.label :cascades, "No" %>
   </td>
 
-  <td class="text-right">
-    <button type="submit" class="btn btn-success pull-right"><span class="glyphicon glyphicon-plus"></span> <%= action %> Access</button>
+  <td class="text">
+    <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> <%= action %> Access</button>
     <% if action != 'Add' %>
-      <br>
-      <%= link_to 'cancel', admin_user_path(id: permission[:user_id]) %>
+      <%= link_to 'cancel', admin_user_path(id: permission[:user_id]), class:"btn btn-default" %>
     <% end %>
   </td>
 </tr>
