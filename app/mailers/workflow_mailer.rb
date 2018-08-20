@@ -1,7 +1,9 @@
+include ApplicationHelper
 class WorkflowMailer < ApplicationMailer
-  def step_email document, host, user, organization, step_slug, allowed_variables
+  helper :application
+  def step_email document, user, organization, step_slug, allowed_variables
     orgs = organization.parents.push(organization)
-    allowed_variables["document_url"] = document_url(document.edit_id, host: host)
+    allowed_variables["document_url"] = document_url(document.edit_id, host: full_org_path(organization))
     workflow_step = WorkflowStep.find_by(organization_id: orgs.map(&:id), slug: step_slug)
     @mail_component = Component.find_by(organization_id: orgs.map(&:id), category: "mailer", slug: "#{step_slug}_email", format: "liquid")
     @next_component = Component.find_by(organization_id: orgs.map(&:id), slug: WorkflowStep.find_by(organization_id: orgs.map(&:id), id:workflow_step&.next_workflow_step_id).slug) if workflow_step&.next_workflow_step_id
@@ -17,9 +19,9 @@ class WorkflowMailer < ApplicationMailer
     end
   end
 
-  def welcome_email document, host, user, organization, step_slug, allowed_variables
+  def welcome_email document, user, organization, step_slug, allowed_variables
     orgs = organization.parents.push(organization)
-    allowed_variables["document_url"] = document_url(document.edit_id, host: host)
+    allowed_variables["document_url"] = document_url(document.edit_id, host: full_org_path(organization))
     @mail_component = Component.find_by(organization_id: orgs.map(&:id),category: "mailer", slug: "workflow_welcome_email", format: "liquid")
     if @mail_component
       @template = Liquid::Template.parse(@mail_component.layout)

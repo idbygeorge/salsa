@@ -1,7 +1,8 @@
 class PeriodsController < OrganizationsController
+  #Skip permissions defined in OrganizationsController
   skip_before_action :require_admin_permissions
-  skip_before_action :require_organization_admin_permissions
   skip_before_action :require_designer_permissions
+  
   before_action :get_organizations, only: [:index]
   before_action :require_organization_admin_permissions
 
