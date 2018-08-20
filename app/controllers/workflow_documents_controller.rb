@@ -19,9 +19,9 @@ class WorkflowDocumentsController < ApplicationController
       wfs = @workflow_steps.find_by(id: params[:step_filter].to_i)
       @documents = @documents.where(workflow_step_id: wfs&.id )
     else
-      @my_documents = @documents.where(user_id: current_user&.id) if current_user
+      @user_documents = @documents.where(user_id: current_user&.id) if current_user
       @documents = get_documents(current_user, @documents)
-      @my_documents = @my_documents.where.not(id: @documents.map(&:id))
+      @user_documents = @user_documents.where.not(id: @documents.map(&:id)) if @user_documents
     end
     @documents = @documents.page(params[:page]).per(params[:per])
   end

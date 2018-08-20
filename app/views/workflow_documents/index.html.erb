@@ -44,11 +44,11 @@
           </td>
         </tr>
     <% end %>
-    <% if @my_documents %>
+    <% if @user_documents %>
       <tr>
            <td colspan="4"><h1 class="text-center">Your Documents</h1></td>
       </tr>
-      <% @my_documents.each do |document| %>
+      <% @user_documents.each do |document| %>
           <tr>
             <td><%= document.name %></td>
             <td><%= document.organization&.slug %></td>
