@@ -10,7 +10,7 @@ class WorkflowMailerPreview < ActionMailer::Preview
   end
 
   def welcome_email
-    org = Organization.find(3)
+    org = Organization.first
     orgs = org.parents.push(org)
     user = User.first
     step_slug = WorkflowStep.where(organization_id: orgs.map(&:id)).first.slug

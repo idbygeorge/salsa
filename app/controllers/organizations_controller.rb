@@ -106,7 +106,7 @@ class OrganizationsController < AdminController
     users = User.where(id: user_ids)
     users.each do |user|
       document = Document.create(name: start_workflow_params[:document_name], workflow_step_id: start_workflow_params[:starting_workflow_step_id].to_i, organization_id: organization.id, period_id: start_workflow_params[:period_id].to_i, user_id: user.id)
-      WorkflowMailer.welcome_email(user,organization,document.workflow_step.slug,component_allowed_liquid_variables(user,organization,document.workflow_step.slug)).deliver_later
+      WorkflowMailer.welcome_email(user,organization,document.workflow_step.slug,component_allowed_liquid_variables(document.workflow_step.slug, user, organization)).deliver_later
     end
 
     flash[:notice] = "successfully started workflow for period"

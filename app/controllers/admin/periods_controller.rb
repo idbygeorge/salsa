@@ -1,5 +1,5 @@
 class Admin::PeriodsController < AdminController
-  before_action :get_organizations, only: [:index]
+  before_action :get_organizations, only: [:index,:show,:edit,:new]
   def index
     @periods = Period.all.page(params[:page]).per(params[:per])
   end
@@ -8,6 +8,13 @@ class Admin::PeriodsController < AdminController
     @period = Period.new
   end
 
+  def show
+    @period = Period.find(params[:id])
+  end
+
+  def edit
+    @period = Period.find(params[:id])
+  end
 
   # POST /periods
   # POST /periods.json
@@ -25,6 +32,16 @@ class Admin::PeriodsController < AdminController
   end
 
   def update
+    @period = Period.find(params[:id])
+    respond_to do |format|
+      if @period.update(period_params)
+        format.html { redirect_to admin_periods_path(params[:slug]), notice: 'Period was successfully updated.' }
+        format.json { render :index, status: :ok}
+      else
+        format.html { render :edit }
+        format.json { render json: @period.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   private

@@ -24,11 +24,11 @@
           <td><%= period.slug %></td>
           <td><%= period.organization.slug if period.organization_id %></td>
           <td><%= period.start_date %></td>
-          <td><%= period.duration %></td>
+          <td><%= period.duration.to_s + " days" if period.duration%></td>
           <td><%= period.cycle %></td>
           <td><%= period.sequence %></td>
           <td><%= period.is_default %></td>
-          <td><%= link_to t('.edit', :default => t("helpers.links.edit")), admin_period_path(period.id), :class => 'btn btn-default btn-xs' %></td>
+          <td><%= link_to t('.edit', :default => t("helpers.links.edit")), edit_admin_period_path(period.id), :class => 'btn btn-default btn-xs' %></td>
         </tr>
     <% end %>
   </tbody>
