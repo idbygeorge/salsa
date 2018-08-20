@@ -112,7 +112,7 @@ class OrganizationsController < AdminController
       users = User.where(id: user_ids)
       users.each do |user|
         document = Document.create(name: start_workflow_params[:document_name], workflow_step_id: start_workflow_params[:starting_workflow_step_id].to_i, organization_id: org.id, period_id: start_workflow_params[:period_id].to_i, user_id: user.id)
-        WorkflowMailer.welcome_email(document, request.env["SERVER_NAME"], user, org, document.workflow_step.slug,component_allowed_liquid_variables(document.workflow_step.slug, user, org)).deliver_later
+        WorkflowMailer.welcome_email(document, user, org, document.workflow_step.slug,component_allowed_liquid_variables(document.workflow_step.slug, user, org)).deliver_later
       end
     end
 

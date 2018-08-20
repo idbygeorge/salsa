@@ -16,7 +16,7 @@
   <dt><strong><%= model_class.human_attribute_name(:duration) %>:</strong></dt>
   <dd><%= @period.duration.to_s + " days" if @period.duration %></dd>
   <dt><strong><%= model_class.human_attribute_name(:is_default) %>:</strong></dt>
-  <dd><%= @period.is_default %></dd
+  <dd><%= @period.is_default %></dd>
 </dl>
 
 <%= link_to t('.back', :default => t("helpers.links.back")),

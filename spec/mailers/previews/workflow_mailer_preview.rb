@@ -8,7 +8,7 @@ class WorkflowMailerPreview < ActionMailer::Preview
     step_slug = wfs.slug
     doc = Document.create(user_id: user.id, organization_id: orgs.map(&:id),workflow_step_id: wfs.id)
     allowed_variables = {"user_name" => "#{user&.name}","user_email" => "#{user&.email}", "organization_name" => "#{org&.name}", "step_slug" => "#{step_slug}"}
-    WorkflowMailer.step_email(doc, org.slug, user,org,step_slug, allowed_variables)
+    WorkflowMailer.step_email(doc, user,org,step_slug, allowed_variables)
   end
 
   def welcome_email
@@ -19,6 +19,6 @@ class WorkflowMailerPreview < ActionMailer::Preview
     step_slug = wfs.slug
     doc = Document.create(user_id: user.id, organization_id: orgs.map(&:id),workflow_step_id: wfs.id)
     allowed_variables = {"user_name" => "#{user&.name}","user_email" => "#{user&.email}", "organization_name" => "#{org&.name}", "step_slug" => "#{step_slug}"}
-    WorkflowMailer.welcome_email(doc, org.slug, user,org,step_slug, allowed_variables)
+    WorkflowMailer.welcome_email(doc, user,org,step_slug, allowed_variables)
   end
 end

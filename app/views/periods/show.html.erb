@@ -14,9 +14,9 @@
   <dt><strong><%= model_class.human_attribute_name(:start_date) %>:</strong></dt>
   <dd><%= @period.start_date %></dd>
   <dt><strong><%= model_class.human_attribute_name(:duration) %>:</strong></dt>
-  <dd><%= @period.duration.to_s + " days" if @period.duration %></dd>
+  <dd><%= @period.duration.to_s if @period.duration %> days</dd>
   <dt><strong><%= model_class.human_attribute_name(:is_default) %>:</strong></dt>
-  <dd><%= @period.is_default %></dd
+  <dd><%= @period.is_default %></dd>
 </dl>
 orga
 <%= link_to t('.back', :default => t("helpers.links.back")),
