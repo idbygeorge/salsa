@@ -33,13 +33,15 @@ class AdminUsersController < AdminController
   def archive
     @user = User.find params[:admin_user_id]
     @user.update(archived: true)
-    return redirect_back(fallback_location: admin_users_path)
+    flash[:notice] = "#{@user.email} has been archived"
+    return redirect_to admin_users_path
   end
 
   def restore
     @user = User.find params[:admin_user_id]
     @user.update(archived: false)
-    return redirect_back(fallback_location: admin_users_path)
+    flash[:notice] = "#{@user.email} has been restored"
+    return redirect_to admin_users_path
   end
 
   def assign
