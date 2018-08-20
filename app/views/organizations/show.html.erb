@@ -42,11 +42,18 @@
           </a>
       <% end %>
 
+      <a class="btn btn-default" href="<%= periods_path(slug: @organization[:slug]) %>">
+        Manage Periods
+      </a>
 
     <% end %>
     <% if @organization.enable_workflows && has_role('supervisor', get_org) %>
       <a class="btn btn-default" href="<%= workflow_steps_path(params[:slug]) %>">
         Workflow Steps
+      </a>
+
+      <a class="btn btn-default" href="<%= start_workflow_form_path(slug: @organization[:slug]) %>">
+        Start Workflows
       </a>
     <% end %>
     <hr>

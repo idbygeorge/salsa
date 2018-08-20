@@ -127,7 +127,7 @@ class AdminUsersController < AdminController
 
   def create_users
     org = get_org
-    users_emails = params[:users][:emails].gsub(/[\r\n ]*/,'').split(/,/).delete_if {|x| x == "\r" }
+    users_emails = params[:users][:emails].gsub(/ */,'').split(/(\r\n|\n|,)/).delete_if {|x| x.match(/\A(\r\n|\n|,|)\z/) }
     user_errors = Array.new
     users_emails.each do |user_email|
       user = User.new(name: "New User", email:user_email, password: "#{rand(36**40).to_s(36)}", activated:false)

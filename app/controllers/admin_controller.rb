@@ -203,8 +203,7 @@ class AdminController < ApplicationController
       user.activate
       redirect_to admin_path
     else
-      flash[:error] = "Sorry. User does not exist"
-      redirect_to root_url
+      return render :file => "public/410.html", :status => :gone, :layout => false
     end
   end
 
@@ -213,8 +212,7 @@ class AdminController < ApplicationController
     if user
   		render action: :user_activation, layout: false
     else
-      flash[:error] = "Sorry. User does not exist"
-      redirect_to root_url
+      return render :file => "public/410.html", :status => :gone, :layout => false
     end
   end
 

@@ -1,0 +1,35 @@
+<%- model_class = Period -%>
+<div class="page-header">
+  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= model_class.human_attribute_name(:name) %></th>
+      <th><%= model_class.human_attribute_name(:slug) %></th>
+      <th><%= model_class.human_attribute_name(:organization) %></th>
+      <th><%= model_class.human_attribute_name(:start_date) %></th>
+      <th><%= model_class.human_attribute_name(:duration) %></th>
+      <th><%= model_class.human_attribute_name(:is_default) %></th>
+      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @periods.each do |period| %>
+
+        <tr>
+          <td><%= period.name %></td>
+          <td><%= period.slug %></td>
+          <td><%= period.organization.slug if period.organization_id%></td>
+          <td><%= period.start_date %></td>
+          <td><%= period.duration.to_s + " days" if period.duration %></td>
+          <td><%= period.is_default %></td>
+          <td><%= link_to t('.edit', :default => t("helpers.links.edit")), edit_period_path(params[:slug],period.id), :class => 'btn btn-default btn-xs' %></td>
+        </tr>
+    <% end %>
+  </tbody>
+</table>
+<%= paginate @periods%>
+<%= link_to t('.new', :default => t("helpers.links.new")),
+            new_period_path,
+            :class => 'btn btn-primary' %>
