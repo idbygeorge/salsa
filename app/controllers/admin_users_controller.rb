@@ -1,7 +1,9 @@
 class AdminUsersController < AdminController
-  before_action :require_organization_admin_permissions
+  skip_before_action :require_designer_permissions
   before_action :require_admin_permissions, only: [:destroy, :create, :new]
-  before_action :get_organizations, only: [:index, :new, :edit, :show, :edit_assignment]
+  before_action :require_organization_admin_permissions, except:[:import_users,:create_users]
+  before_action :require_supervisor_permissions, only:[:import_users,:create_users]
+  before_action :get_organizations, only: [:index, :new, :edit, :show, :edit_assignment, :import_users]
   before_action :get_roles, only: [:edit_assignment, :assign, :index ,:show]
 
   def index
@@ -123,7 +125,37 @@ class AdminUsersController < AdminController
     redirect_to admin_users_path
   end
 
+  def create_users
+    org = get_org
+    users_emails = params[:users][:emails].gsub(/[\r\n ]*/,'').split(/,/).delete_if {|x| x == "\r" }
+    user_errors = Array.new
+    users_emails.each do |user_email|
+      user = User.new(name: "New User", email:user_email, password: "#{rand(36**40).to_s(36)}", activated:false)
+      user_activation_token user
+      user.save
+      UserAssignment.create(role:"staff",user_id:user.id,organization_id:org.id,cascades:true) if user
+      user.errors.messages.each do |error|
+        user_errors.push "Could not create user with email: '#{user.email}' because: #{error[0]} #{error[1][0]}" if user.errors
+      end
+      next if !user.errors.empty?
+      UserMailer.welcome_email(user,org,component_allowed_liquid_variables(nil,user,org)).deliver_later
+    end
+    flash[:notice] = "Users created successfully" if user_errors == [] && users_emails != []
+    flash[:errors] = user_errors
+    redirect_to admin_import_users_path
+  end
+
+  def import_users
+  end
+
   private
+
+  def user_activation_token user
+    if user.activation_digest.blank?
+      user.activation_digest = SecureRandom.urlsafe_base64.to_s
+    end
+  end
+
 
   def user_params
     params.require(:user).require(:name)

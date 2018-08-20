@@ -19,8 +19,10 @@ class ApplicationController < ActionController::Base
 
   end
 
-  def component_allowed_liquid_variables user=nil, organization=nil, step_slug=nil
-    {"user_name" => "#{user&.name}","user_email" => "#{user&.email}", "organization_name" => "#{organization&.name}", "step_slug" => "#{step_slug}"}
+  def component_allowed_liquid_variables step_slug, user=nil, organization=nil
+    hash = {"user_name" => "#{user&.name}","user_email" => "#{user&.email}", "organization_name" => "#{organization&.name}"}
+    hash["step_slug"] = "#{step_slug}" if step_slug != nil
+    return hash
   end
 
   def check_organization_workflow_enabled
