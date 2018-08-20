@@ -37,6 +37,7 @@
       <ul class="nav navbar-nav navbar-right">
         <%# <li class="active"><%= link_to "Reports", reports_path %><%# </li> %>
         <% if has_role('admin') %>
+          <li class="active"><%= link_to "Periods", admin_periods_path %></li>
           <li class="active"><%= link_to "Documents", admin_document_index_path %></li>
           <li class="active"><%= link_to "Users", admin_users_path %></li>
         <% end %>

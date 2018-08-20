@@ -1,0 +1,50 @@
+<%= form_for(@period, url: admin_period_form_path, html: { class: "form-horizontal col-md-9" } ) do |f| %>
+
+  <% if @period.errors.any? %>
+    <div class="alert alert-danger">
+      <ul>
+        <% @period.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :name, class: "control-label" %>
+    <div class="controls">
+      <%= f.text_field :name, class: 'form-control input-xxlarge' %>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= f.label :slug, class: "control-label" %>
+    <div class="controls">
+      <%= f.text_field :slug, class: 'form-control input-xxlarge' %>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= f.label :organization, class: "control-label" %>
+    <%= f.collection_select :organization_id, get_organizations, :id, :slug, class: 'form-control input-xxlarge' %>
+  </div>
+  <div class="form-group">
+    <%= f.label :start_date, class: "control-label" %>
+    <div class="controls">
+      <%= f.date_select :start_date, class: 'form-control input-xxlarge' %>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= f.label :duration, class: "control-label" %>
+    <div class="controls">
+      <%= f.number_field :duration, class: 'form-control input-xxlarge' %>
+    </div>
+  </div>
+  <div class="form-group">
+    <%= f.label :is_default, class: "control-label" %>
+    <%= f.check_box :is_default, class: '' %>
+  </div>
+
+<div class="form-group">
+  <%= f.submit class: 'btn btn-default' %>
+</div>
+
+<% end %>

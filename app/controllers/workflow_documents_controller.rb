@@ -9,13 +9,19 @@ class WorkflowDocumentsController < ApplicationController
   def index
     org = get_org
     user_assignment = current_user.user_assignments.find_by organization_id: org.id if current_user
+    @workflow_steps = WorkflowStep.where(organization_id: org.organization_ids.push(org.id))
     @documents = Document.where(organization_id:org.id).where('documents.updated_at != documents.created_at')
     if has_role("supervisor") && params[:show_completed] == "true"
       @documents = @documents.where(workflow_step_id: WorkflowStep.where(step_type:"end_step").map(&:id) )
     elsif has_role("supervisor") && (params[:show_completed] == "false")
       @documents = @documents.where(workflow_step_id: WorkflowStep.where.not(step_type:"end_step").map(&:id) + [nil] )
+    elsif has_role("supervisor") && params[:step_filter]
+      wfs = @workflow_steps.find_by(id: params[:step_filter].to_i)
+      @documents = @documents.where(workflow_step_id: wfs&.id )
     else
+      @user_documents = @documents.where(user_id: current_user&.id) if current_user
       @documents = get_documents(current_user, @documents)
+      @user_documents = @user_documents.where.not(id: @documents.map(&:id)) if @user_documents
     end
     @documents = @documents.page(params[:page]).per(params[:per])
   end
@@ -32,10 +38,10 @@ class WorkflowDocumentsController < ApplicationController
   def update
     get_document params[:id]
     if params[:document][:workflow_step_id] != @document.workflow_step_id && !params[:document][:workflow_step_id].blank? && !params[:document][:user_id].blank?
-      wfs = WorkflowStep.find(params[:document][:workflow_step_id])
-      if wfs.step_type == "start_step"
-        user = User.find(params[:document][:user_id])
-        WorkflowMailer.welcome_email(user,@organization,wfs.slug,component_allowed_liquid_variables(@document.workflow_step,User.find(params[:document][:user_id]),@organizaiton)).deliver_later
+      @wfs = WorkflowStep.find(params[:document][:workflow_step_id])
+      if @wfs.step_type == "start_step"
+        @user = User.find(params[:document][:user_id])
+        WorkflowMailer.welcome_email(@document, @user, @organization, @wfs.slug, component_allowed_liquid_variables(@document.workflow_step,User.find(params[:document][:user_id]),@organization)).deliver_later
       end
     end
 
@@ -46,6 +52,7 @@ class WorkflowDocumentsController < ApplicationController
     end
 
     if @document.update document_params
+      flash[:notice] = "You have assigned a document to #{@user.email} on #{@wfs.slug}" if @user && @wfs
       redirect_to workflow_document_index_path
     else
       flash[:error] = @document.errors.messages
@@ -72,7 +79,7 @@ class WorkflowDocumentsController < ApplicationController
   private
 
   def document_params
-    params.require(:document).permit(:name, :lms_course_id, :workflow_step_id, :user_id)
+    params.require(:document).permit(:name, :lms_course_id, :workflow_step_id, :user_id, :period_id)
   end
 
   def get_documents user, documents

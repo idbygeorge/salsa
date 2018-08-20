@@ -44,7 +44,7 @@ class ApplicationController < ActionController::Base
       org_slug += '/' + params[:sub_organization_slugs]
     end
 
-    # find the matching organizaiton based on the request
+    # find the matching organization based on the request
     @organization = Organization.find_by slug: org_slug
 
     # get a placeholder org matching the org slug if there is no matching or in the database

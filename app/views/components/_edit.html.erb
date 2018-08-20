@@ -46,7 +46,7 @@
       </div>
     </div>
 
-    <% if @available_component_formats.include? 'erb' %>
+    <% if @organization.enable_workflows %>
       <div class="row">
         <div class="col-md-6">
           <div class="form-group">
@@ -83,7 +83,9 @@
       <div class="help-block">
         when using liquid format refer to <a href="https://github.com/Shopify/liquid/wiki/Liquid-for-Designers" target="_blank">Liquid guide for designers</a>
         <br>
-        and the available variables are <%= @available_liquid_variables.keys.join(', ') %> and for the user_welcome_email there is the user_activation_link variable
+        and the available variables are <b><%= @available_liquid_variables.keys.join(', ') %></b>
+        and for the user_welcome_email there is the <b>user_activation_url</b> variable<br>
+        and for the workflow_welcome_email and step_emails there is the <b>document_url</b> variable
       </div>
     </div>
   </div>
