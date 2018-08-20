@@ -132,7 +132,11 @@ class AdminUsersController < AdminController
     users_emails = params[:users][:emails].gsub(/ */,'').split(/(\r\n|\n|,)/).delete_if {|x| x.match(/\A(\r\n|\n|,|)\z/) }
     user_errors = Array.new
     users_emails.each do |user_email|
-      user = User.new(name: "New User", email:user_email, password: "#{rand(36**40).to_s(36)}", activated:false)
+      user = User.find_or_initialize_by(email: user_email)
+      user.password = "#{rand(36**40).to_s(36)}" if !user&.password
+      user.name = "New User" if !user&.name
+      user.archived = false
+      user.activated = false
       user_activation_token user
       user.save
       UserAssignment.create(role:"staff",user_id:user.id,organization_id:org.id,cascades:true) if user
