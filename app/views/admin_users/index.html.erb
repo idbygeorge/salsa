@@ -1,4 +1,11 @@
-<%= link_to 'Add User', new_admin_user_path, class: 'btn btn-success pull-right' %>
+<% if has_role("admin") %>
+  <%= link_to 'Add User', new_admin_user_path, class: 'btn btn-success pull-right' %>
+<% end %>
+<% if params[:show_archived] == "true" %>
+  <%= link_to 'Users', admin_users_path(show_archived: false), class: 'btn btn-success pull-right' %>
+<% else %>
+  <%= link_to 'Archived Users', admin_users_path(show_archived: true), class: 'btn btn-success pull-right' %>
+<% end %>
 
 <h1>System Users</h1>
 
@@ -9,6 +16,9 @@
     </th>
     <th>
       Permissions
+    </th>
+    <th>
+      Actions
     </th>
   </thead>
 
@@ -38,6 +48,14 @@
             </li>
           <% end %>
         </ul>
+      </td>
+      <td>
+        <% if params[:show_archived] == "true" %>
+          <%= link_to "Restore", admin_user_restore_path(admin_user_id: user[:id]), method:"post", class:"btn btn-primary" %>
+        <% else %>
+          <%= link_to "Archive", admin_user_archive_path(admin_user_id: user[:id]), method:"post", class:"btn btn-danger" %>
+
+        <% end %>
       </td>
     </tr>
   <% end %>
