@@ -221,7 +221,18 @@ class AdminController < ApplicationController
 
     search_document_text = "OR payload ~* '.*#{params[:q]}.*'" if params[:search_document_text]
 
-    @documents = Document.where("organization_id IN (#{@organizations.pluck(:id).join(',')}) AND (lms_course_id = '#{params[:q]}' OR name ~* '.*#{params[:q]}.*' OR edit_id ~* '#{params[:q]}.*' OR view_id ~* '#{params[:q]}.*' OR template_id ~* '#{params[:q]}.*' #{search_document_text})").page(page).per(per)
+    user_name = user_email = user_id = user_remote_id = "null"
+    
+    user_email = params[:q] if params[:search_user_email]
+    user_id = params[:q].to_i if params[:search_user_id]
+    user_name = params[:q] if params[:search_user_name]
+    user_remote_id = params[:q] if params[:search_remote_account_id]
+
+    user_ids = User.where("email = '#{user_email}' OR id = #{user_id} OR name ~* '.*#{user_name}.*'").map(&:id)
+    user_ids += UserAssignment.where("username = '#{user_remote_id}' ").map(&:user_id)
+    user_sql = "OR user_id IN (#{user_ids.join(",")})" if !user_ids.blank?
+
+    @documents = Document.where("organization_id IN (#{@organizations.pluck(:id).join(',')}) AND (lms_course_id = '#{params[:q]}' OR name ~* '.*#{params[:q]}.*' #{user_sql} OR edit_id ~* '#{params[:q]}.*' OR view_id ~* '#{params[:q]}.*' OR template_id ~* '#{params[:q]}.*' #{search_document_text})").page(page).per(per)
   end
 
 
