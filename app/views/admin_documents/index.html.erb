@@ -17,12 +17,16 @@
     <% @documents.each do |document| %>
 
         <tr>
-          <td><%= link_to document.name, document_path(document.view_id) %></td>
-          <td><%= link_to(document.organization.slug, document_path(document.view_id)) if document.organization %></td>
-          <td><%= link_to(document.lms_course_id, document_path(document.view_id)) if document.lms_course_id %></td>
-          <td><%= link_to(document.workflow_step.slug, document_path(document.view_id)) if document.workflow_step_id %></td>
-          <td><%= link_to(document.user_id, document_path(document.view_id)) if document.user_id %></td>
+          <td><%= document.name %></td>
+          <td><%= document.organization&.slug %></td>
+          <td><%= document.lms_course_id %></td>
+          <td><%= document.workflow_step&.slug %></td>
+          <td><%= document.user&.email %></td>
           <td>
+            <% if !document.organization&.disable_document_view  %>
+              <%= link_to "View",
+                        document_path(document.view_id), :class => 'btn btn-default btn-xs' %>
+            <% end %>
             <%= link_to "Versions",
                         admin_document_versions_path(document), :class => 'btn btn-default btn-xs' %>
             <%= link_to t('.edit', :default => t("helpers.links.edit")),

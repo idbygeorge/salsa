@@ -18,45 +18,4 @@
     </ul>
   </div>
 <% end %>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th><%= model_class.human_attribute_name(:name) %></th>
-      <th><%= model_class.human_attribute_name(:organization) %></th>
-      <th><%= model_class.human_attribute_name(:workflow_step_id) %></th>
-      <th><%=t '.actions', :default => t("helpers.actions") %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @documents.each do |document| %>
-
-        <tr>
-          <td><%= link_to document.name, edit_document_path(document.edit_id), id:"edit_document" %></td>
-          <td><%= link_to(document.organization.slug, document_path(document.edit_id)) if document.organization %></td>
-          <td><%= link_to(document.workflow_step.slug, document_path(document.edit_id)) if document.workflow_step_id %></td>
-          <td>
-            <% if has_role 'supervisor' %>
-              <%= link_to "Versions", workflow_document_versions_path(document), :class => 'btn btn-default btn-xs' %>
-              <%= link_to t('.edit', :default => t("helpers.links.edit")), edit_workflow_document_path(document.id), :class => 'btn btn-default btn-xs' %>
-            <% else %>
-              <%= link_to t('.edit', :default => t("helpers.links.edit")), document_path(document.edit_id), :class => 'btn btn-default btn-xs' %>
-            <% end %>
-          </td>
-        </tr>
-    <% end %>
-    <% if @user_documents %>
-      <tr>
-           <td colspan="4"><h1 class="text-center">Your Documents</h1></td>
-      </tr>
-      <% @user_documents.each do |document| %>
-          <tr>
-            <td><%= document.name %></td>
-            <td><%= document.organization&.slug %></td>
-            <td><%= document.workflow_step&.slug %></td>
-            <td></td>
-          </tr>
-      <% end %>
-    <% end %>
-  </tbody>
-</table>
-<%= paginate @documents%>
+<%= render :partial => "list", locals:{ user_documents: @user_documents, documents: @documents } %>

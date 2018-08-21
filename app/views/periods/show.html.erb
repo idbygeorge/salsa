@@ -18,7 +18,7 @@
   <dt><strong><%= model_class.human_attribute_name(:is_default) %>:</strong></dt>
   <dd><%= @period.is_default %></dd>
 </dl>
-orga
+
 <%= link_to t('.back', :default => t("helpers.links.back")),
               periods_path(params[:slug]), :class => 'btn btn-default'  %>
 <%= link_to t('.edit', :default => t("helpers.links.edit")),
