@@ -1405,6 +1405,9 @@ table td[class*="col-"], table th[class*="col-"] {
   background-color: #ebcccc;
 }
 @media (max-width: 767px) {
+  .main {
+    margin-top: 70px;
+  }
   .table-responsive {
     width: 100%;
     margin-bottom: 15px;
@@ -3334,7 +3337,7 @@ input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="butto
         float: none;
     }
     .navbar-toggle {
-        display: block;
+        display: inline-block;
     }
     .navbar-collapse {
         border-top: 1px solid transparent;
