@@ -133,7 +133,10 @@ ActiveRecord::Schema.define(version: 20180822192814) do
     t.integer "default_workflow_step_id"
     t.boolean "enforce_workflow_permissions_on_document_view", default: false
     t.boolean "disable_document_view", default: false
+<<<<<<< HEAD
     t.boolean "force_https", default: false
+=======
+>>>>>>> a7e762f08260c4e10d67e96c4015c5642702eae6
     t.index ["depth"], name: "index_organizations_on_depth"
     t.index ["lft"], name: "index_organizations_on_lft"
     t.index ["lms_id"], name: "index_organizations_on_lms_id"

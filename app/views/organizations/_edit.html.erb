@@ -142,6 +142,13 @@
 
         <div class="form-group">
           <div class="controls">
+            <%= f.check_box :disable_document_view, class: '' %>
+            <%= f.label :disable_document_view, class: "control-label" %>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="controls">
             <%= f.check_box :force_https, class: '' %>
             <%= f.label :force_https, class: "control-label" %>
           </div>

@@ -57,7 +57,9 @@ class DocumentsController < ApplicationController
     end
 
     @calendar_only = params[:calendar_only] ? true : false
-
+    if @document.organization.disable_document_view
+      return render :file => "public/404.html", :status => :not_found, :layout => false
+    end
     @action = 'show'
 
     respond_to do |format|
