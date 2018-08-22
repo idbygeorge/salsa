@@ -23,7 +23,7 @@ if rails_env != "development"
   stdout_redirect "#{shared_dir}/log/puma.stdout.log", "#{shared_dir}/log/puma.stderr.log", true
 else
   # Set up socket location (if using a webserver such as nginx)
-  bind "unix://#{shared_dir}/tmp/sockets/puma.sock"
+  bind "ssl://0.0.0.0:3000?key=#{shared_dir}/tmp/ssl/localhost.key&cert=#{shared_dir}/tmp/ssl/localhost.crt"
 
 end
 

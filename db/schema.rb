@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180821164216) do
+ActiveRecord::Schema.define(version: 20180822192814) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -133,6 +133,10 @@ ActiveRecord::Schema.define(version: 20180821164216) do
     t.integer "default_workflow_step_id"
     t.boolean "enforce_workflow_permissions_on_document_view", default: false
     t.boolean "disable_document_view", default: false
+<<<<<<< HEAD
+    t.boolean "force_https", default: false
+=======
+>>>>>>> a7e762f08260c4e10d67e96c4015c5642702eae6
     t.index ["depth"], name: "index_organizations_on_depth"
     t.index ["lft"], name: "index_organizations_on_lft"
     t.index ["lms_id"], name: "index_organizations_on_lms_id"
