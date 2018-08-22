@@ -10,7 +10,11 @@ class ApplicationController < ActionController::Base
   protected
 
   def ssl_enabled?
-    return get_org.force_https
+    if request.ssl?
+      return get_org.force_https
+    else
+      return false
+    end
   end
 
   def redirect_if_user_archived
