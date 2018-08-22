@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   protected
 
   def ssl_enabled?
-    if request.ssl?
+    if !request.ssl?
       get_org.force_https
     else
       false
