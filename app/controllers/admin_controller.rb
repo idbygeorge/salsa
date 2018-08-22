@@ -218,7 +218,6 @@ class AdminController < ApplicationController
 
   def search page=params[:page], per=25
     search_document_text = ''
-    params[:q] = params[:q].parameterize 
     user_name = user_email = user_id = user_remote_id = nil
 
     user_email = params[:q] if params[:search_user_email]
