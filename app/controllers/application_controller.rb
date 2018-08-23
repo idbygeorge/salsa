@@ -4,15 +4,10 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception
   before_action :redirect_if_user_archived, except:[:logout]
   force_ssl if: :ssl_enabled?
-  before_action :set_headers, if: :ssl_enabled?
 
   include ApplicationHelper
 
   protected
-
-  def set_headers
-    response.headers['X-Forwarded-Proto'] = 'https'
-  end
 
   def ssl_enabled?
     get_org.force_https
