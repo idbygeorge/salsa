@@ -218,10 +218,34 @@ class AdminController < ApplicationController
 
   def search page=params[:page], per=25
     search_document_text = ''
+    user_name = user_email = user_id = user_remote_id = nil
 
-    search_document_text = "OR payload ~* '.*#{params[:q]}.*'" if params[:search_document_text]
+    user_email = params[:q] if params[:search_user_email]
+    user_id = params[:q].to_i if params[:search_user_id]
+    user_name = ".*#{params[:q]}.*" if params[:search_user_name]
+    user_remote_id = params[:q] if params[:search_remote_account_id]
 
-    @documents = Document.where("organization_id IN (#{@organizations.pluck(:id).join(',')}) AND (lms_course_id = '#{params[:q]}' OR name ~* '.*#{params[:q]}.*' OR edit_id ~* '#{params[:q]}.*' OR view_id ~* '#{params[:q]}.*' OR template_id ~* '#{params[:q]}.*' #{search_document_text})").page(page).per(per)
+    user_ids = User.where("email = ? OR id = ? OR name ~* ? ", user_email, user_id, user_name).map(&:id)
+    user_ids += UserAssignment.where("username = '?' ", user_remote_id).map(&:user_id)
+
+    sql = ["organization_id IN (?) AND (lms_course_id = ? OR name ~* ? OR edit_id ~* ? OR view_id ~* ? OR template_id ~* ? )"]
+    param = [@organizations.pluck(:id), params[:q], ".*#{params[:q]}.*"]
+
+    3.times do
+      param << "#{params[:q]}.*"
+    end
+
+    if !user_ids.blank?
+      sql << "OR user_id IN (?)"
+      param << user_ids.join(",")
+    end
+
+    if params[:search_document_text]
+      sql << "OR payload ~* ?"
+      param << ".*#{params[:q]}.*"
+    end
+
+    @documents = Document.where(sql.join(' '), *param).page(page).per(per)
   end
 
 
