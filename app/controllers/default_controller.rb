@@ -41,6 +41,7 @@ class DefaultController < ApplicationController
     response.headers['Access-Control-Allow-Origin'] = request.headers['Origin'] || '*' # the domain you're making the request from
     response.headers['Access-Control-Allow-Credentials'] = 'true'
     response.headers['Access-Control-Allow-Headers'] = 'accept, content-type'
+    response.headers['X-Forwarded-Proto'] = 'https'
   end
 
 end
