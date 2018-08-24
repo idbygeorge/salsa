@@ -61,12 +61,9 @@ module ReportHelper
         end
         if @organization.track_meta_info_from_document && @organization.export_type == "Program Outcomes"
           program_outcomes_format
-        elsif @organization.track_meta_info_from_document
-          dm = "#{DocumentMeta.where("key LIKE :prefix AND document_id IN (:document_id)", prefix: "salsa_%", document_id: doc.id).select(:key, :value).to_json(:except => :id)}"
-          if dm != "[]"
-            document_metas["lms_course-#{doc.lms_course_id}"] = JSON.parse(dm)
-            zipfile.get_output_stream("#{identifier}_#{doc.id}_document_meta.json"){ |os| os.write JSON.pretty_generate(JSON.parse(dm)) }
-          end
+        elsif @organization.track_meta_info_from_document && dm = "#{DocumentMeta.where("key LIKE :prefix AND document_id IN (:document_id)", prefix: "salsa_%", document_id: doc.id).select(:key, :value).to_json(:except => :id)}" != "[]"
+          document_metas["lms_course-#{doc.lms_course_id}"] = JSON.parse(dm)
+          zipfile.get_output_stream("#{identifier}_#{doc.id}_document_meta.json"){ |os| os.write JSON.pretty_generate(JSON.parse(dm)) }
         end
         # Two arguments:
         # - The name of the file as it will appear in the archive
