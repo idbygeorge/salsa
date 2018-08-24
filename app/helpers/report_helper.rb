@@ -38,10 +38,10 @@ module ReportHelper
   def self.archive (org_slug, report_id, report_data, account_filter=nil)
     report = ReportArchive.find_by id: report_id
     @organization = Organization.find_by slug: org_slug
-    unless account_filter != nil && account_filter != '' && account_filter != {"account_filter"=>""}
-      docs = Document.where(organization_id: @organization.id).where('updated_at != created_at').all
-    else
+    if account_filter == nil || account_filter == '' || account_filter == {"account_filter"=>""}
       docs = Document.where(organization_id: @organization.id, id: report_data.map(&:document_id)).where('updated_at != created_at').all
+    # elsif @organization.enable_workflow_report
+    #   docs = Document.where(organization_id: @organization.id).where('updated_at != created_at').all
     end
     if File.exist?(zipfile_path(org_slug, report_id))
       File.delete(zipfile_path(org_slug, report_id))

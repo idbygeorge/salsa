@@ -156,28 +156,28 @@ module ApplicationHelper
 
     # # if they are authorized as an admin, let them in
     if session[:admin_authorized] == true
-      result = true
-    elsif org && (session[:lms_authenticated_user] != nil || session[:authenticated_user] != nil)
-      if org[:lms_authentication_source] && org[:lms_authentication_source] == session[:oauth_endpoint]
-        username = session[:lms_authenticated_user]['id'].to_s
-        user_assignments = UserAssignment.where('organization_id = ? OR (role = ?)', org[:id], 'admin').where(username: username)
-      else
-        user_assignments = UserAssignment.where('organization_id IN (?) OR (role = ?)', org.organization_ids + [org.id], 'admin').where(user_id: session[:authenticated_user])
+      return result = true
+    elsif !org && (session[:lms_authenticated_user] == nil || session[:authenticated_user] == nil)
+      return result
+    end
+
+    if org[:lms_authentication_source] && org[:lms_authentication_source] == session[:oauth_endpoint]
+      username = session[:lms_authenticated_user]['id'].to_s
+      @user_assignments = UserAssignment.where('organization_id = ? OR (role = ?)', org[:id], 'admin').where(username: username)
+    else
+      @user_assignments = UserAssignment.where('organization_id IN (?) OR (role = ?)', org.organization_ids + [org.id], 'admin').where(user_id: session[:authenticated_user])
+    end
+
+    @user_assignments&.each do |ua|
+      if (ua[:role] == role || ua[:role] == 'admin') && (ua.cascades == false && ua.organization_id == org.id)
+        result = true
+      elsif (ua[:role] == role || ua[:role] == 'admin') && ua.cascades == true
+        result = true
       end
 
-      if user_assignments.count > 0
-        user_assignments.each do |ua|
-          if (ua[:role] == role || ua[:role] == 'admin') && (ua.cascades == false && ua.organization_id == org.id)
-            result = true
-          elsif (ua[:role] == role || ua[:role] == 'admin') && ua.cascades == true
-            result = true
-          end
-
-          # if we aren't looking for an admin role, but the user has organization admin permissions, then they have permissions for this role
-          if role != 'admin' && ua[:role] == 'organization_admin'
-            result = true
-          end
-        end
+      # if we aren't looking for an admin role, but the user has organization admin permissions, then they have permissions for this role
+      if role != 'admin' && ua[:role] == 'organization_admin'
+        result = true
       end
     end
 
