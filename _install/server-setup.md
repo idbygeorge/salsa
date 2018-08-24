@@ -274,7 +274,8 @@ Default site config (forces https connections, forces https on all subdomains)
       # letsencrypt will use this for domain verification when issuing/renewing certs
       # using a common path for all sites allows the cert renewal to be the same
       location /.well-known/acme-challenge {
-      root /var/www/html;
+          root /var/www/html;
+      }
 
       access_log /home/ubuntu/apps/salsa/current/log/nginx.access.log;
       error_log /home/ubuntu/apps/salsa/current/log/nginx.error.log info;
@@ -299,10 +300,6 @@ Default site config (forces https connections, forces https on all subdomains)
       client_max_body_size 10M;
       keepalive_timeout 10;
 
-
-      location /.well-known/acme-challenge {
-          root /var/www/html;
-      }
     }
 
 Enable site config
