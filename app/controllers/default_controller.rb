@@ -2,6 +2,8 @@ class DefaultController < ApplicationController
 
   layout false
   before_action :init_view_folder
+  before_action :add_allow_credentials_headers, only: [:status_server]
+
 
   def index
     root_org_slug = request.env['SERVER_NAME']
@@ -34,4 +36,12 @@ class DefaultController < ApplicationController
   end
   def faq
   end
+  private
+  def add_allow_credentials_headers
+    response.headers['Access-Control-Allow-Origin'] = request.headers['Origin'] || '*' # the domain you're making the request from
+    response.headers['Access-Control-Allow-Credentials'] = 'true'
+    response.headers['Access-Control-Allow-Headers'] = 'accept, content-type'
+    response.headers['X-Forwarded-Proto'] = 'https'
+  end
+
 end

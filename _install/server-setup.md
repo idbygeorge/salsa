@@ -269,29 +269,36 @@ Default site config (forces https connections, forces https on all subdomains)
       # security headers
       add_header X-Frame-Options DENY;
       add_header X-Content-Type-Options nosniff;
-      add_header X-XSS-Protection "1; mode=block";
+      add_header X-XSS-Protection "1; mode=block"; # dont set this twice
 
       # letsencrypt will use this for domain verification when issuing/renewing certs
       # using a common path for all sites allows the cert renewal to be the same
       location /.well-known/acme-challenge {
-        root /var/www/html;
+          root /var/www/html;
       }
 
-      location / {
-        try_files $uri $uri/ /index.php?$query_string;
+      access_log /home/ubuntu/apps/salsa/current/log/nginx.access.log;
+      error_log /home/ubuntu/apps/salsa/current/log/nginx.error.log info;
+
+      location ^~ /assets/ {
+          gzip_static on;
+          expires max;
+          add_header Cache-Control public;
       }
 
-      location ~ \.php$ {
-        try_files $uri /index.php =404;
-        fastcgi_split_path_info ^(.+\.php)(/.+)$;
-        fastcgi_pass unix:/run/php/php7.0-fpm.sock;
-        fastcgi_index index.php;
-        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
-        include fastcgi_params;
-        fastcgi_param HTTP_PROXY "";
+      try_files $uri/index.html $uri @puma;
+      location @puma {
+          proxy_set_header X-Forwarded-Proto $scheme;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header Host $http_host;
+          proxy_redirect off;
+
+          proxy_pass http://puma;
       }
 
-
+      error_page 500 502 503 504 /500.html;
+      client_max_body_size 10M;
+      keepalive_timeout 10;
 
     }
 
