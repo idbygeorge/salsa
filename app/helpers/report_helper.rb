@@ -60,40 +60,7 @@ module ReportHelper
           identifier = "#{doc.lms_course_id}".gsub(/[^A-Za-z0-9]+/, '_')
         end
         if @organization.track_meta_info_from_document && @organization.export_type == "Program Outcomes"
-          dms = DocumentMeta.where("key LIKE :prefix AND document_id IN (:document_id)", prefix: "salsa_%", document_id: doc.id)
-          dms_array = []
-          if dms != []
-            dms.each do |dm|
-              salsa_hash = Hash.new
-              salsa_outcome = dm.key.split("_")[1].split("-")
-              if salsa_outcome.length >= 3
-                if salsa_outcome.length > 3
-                  salsa_outcome_type = "#{salsa_outcome[1]}: " + salsa_outcome[2..-2].join(' ')
-                else
-                  salsa_outcome_type = salsa_outcome[1]
-                end
-                salsa_hash[:lms_course_id] = "#{dm.lms_course_id}"
-                salsa_hash[:salsa_outcome] = salsa_outcome[0]
-                salsa_hash[:salsa_outcome_type] = salsa_outcome_type
-                salsa_hash[:salsa_outcome_id] = salsa_outcome.last
-                salsa_hash[:salsa_outcome_text] = dm.value
-                salsa_hash[:key] = ""
-                salsa_hash[:value] = ""
-              else
-                salsa_hash[:lms_course_id] = "#{dm.lms_course_id}"
-                salsa_hash[:salsa_outcome] = ""
-                salsa_hash[:salsa_outcome_type] = ""
-                salsa_hash[:salsa_outcome_id] = ""
-                salsa_hash[:salsa_outcome_text] = ""
-                salsa_hash[:key] = dm.key
-                salsa_hash[:value] = dm.value
-
-              end
-              document_metas.push JSON.parse(salsa_hash.to_json)
-              dms_array.push JSON.parse(salsa_hash.to_json)
-            end
-          end
-
+          program_outcomes_format
         elsif @organization.track_meta_info_from_document
           dm = "#{DocumentMeta.where("key LIKE :prefix AND document_id IN (:document_id)", prefix: "salsa_%", document_id: doc.id).select(:key, :value).to_json(:except => :id)}"
           if dm != "[]"
@@ -112,6 +79,40 @@ module ReportHelper
       if @organization.track_meta_info_from_document && document_metas != {}
         zipfile.get_output_stream("document_meta.json"){ |os| os.write document_metas.to_json  }
       end
+    end
+  end
+
+  def program_outcomes_format
+    dms = DocumentMeta.where("key LIKE :prefix AND document_id IN (:document_id)", prefix: "salsa_%", document_id: doc.id)
+    dms_array = []
+    dms&.each do |dm|
+      salsa_hash = Hash.new
+      salsa_outcome = dm.key.split("_")[1].split("-")
+      if salsa_outcome.length >= 3
+        if salsa_outcome.length > 3
+          salsa_outcome_type = "#{salsa_outcome[1]}: " + salsa_outcome[2..-2].join(' ')
+        else
+          salsa_outcome_type = salsa_outcome[1]
+        end
+        salsa_hash[:lms_course_id] = "#{dm.lms_course_id}"
+        salsa_hash[:salsa_outcome] = salsa_outcome[0]
+        salsa_hash[:salsa_outcome_type] = salsa_outcome_type
+        salsa_hash[:salsa_outcome_id] = salsa_outcome.last
+        salsa_hash[:salsa_outcome_text] = dm.value
+        salsa_hash[:key] = ""
+        salsa_hash[:value] = ""
+      else
+        salsa_hash[:lms_course_id] = "#{dm.lms_course_id}"
+        salsa_hash[:salsa_outcome] = ""
+        salsa_hash[:salsa_outcome_type] = ""
+        salsa_hash[:salsa_outcome_id] = ""
+        salsa_hash[:salsa_outcome_text] = ""
+        salsa_hash[:key] = dm.key
+        salsa_hash[:value] = dm.value
+
+      end
+      document_metas.push JSON.parse(salsa_hash.to_json)
+      dms_array.push JSON.parse(salsa_hash.to_json)
     end
   end
 
