@@ -1,6 +1,3 @@
-env:
-  global:
-    - CC_TEST_REPORTER_ID=bff7805609100c597affe2b7103b64a96d4222fe74ad2675097a937591d8695c
 addons:
   postgresql: 9.6
   apt:
@@ -26,12 +23,14 @@ before_script:
   - sudo docker-compose run salsa rake db:migrate
   - sudo docker-compose run salsa rake db:seed
 
-after_script:
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 script:
   - sudo docker-compose run salsa rake db:schema:load RAILS_ENV=test
   - sudo docker-compose run salsa rake db:migrate RAILS_ENV=test
   - sudo docker-compose run salsa bash ./cucumber.sh
+
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+  
 dist: trusty
 language: ruby
 rvm:
