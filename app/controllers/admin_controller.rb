@@ -28,15 +28,15 @@ class AdminController < ApplicationController
 
   def landing
     if has_role 'designer'
-      return redirect_to organizations_path, notice: flash[:notice]
+      redirect_to organizations_path, notice: flash[:notice]
     elsif has_role 'auditor'
-      return redirect_to admin_auditor_reports_path, notice: flash[:notice]
+      redirect_to admin_auditor_reports_path, notice: flash[:notice]
     elsif has_role('supervisor', assignment_org = get_user_assignment_org(session[:authenticated_user],'supervisor')) && assignment_org.enable_workflows == true
-      return redirect_to workflow_steps_path(assignment_org.slug), notice: flash[:notice]
+      redirect_to workflow_steps_path(assignment_org.slug), notice: flash[:notice]
     elsif has_role('staff', assignment_org = get_user_assignment_org(session[:authenticated_user],'staff')) && assignment_org.enable_workflows == true
-      return redirect_to workflow_document_index_path, notice: flash[:notice]
+      redirect_to workflow_document_index_path, notice: flash[:notice]
     else
-      return redirect_or_error
+      redirect_or_error
     end
   end
 
@@ -70,23 +70,20 @@ class AdminController < ApplicationController
 
     user = User.where(archived: false,email: params[:user][:email]).first
 
-    unless user
+    if !user
         flash[:error] = 'No account matches the email provided'
-        return render action: :login, layout: false
-    end
-
-    unless user.password_digest# && user.activated
+    elsif !user.password_digest# && user.activated
         flash[:error] = 'Your account is not active yet'
-        return render action: :login, layout: false
+    elsif !user.authenticate(params[:user][:password])
+        flash[:error] = 'Invalid email or password'
     end
 
-    unless user.authenticate(params[:user][:password])
-        flash[:error] = 'Invalid email or password'
-        return render action: :login, layout: false
+    if !flash[:error].blank?
+      return render action: :login, layout: false
     end
 
     session[:authenticated_user] = user.id
-    return redirect_to admin_path, notice: 'Logged in successfully'
+    redirect_to admin_path, notice: 'Logged in successfully'
   end
 
   def canvas_accounts
