@@ -19,8 +19,9 @@ class AdminDocumentsController < AdminController
     if @document.organization.inherit_workflows_from_parents
       @workflow_steps = WorkflowStep.where(organization_id: @document.organization.organization_ids + [@document.organization_id]).order(step_type: :desc)
     else
-      @workflow_steps = WorkflowStep.where(organization_id: @document.organization_id, step_type: "start_step")
+      @workflow_steps = WorkflowStep.where(organization_id: @document.organization_id).order(step_type: :desc)
     end
+    @periods = Period.where(organization_id: @document.organization.id)
   end
 
   def versions
@@ -38,8 +39,7 @@ class AdminDocumentsController < AdminController
     get_document params[:id]
 
     # if the publish target changed, clear out the published at date
-    if params[:document][:lms_course_id] && @document[:lms_course_id] != params[:document][:lms_course_id] ||
-       params[:document][:organization_id] && @document[:organization_id] != params[:document][:organization_id]
+    if params[:document][:lms_course_id] && @document[:lms_course_id] != params[:document][:lms_course_id] || params[:document][:organization_id] && @document[:organization_id] != params[:document][:organization_id]
       @document[:lms_published_at] = nil
     end
 

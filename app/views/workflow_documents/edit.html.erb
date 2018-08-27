@@ -29,6 +29,13 @@
     </div>
   <% end %>
 
+  <div class="form-group">
+    <%= f.label :period_id, class: "control-label" %>
+    <div class="controls">
+      <%= f.collection_select :period_id, @periods, :id, :slug, {include_blank: true},{class:"form-control"} %>
+    </div>
+  </div>
+
 <div class="form-group">
   <%= f.submit class: 'btn btn-default' %>
 </div>
