@@ -30,14 +30,14 @@ module ReportHelper
     # get the report data (slow process... only should run one at a time)
     puts 'Getting Document Meta'
     if @organization.enable_workflow_report
-      @report_data = self.get_workflow_document_meta docs.map(&:id)
+      @report_data = self.get_workflow_document_meta docs&.map(&:id)
     else
       @report_data = self.get_document_meta org_slug, account_filter, params
     end
     puts 'Retrieved Document Meta'
 
     if !account_filter_blank?(account_filter) && !@organization.enable_workflow_report
-      docs = Document.where(organization_id: @organization.id, id: report_data.map(&:document_id)).where('updated_at != created_at').all
+      docs = Document.where(organization_id: @organization.id, id: @report_data.map(&:document_id)).where('updated_at != created_at').all
     elsif !@organization.enable_workflow_report
       docs = Document.where(organization_id: @organization.id).where('updated_at != created_at').all
     end
