@@ -39,13 +39,8 @@ class Admin::AuditorController < ApplicationController
     end
     @default_report = nil
     @reports.each do |report|
-      if report.payload
-        if @org.default_account_filter
-          if report.report_filters && report.report_filters["account_filter"] == @org.default_account_filter
-            @default_report = true
-          end
-
-        end
+      if report.payload && @org.default_account_filter && report.report_filters && report.report_filters["account_filter"] == @org.default_account_filter
+        @default_report = true
       end
     end
 

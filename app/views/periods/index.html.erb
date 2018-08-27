@@ -20,7 +20,7 @@
         <tr>
           <td><%= period.name %></td>
           <td><%= period.slug %></td>
-          <td><%= period.organization.slug if period.organization_id%></td>
+          <td><%= period.organization&.slug if period.organization_id%></td>
           <td><%= period.start_date %></td>
           <td><%= period.duration.to_s + " days" if period.duration %></td>
           <td><%= period.is_default %></td>

@@ -19,33 +19,50 @@ module ReportHelper
   end
 
   def self.generate_report (org_slug, account_filter, params, report_id)
-    @org = Organization.find_by slug: org_slug
+    @organization = Organization.find_by slug: org_slug
     @report = ReportArchive.where(id: report_id).first
 
+    if !account_filter_blank?(account_filter) && @organization.enable_workflow_report
+      docs = Document.where(workflow_step_id: WorkflowStep.where(organization_id: @organization.parents.push(@organization.id), step_type: "end_step").map(&:id), organization_id: @organization.id, period_id: Period.where(slug: account_filter)).where('updated_at != created_at').all
+    elsif @organization.enable_workflow_report
+      docs = Document.where(workflow_step_id: WorkflowStep.where(organization_id: @organization.parents.push(@organization.id), step_type: "end_step").map(&:id), organization_id: @organization.id).where('updated_at != created_at').all
+    end
     # get the report data (slow process... only should run one at a time)
     puts 'Getting Document Meta'
-    @report_data = self.get_document_meta org_slug, account_filter, params
+    if @organization.enable_workflow_report
+      @report_data = self.get_workflow_document_meta docs&.map(&:id)
+    else
+      @report_data = self.get_document_meta org_slug, account_filter, params
+    end
     puts 'Retrieved Document Meta'
+
+    if !account_filter_blank?(account_filter) && !@organization.enable_workflow_report
+      docs = Document.where(organization_id: @organization.id, id: @report_data.map(&:document_id)).where('updated_at != created_at').all
+    elsif !@organization.enable_workflow_report
+      docs = Document.where(organization_id: @organization.id).where('updated_at != created_at').all
+    end
 
     #store it
     @report.generating_at = nil
     @report.payload = @report_data.to_json
     @report.save!
 
-    self.archive org_slug, report_id, @report_data
+    self.archive org_slug, report_id, @report_data, account_filter, docs
   end
 
-  def self.archive (org_slug, report_id, report_data, account_filter=nil)
+  def self.account_filter_blank? account_filter
+    false
+    if account_filter.blank? || account_filter == {"account_filter"=>""}
+      true
+    end
+  end
+
+  def self.archive (org_slug, report_id, report_data, account_filter=nil, docs)
     report = ReportArchive.find_by id: report_id
     @organization = Organization.find_by slug: org_slug
-    unless account_filter != nil && account_filter != '' && account_filter != {"account_filter"=>""}
-      docs = Document.where(organization_id: @organization.id).where('updated_at != created_at').all
-    else
-      docs = Document.where(organization_id: @organization.id, id: report_data.map(&:document_id)).where('updated_at != created_at').all
-    end
-    if File.exist?(zipfile_path(org_slug, report_id))
-      File.delete(zipfile_path(org_slug, report_id))
-    end
+
+    FileUtils.rm zipfile_path(org_slug, report_id), :force => true   # never raises exception
+
     Zip::File.open(zipfile_path(org_slug, report_id), Zip::File::CREATE) do |zipfile|
       zipfile.get_output_stream('content.css'){ |os| os.write CompassRails.sprockets.find_asset('application.css').to_s }
       if @organization.export_type == "Program Outcomes"
@@ -55,51 +72,17 @@ module ReportHelper
       end
       docs.each do |doc|
         identifier = doc.id
+        folder = nil
+        folder = "#{doc.period&.slug}/" if @organization.enable_workflow_report
         identifier = doc.name.gsub(/[^A-Za-z0-9]+/, '_') if doc.name
         if doc.lms_course_id
           identifier = "#{doc.lms_course_id}".gsub(/[^A-Za-z0-9]+/, '_')
         end
         if @organization.track_meta_info_from_document && @organization.export_type == "Program Outcomes"
-          dms = DocumentMeta.where("key LIKE :prefix AND document_id IN (:document_id)", prefix: "salsa_%", document_id: doc.id)
-          dms_array = []
-          if dms != []
-            dms.each do |dm|
-              salsa_hash = Hash.new
-              salsa_outcome = dm.key.split("_")[1].split("-")
-              if salsa_outcome.length >= 3
-                if salsa_outcome.length > 3
-                  salsa_outcome_type = "#{salsa_outcome[1]}: " + salsa_outcome[2..-2].join(' ')
-                else
-                  salsa_outcome_type = salsa_outcome[1]
-                end
-                salsa_hash[:lms_course_id] = "#{dm.lms_course_id}"
-                salsa_hash[:salsa_outcome] = salsa_outcome[0]
-                salsa_hash[:salsa_outcome_type] = salsa_outcome_type
-                salsa_hash[:salsa_outcome_id] = salsa_outcome.last
-                salsa_hash[:salsa_outcome_text] = dm.value
-                salsa_hash[:key] = ""
-                salsa_hash[:value] = ""
-              else
-                salsa_hash[:lms_course_id] = "#{dm.lms_course_id}"
-                salsa_hash[:salsa_outcome] = ""
-                salsa_hash[:salsa_outcome_type] = ""
-                salsa_hash[:salsa_outcome_id] = ""
-                salsa_hash[:salsa_outcome_text] = ""
-                salsa_hash[:key] = dm.key
-                salsa_hash[:value] = dm.value
-
-              end
-              document_metas.push JSON.parse(salsa_hash.to_json)
-              dms_array.push JSON.parse(salsa_hash.to_json)
-            end
-          end
-
-        elsif @organization.track_meta_info_from_document
-          dm = "#{DocumentMeta.where("key LIKE :prefix AND document_id IN (:document_id)", prefix: "salsa_%", document_id: doc.id).select(:key, :value).to_json(:except => :id)}"
-          if dm != "[]"
-            document_metas["lms_course-#{doc.lms_course_id}"] = JSON.parse(dm)
-            zipfile.get_output_stream("#{identifier}_#{doc.id}_document_meta.json"){ |os| os.write JSON.pretty_generate(JSON.parse(dm)) }
-          end
+          program_outcomes_format(doc, document_metas)
+        elsif @organization.track_meta_info_from_document && dm = "#{DocumentMeta.where("key LIKE :prefix AND document_id IN (:document_id)", prefix: "salsa_%", document_id: doc.id).select(:key, :value).to_json(:except => :id)}" != "[]"
+          document_metas["lms_course-#{doc.lms_course_id}"] = JSON.parse(dm)
+          zipfile.get_output_stream("#{folder}#{identifier}_#{doc.id}_document_meta.json"){ |os| os.write JSON.pretty_generate(JSON.parse(dm)) }
         end
         # Two arguments:
         # - The name of the file as it will appear in the archive
@@ -107,7 +90,7 @@ module ReportHelper
         #rendered_doc = render_to_string :layout => "archive", :template => "documents/content"
         rendered_doc = ApplicationController.new.render_to_string(layout: 'archive',partial: 'documents/content', locals: {doc: doc, organization: @organization, :@organization => @organization})
 
-        zipfile.get_output_stream("#{identifier}_#{doc.id}.html") { |os| os.write rendered_doc }
+        zipfile.get_output_stream("#{folder}#{identifier}_#{doc.id}.html") { |os| os.write rendered_doc }
       end
       if @organization.track_meta_info_from_document && document_metas != {}
         zipfile.get_output_stream("document_meta.json"){ |os| os.write document_metas.to_json  }
@@ -115,8 +98,46 @@ module ReportHelper
     end
   end
 
+  def self.program_outcomes_format doc, document_metas
+    dms = DocumentMeta.where("key LIKE :prefix AND document_id IN (:document_id)", prefix: "salsa_%", document_id: doc.id)
+    dms_array = []
+    dms&.each do |dm|
+      salsa_hash = Hash.new
+      salsa_outcome = dm.key.split("_")[1].split("-")
+      if salsa_outcome.length >= 3
+        if salsa_outcome.length > 3
+          salsa_outcome_type = "#{salsa_outcome[1]}: " + salsa_outcome[2..-2].join(' ')
+        else
+          salsa_outcome_type = salsa_outcome[1]
+        end
+        salsa_hash[:lms_course_id] = "#{dm.lms_course_id}"
+        salsa_hash[:salsa_outcome] = salsa_outcome[0]
+        salsa_hash[:salsa_outcome_type] = salsa_outcome_type
+        salsa_hash[:salsa_outcome_id] = salsa_outcome.last
+        salsa_hash[:salsa_outcome_text] = dm.value
+        salsa_hash[:key] = ""
+        salsa_hash[:value] = ""
+      else
+        salsa_hash[:lms_course_id] = "#{dm.lms_course_id}"
+        salsa_hash[:salsa_outcome] = ""
+        salsa_hash[:salsa_outcome_type] = ""
+        salsa_hash[:salsa_outcome_id] = ""
+        salsa_hash[:salsa_outcome_text] = ""
+        salsa_hash[:key] = dm.key
+        salsa_hash[:value] = dm.value
+
+      end
+      document_metas.push JSON.parse(salsa_hash.to_json)
+      dms_array.push JSON.parse(salsa_hash.to_json)
+    end
+  end
+
   def self.zipfile_path (org_slug, report_id)
     "#{ENV["ZIPFILE_FOLDER"]}/#{org_slug}_#{report_id}.zip"
+  end
+
+  def self.get_workflow_document_meta doc_ids
+    DocumentMeta.where(document_id: doc_ids)
   end
 
   def self.get_document_meta org_slug, account_filter, params
@@ -124,7 +145,7 @@ module ReportHelper
 
     org = Organization.find_by slug: org_slug
 
-    if account_filter != nil && account_filter != '' && account_filter != {"account_filter"=>""}
+    if account_filter_blank?(account_filter)
       query_parameters[:account_filter] = "%#{account_filter}%"
       account_filter_sql = "AND n.value LIKE :account_filter AND a.key = 'account_id'"
     else
@@ -150,7 +171,10 @@ module ReportHelper
     query_parameters[:org_id] = org[:id]
     query_parameters[:org_id_string] = org[:id].to_s
 
-    query_string =
+    DocumentMeta.find_by_sql([document_meta_query_sql(account_filter_sql, limit_sql, start_filter), query_parameters])
+  end
+
+  def self.document_meta_query_sql account_filter_sql, limit_sql, start_filter
     <<-SQL.gsub(/^ {4}/, '')
       SELECT DISTINCT a.lms_course_id as course_id,
         a.value as account_id,
@@ -281,7 +305,6 @@ module ReportHelper
 
       #{limit_sql}
     SQL
-
-    DocumentMeta.find_by_sql([query_string, query_parameters])
   end
+
 end
