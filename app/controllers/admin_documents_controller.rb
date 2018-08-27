@@ -39,8 +39,7 @@ class AdminDocumentsController < AdminController
     get_document params[:id]
 
     # if the publish target changed, clear out the published at date
-    if params[:document][:lms_course_id] && @document[:lms_course_id] != params[:document][:lms_course_id] ||
-       params[:document][:organization_id] && @document[:organization_id] != params[:document][:organization_id]
+    if params[:document][:lms_course_id] && @document[:lms_course_id] != params[:document][:lms_course_id] || params[:document][:organization_id] && @document[:organization_id] != params[:document][:organization_id]
       @document[:lms_published_at] = nil
     end
 
