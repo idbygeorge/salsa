@@ -31,6 +31,7 @@
 //= require on_click
 //= require on_change
 //= require script
+//= require workflow_document
 //= require canvas
 
 //= require moment.min
