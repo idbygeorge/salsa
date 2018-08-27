@@ -32,3 +32,10 @@ production:
   secret_key_base: <%= ENV["SECRET_KEY_BASE"] %>
 EOL
 fi
+
+mkdir ./tmp/ssl -p
+
+if [ ! -f ./tmp/ssl/localhost.crt ] || [ ! -f ./tmp/ssl/localhost.key ]; then
+  echo -e "\nGenerating ssl new cert and key"
+  openssl req -new -newkey rsa:2048 -sha1 -days 365 -nodes -x509 -keyout tmp/ssl/localhost.key -out tmp/ssl/localhost.crt
+fi

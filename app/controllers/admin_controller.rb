@@ -24,6 +24,7 @@ class AdminController < ApplicationController
       :canvas_accounts,
       :canvas_courses
   ]
+  force_ssl only:[:canvas_courses, :canvas_accounts,:canvas_courses,:canvas_accounts_sync]
 
   def landing
     if has_role 'designer'
