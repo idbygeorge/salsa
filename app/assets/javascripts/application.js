@@ -19,6 +19,8 @@
 
 //= require modernizr
 
+//= require workflow_document
+
 //= require editor/ckeditor_init.js
 //= require editor/tinymce_init.js
 
