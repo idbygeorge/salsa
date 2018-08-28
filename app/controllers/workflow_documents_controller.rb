@@ -35,7 +35,7 @@ class WorkflowDocumentsController < ApplicationController
     end
     @periods = Period.where(organization_id: @document.organization.id)
     @users = User.where(archived: false)
-    @user += [@document.user] if !@document.user.blank?
+    @users += [@document.user] if !@document.user.blank?
   end
 
   def update
