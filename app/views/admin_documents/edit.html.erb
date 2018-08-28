@@ -20,7 +20,7 @@
       <%= f.text_field :lms_course_id, class: 'form-control input-xxlarge' %>
     </div>
   </div>
-  <% if @workflow_steps && @document.organization.enable_workflows %>
+  <% if @workflow_steps && @document.organization&.enable_workflows %>
     <div class="form-group">
       <%= f.label :workflow_step_id, class: "control-label" %>
       <div class="controls">
@@ -31,7 +31,7 @@
     <div class="form-group">
       <%= f.label :user_id, class: "control-label" %>
       <div class="controls">
-        <%= f.collection_select :user_id, User.all, :id, :email, {include_blank: true},{class:"form-control"} %>
+        <%= f.collection_select :user_id, @users, :id, :email, {include_blank: true},{class:"form-control"} %>
       </div>
     </div>
   <% end %>
