@@ -10,7 +10,7 @@ class WorkflowDocumentsController < ApplicationController
     org = get_org
     user_assignment = current_user.user_assignments.find_by organization_id: org.id if current_user
     @workflow_steps = WorkflowStep.where(organization_id: org.organization_ids.push(org.id))
-    @documents = Document.where(organization_id:org.id).where('documents.updated_at != documents.created_at')
+    @documents = Document.where(organization_id:org.children.map(&:id).push(org.id)).where('documents.updated_at != documents.created_at')
     if has_role("supervisor") && params[:show_completed] == "true"
       @documents = @documents.where(workflow_step_id: WorkflowStep.where(step_type:"end_step").map(&:id) )
     elsif has_role("supervisor") && (params[:show_completed] == "false")
@@ -34,7 +34,7 @@ class WorkflowDocumentsController < ApplicationController
       @workflow_steps = WorkflowStep.where(organization_id: @document.organization_id).order(step_type: :desc)
     end
     @periods = Period.where(organization_id: @document.organization&.parents&.map(&:id).push(@document.organization&.id))
-    @users = UserAssignment.where(organization_id:@organization.children.map(&:id) + [@organization.id]).map(&:user)
+    @users = UserAssignment.where(organization_id:@document.organization.children.map(&:id) + [@organization.id]).map(&:user)
   end
 
   def update
