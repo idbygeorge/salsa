@@ -23,7 +23,7 @@ class AdminDocumentsController < AdminController
     end
     @periods = Period.where(organization_id: @document.organization&.id)
     @users = User.where(archived: false)
-    @users += [@document.user] if !@document.user&.blank?
+    @users += [@document.user] if !@document.user.blank?
   end
 
   def versions
