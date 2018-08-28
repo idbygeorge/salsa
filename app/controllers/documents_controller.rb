@@ -87,6 +87,8 @@ class DocumentsController < ApplicationController
       @can_use_edit_token = can_use_edit_token(@document.lms_course_id)
       if @organization.enable_workflows && @document.assigned_to?(current_user) && @document.workflow_step_id
         render :layout => 'edit', :template => '/documents/content'
+      elsif @organization.enable_workflows && has_role("supervisor") && @document.workflow_step&.step_type == "end_step"
+        render :layout => 'edit', :template => '/documents/content'
       elsif !@organization.enable_workflows || !@document.workflow_step_id || !@document.user_id
         render :layout => 'edit', :template => '/documents/content'
       elsif current_user != nil
