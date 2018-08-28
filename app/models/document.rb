@@ -18,7 +18,7 @@ class Document < ApplicationRecord
       component = self.workflow_step.component
       user_assignment = user.user_assignments.find_by(organization_id:self.organization_id)
       user_org = user_assignment.organization
-      if (component.role == nil || component.role == "") && ((user_assignment.role == "supervisor" && user_org.level == component.role_organization_level) || user.id == self.user_id)
+      if (component&.role == nil || component&.role == "") && ((user_assignment&.role == "supervisor" && user_org.level == component.role_organization_level) || user.id == self.user_id)
         result = true
       elsif component.role == "staff" && user_assignment.role == "staff" && self.user_id == user.id && self.workflow_step_id != ""
         result = true
