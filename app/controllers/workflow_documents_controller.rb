@@ -34,6 +34,8 @@ class WorkflowDocumentsController < ApplicationController
       @workflow_steps = WorkflowStep.where(organization_id: @document.organization_id).order(step_type: :desc)
     end
     @periods = Period.where(organization_id: @document.organization.id)
+    @users = User.where(archived: false)
+    @user += [@document.user] if !@document.user.blank?
   end
 
   def update

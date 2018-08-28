@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   protected
 
   def https_enabled?
-    get_org.force_https
+    get_org&.force_https
   end
 
   def redirect_if_user_archived

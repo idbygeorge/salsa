@@ -1,4 +1,6 @@
 <h1>
-<small><%= @organization[:slug] %></small><br>
+<%= link_to organization_path(@organization.slug) do %>
+  <small><%= @organization[:slug] %></small><br>
+<% end %>
 Update Component</h1>
 <%= render 'edit' %>
