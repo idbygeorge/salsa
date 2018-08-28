@@ -41,3 +41,4 @@ salsa_test
 
 # Ignore application configuration
 /config/application.yml
+coverage
