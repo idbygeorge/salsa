@@ -33,7 +33,7 @@ class WorkflowDocumentsController < ApplicationController
     else
       @workflow_steps = WorkflowStep.where(organization_id: @document.organization_id).order(step_type: :desc)
     end
-    @periods = Period.where(organization_id: @document.organization.id)
+    @periods = Period.where(organization_id: @document.organization&.parents&.map(&:id).push(@document.organization&.id))
     @users = UserAssignment.where(organization_id:@organization.children.map(&:id) + [@organization.id]).map(&:user)
   end
 
