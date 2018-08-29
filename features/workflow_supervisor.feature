@@ -15,6 +15,7 @@ I want to have a defined set of workflow steps to go thrugh
     Then I should be able to see all the workflow_steps for the organization
 
   Scenario: create workflow step
+     Given I am on the workflow_steps index page for the organization
      When I click the "New" link
      And I fill in the workflow_step form with:
         | slug | step_1 |

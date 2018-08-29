@@ -17,14 +17,20 @@ class Document < ApplicationRecord
     if self.workflow_step&.component_id && user != nil && self.workflow_step.step_type != "end_step" && user.user_assignments.where.not(organization_id: nil).exists?
       component = self.workflow_step.component
       user_assignment = user.user_assignments.find_by(organization_id:self.organization_id)
-      user_org = user_assignment.organization
-      if (component.role == nil || component.role == "") && ((user_assignment.role == "supervisor" && user_org.level == component.role_organization_level) || user.id == self.user_id)
+      if self.organization&.inherit_workflows_from_parents
+        user_assignment = user.user_assignments.find_by(organization_id: self.organization&.parents.map(&:id).push(self.organization_id))
+      end
+      user_org = user_assignment&.organization
+      if !user_assignment.cascades && user_org.level == component.role_organization_level
+        user_org_level_check = user_org.level == component.role_organization_level
+      elsif user_assignment.cascades && user_org.level <= component.role_organization_level
+        user_org_level_check = user_org.level <= component.role_organization_level
+      end
+      if (component&.role == nil || component&.role == "") && ((user_assignment&.role == "supervisor" && user_org_level_check) || user.id == self.user_id)
         result = true
       elsif component.role == "staff" && user_assignment.role == "staff" && self.user_id == user.id && self.workflow_step_id != ""
         result = true
-      elsif component.role == "supervisor" && user_assignment.role == "supervisor" && user_assignment.cascades && user_org.level <= component.role_organization_level
-        result = true
-      elsif component.role == "supervisor" && user_assignment.role == "supervisor" && !user_assignment.cascades && user_org.level == component.role_organization_level
+      elsif component.role == "supervisor" && user_assignment.role == "supervisor" && user_org_level_check
         result = true
       else
         result = false
