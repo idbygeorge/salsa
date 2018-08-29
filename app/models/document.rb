@@ -21,13 +21,16 @@ class Document < ApplicationRecord
         user_assignment = user.user_assignments.find_by(organization_id: self.organization&.parents.map(&:id).push(self.organization_id))
       end
       user_org = user_assignment&.organization
-      if (component&.role == nil || component&.role == "") && ((user_assignment&.role == "supervisor" && user_org.level == component.role_organization_level) || user.id == self.user_id)
+      if !user_assignment.cascades && user_org.level == component.role_organization_level
+        user_org_level_check = user_org.level == component.role_organization_level
+      elsif user_assignment.cascades && user_org.level <= component.role_organization_level
+        user_org_level_check = user_org.level <= component.role_organization_level
+      end
+      if (component&.role == nil || component&.role == "") && ((user_assignment&.role == "supervisor" && user_org_level_check) || user.id == self.user_id)
         result = true
       elsif component.role == "staff" && user_assignment.role == "staff" && self.user_id == user.id && self.workflow_step_id != ""
         result = true
-      elsif component.role == "supervisor" && user_assignment.role == "supervisor" && user_assignment.cascades && user_org.level <= component.role_organization_level
-        result = true
-      elsif component.role == "supervisor" && user_assignment.role == "supervisor" && !user_assignment.cascades && user_org.level == component.role_organization_level
+      elsif component.role == "supervisor" && user_assignment.role == "supervisor" && user_org_level_check
         result = true
       else
         result = false
