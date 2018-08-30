@@ -131,7 +131,6 @@ ActiveRecord::Schema.define(version: 20180824203645) do
     t.boolean "enable_workflows"
     t.boolean "inherit_workflows_from_parents"
     t.integer "default_workflow_step_id"
-    t.boolean "enforce_workflow_permissions_on_document_view", default: false
     t.boolean "disable_document_view", default: false
     t.boolean "force_https", default: false
     t.boolean "enable_workflow_report", default: false
