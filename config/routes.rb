@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  devise_for :users
   root 'default#index'
 
   resources :documents, path: 'SALSA', constraints: { slug: /.*/ }
@@ -42,7 +43,7 @@ Rails.application.routes.draw do
       post "archive"
       post "restore"
     end
-    
+
     get "user_activation/:id", to: 'admin#user_activation', as: 'admin_user_activation'
     post "create_user/:id", to: 'admin#create_user', as: 'admin_create_user'
 
