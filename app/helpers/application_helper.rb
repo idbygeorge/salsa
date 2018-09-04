@@ -249,7 +249,7 @@ module ApplicationHelper
         unless organization
           organization = Organization.find_by slug: slug, depth: 0
         else
-          organization = organization.children.find_by slug: "/" + slug
+          organization = organization.descendants.find_by slug: "/" + slug
         end
       end
     end
