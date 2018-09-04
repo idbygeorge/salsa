@@ -103,7 +103,7 @@ class OrganizationsController < AdminController
     end
     organization = get_org
     if start_workflow_params[:start_for_sub_organizations]
-      organizations = organization.children + [organization]
+      organizations = organization.descendants + [organization]
     else
       organizations = [organization]
     end
