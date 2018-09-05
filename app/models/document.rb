@@ -18,7 +18,7 @@ class Document < ApplicationRecord
       component = self.workflow_step.component
       if component.role == "supervisor"
         ua = UserAssignment.where(role: "supervisor",organization_id: self.organization&.parents.map(&:id)).includes(:organization).reorder("organizations.depth DESC").first
-        user_assignment = user.user_assignments.find_by(id:ua.id)
+        user_assignment = user.user_assignments.find_by(id:ua&.id)
       else
         user_assignment = user.user_assignments.find_by(organization_id: self.organization&.parents.map(&:id).push(self.organization_id))
       end
