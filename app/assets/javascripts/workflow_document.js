@@ -18,7 +18,10 @@
   $(window).load(function(){
     var document_step_type = $('[data-document-step-type]').attr('data-document-step-type');
     var role = $('[data-component-role]').attr('data-component-role');
-    $(".workflow_step").show().fadeTo(500,1)
+
+    if(document_step_type === "end_step"){
+      $(".workflow_step").fadeTo(500,1)
+    }
     if(role === "" && document_step_type !== "end_step"){
       $(".workflow_step.staff").show().fadeTo(500,0.5)
       $(".workflow_step.staff").find(":input").prop('disabled', true);
