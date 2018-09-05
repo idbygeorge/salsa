@@ -174,7 +174,7 @@ class ComponentsController < ApplicationController
   end
 
   def get_organization_levels
-     @orgs = @organization.parents.push(@organization) + @organization.children
+     @orgs = @organization.parents.push(@organization) + @organization.descendants
      organization_levels = @orgs.map { |h| h.slice(:slug, :level).values }
      @organization_levels = organization_levels.sort {|a,b|  a[1] <=> b[1] }
   end
