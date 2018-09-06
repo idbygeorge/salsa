@@ -198,8 +198,7 @@ class ComponentsController < ApplicationController
       :subject,
       :layout,
       :format,
-      :role,
-      :role_organization_level
+      :role
     )
   end
 end
