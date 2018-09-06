@@ -1,13 +1,16 @@
 <tr>
   <td><%= link_to workflow_step.name, edit_workflow_step_path(params[:slug],workflow_step) %></td>
-  <td><%= link_to workflow_step.slug, edit_workflow_step_path(params[:slug],workflow_step) %></td>
+  <td><%= workflow_step.slug %></td>
   <td><%= WorkflowStep.find(workflow_step.next_workflow_step_id).slug if workflow_step&.next_workflow_step_id %></td>
   <td><%= workflow_step.step_type %></td>
-  <td><%= "#{workflow_step.component&.id}: #{workflow_step.component&.slug}" %></td>
+  <td>
+    <% if workflow_step.component&.id %>
+      <%= "#{workflow_step.component&.id}: #{workflow_step.component&.slug}" %>
+    <% end %>
+  </td>
   <td>
     <% if has_role('supervisor',workflow_step.organization) %>
-    <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                edit_workflow_step_path(params[:slug],workflow_step), :class => 'btn btn-default btn-xs' %>
+
     <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
                 workflow_step_path(params[:slug],workflow_step),
                 :method => :delete,
