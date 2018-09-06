@@ -87,7 +87,7 @@ class OrganizationsController < AdminController
   end
 
   def start_workflow_form
-    @organization = get_org
+    @organization = Organization.find_by(slug:params[:slug])
     @workflow_steps = WorkflowStep.where(organization_id: @organization.organization_ids+[@organization.id], step_type: "start_step")
     user_ids = @organization.user_assignments.map(&:user_id)
     @users = User.find_by(id: user_ids)
