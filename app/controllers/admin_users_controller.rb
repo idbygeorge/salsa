@@ -129,6 +129,16 @@ class AdminUsersController < AdminController
 
   def create_users
     org = get_org
+
+    org_id = org.id
+    if params['organization_id']
+      org_id = params['organization_id']
+    end
+
+    if org.id != org_id && !org.children.pluck('id').include?(org_id)
+      return 404
+    end
+
     users_emails = params[:users][:emails].gsub(/ */,'').split(/(\r\n|\n|,)/).delete_if {|x| x.match(/\A(\r\n|\n|,|)\z/) }
     user_errors = Array.new
     users_emails.each do |user_email|
@@ -139,7 +149,7 @@ class AdminUsersController < AdminController
       user.activated = false
       user_activation_token user
       user.save
-      UserAssignment.create(role:"staff",user_id:user.id,organization_id:org.id,cascades:true) if user
+      UserAssignment.create(role:"staff",user_id:user.id,organization_id:org_id,cascades:true) if user
       user.errors.messages.each do |error|
         user_errors.push "Could not create user with email: '#{user.email}' because: #{error[0]} #{error[1][0]}" if user.errors
       end
@@ -152,6 +162,8 @@ class AdminUsersController < AdminController
   end
 
   def import_users
+    @organization = get_org
+    @organizations = @organization.children
   end
 
   private

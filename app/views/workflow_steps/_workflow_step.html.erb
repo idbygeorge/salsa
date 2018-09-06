@@ -1,11 +1,11 @@
 <tr>
-  <td><%= link_to workflow_step.name, edit_workflow_step_path(params[:slug],workflow_step) %></td>
+  <td><%= link_to "#{workflow_step.name}: #{workflow_step.component&.name}", edit_workflow_step_path(params[:slug],workflow_step) %></td>
   <td><%= workflow_step.slug %></td>
   <td><%= WorkflowStep.find(workflow_step.next_workflow_step_id).slug if workflow_step&.next_workflow_step_id %></td>
   <td><%= workflow_step.step_type %></td>
   <td>
     <% if workflow_step.component&.id %>
-      <%= "#{workflow_step.component&.id}: #{workflow_step.component&.slug}" %>
+      <%= link_to "#{workflow_step.component&.id}: #{workflow_step.component&.slug}", edit_component_path(params[:slug],workflow_step.slug) %>
     <% end %>
   </td>
   <td>

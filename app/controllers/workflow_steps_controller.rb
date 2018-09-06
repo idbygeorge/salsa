@@ -12,8 +12,8 @@ class WorkflowStepsController < OrganizationsController
   # GET /workflow_steps
   # GET /workflow_steps.json
   def index
-    org = Organization.find_by(slug: params[:slug])
-    org_ids = org.organization_ids + [org.id]
+    @organization = Organization.find_by(slug: params[:slug])
+    org_ids = @organization.organization_ids + [@organization.id]
     @workflows = WorkflowStep.workflows org_ids
     workflow_array = []
     @workflows.each do|wf|
@@ -32,18 +32,21 @@ class WorkflowStepsController < OrganizationsController
 
   # GET /workflow_steps/new
   def new
+    @organization = Organization.find_by(slug: params[:slug])
     @workflow_step = WorkflowStep.new
   end
 
   # GET /workflow_steps/1/edit
   def edit
+    @organization = Organization.find_by(slug: params[:slug])
   end
 
   # POST /workflow_steps
   # POST /workflow_steps.json
   def create
+    @organization = Organization.find_by(slug: params[:slug])
     @workflow_step = WorkflowStep.new(workflow_step_params)
-    @workflow_step.organization_id = Organization.find_by(slug: params[:slug]).id
+    @workflow_step.organization_id = @organization.id
     find_or_create_component @workflow_step
 
     respond_to do |format|
@@ -60,6 +63,7 @@ class WorkflowStepsController < OrganizationsController
   # PATCH/PUT /workflow_steps/1
   # PATCH/PUT /workflow_steps/1.json
   def update
+    @organization = Organization.find_by(slug: params[:slug])
     find_or_create_component @workflow_step
     respond_to do |format|
       if @workflow_step.update(workflow_step_params)
