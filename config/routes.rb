@@ -1,6 +1,11 @@
 Rails.application.routes.draw do
 
-  devise_for :users
+  devise_for :shibboleth_users
+
+  devise_scope :shibboleth_user do
+    post '/auth/shibboleth', to: 'devise/saml_sessions#create'
+  end
+
   root 'default#index'
 
   resources :documents, path: 'SALSA', constraints: { slug: /.*/ }

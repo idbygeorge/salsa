@@ -1,5 +1,34 @@
 # frozen_string_literal: true
 
+
+class IdPSettingsAdapter
+  def self.settings(idp_entity_id)
+    orgs = Organization.where(enable_shibboleth: true)
+    idp_settings = nil
+    orgs.each do |org|
+      idp_settings = {
+        assertion_consumer_service_url: "https://evaluation.cpdusu.org/auth/shibboleth",
+        issuer: "oasis4he-a11y-docs",
+        idp_entity_id: "#{org.idp_entity_id}",
+        idp_slo_target_url: "#{org.idp_slo_target_url}",
+        idp_sso_target_url: "#{org.idp_sso_target_url}",
+        idp_cert: "#{org.idp_cert}"
+      }
+    end
+    return idp_settings
+  end
+
+  def self.full_org_path org
+    if org[:depth] > 0 and org[:slug].start_with? '/'
+      org_slug = org.self_and_ancestors.pluck(:slug).join ''
+    else
+      org_slug = org[:slug]
+    end
+
+    org_slug
+  end
+end
+
 # Use this hook to configure devise mailer, warden hooks and so forth.
 # Many of these configuration options can be set straight in your model.
 Devise.setup do |config|
@@ -289,75 +318,62 @@ Devise.setup do |config|
   # end
 
 
-# # ==> Configuration for :saml_authenticatable
-#
-#   # Create user if the user does not exist. (Default is false)
-#   config.saml_create_user = true
-#
-#   # Update the attributes of the user after a successful login. (Default is false)
-#   config.saml_update_user = true
-#
-#   # Set the default user key. The user will be looked up by this key. Make
-#   # sure that the Authentication Response includes the attribute.
-#   config.saml_default_user_key = :email
-#
-#   # Optional. This stores the session index defined by the IDP during login.  If provided it will be used as a salt
-#   # for the user's session to facilitate an IDP initiated logout request.
-#   # config.saml_session_index_key = :session_index
-#
-#   # You can set this value to use Subject or SAML assertation as info to which email will be compared.
-#   # If you don't set it then email will be extracted from SAML assertation attributes.
-#   #
-#   # CHECK THIS AGAINST SAML response
-#   #
-#   config.saml_use_subject = true
-#
-#   # You can support multiple IdPs by setting this value to a class that implements a #settings method which takes
-#   # an IdP entity id as an argument and returns a hash of idp settings for the corresponding IdP.
-#   config.idp_settings_adapter = IdPSettingsAdapter
-#
-#   # You provide you own method to find the idp_entity_id in a SAML message in the case of multiple IdPs
-#   # by setting this to a custom reader class, or use the default.
-#   # config.idp_entity_id_reader = DeviseSamlAuthenticatable::DefaultIdpEntityIdReader
-#
-#   # You can set a handler object that takes the response for a failed SAML request and the strategy,
-#   # and implements a #handle method. This method can then redirect the user, return error messages, etc.
-#   # config.saml_failed_callback = nil
-#
-#   # Configure with your SAML settings (see [ruby-saml][] for more information).
-#
-#   config.saml_configure do |settings|
-#
-#     settings.assertion_consumer_service_binding = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
-#     settings.protocol_binding                   = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
-#
-#     settings.security[:authn_requests_signed]   = true     # Enable or not signature on AuthNRequest
-#     settings.security[:logout_requests_signed]  = true     # Enable or not signature on Logout Request
-#     settings.security[:logout_responses_signed] = false    # Enable or not signature on Logout Response
-#     settings.security[:want_assertions_signed]  = true     # Enable or not the requirement of signed assertion
-#     settings.security[:metadata_signed]         = false    # Enable or not signature on Metadata
-#     settings.security[:want_assertions_encrypted] = true
-#
-#     settings.security[:digest_method]    = XMLSecurity::Document::SHA1
-#     settings.security[:signature_method] = XMLSecurity::Document::RSA_SHA1
-#   end
-#
+# ==> Configuration for :saml_authenticatable
+
+  # Create user if the user does not exist. (Default is false)
+  config.saml_create_user = true
+
+  # Update the attributes of the user after a successful login. (Default is false)
+  config.saml_update_user = true
+
+  # Set the default user key. The user will be looked up by this key. Make
+  # sure that the Authentication Response includes the attribute.
+  config.saml_default_user_key = :email
+
+  # Optional. This stores the session index defined by the IDP during login.  If provided it will be used as a salt
+  # for the user's session to facilitate an IDP initiated logout request.
+  # config.saml_session_index_key = :session_index
+
+  # You can set this value to use Subject or SAML assertation as info to which email will be compared.
+  # If you don't set it then email will be extracted from SAML assertation attributes.
+  #
+  # CHECK THIS AGAINST SAML response
+  #
+  config.saml_use_subject = true
+
+  # You can support multiple IdPs by setting this value to a class that implements a #settings method which takes
+  # an IdP entity id as an argument and returns a hash of idp settings for the corresponding IdP.
+  config.idp_settings_adapter = IdPSettingsAdapter
+
+  # You provide you own method to find the idp_entity_id in a SAML message in the case of multiple IdPs
+  # by setting this to a custom reader class, or use the default.
+  # config.idp_entity_id_reader = DeviseSamlAuthenticatable::DefaultIdpEntityIdReader
+
+  # You can set a handler object that takes the response for a failed SAML request and the strategy,
+  # and implements a #handle method. This method can then redirect the user, return error messages, etc.
+  # config.saml_failed_callback = nil
+
+  # Configure with your SAML settings (see [ruby-saml][] for more information).
+
+  config.saml_configure do |settings|
+
+    settings.assertion_consumer_service_binding = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+
+    settings.name_identifier_format             = "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified"
+
+    settings.certificate = ENV["SSO_CERT"]
+    settings.private_key = ENV["SSO_KEY"]
+
+    settings.security[:authn_requests_signed]   = false     # Enable or not signature on AuthNRequest
+    settings.security[:logout_requests_signed]  = true     # Enable or not signature on Logout Request
+    settings.security[:logout_responses_signed] = false    # Enable or not signature on Logout Response
+    settings.security[:want_assertions_signed]  = true     # Enable or not the requirement of signed assertion
+    settings.security[:metadata_signed]         = false    # Enable or not signature on Metadata
+    settings.security[:want_assertions_encrypted] = true
+
+    settings.security[:digest_method]    = XMLSecurity::Document::SHA1
+    settings.security[:signature_method] = XMLSecurity::Document::RSA_SHA1
+  end
+
 
 end
-#
-# class IdPSettingsAdapter
-#   def self.settings(idp_entity_id)
-#     Organization.where(enable_shibboleth: true).each do |org|
-#       settings = {
-#         assertion_consumer_service_url: "https://#{full_org_path}/users/saml/auth",
-#         issuer: "http://#{full_org_path}/saml/metadata",
-#         idp_entity_id: "#{org.idp_entity_id}",
-#         authn_context: "#{org.authn_context}",
-#         idp_slo_target_url: "#{org.idp_sso_target_url}",
-#         idp_sso_target_url: "#{org.idp_slo_target_url}",
-#         idp_cert: "#{org.idp_cert}"
-#       }
-#     end
-#     settings
-#   end
-# end

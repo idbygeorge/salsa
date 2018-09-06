@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180903225602) do
+ActiveRecord::Schema.define(version: 20180905195724) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -134,6 +134,14 @@ ActiveRecord::Schema.define(version: 20180903225602) do
     t.boolean "disable_document_view", default: false
     t.boolean "force_https", default: false
     t.boolean "enable_workflow_report", default: false
+    t.boolean "enable_shibboleth", default: false
+    t.string "idp_sso_target_url"
+    t.string "idp_slo_target_url"
+    t.string "idp_entity_id"
+    t.text "idp_cert"
+    t.string "idp_cert_fingerprint"
+    t.string "idp_cert_fingerprint_algorithm"
+    t.string "authn_context"
     t.index ["depth"], name: "index_organizations_on_depth"
     t.index ["lft"], name: "index_organizations_on_lft"
     t.index ["lms_id"], name: "index_organizations_on_lms_id"
@@ -176,6 +184,18 @@ ActiveRecord::Schema.define(version: 20180903225602) do
     t.index ["organization_id"], name: "index_report_archives_on_organization_id"
   end
 
+  create_table "shibboleth_users", force: :cascade do |t|
+    t.string "email", default: "", null: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["email"], name: "index_shibboleth_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_shibboleth_users_on_reset_password_token", unique: true
+  end
+
   create_table "templates", id: :serial, force: :cascade do |t|
     t.string "slug"
     t.text "payload"
@@ -206,12 +226,7 @@ ActiveRecord::Schema.define(version: 20180903225602) do
     t.string "reset_digest"
     t.datetime "reset_sent_at"
     t.boolean "archived", default: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
     t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   create_table "versions", force: :cascade do |t|
