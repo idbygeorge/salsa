@@ -27,7 +27,7 @@ class Document < ApplicationRecord
         false
       elsif component.role.blank? && ((user_assignment&.role == "supervisor" && user_org.level < self.organization&.level) || user.id == self.user_id)
         result = true
-      elsif component.role == "staff" && ["supervisor", "staff"].include?(user_assignment.role) && self.user_id == user.id && self.workflow_step_id != ""
+      elsif component.role == "staff" && user_assignment.role == "staff" && self.user_id == user.id && self.workflow_step_id != ""
         result = true
       elsif component.role == "supervisor" && user_assignment.role == "supervisor" && user_org.level < self.organization&.level
         result = true
