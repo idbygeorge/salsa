@@ -455,7 +455,7 @@ class DocumentsController < ApplicationController
     # if there is no org yet, show an error
     raise "error: no org found matching #{document_slug}"  unless org
 
-    @document[:organization_id] = org[:id] if @document && !org.enable_workflows
+    @document[:organization_id] = org[:id] if @document && (!org.enable_workflows || @document.new_record?)
 
     @organization = org
   end
