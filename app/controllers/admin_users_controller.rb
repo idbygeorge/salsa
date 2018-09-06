@@ -83,6 +83,8 @@ class AdminUsersController < AdminController
 
     @user_assignment = UserAssignment.update params[:id], user_assignment_params
 
+    @user_assignment.errors.add('role', 'Invalid role') if !get_roles.has_value?(params[:user_assignment][:role]) && !has_role("admin")
+
     if @user_assignment.errors.any?
       get_organizations
 

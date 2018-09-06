@@ -49,7 +49,11 @@ class ApplicationController < ActionController::Base
   end
 
   def get_roles
-    @roles = UserAssignment.roles
+    if has_role("admin")
+      @roles = UserAssignment.roles
+    else
+      @roles = {'Supervisor'=>'supervisor','Staff'=>'staff'}
+    end
   end
 
   def init_view_folder
