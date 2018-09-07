@@ -27,6 +27,12 @@
         <h2 class="form-signin-heading">Salsa Dashboard</h2>
 
 
+        <% if flash[:notice] %>
+          <div class="alert alert-info">
+            <%= flash[:notice] %>
+          </div>
+        <% end %>
+
         <% if flash[:error] %>
           <div class="alert alert-danger">
             <%= flash[:error] %>
