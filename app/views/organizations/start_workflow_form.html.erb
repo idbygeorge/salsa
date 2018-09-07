@@ -1,3 +1,11 @@
+<div class="page-header">
+  <h1>
+    <%= link_to organization_path(@organization.slug) do %><small><%= @organization.name %></small><% end %>
+    <br>
+    <%=t '.title', :default => "Start Workflow" %>
+  </h1>
+</div>
+
 <%= form_for("Start Workflow", url: start_workflow_path, html: { class: "form-horizontal col-md-9" } ) do |f| %>
 
   <div class="form-group">

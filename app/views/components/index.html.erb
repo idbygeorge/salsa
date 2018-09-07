@@ -1,21 +1,4 @@
 <%= link_to "Add Component", new_component_path, class: 'btn btn-success pull-right', id: 'Add Component' %>
-<% if has_role('admin') %>
-  <%= link_to "Load Default Components To Database", load_components_path, :data => { :confirm => 'Are you sure? this WILL RESET YOUR SALSA CONFIGURATION TO DEFAULT' }, class: 'btn btn-danger'%>
-  <%= link_to "Export Components To Zipfile", export_components_path, class: 'btn btn-danger'%>
-
-  <%= form_tag import_components_path(@organization.slug), multipart: true, :html => { :class => "form-horizontal col-md-9" } do %>
-    <div class="form-group">
-      <div class="controls">
-        <%= file_field_tag :file, accept: '.zip', class: "form-control-file btn btn-file " %>
-        <%= label :overwrite, class:"control-label" do %>
-          <%= check_box_tag :overwrite, true, class: "form-control" %>
-          Overwrite Existing Components
-        <% end %>
-      </div>
-      <%= submit_tag "Import Components", :data => { :confirm => 'Are you sure? this could break your SALSA configuration' }, class: "btn btn-default" %>
-    </div>
-  <% end %>
-<% end %>
 <h1>
   <%= link_to organization_path(@organization.slug) do %>
     <small><%= @organization.name %></small>
@@ -67,4 +50,27 @@
   <div class="alert alert-warning">
     There are no <% if params['category'] %><code><%= params[:category] %></code><% end %> components for this organization.
   </div>
+<% end %>
+
+
+<% if has_role('admin') %>
+  <hr>
+  
+  <%= link_to "Load Default Components To Database", load_components_path, :data => { :confirm => 'Are you sure? this WILL RESET YOUR SALSA CONFIGURATION TO DEFAULT' }, class: 'btn btn-danger'%>
+  <%= link_to "Export Components To Zipfile", export_components_path, class: 'btn btn-danger'%>
+  
+  <hr>
+
+  <%= form_tag import_components_path(@organization.slug), multipart: true, :html => { :class => "form-horizontal col-md-9" } do %>
+    <div class="form-group-">
+      <div class="controls">
+        <%= file_field_tag :file, accept: '.zip', class: "form-control-file btn btn-file " %>
+        <%= label :overwrite, class:"control-label" do %>
+          <%= check_box_tag :overwrite, true, class: "form-control" %>
+          Overwrite Existing Components
+        <% end %>
+      </div>
+      <%= submit_tag "Import Components", :data => { :confirm => 'Are you sure? this could break your SALSA configuration' }, class: "btn btn-default" %>
+    </div>
+  <% end %>
 <% end %>
