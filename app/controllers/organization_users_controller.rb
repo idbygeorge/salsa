@@ -91,6 +91,7 @@ class OrganizationUsersController < AdminUsersController
   end
 
   def import_users
+    @organization = Organization.find_by slug: params[:slug]
   end
 
 end
