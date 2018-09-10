@@ -6,7 +6,7 @@
   </h1>
 </div>
 
-<%= form_for("users", url: admin_import_users_path, :html => { :class => "form-horizontal col-md-9 col-lg-6" } ) do |f| %>
+<%= form_for("users", url: organization_import_users_path(params[:slug]), :html => { :class => "form-horizontal col-md-9 col-lg-6" } ) do |f| %>
 
   <% if flash[:errors] != []  && flash[:errors] != nil%>
       <div class="alert alert-danger">

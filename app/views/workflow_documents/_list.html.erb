@@ -28,14 +28,17 @@
     <% end %>
     <% if user_documents %>
       <tr>
-           <td colspan="4"><h1 class="text-center">Your Documents</h1></td>
+           <td colspan="5"><h1>Your Documents</h1></td>
       </tr>
       <% user_documents.each do |document| %>
           <tr>
             <td><%= document.name %></td>
             <td><%= document.organization&.slug %></td>
             <td><%= document.workflow_step&.slug %></td>
-            <td></td>
+            <td><%= document.user&.email %></td>
+            <td>
+              <%= link_to "View", document_path(document.view_id), :class => 'btn btn-default btn-xs' %>
+            </td>
           </tr>
       <% end %>
     <% end %>

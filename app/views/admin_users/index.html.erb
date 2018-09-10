@@ -1,10 +1,10 @@
-<% if has_role("admin") %>
-  <%= link_to 'Add User', new_admin_user_path, class: 'btn btn-success pull-right' %>
+<% if has_role("dmin") %>
+  <%= link_to 'Add User',  polymorphic_path([:new,params[:controller].singularize]), class: 'btn btn-success pull-right' %>
 <% end %>
 <% if params[:show_archived] == "true" %>
-  <%= link_to 'Users', admin_users_path(show_archived: false), class: 'btn btn-success pull-right' %>
+  <%= link_to 'Users', polymorphic_path([params[:controller]],show_archived: false), class: 'btn btn-success pull-right' %>
 <% else %>
-  <%= link_to 'Archived Users', admin_users_path(show_archived: true), class: 'btn btn-success pull-right' %>
+  <%= link_to 'Archived Users', polymorphic_path([params[:controller]],show_archived: true), class: 'btn btn-success pull-right' %>
 <% end %>
 
 <h1>System Users</h1>
@@ -27,7 +27,7 @@
     <tr>
       <td>
         <address>
-          <strong class="text-large"><%= link_to user.name, admin_user_path(id: user[:id]) %></strong><br>
+          <strong class="text-large"><%= link_to user.name, polymorphic_path([params[:controller].singularize],id: user.id) %></strong><br>
           <%= link_to user.email, "mailto:${user.email}" %>
         </address>
       </td>
@@ -51,9 +51,9 @@
       </td>
       <td>
         <% if params[:show_archived] == "true" %>
-          <%= link_to "Restore", admin_user_restore_path(admin_user_id: user[:id]), method:"post", class:"btn btn-primary" %>
+          <%= link_to "Restore", polymorphic_path([params[:controller].singularize,:restore],"#{params[:controller].singularize}_id".to_sym => user.id), method:"post", class:"btn btn-primary" %>
         <% else %>
-          <%= link_to "Archive", admin_user_archive_path(admin_user_id: user[:id]), method:"post", class:"btn btn-danger" %>
+          <%= link_to "Archive", polymorphic_path([params[:controller].singularize,:archive],"#{params[:controller].singularize}_id".to_sym => user.id), method:"post", class:"btn btn-danger" %>
 
         <% end %>
       </td>
