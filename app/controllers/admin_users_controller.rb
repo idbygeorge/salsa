@@ -123,7 +123,6 @@ class AdminUsersController < AdminController
     redirect_to polymorphic_path([params[:controller]])
   end
 
-
   private
 
   def user_activation_token user
