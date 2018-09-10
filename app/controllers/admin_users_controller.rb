@@ -1,7 +1,6 @@
 class AdminUsersController < AdminController
   skip_before_action :require_designer_permissions
-  before_action :require_admin_permissions, only: [:destroy, :create, :new]
-  before_action :require_organization_admin_permissions, except:[:import_users,:create_users]
+  before_action :require_admin_permissions, except:[:import_users,:create_users]
   before_action :require_supervisor_permissions, only:[:import_users,:create_users]
   before_action :get_organizations, only: [:index, :new, :edit, :show, :edit_assignment, :import_users]
   before_action :get_roles, only: [:edit_assignment, :assign, :index ,:show]
@@ -10,12 +9,7 @@ class AdminUsersController < AdminController
     page = 1
     page = params[:page] if params[:page]
     show_archived = params[:show_archived] == "true"
-    if has_role("admin")
-      @users = User.where(archived: show_archived).order('name', 'email').all.page(params[:page]).per(15)
-    else
-      user_ids = UserAssignment.where(organization_id: get_org.id).map(&:user_id)
-      @users = User.where(id: user_ids, archived: show_archived).order('name', 'email').all.page(params[:page]).per(15)
-    end
+    @users = User.where(archived: show_archived).order('name', 'email').all.page(params[:page]).per(15)
     @session = session
   end
 
@@ -31,17 +25,17 @@ class AdminUsersController < AdminController
   end
 
   def archive
-    @user = User.find params[:admin_user_id]
+    @user = User.find params["#{params[:controller].singularize}_id".to_sym]
     @user.update(archived: true)
     flash[:notice] = "#{@user.email} has been archived"
-    return redirect_to admin_users_path
+    return redirect_to polymorphic_path([params[:controller]])
   end
 
   def restore
-    @user = User.find params[:admin_user_id]
+    @user = User.find params["#{params[:controller].singularize}_id".to_sym]
     @user.update(archived: false)
     flash[:notice] = "#{@user.email} has been restored"
-    return redirect_to admin_users_path
+    return redirect_to polymorphic_path([params[:controller]])
   end
 
   def assign
@@ -68,7 +62,7 @@ class AdminUsersController < AdminController
     @user_assignment = UserAssignment.find params[:id]
     @user_assignment.destroy
 
-    redirect_to admin_user_path @user_assignment[:user_id]
+    redirect_to polymorphic_path([params[:controller].singularize],id: @user_assignment.user_id)
   end
 
   def edit_assignment
@@ -90,7 +84,7 @@ class AdminUsersController < AdminController
 
       render action: :edit_assignment
     else
-      redirect_to admin_user_path id: @user[:id]
+      redirect_to polymorphic_path([params[:controller].singularize],id: @user.id)
     end
   end
 
@@ -109,7 +103,7 @@ class AdminUsersController < AdminController
     # end
 
     if @user.save
-        return redirect_to admin_user_path(id: @user[:id])
+        return redirect_to polymorphic_path([params[:controller].singularize],id: @user.id)
     else
         flash[:error] = 'Error creating user'
         return render action: :new
@@ -119,42 +113,16 @@ class AdminUsersController < AdminController
   def update
     @user = User.find params[:id]
     @user.update user_params
-    redirect_to admin_user_path(id: @user[:id])
+    redirect_to polymorphic_path([params[:controller].singularize],id: @user.id)
   end
 
   def destroy
     @user = User.find params[:id]
     @user.destroy
 
-    redirect_to admin_users_path
+    redirect_to polymorphic_path([params[:controller]])
   end
 
-  def create_users
-    org = get_org
-    users_emails = params[:users][:emails].gsub(/ */,'').split(/(\r\n|\n|,)/).delete_if {|x| x.match(/\A(\r\n|\n|,|)\z/) }
-    user_errors = Array.new
-    users_emails.each do |user_email|
-      user = User.find_or_initialize_by(email: user_email)
-      user.password = "#{rand(36**40).to_s(36)}" if !user&.password
-      user.name = "New User" if !user&.name
-      user.archived = false
-      user.activated = false
-      user_activation_token user
-      user.save
-      UserAssignment.create(role:"staff",user_id:user.id,organization_id:org.id,cascades:true) if user
-      user.errors.messages.each do |error|
-        user_errors.push "Could not create user with email: '#{user.email}' because: #{error[0]} #{error[1][0]}" if user.errors
-      end
-      next if !user.errors.empty?
-      UserMailer.welcome_email(user,org,component_allowed_liquid_variables(nil,user,org)).deliver_later
-    end
-    flash[:notice] = "Users created successfully" if user_errors == [] && users_emails != []
-    flash[:errors] = user_errors
-    redirect_to admin_import_users_path
-  end
-
-  def import_users
-  end
 
   private
 
@@ -173,8 +141,6 @@ class AdminUsersController < AdminController
   end
 
   def user_assignment_params
-    params.require(:user_assignment).require(:user_id)
-    params.require(:user_assignment).require(:role)
 
     # global admin role, doens't have an organization, all other roles require one
     if params[:user_assignment][:role] == 'admin'

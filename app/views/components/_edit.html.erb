@@ -54,12 +54,6 @@
             <%= f.select(:role, @roles, {:include_blank => ''}, {class: 'form-control'}) %>
           </div>
         </div>
-        <div class="col-md-6">
-          <div class="form-group">
-            <%= f.label :role_organization_level, class: "control-label" %>
-            <%= f.collection_select(:role_organization_level,@organization_levels, :last, :first, {:include_blank => ''}, {class: 'form-control'}) %>
-          </div>
-        </div>
       </div>
     <% end %>
 

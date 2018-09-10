@@ -1,4 +1,4 @@
-<a class="btn btn-default pull-right" href="<%= edit_admin_user_path(id: @user[:id]) %>">
+<a class="btn btn-default pull-right" href="<%= polymorphic_path([:edit,params[:controller].singularize.to_sym], id: @user) %>">
   Edit User
 </a>
 
