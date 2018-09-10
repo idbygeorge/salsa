@@ -12,6 +12,8 @@ class WorkflowMailer < ApplicationMailer
       @step_email = @template.render(allowed_variables).html_safe
       if @next_component && @next_component.role == "supervisor"
         user = UserAssignment.where(role: "supervisor",organization_id: document&.organization&.parents&.map(&:id)).includes(:organization).reorder("organizations.depth DESC").first&.user
+      elsif @next_component && @next_component.role == "approver"
+        user = UserAssignment.where(role: "approver",organization_id: document&.organization&.parents&.map(&:id)).includes(:organization).reorder("organizations.depth DESC").first&.user
       end
       mail(to: user&.email, subject: @subject)
     end

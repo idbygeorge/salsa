@@ -54,7 +54,7 @@ class ApplicationController < ActionController::Base
     if has_role("admin")
       @roles = UserAssignment.roles
     else
-      @roles = {'Supervisor'=>'supervisor','Staff'=>'staff'}
+      @roles = {'Approver'=>'approver','Supervisor'=>'supervisor','Staff'=>'staff'}
     end
   end
 
