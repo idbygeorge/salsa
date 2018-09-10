@@ -92,7 +92,7 @@ class DocumentsController < ApplicationController
       elsif !@organization.enable_workflows || !@document.workflow_step_id || !@document.user_id
         render :layout => 'edit', :template => '/documents/content'
       elsif current_user != nil
-        flast[:notice] = "you are not authorized to edit that document"
+        flash[:notice] = "you are not authorized to edit that document"
         redirect_to admin_path
       else
         flash[:notice] = "you are not authorized to edit that document please login to continue"
