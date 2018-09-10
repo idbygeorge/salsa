@@ -58,6 +58,15 @@ module ApplicationHelper
     "instances/custom/#{org.slug}" if File.directory?("app/views/instances/custom/#{org.slug}")
   end
 
+  def require_approver_permissions
+    check_for_admin_password
+
+    unless has_role 'approver'
+      return redirect_or_error
+    end
+  end
+
+
   def require_supervisor_permissions
     check_for_admin_password
 
@@ -69,7 +78,7 @@ module ApplicationHelper
   def require_staff_permissions
     check_for_admin_password
 
-    unless has_role('staff') || has_role('supervisor')
+    unless has_role('staff') || has_role('supervisor') || has_role('approver')
       return redirect_or_error
     end
   end
@@ -113,7 +122,7 @@ module ApplicationHelper
       return render :file => "public/401.html", :status => :unauthorized, :layout => false
     else
       if current_page?(admin_path)
-        flash.keep 
+        flash.keep
         return redirect_to admin_login_path
       else
         return redirect_to admin_path
