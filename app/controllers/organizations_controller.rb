@@ -87,7 +87,7 @@ class OrganizationsController < AdminController
   end
 
   def start_workflow_form
-    @organization = get_org
+    @organization = Organization.find_by(slug:params[:slug])
     @workflow_steps = WorkflowStep.where(organization_id: @organization.organization_ids+[@organization.id], step_type: "start_step")
     user_ids = @organization.user_assignments.map(&:user_id)
     @users = User.find_by(id: user_ids)
@@ -108,11 +108,12 @@ class OrganizationsController < AdminController
       organizations = [organization]
     end
     organizations.each do |org|
-      user_ids = org.user_assignments.where(role:"staff").map(&:user_id)
+      user_ids = org.user_assignments.where(role: ["supervisor","staff"]).map(&:user_id)
       users = User.where(id: user_ids, archived: false)
       users.each do |user|
-        document = Document.create(name: start_workflow_params[:document_name], workflow_step_id: start_workflow_params[:starting_workflow_step_id].to_i, organization_id: org.id, period_id: start_workflow_params[:period_id].to_i, user_id: user.id)
-        WorkflowMailer.welcome_email(document, user, org, document.workflow_step.slug,component_allowed_liquid_variables(document.workflow_step.slug, user, org)).deliver_later
+        document = Document.create(workflow_step_id: start_workflow_params[:starting_workflow_step_id].to_i, organization_id: org.id, period_id: start_workflow_params[:period_id].to_i, user_id: user.id)
+        document.update(name: start_workflow_params[:document_name] )
+        WorkflowMailer.welcome_email(document, user, org, document.workflow_step.slug,component_allowed_liquid_variables(document.workflow_step.slug, user, org, document )).deliver_later
       end
     end
 

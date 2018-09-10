@@ -1,0 +1,2 @@
+module OrganizationUsersHelper
+end

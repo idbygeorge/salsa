@@ -120,6 +120,7 @@ function liteOff(x){
             }
         });
         $('#tb_save, #tb_share').on('ajax:beforeSend', function(event, xhr, settings) {
+            $(".workflow_step").show()
             if($('body').hasClass('disable-save')) {
                 xhr.abort();
                 return false;
@@ -166,9 +167,32 @@ function liteOff(x){
                 });
               }
             }
+            $(".workflow_step").show()
             notification('Saving...');
         });
 
+        $('#tb_save, #tb_share').on('ajax:success', function(event, data, xhr, settings) {
+            var document_workflow_step = $('[data-document-slug]').attr('data-document-slug');
+            var document_step_type = $('[data-document-step-type]').attr('data-document-step-type');
+            if(document_step_type !== "default_step"){
+              $(".workflow_step").fadeTo(500,1)
+            }
+            if (document_step_type === "end_step") {
+              $(".workflow_step").show()
+              $(".content").find(":input").prop('disabled', true);
+              $(".content").find(".editableHtml").removeClass("editableHtml");
+            } else if(document_workflow_step !== ""){
+              $(".workflow_step:not(#"+document_workflow_step+")").hide()
+              $("#"+document_workflow_step).show()
+            } else {
+              $(".workflow_step").hide()
+            }
+
+            if(document_step_type !== "end_step" && document_step_type !== ""){
+              $(".workflow_step.staff").show().fadeTo(500,0.5)
+              $(".workflow_step.staff").find(":input").prop('disabled', true);
+            }
+        });
         $('#tb_save').on('ajax:success', function(event, data, xhr, settings) {
             if(data.status == 'ok') {
               $("#save_prompt").html('saved at: ' + new Date().toLocaleTimeString()).delay(5000).fadeOut(1000);
