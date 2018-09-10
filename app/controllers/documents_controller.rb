@@ -92,9 +92,11 @@ class DocumentsController < ApplicationController
       elsif !@organization.enable_workflows || !@document.workflow_step_id || !@document.user_id
         render :layout => 'edit', :template => '/documents/content'
       elsif current_user != nil
-        redirect_to admin_path, notice:"you are not authorized to edit that document"
+        flast[:notice] = "you are not authorized to edit that document"
+        redirect_to admin_path
       else
-        redirect_to root_path, notice:"you are not authorized to edit that document"
+        flash[:notice] = "you are not authorized to edit that document please login to continue"
+        redirect_to admin_path
       end
     else
       render :layout => 'dialog', :template => '/documents/republishing'
@@ -224,7 +226,7 @@ class DocumentsController < ApplicationController
       end
       if params[:publish] == "true" && @organization.enable_workflows && user
         if @document.workflow_step_id && @document.assigned_to?(user)
-          WorkflowMailer.step_email(@document,user, @organization, @document.workflow_step.slug, component_allowed_liquid_variables(@document.workflow_step, user,@organization)).deliver_later
+          WorkflowMailer.step_email(@document,user, @organization, @document.workflow_step.slug, component_allowed_liquid_variables(@document.workflow_step, user,@organization, @document)).deliver_later
           @document.workflow_step_id = @document.workflow_step.next_workflow_step_id if @document.workflow_step&.next_workflow_step_id
           @document.save!
         end
@@ -455,7 +457,7 @@ class DocumentsController < ApplicationController
     # if there is no org yet, show an error
     raise "error: no org found matching #{document_slug}"  unless org
 
-    @document[:organization_id] = org[:id] if @document && !org.enable_workflows
+    @document[:organization_id] = org[:id] if @document && (!org.enable_workflows || @document.new_record?)
 
     @organization = org
   end

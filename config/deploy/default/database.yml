@@ -6,3 +6,12 @@ development:
   username: postgres
   password:
   pool: 5
+
+test:
+  adapter: postgresql
+  encoding: unicode
+  database: salsa_test
+  host: db
+  username: postgres
+  password:
+  pool: 5

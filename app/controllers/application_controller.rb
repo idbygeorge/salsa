@@ -24,8 +24,10 @@ class ApplicationController < ActionController::Base
 
   end
 
-  def component_allowed_liquid_variables step_slug, user=nil, organization=nil
+  def component_allowed_liquid_variables step_slug, user=nil, organization=nil, document=nil
     hash = {"user_name" => "#{user&.name}","user_email" => "#{user&.email}", "organization_name" => "#{organization&.name}"}
+    hash["document_url"] = document_url(document&.edit_id, host: "http://#{full_org_path(organization)}")  if document
+    hash["document_name"] = document.name if document
     hash["step_slug"] = "#{step_slug}" if step_slug != nil
     return hash
   end
@@ -49,7 +51,11 @@ class ApplicationController < ActionController::Base
   end
 
   def get_roles
-    @roles = UserAssignment.roles
+    if has_role("admin")
+      @roles = UserAssignment.roles
+    else
+      @roles = {'Approver'=>'approver','Supervisor'=>'supervisor','Staff'=>'staff'}
+    end
   end
 
   def init_view_folder

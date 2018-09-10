@@ -1,0 +1,38 @@
+<div class="page-header">
+  <h1>
+    <%= link_to organization_path(@organization.slug) do %><small><%= @organization.name %></small><% end %>
+    <br>
+    <%=t '.title', :default => "Import Users" %>
+  </h1>
+</div>
+
+<%= form_for("users", url: organization_import_users_path(params[:slug]), :html => { :class => "form-horizontal col-md-9 col-lg-6" } ) do |f| %>
+
+  <% if flash[:errors] != []  && flash[:errors] != nil%>
+      <div class="alert alert-danger">
+      <% flash[:errors].each do |error| %>
+          <li><%= error %></li>
+      <% end %>
+      </div>
+  <% end %>
+  <div class="form-group">
+    <%= f.label :emails, class: "control-label" %>
+    <div class="controls">
+      <%= f.text_area :emails, class: 'form-control input-xxlarge', rows: 12 %>
+      <div class="help-block">seperate each email by a comma or newline</div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :organization_id, class: "control-label" %>
+    <div class="controls">
+      <%= f.select(:organization_id, @organizations.collect { |org| [ (org.parent && org.parent.parent ? org.parent.parent.name + ' » ' : '') + (org.parent ? org.parent.name + ' » ' : '') + org.name, org.id ] }, { prompt: @organization.name}, {class: 'form-control'}) %></p>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= f.submit class: 'btn btn-default' %>
+    &nbsp; &nbsp;
+  </div>
+
+<% end %><!-- form -->

@@ -1,6 +1,6 @@
 class UserAssignment < ApplicationRecord
   def self.roles
-    {'Global Administrator'=>'admin', 'Organization Administrator'=>'organization_admin', 'Auditor'=>'auditor', 'Designer'=>'designer', 'Supervisor'=>'supervisor','Staff'=>'staff'}
+    {'Global Administrator'=>'admin', 'Organization Administrator'=>'organization_admin', 'Auditor'=>'auditor', 'Designer'=>'designer', 'Supervisor'=>'supervisor','Staff'=>'staff','Approver'=>'approver'}
   end
 
   belongs_to :user
@@ -8,6 +8,8 @@ class UserAssignment < ApplicationRecord
 
   default_scope { order('user_id, organization_id, role') }
 
+  validates :user_id, presence: true
+  validates :role, presence: true
   validates :role, inclusion: {
     in: roles.values,
     message: "you cant create that role"
