@@ -101,11 +101,11 @@ class WorkflowStepsController < OrganizationsController
     end
 
     def redirect_if_wrong_organization
-      if params[:slug] != @workflow_step.organization.slug
+      if params[:slug].split('/')[-1] != @workflow_step.organization.slug
         if params[:action] != 'index'
-          redirect_to "/admin/organization/#{@workflow_step.organization.slug}/workflow_steps/#{params[:id]}/#{params[:action]}"
+          redirect_to "/admin/organization/#{@workflow_step.organization.full_slug}/workflow_steps/#{params[:id]}/#{params[:action]}"
         else
-          redirect_to workflow_steps_path(@workflow_steps.organization.slug)
+          redirect_to workflow_steps_path(@workflow_steps.organization.full_slug)
         end
       end
     end

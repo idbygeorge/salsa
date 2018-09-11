@@ -158,7 +158,7 @@ module ApplicationHelper
       if params[:slug]
         org = find_org_by_path params[:slug]
       else
-        org = find_org_by_path request.env['SERVER_NAME']
+        org = find_org_by_path get_org_slug
       end
     end
 
@@ -250,7 +250,7 @@ module ApplicationHelper
   end
 
   def find_org_by_path path
-    path = request.env['SERVER_NAME'] unless path
+    path = get_org_slug unless path
 
     unless path.include? '/'
       organization = Organization.find_by slug:path
@@ -290,7 +290,8 @@ module ApplicationHelper
   end
 
   def get_org_slug
-    request.env['SERVER_NAME']
+    return request.env['SERVER_NAME'] + '/' + params[:sub_organization_slugs] if params[:sub_organization_slugs]
+    return request.env['SERVER_NAME']
   end
 
   def get_org
@@ -298,7 +299,7 @@ module ApplicationHelper
   end
 
   def get_document_meta
-    org_slug = request.env['SERVER_NAME']
+    org_slug = get_org_slug
     ReportHelper.get_document_meta org_slug, nil, params
   end
 end

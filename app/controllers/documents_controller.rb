@@ -47,12 +47,20 @@ class DocumentsController < ApplicationController
       document = document_template.dup
       document.reset_ids
       document.save!
-      redirect_to edit_document_path(:id => document.edit_id, :batch_token => params[:batch_token])
+      if params[:sub_organization_slugs]
+        redirect_to edit_sub_org_document_path(:id => document.edit_id, :batch_token => params[:batch_token])
+      else
+        redirect_to edit_document_path(:id => document.edit_id, :batch_token => params[:batch_token])
+      end
       return
     end
     raise ActionController::RoutingError.new('Not Found') unless document || @document
     if document
-      redirect_to edit_document_path(:id => document.edit_id, :batch_token => params[:batch_token])
+      if params[:sub_organization_slugs]
+        redirect_to edit_+sub_org_document_path(:id => document.edit_id, :batch_token => params[:batch_token])
+      else
+        redirect_to edit_document_path(:id => document.edit_id, :batch_token => params[:batch_token])
+      end
       return
     end
 
@@ -191,6 +199,7 @@ class DocumentsController < ApplicationController
     meta_data_from_doc = params[:meta_data_from_doc]
     saved = false
     republishing = true
+    @organization = @document.organization if !@document.organization.blank?
     verify_org
     user = current_user if current_user
     assigned_to_user = @document.assigned_to? user
@@ -379,16 +388,16 @@ class DocumentsController < ApplicationController
     if Rails.env.production?
       "https://s3-#{APP_CONFIG['aws_region']}.amazonaws.com/#{APP_CONFIG['aws_bucket']}/hosted/#{@document.view_id}.pdf"
     else
-      "http://#{request.env['SERVER_NAME']}#{redirect_port}/#{sub_org_slugs}SALSA/#{@document.view_id}.pdf"
+      "http://#{get_org_slug}#{redirect_port}/#{sub_org_slugs}SALSA/#{@document.view_id}.pdf"
     end
   end
 
   def view_url
-    "http://#{request.env['SERVER_NAME']}#{redirect_port}/#{sub_org_slugs}SALSA/#{@document.view_id}"
+    "http://#{get_org_slug}#{redirect_port}/#{sub_org_slugs}SALSA/#{@document.view_id}"
   end
 
   def template_url document
-    "http://#{request.env['SERVER_NAME']}#{redirect_port}/#{sub_org_slugs}SALSA/#{document.template_id}"
+    "http://#{get_org_slug}#{redirect_port}/#{sub_org_slugs}SALSA/#{document.template_id}"
   end
 
   def sub_org_slugs
@@ -427,14 +436,12 @@ class DocumentsController < ApplicationController
   end
 
   def verify_org
-    document_slug = request.env['SERVER_NAME']
+    document_slug = get_org_slug
 
     if @document[:edit_id]
       @salsa_link = document_path(@document[:edit_id])
 
       if params[:sub_organization_slugs]
-        document_slug += '/' + params[:sub_organization_slugs]
-
         if @document[:edit_id]
           @salsa_link = sub_org_document_path @document[:edit_id], sub_organization_slugs: params[:sub_organization_slugs]
         else
@@ -451,7 +458,7 @@ class DocumentsController < ApplicationController
       end
 
       # find the org to bind this to
-      org = Organization.find_by slug: document_slug
+      org = Organization.all.select{ |o| o.full_slug == get_org_slug }.first
     end
 
     # if there is no org yet, show an error

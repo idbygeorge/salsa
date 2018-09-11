@@ -1,6 +1,6 @@
 <%= link_to "Add Component", new_component_path, class: 'btn btn-success pull-right', id: 'Add Component' %>
 <h1>
-  <%= link_to organization_path(@organization.slug) do %>
+  <%= link_to organization_path(params[:slug]) do %>
     <small><%= @organization.name %></small>
   <% end %>
   <br>
@@ -55,10 +55,10 @@
 
 <% if has_role('admin') %>
   <hr>
-  
+
   <%= link_to "Load Default Components To Database", load_components_path, :data => { :confirm => 'Are you sure? this WILL RESET YOUR SALSA CONFIGURATION TO DEFAULT' }, class: 'btn btn-danger'%>
   <%= link_to "Export Components To Zipfile", export_components_path, class: 'btn btn-danger'%>
-  
+
   <hr>
 
   <%= form_tag import_components_path(@organization.slug), multipart: true, :html => { :class => "form-horizontal col-md-9" } do %>

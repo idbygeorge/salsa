@@ -156,7 +156,7 @@ class ComponentsController < ApplicationController
   end
 
   def valid_slugs component_slug
-    org = get_org
+    org = get_organization
     slugs = ['salsa', 'section_nav', 'control_panel', 'footer', 'dynamic_content_1', 'dynamic_content_2', 'dynamic_content_3', 'user_welcome_email']
     if org.enable_workflows
       wfsteps = WorkflowStep.where(organization_id: org.organization_ids+[org.id])
@@ -171,7 +171,7 @@ class ComponentsController < ApplicationController
   end
 
   def get_organization
-    @organization = Organization.find_by slug: params[:slug]
+    @organization = Organization.all.select{ |org| org.full_slug == params[:slug] }.first
   end
 
   def get_organization_levels

@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   root 'default#index'
 
   resources :documents, path: 'SALSA', constraints: { slug: /.*/ }
+  resources :documents, as:'sub_org_documents', path: ':sub_organization_slugs/SALSA', constraints: { sub_organization_slugs: /.*/ }
   scope 'workflow' do
     resources :documents, as: 'workflow_document', controller: 'workflow_documents'
     get "documents/:id/versions", as: 'workflow_document_versions', to: 'workflow_documents#versions'

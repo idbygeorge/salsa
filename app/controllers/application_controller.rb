@@ -33,13 +33,14 @@ class ApplicationController < ActionController::Base
   end
 
   def check_organization_workflow_enabled
-    if params[:slug]
-      organization = Organization.find_by(slug: params[:slug])
+    if slugs = params[:slug].split('/')
+      debugger
+      organization = Organization.find_by(slug: slugs[-1])
     else
-      organization = Organization.find_by(slug: request.env["SERVER_NAME"])
+      organization = Organization.find_by(slug: get_org_slug)
     end
     if organization&.enable_workflows != true
-      flash[:error] = "that page does not exist"
+      flash[:error] = "that page is not enabled"
       redirect_to organization_path(params[:slug])
     end
   end
@@ -61,14 +62,10 @@ class ApplicationController < ActionController::Base
   def init_view_folder
     @google_analytics_id = APP_CONFIG['google_analytics_id'] if APP_CONFIG['google_analytics_id']
 
-    org_slug = request.env['SERVER_NAME']
-
-    if params[:sub_organization_slugs]
-      org_slug += '/' + params[:sub_organization_slugs]
-    end
+    org_slug = get_org_slug
 
     # find the matching organization based on the request
-    @organization = Organization.find_by slug: org_slug
+    @organization = Organization.all.select{ |org| org.full_slug == get_org_slug }.first
 
     # get a placeholder org matching the org slug if there is no matching or in the database
     @organization = Organization.new  slug: org_slug unless @organization
@@ -81,7 +78,7 @@ class ApplicationController < ActionController::Base
     if session[:institution] && session[:institution] != ''
       @institution = session['institution']
     elsif !params[:institution] || params[:institution] == ''
-      @institution = request.env['SERVER_NAME']
+      @institution = get_org_slug
     else
       @institution = params[:institution]
     end
@@ -102,7 +99,7 @@ class ApplicationController < ActionController::Base
     @oauth_endpoint = "https://#{@institution}.instructure.com" unless @oauth_endpoint
     @lms_client_id = APP_CONFIG['canvas_id'] unless @lms_client_id
     @lms_secret = APP_CONFIG['canvas_key'] unless @lms_secret
-    @callback_url = "http://#{request.env['SERVER_NAME']}#{redirect_port}/oauth2/callback" unless @callback_url
+    @callback_url = "http://#{get_org_slug}#{redirect_port}/oauth2/callback" unless @callback_url
 
     if canvas_access_token && canvas_access_token != ''
       @lms_client = Canvas::API.new(:host => @oauth_endpoint, :token => canvas_access_token)

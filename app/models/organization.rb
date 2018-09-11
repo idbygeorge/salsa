@@ -9,6 +9,7 @@ class Organization < ApplicationRecord
 
   default_scope { order('lft, rgt') }
   validates :slug, presence: true
+  validates_uniqueness_of :slug, :scope => :parent_id
   validates :slug, exclusion: { in: %w(status), message: "%{value} is reserved." }
   validates :name, presence: true
 
@@ -16,6 +17,11 @@ class Organization < ApplicationRecord
     ["default","Program Outcomes"]
   end
   validates :export_type, :inclusion=> { :in => self.export_types }
+
+  def full_slug
+    slugs = self.parents.reverse.map(&:slug) + [self.slug.gsub(/\//,'')]
+    slugs.join('/').gsub(/\/\//,'/')
+  end
 
   def parents
     parents = []

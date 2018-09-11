@@ -5,9 +5,7 @@
 
 <h1 class="page-header">
   <% @organization.ancestors.each do |org| %>
-    <small>
-      <%= org[:name] %> &raquo;<br>
-    </small>
+    <%= link_to organization_path(org.full_slug) do %><small><%= org.name %> &raquo;<br></small><% end %> 
   <% end %>
 
   <%= @organization[:name] %>
