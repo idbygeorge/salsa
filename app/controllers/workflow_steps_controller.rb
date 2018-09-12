@@ -12,7 +12,7 @@ class WorkflowStepsController < OrganizationsController
   # GET /workflow_steps
   # GET /workflow_steps.json
   def index
-    @organization = Organization.find_by(slug: params[:slug])
+    @organization = @organizations.all.select{ |o| o.full_slug == params[:slug] }.first
     org_ids = @organization.organization_ids + [@organization.id]
     @workflows = WorkflowStep.workflows org_ids
     workflow_array = []
@@ -32,19 +32,19 @@ class WorkflowStepsController < OrganizationsController
 
   # GET /workflow_steps/new
   def new
-    @organization = Organization.find_by(slug: params[:slug])
+    @organization = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
     @workflow_step = WorkflowStep.new
   end
 
   # GET /workflow_steps/1/edit
   def edit
-    @organization = Organization.find_by(slug: params[:slug])
+    @organization = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
   end
 
   # POST /workflow_steps
   # POST /workflow_steps.json
   def create
-    @organization = Organization.find_by(slug: params[:slug])
+    @organization = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
     @workflow_step = WorkflowStep.new(workflow_step_params)
     @workflow_step.organization_id = @organization.id
     find_or_create_component @workflow_step
@@ -63,7 +63,7 @@ class WorkflowStepsController < OrganizationsController
   # PATCH/PUT /workflow_steps/1
   # PATCH/PUT /workflow_steps/1.json
   def update
-    @organization = Organization.find_by(slug: params[:slug])
+    @organization = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
     find_or_create_component @workflow_step
     respond_to do |format|
       if @workflow_step.update(workflow_step_params)
@@ -116,7 +116,7 @@ class WorkflowStepsController < OrganizationsController
 
     def set_workflow_steps
 
-      org = Organization.find_by(slug: params[:slug])
+      org = @organizations.all.select{ |o| o.full_slug == params[:slug] }.first
       organization_ids = org.organization_ids + [org.id]
       @workflow_steps = WorkflowStep.where(organization_id: organization_ids)
       if @workflow_step

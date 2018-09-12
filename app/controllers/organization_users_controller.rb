@@ -4,7 +4,7 @@ class OrganizationUsersController < AdminUsersController
   before_action :require_supervisor_permissions, only:[:import_users,:create_users]
 
   def index
-    organization = Organization.find_by slug: params[:slug]
+    organization = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
     page = 1
     page = params[:page] if params[:page]
     show_archived = params[:show_archived] == "true"
@@ -30,7 +30,7 @@ class OrganizationUsersController < AdminUsersController
   end
 
   def show
-    org = Organization.find_by(slug: params[:slug])
+    org = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
     user_ids = UserAssignment.where(organization_id: org.id ).map(&:user_id)
     users = User.where(id: user_ids, archived: false)
     @user = users.find_by id: params[:id]
@@ -66,7 +66,7 @@ class OrganizationUsersController < AdminUsersController
   end
 
   def create_users
-    org = Organization.find_by slug: params[:slug]
+    org = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
     users_emails = params[:users][:emails].gsub(/ */,'').split(/(\r\n|\n|,)/).delete_if {|x| x.match(/\A(\r\n|\n|,|)\z/) }
     user_errors = Array.new
     user_errors.push "Add emails to import users" if params[:users][:emails].blank?
@@ -91,7 +91,7 @@ class OrganizationUsersController < AdminUsersController
   end
 
   def import_users
-    @organization = Organization.find_by slug: params[:slug]
+    @organization = @organizations.all.select{ |o| o.full_slug == params[:slug] }.first
   end
 
 end

@@ -33,8 +33,7 @@ class ApplicationController < ActionController::Base
   end
 
   def check_organization_workflow_enabled
-    if slugs = params[:slug].split('/')
-      debugger
+    if slugs = params[:slug].split((/(?=\/)/))
       organization = Organization.find_by(slug: slugs[-1])
     else
       organization = Organization.find_by(slug: get_org_slug)
