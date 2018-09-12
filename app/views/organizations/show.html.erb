@@ -5,7 +5,7 @@
 
 <h1 class="page-header">
   <% @organization.ancestors.each do |org| %>
-    <%= link_to organization_path(org.full_slug) do %><small><%= org.name %> &raquo;<br></small><% end %> 
+    <%= link_to organization_path(org.full_slug) do %><small><%= org.name %> &raquo;<br></small><% end %>
   <% end %>
 
   <%= @organization[:name] %>
@@ -26,14 +26,14 @@
 
   <p>
     <% if has_role 'organization_admin' %>
-      <a class="btn btn-default" href="<%= start_workflow_form_path(slug: @organization[:slug]) %>">
+      <a class="btn btn-default" href="<%= start_workflow_form_path(slug: params[:slug]) %>">
         Start Workflows
       </a>
       <a class="btn btn-default" href="<%= edit_organization_path(id: @organization[:id]) %>">
         Update Organization
       </a>
 
-      <a class="btn btn-default" href="<%= components_path(organization_slug: @organization[:slug]) %>">
+      <a class="btn btn-default" href="<%= components_path(organization_slug: params[:slug]) %>">
         Manage Components
       </a>
 
@@ -43,7 +43,7 @@
           </a>
       <% end %>
 
-      <a class="btn btn-default" href="<%= periods_path(slug: @organization[:slug]) %>">
+      <a class="btn btn-default" href="<%= periods_path(slug: params[:slug]) %>">
         Manage Periods
       </a>
 

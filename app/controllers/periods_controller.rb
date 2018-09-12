@@ -2,23 +2,27 @@ class PeriodsController < OrganizationsController
   #Skip permissions defined in OrganizationsController
   skip_before_action :require_admin_permissions
   skip_before_action :require_designer_permissions
-  
+
   before_action :get_organizations, only: [:index]
   before_action :require_organization_admin_permissions
 
   def index
-    @periods = Period.where(organization_id: Organization.find_by(slug:params[:slug]).id).page(params[:page]).per(params[:per])
+    @organization = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
+    @periods = Period.where(organization_id: @organization.id).page(params[:page]).per(params[:per])
   end
 
   def new
+    @organization = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
     @period = Period.new
   end
 
   def show
+    @organization = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
     @period = Period.find(params[:id])
   end
 
   def edit
+    @organization = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
     @period = Period.find(params[:id])
   end
 
@@ -26,7 +30,7 @@ class PeriodsController < OrganizationsController
   # POST /periods.json
   def create
     @period = Period.new(period_params)
-    @period.organization_id = Organization.find_by(slug:params[:slug]).id
+    @period.organization_id = Organization.all.select{ |o| o.full_slug == params[:slug] }.first.id
     respond_to do |format|
       if @period.save
         format.html { redirect_to periods_path(params[:slug]), notice: 'Period was successfully created.' }
@@ -40,7 +44,7 @@ class PeriodsController < OrganizationsController
 
   def update
     @period = Period.find(params[:id])
-    @period.organization_id = Organization.find_by(slug:params[:slug]).id
+    @period.organization_id = Organization.all.select{ |o| o.full_slug == params[:slug] }.first.id
     respond_to do |format|
       if @period.update(period_params)
         format.html { redirect_to periods_path(params[:slug]), notice: 'Period was successfully updated.' }

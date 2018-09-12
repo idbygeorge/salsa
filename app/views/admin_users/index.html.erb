@@ -6,7 +6,9 @@
 <% else %>
   <%= link_to 'Archived Users', polymorphic_path([params[:controller]],show_archived: true), class: 'btn btn-success pull-right' %>
 <% end %>
-
+<% if params[:controller] == "organization_users" %>
+  <h1><%= link_to organization_path(params[:slug]) do %><small><%= @organization.name %></small><% end %></h1>
+<% end %>
 <h1>System Users</h1>
 
 <table class="table table-responsive table-striped">

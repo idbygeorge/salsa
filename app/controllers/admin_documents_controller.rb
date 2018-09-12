@@ -49,7 +49,7 @@ class AdminDocumentsController < AdminController
 
       slug = ''
       if @document.organization
-        slug = @document.organization.slug
+        slug = @document.organization.full_slug
       end
 
       redirect_to organization_path(slug: slug)

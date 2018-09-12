@@ -11,6 +11,7 @@ class User < ApplicationRecord
     has_secure_password
 
     has_many :user_assignments
+    has_many :documents
 
     def activate
       if !self.activated
