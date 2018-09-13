@@ -10,15 +10,18 @@ class WorkflowDocumentsController < ApplicationController
     org = get_org
     user_assignment = current_user.user_assignments.find_by organization_id: org.id if current_user
     @workflow_steps = WorkflowStep.where(organization_id: org.organization_ids.push(org.id))
-    @documents = Document.where(organization_id:org.descendants.map(&:id).push(org.id)).where('documents.updated_at != documents.created_at')
     if has_role("supervisor") && params[:show_completed] == "true"
+      @documents = Document.where(organization_id:org.descendants.map(&:id)).where('documents.updated_at != documents.created_at')
       @documents = @documents.where(workflow_step_id: WorkflowStep.where(step_type:"end_step").map(&:id) )
     elsif has_role("supervisor") && (params[:show_completed] == "false")
+      @documents = Document.where(organization_id:org.descendants.map(&:id)).where('documents.updated_at != documents.created_at')
       @documents = @documents.where(workflow_step_id: WorkflowStep.where.not(step_type:"end_step").map(&:id) + [nil] )
     elsif has_role("supervisor") && params[:step_filter]
+      @documents = Document.where(organization_id:org.descendants.map(&:id)).where('documents.updated_at != documents.created_at')
       wfs = @workflow_steps.find_by(id: params[:step_filter].to_i)
       @documents = @documents.where(workflow_step_id: wfs&.id )
     else
+      @documents = Document.where(organization_id:org.descendants.map(&:id).push(org.id)).where('documents.updated_at != documents.created_at')
       @user_documents = @documents.where(user_id: current_user&.id) if current_user
       @documents = get_documents(current_user, @documents)
       @user_documents = @user_documents.where.not(id: @documents.map(&:id)) if @user_documents
@@ -34,7 +37,7 @@ class WorkflowDocumentsController < ApplicationController
       @workflow_steps = WorkflowStep.where(organization_id: @document.organization_id).order(step_type: :desc)
     end
     @periods = Period.where(organization_id: @document.organization&.parents&.map(&:id).push(@document.organization&.id))
-    @users = UserAssignment.where(organization_id:@document.organization.descendants.map(&:id) + [@organization.id]).map(&:user)
+    @users = UserAssignment.where(organization_id:@organization.descendants.map(&:id) + [@organization.id]).map(&:user)
   end
 
   def update
@@ -43,7 +46,7 @@ class WorkflowDocumentsController < ApplicationController
       @wfs = WorkflowStep.find(params[:document][:workflow_step_id])
       if @wfs.step_type == "start_step"
         @user = User.find_by(id: params[:document][:user_id], archived: false)
-        WorkflowMailer.welcome_email(@document, @user, @organization, @wfs.slug, component_allowed_liquid_variables(@document.workflow_step,User.find(params[:document][:user_id]),@organization)).deliver_later
+        WorkflowMailer.welcome_email(@document, @user, @organization, @wfs.slug, component_allowed_liquid_variables(@document.workflow_step,User.find(params[:document][:user_id]),@organization, @document)).deliver_later
       end
     end
 

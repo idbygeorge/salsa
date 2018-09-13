@@ -16,21 +16,22 @@ class Document < ApplicationRecord
     result = false
     if self.workflow_step&.component_id && user != nil && self.workflow_step.step_type != "end_step" && user.user_assignments.where.not(organization_id: nil).exists?
       component = self.workflow_step.component
-      user_assignment = user.user_assignments.find_by(organization_id:self.organization_id)
-      if self.organization&.inherit_workflows_from_parents
+      if component.role == "supervisor"
+        ua = UserAssignment.where(role: "supervisor",organization_id: self.organization&.parents.map(&:id)).includes(:organization).reorder("organizations.depth DESC").first
+        user_assignment = user.user_assignments.find_by(id:ua&.id)
+      else
         user_assignment = user.user_assignments.find_by(organization_id: self.organization&.parents.map(&:id).push(self.organization_id))
       end
       user_org = user_assignment&.organization
-      if !user_assignment.cascades && user_org.level == component.role_organization_level
-        user_org_level_check = user_org.level == component.role_organization_level
-      elsif user_assignment.cascades && user_org.level <= component.role_organization_level
-        user_org_level_check = user_org.level <= component.role_organization_level
-      end
-      if (component&.role == nil || component&.role == "") && ((user_assignment&.role == "supervisor" && user_org_level_check) || user.id == self.user_id)
+      if user_assignment.blank?
+        false
+      elsif component.role.blank? && ((user_assignment&.role == "supervisor" && user_org.level < self.organization&.level) || user.id == self.user_id)
         result = true
-      elsif component.role == "staff" && user_assignment.role == "staff" && self.user_id == user.id && self.workflow_step_id != ""
+      elsif component.role == "staff" &&  ["supervisor","staff"].include?(user_assignment.role) && self.user_id == user.id && self.workflow_step_id != ""
         result = true
-      elsif component.role == "supervisor" && user_assignment.role == "supervisor" && user_org_level_check
+      elsif component.role == "supervisor" && user_assignment.role == "supervisor" && user_org.level < self.organization&.level
+        result = true
+      elsif component.role == "approver" && user_assignment.role == "approver" && user_org.level < self.organization&.level
         result = true
       else
         result = false

@@ -58,6 +58,15 @@ module ApplicationHelper
     "instances/custom/#{org.slug}" if File.directory?("app/views/instances/custom/#{org.slug}")
   end
 
+  def require_approver_permissions
+    check_for_admin_password
+
+    unless has_role 'approver'
+      return redirect_or_error
+    end
+  end
+
+
   def require_supervisor_permissions
     check_for_admin_password
 
@@ -69,7 +78,7 @@ module ApplicationHelper
   def require_staff_permissions
     check_for_admin_password
 
-    unless has_role('staff') || has_role('supervisor')
+    unless has_role('staff') || has_role('supervisor') || has_role('approver')
       return redirect_or_error
     end
   end
@@ -113,6 +122,7 @@ module ApplicationHelper
       return render :file => "public/401.html", :status => :unauthorized, :layout => false
     else
       if current_page?(admin_path)
+        flash.keep
         return redirect_to admin_login_path
       else
         return redirect_to admin_path
@@ -160,15 +170,15 @@ module ApplicationHelper
     elsif !org && (session[:lms_authenticated_user] == nil || session[:authenticated_user] == nil)
       return result
     end
-
+    user_assignments = nil
     if org[:lms_authentication_source] && org[:lms_authentication_source] == session[:oauth_endpoint]
       username = session[:lms_authenticated_user]['id'].to_s
-      @user_assignments = UserAssignment.where('organization_id = ? OR (role = ?)', org[:id], 'admin').where(username: username)
+      user_assignments = UserAssignment.where('organization_id = ? OR (role = ?)', org[:id], 'admin').where(username: username)
     else
-      @user_assignments = UserAssignment.where('organization_id IN (?) OR (role = ?)', org.organization_ids + [org.id], 'admin').where(user_id: session[:authenticated_user])
+      user_assignments = UserAssignment.where('organization_id IN (?) OR (role = ?)', org.organization_ids + [org.id], 'admin').where(user_id: session[:authenticated_user])
     end
 
-    @user_assignments&.each do |ua|
+    user_assignments&.each do |ua|
       if (ua[:role] == role || ua[:role] == 'admin') && (ua.cascades == false && ua.organization_id == org.id)
         result = true
       elsif (ua[:role] == role || ua[:role] == 'admin') && ua.cascades == true

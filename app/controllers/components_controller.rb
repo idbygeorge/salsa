@@ -112,10 +112,11 @@ class ComponentsController < ApplicationController
           slug: file.name.remove(/\..*/, /\b_/).gsub(/ /, '_')
         )
         if params[:overwrite] == "true" || component.new_record?
+          component.category = "document" if component.category.blank?
+          component.category = "mailer" if File.extname(file.name).delete('.') == "liquid"
           component.update(
             name: file.name.remove(/\..*/),
             description: "",
-            category: "document",
             layout: content,
             format: File.extname(file.name).delete('.')
           )
@@ -198,8 +199,7 @@ class ComponentsController < ApplicationController
       :subject,
       :layout,
       :format,
-      :role,
-      :role_organization_level
+      :role
     )
   end
 end

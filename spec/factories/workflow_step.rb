@@ -7,7 +7,7 @@ FactoryBot.define do
     step_type "default_step" 
     organization_id 1
     after :create do |workflow_step|
-      component = create :component, slug: workflow_step.slug, role: "staff", role_organization_level: 0, organization_id: workflow_step.organization_id
+      component = create :component, slug: workflow_step.slug, role: "staff", organization_id: workflow_step.organization_id
       workflow_step.component_id = component.id
       workflow_step.save
     end
