@@ -48,13 +48,15 @@ module ReportHelper
     @report.save!
 
     self.archive org_slug, report_id, @report_data, account_filter, docs
+    puts 'Report Generated'
   end
 
   def self.account_filter_blank? account_filter
-    false
+    result = false
     if account_filter.blank? || account_filter == {"account_filter"=>""}
-      true
+      result = true
     end
+    result
   end
 
   def self.archive (org_slug, report_id, report_data, account_filter=nil, docs)
@@ -145,7 +147,7 @@ module ReportHelper
 
     org = Organization.find_by slug: org_slug
 
-    if account_filter_blank?(account_filter)
+    if !account_filter_blank?(account_filter)
       query_parameters[:account_filter] = "%#{account_filter}%"
       account_filter_sql = "AND n.value LIKE :account_filter AND a.key = 'account_id'"
     else
@@ -156,7 +158,7 @@ module ReportHelper
     if params[:start]
       start = params[:start] = params[:start].gsub(/[^\d-]/, '')
       if start != ''
-        query_parameters[:start]
+        query_parameters[:start] = params[:start]
         start_filter = "AND (start.value IS NULL OR CAST(start.value AS DATE) >= :start)"
       end
     end
