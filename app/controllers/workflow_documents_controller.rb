@@ -68,9 +68,9 @@ class WorkflowDocumentsController < ApplicationController
   def versions
     get_document params[:id]
     if session[:admin_authorized] || has_role('admin')
-      @document_versions = @document.versions.where(event: "update")
+      @document_versions = @document.versions.where(event: ["update","publish"])
     else
-      @document_versions = @document.versions.where("object ~ ?",".*organization_id: #{get_org.id}.*").where(event: "update")
+      @document_versions = @document.versions.where("object ~ ?",".*organization_id: #{get_org.id}.*").where(event: ["update","publish"])
     end
   end
 

@@ -36,7 +36,7 @@ class ApplicationController < ActionController::Base
     if params[:slug]
       organization = Organization.find_by(slug: params[:slug])
     else
-      organization = Organization.find_by(slug: request.env["SERVER_NAME"])
+      organization = Organization.find_by(slug: get_org_slug)
     end
     if organization&.enable_workflows != true
       flash[:error] = "that page does not exist"
@@ -61,7 +61,7 @@ class ApplicationController < ActionController::Base
   def init_view_folder
     @google_analytics_id = APP_CONFIG['google_analytics_id'] if APP_CONFIG['google_analytics_id']
 
-    org_slug = request.env['SERVER_NAME']
+    org_slug = get_org_slug
 
     if params[:sub_organization_slugs]
       org_slug += '/' + params[:sub_organization_slugs]
@@ -81,7 +81,7 @@ class ApplicationController < ActionController::Base
     if session[:institution] && session[:institution] != ''
       @institution = session['institution']
     elsif !params[:institution] || params[:institution] == ''
-      @institution = request.env['SERVER_NAME']
+      @institution = get_org_slug
     else
       @institution = params[:institution]
     end
@@ -102,7 +102,7 @@ class ApplicationController < ActionController::Base
     @oauth_endpoint = "https://#{@institution}.instructure.com" unless @oauth_endpoint
     @lms_client_id = APP_CONFIG['canvas_id'] unless @lms_client_id
     @lms_secret = APP_CONFIG['canvas_key'] unless @lms_secret
-    @callback_url = "http://#{request.env['SERVER_NAME']}#{redirect_port}/oauth2/callback" unless @callback_url
+    @callback_url = "http://#{get_org_slug}#{redirect_port}/oauth2/callback" unless @callback_url
 
     if canvas_access_token && canvas_access_token != ''
       @lms_client = Canvas::API.new(:host => @oauth_endpoint, :token => canvas_access_token)

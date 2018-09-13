@@ -52,7 +52,7 @@ class AdminController < ApplicationController
 
     # allow using the login form for the admin password if it is set
     if APP_CONFIG['admin_password']
-        if params[:user][:email] == 'admin@' + (params[:slug] || request.env['SERVER_NAME'])
+        if params[:user][:email] == 'admin@' + (params[:slug] || get_org_slug)
           session[:admin_authorized] = params[:user][:password] == APP_CONFIG['admin_password']
 
           return redirect_to admin_path
@@ -85,7 +85,7 @@ class AdminController < ApplicationController
   end
 
   def canvas_accounts
-    org_slug = request.env['SERVER_NAME']
+    org_slug = get_org_slug
     @org = Organization.find_by slug: org_slug
 
     org_meta = OrganizationMeta.where(
@@ -112,7 +112,7 @@ class AdminController < ApplicationController
   end
 
   def canvas_courses
-    @org = Organization.find_by slug: request.env['SERVER_NAME']
+    @org = Organization.find_by slug: get_org_slug
     per_page = 10
     per_page = params[:per] if params[:per]
     if params[:show_course_meta]
@@ -128,7 +128,7 @@ class AdminController < ApplicationController
   def canvas_accounts_sync
     @canvas_access_token = params[:canvas_token]
 
-    org_slug = request.env['SERVER_NAME']
+    org_slug = get_org_slug
 
     @org = Organization.find_by slug: org_slug
 
@@ -156,7 +156,7 @@ class AdminController < ApplicationController
   def canvas_courses_sync
     @canvas_access_token = params[:canvas_token]
     accounts = params[:account_ids]
-    org_slug = request.env['SERVER_NAME']
+    org_slug = get_org_slug
 
     CanvasHelper.courses_sync_as_job org_slug, @canvas_access_token, accounts
 

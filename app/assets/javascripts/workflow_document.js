@@ -21,7 +21,7 @@
   $(window).load(function(){
     var document_step_type = $('[data-document-step-type]').attr('data-document-step-type');
 
-    if(document_step_type !== "end_step" && document_step_type !== ""){
+    if(document_step_type !== "end_step" && document_step_type !== "" && document_step_type !== "start_step"){
       $(".workflow_step.staff").show().fadeTo(500,0.5)
       $(".workflow_step.staff").find(":input").prop('disabled', true);
     }
