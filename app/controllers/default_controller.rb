@@ -6,7 +6,7 @@ class DefaultController < ApplicationController
 
 
   def index
-    root_org_slug = request.env['SERVER_NAME']
+    root_org_slug = get_org_slug
     org = Organization.find_by slug: root_org_slug
 
     if org and org.home_page_redirect?
