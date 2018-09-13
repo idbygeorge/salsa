@@ -87,11 +87,11 @@ class OrganizationsController < AdminController
   end
 
   def start_workflow_form
-    @organization = Organization.find_by(slug:params[:slug])
+    @organization = @organizations.all.select{ |o| o.full_slug == params[:slug] }.first
     @workflow_steps = WorkflowStep.where(organization_id: @organization.organization_ids+[@organization.id], step_type: "start_step")
     user_ids = @organization.user_assignments.map(&:user_id)
     @users = User.find_by(id: user_ids)
-    @periods = Period.where(organization_id: @organization.id)
+    @periods = Period.where(organization_id: @organization.organization_ids+[@organization.id])
   end
 
   def start_workflow
@@ -101,23 +101,26 @@ class OrganizationsController < AdminController
       flash[:error] = "all fields must be filled"
       return redirect_back(fallback_location: start_workflow_form_path)
     end
-    organization = Organization.find_by slug: params[:slug]
+    organization = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
     if start_workflow_params[:start_for_sub_organizations]
       organizations = organization.descendants + [organization]
     else
       organizations = [organization]
     end
+    counter = 0
     organizations.each do |org|
       user_ids = org.user_assignments.where(role: ["supervisor","staff"]).map(&:user_id)
       users = User.where(id: user_ids, archived: false)
       users.each do |user|
+        next if user.documents.map(&:period_id).include?(start_workflow_params[:period_id].to_i)
         document = Document.create(workflow_step_id: start_workflow_params[:starting_workflow_step_id].to_i, organization_id: org.id, period_id: start_workflow_params[:period_id].to_i, user_id: user.id)
         document.update(name: start_workflow_params[:document_name] )
         WorkflowMailer.welcome_email(document, user, org, document.workflow_step.slug,component_allowed_liquid_variables(document.workflow_step.slug, user, org, document )).deliver_later
+        counter +=1
       end
     end
 
-    flash[:notice] = "successfully started workflow for period"
+    flash[:notice] = "successfully started workflow for #{counter} users for the #{Period.find(start_workflow_params[:period_id].to_i).name} period"
     return redirect_to start_workflow_form_path
   end
 

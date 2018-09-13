@@ -4,11 +4,11 @@ class OrganizationUsersController < AdminUsersController
   before_action :require_supervisor_permissions, only:[:import_users,:create_users]
 
   def index
-    organization = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
+    @organization = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
     page = 1
     page = params[:page] if params[:page]
     show_archived = params[:show_archived] == "true"
-    user_ids = UserAssignment.where(organization_id: organization.id).map(&:user_id)
+    user_ids = UserAssignment.where(organization_id: @organization.id).map(&:user_id)
     @users = User.where(id: user_ids, archived: show_archived).order('name', 'email').all.page(params[:page]).per(15)
     @session = session
   end

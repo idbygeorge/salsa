@@ -32,8 +32,8 @@
       <li class="media">
 
         <h2>
-          <%= link_to component.name, edit_component_path(@organization[:slug], component.slug, category: component.category) %>
-          <a class="clearfix pull-right btn btn-default" href="<%= edit_component_path @organization[:slug], component.slug %>">Edit</a>
+          <%= link_to component.name, edit_component_path(params[:slug], component.slug, category: component.category) %>
+          <a class="clearfix pull-right btn btn-default" href="<%= edit_component_path params[:slug], component.slug %>">Edit</a>
         </h2>
         <p><%= component.description %></p>
         <em>
@@ -61,7 +61,7 @@
 
   <hr>
 
-  <%= form_tag import_components_path(@organization.slug), multipart: true, :html => { :class => "form-horizontal col-md-9" } do %>
+  <%= form_tag import_components_path(params[:slug]), multipart: true, :html => { :class => "form-horizontal col-md-9" } do %>
     <div class="form-group-">
       <div class="controls">
         <%= file_field_tag :file, accept: '.zip', class: "form-control-file btn btn-file " %>
