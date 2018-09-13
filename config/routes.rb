@@ -78,8 +78,8 @@ Rails.application.routes.draw do
       post 'users/assignment', as: 'organization_user_assignments', to: 'organization_users#assign', constraints: {slug: /.+/ }
       patch 'users/:id/assignment/', as: 'organization_user_update_assignments', to: 'organization_users#update_assignment', constraints: {slug: /.+/ }
 
-      get 'user/remove_assignment/:id', as: 'organization_user_remove_assignment', to: 'organization_users#remove_assignment'
-      get 'user/edit_assignment/:id', as: 'organization_user_edit_assignment', to: 'organization_users#edit_assignment'
+      get 'user/remove_assignment/:id', as: 'organization_user_remove_assignment', to: 'organization_users#remove_assignment', constraints: {slug: /.+/ }
+      get 'user/edit_assignment/:id', as: 'organization_user_edit_assignment', to: 'organization_users#edit_assignment', constraints: {slug: /.+/ }
 
       get "import_users", to: 'organization_users#import_users', as: 'organization_import_users', constraints: {slug: /.+/ }
       post "import_users", to: 'organization_users#create_users', as: 'create_users', constraints: {slug: /.+/ }
