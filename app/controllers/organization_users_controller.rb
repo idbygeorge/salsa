@@ -4,14 +4,40 @@ class OrganizationUsersController < AdminUsersController
   before_action :require_supervisor_permissions, only:[:import_users,:create_users]
 
   def index
-    organization = Organization.find_by slug: params[:slug]
+    @organization = Organization.find_by slug: params[:slug]
     page = 1
     page = params[:page] if params[:page]
     show_archived = params[:show_archived] == "true"
-    user_ids = UserAssignment.where(organization_id: organization.id).map(&:user_id)
+    user_ids = UserAssignment.where(organization_id: @organization.id).map(&:user_id)
     @users = User.where(id: user_ids, archived: show_archived).order('name', 'email').all.page(params[:page]).per(15)
     @session = session
   end
+
+  def new
+    @organization = Organization.find_by slug: params[:slug]
+    @user = User.new
+  end
+
+  def create
+    @organization = Organization.find_by slug: params[:slug]
+    @user = User.new
+
+    @user.attributes = user_params
+
+    # unless @user.password
+    #     @user.password = SecureRandom.urlsafe_base64
+    #     @user.password_confirmation = @user.password
+    # end
+
+    if @user.save
+      @user_assignment = UserAssignment.create(user_id:@user.id, organization_id:@organization.id ,role:"staff", cascades: true)
+      return redirect_to polymorphic_path([params[:controller].singularize],id: @user.id)
+    else
+        flash[:error] = 'Error creating user'
+        return render action: :new
+    end
+  end
+
 
   def remove_assignment
     @user_assignment = UserAssignment.find_by id: params[:id], organization_id: Organization.find_by(slug: params[:slug])
@@ -21,7 +47,28 @@ class OrganizationUsersController < AdminUsersController
     redirect_to polymorphic_path([params[:controller].singularize],id: @user_assignment.user_id)
   end
 
+  def assign
+    @user = User.find params[:user_assignment][:user_id]
+    @user_assignment = UserAssignment.new user_assignment_params
+    if !has_role("admin")
+      @user_assignment.organization_id = get_org.id
+    end
+    get_organizations
+    @user_assignments = @user.user_assignments if @user.user_assignments.count > 0
+    @new_permission = @user_assignment
+    respond_to do |format|
+      if @user_assignment.save
+        format.html { redirect_to admin_user_path id: @user[:id], notice: 'User Assignment was successfully created.' }
+        format.json { render :show, status: :created, location: @user_assignment }
+      else
+        format.html { render :show }
+        format.json { render json: @user_assignment.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
   def edit_assignment
+    @organization = Organization.find_by slug: params[:slug]
     if !has_role("admin")
       @roles.delete("Global Administrator")
     end
@@ -30,6 +77,7 @@ class OrganizationUsersController < AdminUsersController
   end
 
   def show
+    @organization = Organization.find_by slug: params[:slug]
     org = Organization.find_by(slug: params[:slug])
     user_ids = UserAssignment.where(organization_id: org.id ).map(&:user_id)
     users = User.where(id: user_ids, archived: false)
@@ -41,6 +89,7 @@ class OrganizationUsersController < AdminUsersController
   end
 
   def edit
+    @organization = Organization.find_by slug: params[:slug]
     user_ids = UserAssignment.where(organization_id: Organization.find_by(slug: params[:slug])).map(&:user_id)
     users = User.where(id: user_ids, archived: false)
     @user = users.find_by id: params[:id]
