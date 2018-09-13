@@ -63,6 +63,10 @@ class ApplicationController < ActionController::Base
 
     org_slug = get_org_slug
 
+    if params[:sub_organization_slugs]
+      org_slug += '/' + params[:sub_organization_slugs]
+    end
+
     # find the matching organization based on the request
     @organization = Organization.all.select{ |org| org.full_slug == get_org_slug }.first
 
