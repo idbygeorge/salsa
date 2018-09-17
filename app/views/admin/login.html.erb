@@ -56,7 +56,7 @@
           </label>
         </div> -->
 
-        <%= link_to "shibboleth login", new_user_session_path %><br>
+        <%= link_to "shibboleth login", new_user_session_path if get_org&.enable_shibboleth %><br>
         <%= f.submit "Log in", class: "btn btn-primary" %>
       <% end %>
 

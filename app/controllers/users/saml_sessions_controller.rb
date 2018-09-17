@@ -19,6 +19,7 @@ class Users::SamlSessionsController < Devise::SamlSessionsController
       hash[key] = decorated_response.attribute_value_by_resource_key(key)
     end
     session[:saml_authenticated_user] = hash
+    session[:authenticated_user] = UserAssignment.find_by_username(session[:saml_authenticated_user]["id"]).user.id
     session['institution'] = request.env['SERVER_NAME']
   end
 

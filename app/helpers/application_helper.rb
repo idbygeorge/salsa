@@ -170,9 +170,10 @@ module ApplicationHelper
     elsif !org && (session[:saml_authenticated_user] == nil || session[:authenticated_user] == nil)
       return result
     end
+
     user_assignments = nil
     if get_org.enable_shibboleth && session[:saml_authenticated_user]
-      username = session[:saml_authenticated_user]['id']
+      username = session[:saml_authenticated_user]['id'].to_s
       user_assignments = UserAssignment.where('organization_id = ? OR (role = ?)', org[:id], 'admin').where(username: username)
     elsif org[:lms_authentication_source] && org[:lms_authentication_source] == session[:oauth_endpoint]
       username = session[:saml_authenticated_user]['id'].to_s
