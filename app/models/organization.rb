@@ -35,6 +35,16 @@ class Organization < ApplicationRecord
     return org_ids
   end
 
+  def full_org_path
+    if self.depth > 0 and self.slug.start_with? '/'
+      org_slug = self.self_and_ancestors.pluck(:slug).join ''
+    else
+      org_slug = self.slug
+    end
+
+    org_slug
+  end
+
   def self.descendants
     ObjectSpace.each_object(Class).select { |klass| klass < self }
   end

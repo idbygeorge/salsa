@@ -28,6 +28,8 @@ salsa_test
 # Ignore instance configuration files
 /workers/pdf/iron.json
 
+*.pem*
+
 /config/deploy/config/
 /config/config.yml
 /config/database.yml*
@@ -38,6 +40,8 @@ salsa_test
 /config/nginx.conf
 
 .byebug_history
+
+sp-cert.cnf
 
 # Ignore application configuration
 /config/application.yml

@@ -320,7 +320,7 @@ class DocumentsController < ApplicationController
   end
 
   def can_use_edit_token(lms_course_id = nil)
-    is_authorized = is_lms_authenticated_user? && has_canvas_access_token? && lms_course_id
+    is_authorized = is_saml_authenticated_user? && has_canvas_access_token? && lms_course_id
     user = current_user
     workflow_authorized = @organization.enable_workflows && user && @document&.workflow_step_id && @document.assigned_to?(user)
     if workflow_authorized
@@ -360,8 +360,8 @@ class DocumentsController < ApplicationController
     courses = canvas.get("/api/v1/courses?per_page=50")
   end
 
-  def is_lms_authenticated_user?
-    if session[:lms_authenticated_user]
+  def is_saml_authenticated_user?
+    if session[:saml_authenticated_user]
       true
     else
       false
