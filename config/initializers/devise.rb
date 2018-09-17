@@ -5,27 +5,21 @@ class IdPSettingsAdapter
   def self.settings(idp_entity_id)
     orgs = Organization.where(enable_shibboleth: true)
     idp_settings = nil
-    orgs.each do |org|
-      idp_settings = {
-        assertion_consumer_service_url: "https://evaluation.cpdusu.org/auth/shibboleth",
-        issuer: "oasis4he-a11y-docs",
-        idp_entity_id: "#{org.idp_entity_id}",
-        idp_slo_target_url: "#{org.idp_slo_target_url}",
-        idp_sso_target_url: "#{org.idp_sso_target_url}",
-        idp_cert: "#{org.idp_cert}"
-      }
+    if !orgs.blank?
+      orgs.each do |org|
+        idp_settings = {
+          assertion_consumer_service_url: "https://#{org.full_org_path}/auth/shibboleth",
+          issuer: "oasis4he-a11y-docs",
+          idp_entity_id: "#{org.idp_entity_id}",
+          idp_slo_target_url: "#{org.idp_slo_target_url}",
+          idp_sso_target_url: "#{org.idp_sso_target_url}",
+          idp_cert: "#{org.idp_cert}"
+        }
+      end
+    else
+      idp_settings = {}
     end
     return idp_settings
-  end
-
-  def self.full_org_path org
-    if org[:depth] > 0 and org[:slug].start_with? '/'
-      org_slug = org.self_and_ancestors.pluck(:slug).join ''
-    else
-      org_slug = org[:slug]
-    end
-
-    org_slug
   end
 end
 
@@ -321,14 +315,18 @@ Devise.setup do |config|
 # ==> Configuration for :saml_authenticatable
 
   # Create user if the user does not exist. (Default is false)
-  config.saml_create_user = true
+  config.saml_create_user = false
 
   # Update the attributes of the user after a successful login. (Default is false)
-  config.saml_update_user = true
+  config.saml_update_user = false
 
   # Set the default user key. The user will be looked up by this key. Make
   # sure that the Authentication Response includes the attribute.
-  config.saml_default_user_key = :email
+  config.saml_default_user_key = :id
+  config.saml_resource_locator = Proc.new do |model, saml_response, auth_value|
+    User.saml_resource_locator(model, saml_response, auth_value)
+  end
+
 
   # Optional. This stores the session index defined by the IDP during login.  If provided it will be used as a salt
   # for the user's session to facilitate an IDP initiated logout request.
@@ -339,7 +337,7 @@ Devise.setup do |config|
   #
   # CHECK THIS AGAINST SAML response
   #
-  config.saml_use_subject = true
+  # config.saml_use_subject = true
 
   # You can support multiple IdPs by setting this value to a class that implements a #settings method which takes
   # an IdP entity id as an argument and returns a hash of idp settings for the corresponding IdP.
@@ -370,6 +368,7 @@ Devise.setup do |config|
     settings.security[:want_assertions_signed]  = true     # Enable or not the requirement of signed assertion
     settings.security[:metadata_signed]         = false    # Enable or not signature on Metadata
     settings.security[:want_assertions_encrypted] = true
+    settings.force_authn   = 1     # Enable or not signature on AuthNRequest
 
     settings.security[:digest_method]    = XMLSecurity::Document::SHA1
     settings.security[:signature_method] = XMLSecurity::Document::RSA_SHA1

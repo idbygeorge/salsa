@@ -183,18 +183,6 @@ ActiveRecord::Schema.define(version: 20180906205400) do
     t.index ["organization_id"], name: "index_report_archives_on_organization_id"
   end
 
-  create_table "shibboleth_users", force: :cascade do |t|
-    t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["email"], name: "index_shibboleth_users_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_shibboleth_users_on_reset_password_token", unique: true
-  end
-
   create_table "templates", id: :serial, force: :cascade do |t|
     t.string "slug"
     t.text "payload"

@@ -55,7 +55,7 @@ class OrganizationsController < AdminController
     @export_types = Organization.export_types
     @organization = Organization.create organization_params
 
-    redirect_to organization_path(slug: full_org_path(@organization))
+    redirect_to organization_path(slug: full_org_path(@organization)) if !@organization.new_record?
   end
 
   def update

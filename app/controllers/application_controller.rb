@@ -46,7 +46,10 @@ class ApplicationController < ActionController::Base
 
   def current_user
     if session[:authenticated_user]
-      User.find_by(id: session[:authenticated_user], archived: false)
+      return User.find_by(id: session[:authenticated_user], archived: false)
+    elsif session[:saml_authenticated_user]
+      user = UserAssignment.find_by_username( session[:saml_authenticated_user]["id"]).user
+      return user if user.archived == false
     end
   end
 

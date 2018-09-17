@@ -1,9 +1,11 @@
 Rails.application.routes.draw do
 
-  devise_for :shibboleth_users
-
-  devise_scope :shibboleth_user do
-    post '/auth/shibboleth', to: 'devise/saml_sessions#create'
+  devise_for :users, controllers: {
+    sessions: 'users/sessions',
+    saml_sessions: 'users/saml_sessions'
+  }
+  devise_scope :user do
+    post '/auth/shibboleth', to: 'users/saml_sessions#create'
   end
 
   root 'default#index'
