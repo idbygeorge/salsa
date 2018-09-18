@@ -45,6 +45,10 @@ class Organization < ApplicationRecord
     org_slug
   end
 
+  def setting(setting)
+    org = organization.self_and_ancestors.where.not("#{setting}": nil).reorder(:depth).last
+  end
+
   def self.descendants
     ObjectSpace.each_object(Class).select { |klass| klass < self }
   end
