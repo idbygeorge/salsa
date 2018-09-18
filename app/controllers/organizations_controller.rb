@@ -91,7 +91,7 @@ class OrganizationsController < AdminController
     @workflow_steps = WorkflowStep.where(organization_id: @organization.organization_ids+[@organization.id], step_type: "start_step")
     user_ids = @organization.user_assignments.map(&:user_id)
     @users = User.find_by(id: user_ids)
-    @periods = Period.where(organization_id: @organization.id)
+    @periods = Period.where(organization_id: @organization.organization_ids+[@organization.id])
   end
 
   def start_workflow
