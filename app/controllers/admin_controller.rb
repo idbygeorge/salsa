@@ -226,7 +226,7 @@ class AdminController < ApplicationController
     user_remote_id = params[:q] if params[:search_remote_account_id]
 
     user_ids = User.where("email = ? OR id = ? OR name ~* ? ", user_email, user_id, user_name).map(&:id)
-    user_ids += UserAssignment.where("username = '?' ", user_remote_id).map(&:user_id)
+    user_ids += UserAssignment.where("lower(username) = '?' ", user_remote_id.downcase).map(&:user_id)
 
     sql = ["organization_id IN (?) AND (lms_course_id = ? OR name ~* ? OR edit_id ~* ? OR view_id ~* ? OR template_id ~* ? )"]
     param = [@organizations.pluck(:id), params[:q], ".*#{params[:q]}.*"]
