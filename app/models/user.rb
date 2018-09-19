@@ -15,9 +15,9 @@ class User < ApplicationRecord
   has_many :user_assignments
 
   def self.saml_resource_locator(model, saml_response, auth_value)
-    UserAssignment.find_by_username(auth_value)&.user
+    UserAssignment.find_by("lower(username) = ?", auth_value.downcase)&.first&.user
   end
-  
+
   def self.authenticate_with_saml(saml_response, relay_state)
     super
   end
