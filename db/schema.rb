@@ -133,6 +133,14 @@ ActiveRecord::Schema.define(version: 20180906205400) do
     t.boolean "disable_document_view", default: false
     t.boolean "force_https", default: false
     t.boolean "enable_workflow_report", default: false
+    t.boolean "enable_shibboleth", default: false
+    t.string "idp_sso_target_url"
+    t.string "idp_slo_target_url"
+    t.string "idp_entity_id"
+    t.text "idp_cert"
+    t.string "idp_cert_fingerprint"
+    t.string "idp_cert_fingerprint_algorithm"
+    t.string "authn_context"
     t.index ["depth"], name: "index_organizations_on_depth"
     t.index ["lft"], name: "index_organizations_on_lft"
     t.index ["lms_id"], name: "index_organizations_on_lms_id"

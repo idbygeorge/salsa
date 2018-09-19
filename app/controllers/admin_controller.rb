@@ -197,6 +197,10 @@ class AdminController < ApplicationController
     if user
       user.update user_params
       user.activate
+      ua = UserAssignment.find_or_initialize_by(user_id: user.id, organization_id:get_org.id )
+      ua.username = params[:user_remote_id]
+      ua.role = "staff" if ua.role.blank?
+      ua.save
       redirect_to admin_path
     else
       return render :file => "public/410.html", :status => :gone, :layout => false

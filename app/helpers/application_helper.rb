@@ -167,15 +167,19 @@ module ApplicationHelper
     # # if they are authorized as an admin, let them in
     if session[:admin_authorized] == true
       return result = true
-    elsif !org && (session[:lms_authenticated_user] == nil || session[:authenticated_user] == nil)
+    elsif !org && (session[:saml_authenticated_user] == nil || session[:authenticated_user] == nil)
       return result
     end
+
     user_assignments = nil
-    if org[:lms_authentication_source] && org[:lms_authentication_source] == session[:oauth_endpoint]
-      username = session[:lms_authenticated_user]['id'].to_s
-      user_assignments = UserAssignment.where('organization_id = ? OR (role = ?)', org[:id], 'admin').where(username: username)
+    if get_org.enable_shibboleth && session[:saml_authenticated_user]
+      username = session[:saml_authenticated_user]['id'].to_s
+      user_assignments = UserAssignment.where('organization_id in (?) OR (role = ?)', org.self_and_ancestors.map(&:id), 'admin').where(username: username)
+    elsif org[:lms_authentication_source] && org[:lms_authentication_source] == session[:oauth_endpoint]
+      username = session[:saml_authenticated_user]['id'].to_s
+      user_assignments = UserAssignment.where('organization_id = ? OR (role = ?)', org.self_and_ancestors.map(&:id), 'admin').where(username: username)
     else
-      user_assignments = UserAssignment.where('organization_id IN (?) OR (role = ?)', org.organization_ids + [org.id], 'admin').where(user_id: session[:authenticated_user])
+      user_assignments = UserAssignment.where('organization_id IN (?) OR (role = ?)', org.self_and_ancestors.map(&:id), 'admin').where(user_id: session[:authenticated_user])
     end
 
     user_assignments&.each do |ua|
@@ -195,10 +199,8 @@ module ApplicationHelper
   end
 
   def get_organizations
-    if session[:lms_authenticated_user]
-      user = UserAssignment.find_by_username(
-        session[:lms_authenticated_user]['id'].to_s
-      ).user
+    if session[:saml_authenticated_user]
+      user = UserAssignment.find_by("lower(username) = ?", session[:saml_authenticated_user]["id"].downcase).user
     elsif session[:authenticated_user]
       user = User.find session[:authenticated_user]
     end
