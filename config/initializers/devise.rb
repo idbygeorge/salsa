@@ -3,10 +3,9 @@
 
 class IdPSettingsAdapter
   def self.settings(idp_entity_id)
-    orgs = Organization.where(enable_shibboleth: true)
+    org = Organization.find_by(enable_shibboleth: true,idp_entity_id: idp_entity_id)
     idp_settings = nil
-    if !orgs.blank?
-      orgs.each do |org|
+    if !org.blank?
         idp_settings = {
           assertion_consumer_service_url: "https://#{org.full_org_path}/auth/shibboleth",
           issuer: "oasis4he-a11y-docs",
@@ -15,7 +14,6 @@ class IdPSettingsAdapter
           idp_sso_target_url: "#{org.idp_sso_target_url}",
           idp_cert: "#{org.idp_cert}"
         }
-      end
     else
       idp_settings = {}
     end
@@ -345,7 +343,7 @@ Devise.setup do |config|
 
   # You provide you own method to find the idp_entity_id in a SAML message in the case of multiple IdPs
   # by setting this to a custom reader class, or use the default.
-  # config.idp_entity_id_reader = DeviseSamlAuthenticatable::DefaultIdpEntityIdReader
+  config.idp_entity_id_reader = OrganizationsHelper
 
   # You can set a handler object that takes the response for a failed SAML request and the strategy,
   # and implements a #handle method. This method can then redirect the user, return error messages, etc.

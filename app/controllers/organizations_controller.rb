@@ -123,6 +123,7 @@ class OrganizationsController < AdminController
     return redirect_to start_workflow_form_path
   end
 
+
   private
 
   def get_documents path=params[:slug], page=params[:page], per=25, key=params[:key]
