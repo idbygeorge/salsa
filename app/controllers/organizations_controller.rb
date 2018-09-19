@@ -112,6 +112,7 @@ class OrganizationsController < AdminController
       user_ids = org.user_assignments.where(role: ["supervisor","staff"]).map(&:user_id)
       users = User.where(id: user_ids, archived: false)
       users.each do |user|
+        next if Document.find_by(period_id:start_workflow_params[:period_id].to_i)
         document = Document.create(workflow_step_id: start_workflow_params[:starting_workflow_step_id].to_i, organization_id: org.id, period_id: start_workflow_params[:period_id].to_i, user_id: user.id)
         document.update(name: start_workflow_params[:document_name] )
         WorkflowMailer.welcome_email(document, user, org, document.workflow_step.slug,component_allowed_liquid_variables(document.workflow_step.slug, user, org, document )).deliver_later
