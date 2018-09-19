@@ -48,7 +48,7 @@ class ApplicationController < ActionController::Base
     if session[:authenticated_user]
       return User.find_by(id: session[:authenticated_user], archived: false)
     elsif session[:saml_authenticated_user]
-      user = UserAssignment.find_by("lower(username) = ?", session[:saml_authenticated_user]["id"].downcase).first.user
+      user = UserAssignment.find_by("lower(username) = ?", session[:saml_authenticated_user]["id"].downcase).user
       return user if user.archived == false
     end
   end
