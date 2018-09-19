@@ -1,7 +1,7 @@
 class OrganizationUsersController < AdminUsersController
   skip_before_action :require_admin_permissions
-  before_action :require_organization_admin_permissions, except:[:import_users,:create_users]
-  before_action :require_supervisor_permissions, only:[:import_users,:create_users]
+  before_action :require_admin_permissions, only: [:archive,:restore]
+  before_action :require_supervisor_permissions
 
   def index
     @organization = Organization.find_by slug: params[:slug]
@@ -20,7 +20,7 @@ class OrganizationUsersController < AdminUsersController
 
   def create
     @organization = Organization.find_by slug: params[:slug]
-    @user = User.new
+    @user = User.find_or_initialize_by(email: user_params[:email])
 
     @user.attributes = user_params
 
