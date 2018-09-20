@@ -58,7 +58,7 @@
       <% if has_role("admin") %>
         <td>
           <% if params[:show_archived] == "true" %>
-            <%= link_to "Restore", polymorphic_path([params[:controller].singularize,:restore],"#{params[:controller].singularize}_id".to_sym => user.id), method:"post", class:"btn btn-primary" %>
+            <%= link_to "Activate", polymorphic_path([params[:controller].singularize,:restore],"#{params[:controller].singularize}_id".to_sym => user.id), method:"post", class:"btn btn-primary" %>
           <% else %>
             <%= link_to "Archive", polymorphic_path([params[:controller].singularize,:archive],"#{params[:controller].singularize}_id".to_sym => user.id), method:"post", class:"btn btn-danger" %>
 
