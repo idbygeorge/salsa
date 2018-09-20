@@ -200,7 +200,7 @@ module ApplicationHelper
 
   def get_organizations
     if session[:saml_authenticated_user]
-      user = UserAssignment.find_by("lower(username) = ?", session[:saml_authenticated_user]["id"].downcase).user
+      user = UserAssignment.find_by("lower(username) = ?", session[:saml_authenticated_user]["id"].to_s.downcase).user
     elsif session[:authenticated_user]
       user = User.find session[:authenticated_user]
     end
