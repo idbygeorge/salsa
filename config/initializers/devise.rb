@@ -313,16 +313,43 @@ Devise.setup do |config|
 # ==> Configuration for :saml_authenticatable
 
   # Create user if the user does not exist. (Default is false)
-  config.saml_create_user = false
+  config.saml_create_user = true
 
   # Update the attributes of the user after a successful login. (Default is false)
-  config.saml_update_user = false
+  config.saml_update_user = true
 
   # Set the default user key. The user will be looked up by this key. Make
   # sure that the Authentication Response includes the attribute.
   config.saml_default_user_key = :id
   config.saml_resource_locator = Proc.new do |model, saml_response, auth_value|
     User.saml_resource_locator(model, saml_response, auth_value)
+  end
+
+  config.saml_update_resource_hook = Proc.new do |user, saml_response, auth_value|
+    saml_response.attributes.resource_keys.each do |key|
+      case key
+      when /(first_name|last_name)/
+        user.send "name=", "#{saml_response.attribute_value_by_resource_key("first_name")} #{saml_response.attribute_value_by_resource_key("last_name")}"
+      when /id/
+        if user.new_record?
+          org = Organization.find_by(slug: URI.parse(saml_response.raw_response.destination).host)
+          ua = UserAssignment.find_or_initialize_by(user_id: user.id, organization_id: org.id )
+          ua.username = saml_response.attribute_value_by_resource_key(key)
+          ua.role = "staff"
+          user.archived = true
+          ua.save
+        end
+      else
+        user.send "#{key}=", saml_response.attribute_value_by_resource_key(key)
+      end
+    end
+
+    user.send "password=", SecureRandom.urlsafe_base64
+    if (Devise.saml_use_subject)
+      user.send "#{Devise.saml_default_user_key}=", auth_value
+    end
+
+    user.save!
   end
 
 
