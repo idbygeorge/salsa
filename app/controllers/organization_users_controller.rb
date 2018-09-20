@@ -1,7 +1,7 @@
 class OrganizationUsersController < AdminUsersController
   skip_before_action :require_admin_permissions
-  before_action :require_organization_admin_permissions, except:[:import_users,:create_users]
-  before_action :require_supervisor_permissions, only:[:import_users,:create_users]
+  before_action :require_admin_permissions, only: [:archive,:restore]
+  before_action :require_supervisor_permissions
 
   def index
     @organization = Organization.find_by slug: params[:slug]
@@ -20,7 +20,7 @@ class OrganizationUsersController < AdminUsersController
 
   def create
     @organization = Organization.find_by slug: params[:slug]
-    @user = User.new
+    @user = User.find_or_initialize_by(email: user_params[:email])
 
     @user.attributes = user_params
 
@@ -118,6 +118,7 @@ class OrganizationUsersController < AdminUsersController
     org = Organization.find_by slug: params[:slug]
     users_emails = params[:users][:emails].gsub(/ */,'').split(/(\r\n|\n|,)/).delete_if {|x| x.match(/\A(\r\n|\n|,|)\z/) }
     user_errors = Array.new
+    users_created = 0
     user_errors.push "Add emails to import users" if params[:users][:emails].blank?
     users_emails.each do |user_email|
       user = User.find_or_initialize_by(email: user_email)
@@ -132,9 +133,10 @@ class OrganizationUsersController < AdminUsersController
         user_errors.push "Could not create user with email: '#{user.email}' because: #{error[0]} #{error[1][0]}" if user.errors
       end
       next if !user.errors.empty?
+      users_created +=1
       UserMailer.welcome_email(user,org,component_allowed_liquid_variables(nil,user,org)).deliver_later
     end
-    flash[:notice] = "Users created successfully" if user_errors == [] && users_emails != []
+    flash[:notice] = "#{users_created} Users created successfully" if user_errors == [] && users_emails != []
     flash[:errors] = user_errors
     redirect_to organization_import_users_path
   end

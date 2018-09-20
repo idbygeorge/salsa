@@ -1,10 +1,10 @@
+<%= link_to 'Add User',  polymorphic_path([:new,params[:controller].singularize]), class: 'btn btn-success pull-right' %>
 <% if has_role("admin") %>
-  <%= link_to 'Add User',  polymorphic_path([:new,params[:controller].singularize]), class: 'btn btn-success pull-right' %>
-<% end %>
-<% if params[:show_archived] == "true" %>
-  <%= link_to 'Users', polymorphic_path([params[:controller]],show_archived: false), class: 'btn btn-success pull-right' %>
-<% else %>
-  <%= link_to 'Archived Users', polymorphic_path([params[:controller]],show_archived: true), class: 'btn btn-success pull-right' %>
+  <% if params[:show_archived] == "true" %>
+    <%= link_to 'Users', polymorphic_path([params[:controller]],show_archived: false), class: 'btn btn-success pull-right' %>
+  <% else %>
+    <%= link_to 'Archived Users', polymorphic_path([params[:controller]],show_archived: true), class: 'btn btn-success pull-right' %>
+  <% end %>
 <% end %>
 
 <% if params[:controller] == "organization_users" %>
@@ -21,9 +21,11 @@
     <th>
       Permissions
     </th>
-    <th>
-      Actions
-    </th>
+    <% if has_role("admin") %>
+      <th>
+        Actions
+      </th>
+    <% end %>
   </thead>
 
   <tbody>
@@ -53,14 +55,16 @@
           <% end %>
         </ul>
       </td>
-      <td>
-        <% if params[:show_archived] == "true" %>
-          <%= link_to "Restore", polymorphic_path([params[:controller].singularize,:restore],"#{params[:controller].singularize}_id".to_sym => user.id), method:"post", class:"btn btn-primary" %>
-        <% else %>
-          <%= link_to "Archive", polymorphic_path([params[:controller].singularize,:archive],"#{params[:controller].singularize}_id".to_sym => user.id), method:"post", class:"btn btn-danger" %>
+      <% if has_role("admin") %>
+        <td>
+          <% if params[:show_archived] == "true" %>
+            <%= link_to "Restore", polymorphic_path([params[:controller].singularize,:restore],"#{params[:controller].singularize}_id".to_sym => user.id), method:"post", class:"btn btn-primary" %>
+          <% else %>
+            <%= link_to "Archive", polymorphic_path([params[:controller].singularize,:archive],"#{params[:controller].singularize}_id".to_sym => user.id), method:"post", class:"btn btn-danger" %>
 
-        <% end %>
-      </td>
+          <% end %>
+        </td>
+      <% end %>
     </tr>
   <% end %>
   </tbody>
