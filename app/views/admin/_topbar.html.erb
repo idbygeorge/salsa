@@ -74,15 +74,15 @@
       <ul class="nav navbar-nav navbar-right">
         <%# <li class="active"><%= link_to "Reports", reports_path %><%# </li> %>
         <% if has_role('admin') %>
-          <li class="active"><%= link_to "Periods", admin_periods_path %></li>
-          <li class="active"><%= link_to "Documents", admin_document_index_path %></li>
-          <li class="active"><%= link_to "Users", admin_users_path %></li>
+          <li class="active"><%= link_to "Periods", admin_periods_path(org_path: params[:org_path]) %></li>
+          <li class="active"><%= link_to "Documents", admin_document_index_path(org_path:params[:org_path]) %></li>
+          <li class="active"><%= link_to "Users", admin_users_path(org_path:params[:org_path]) %></li>
         <% end %>
         <% if get_org&.enable_workflows %>
-          <li class="active"><%= link_to "Workflow Documents", workflow_document_index_path %></li>
+          <li class="active"><%= link_to "Workflow Documents", workflow_document_index_path(org_path:params[:org_path]) %></li>
         <% end %>
-        <li class="active"><%= link_to "Organizations", organizations_path %></li>
-        <li class="logout"><%= link_to "Logout", admin_logout_path %></li>
+        <li class="active"><%= link_to "Organizations", organizations_path(org_path:params[:org_path]) %></li>
+        <li class="logout"><%= link_to "Logout", admin_logout_path(org_path:params[:org_path]) %></li>
       </ul>
     </div>
   </div>

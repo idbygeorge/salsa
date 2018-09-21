@@ -20,11 +20,11 @@
 </dl>
 
 <%= link_to t('.back', :default => t("helpers.links.back")),
-              admin_periods_path, :class => 'btn btn-default'  %>
+              admin_periods_path(org_path: params[:org_path]), :class => 'btn btn-default'  %>
 <%= link_to t('.edit', :default => t("helpers.links.edit")),
-              edit_admin_period_path(@period), :class => 'btn btn-default' %>
+              edit_admin_period_path(@period, org_path: params[:org_path]), :class => 'btn btn-default' %>
 <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-              admin_period_path(@period),
+              admin_period_path(@period, org_path: params[:org_path]),
               :method => 'delete',
               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
               :class => 'btn btn-danger' %>

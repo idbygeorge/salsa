@@ -47,10 +47,10 @@
 
 			<ul class="nav navbar-nav navbar-right">
 				<% if has_role 'organization_admin' %>
-					<li><%= link_to 'Admin', admin_path, class: "btn btn-default" %></li>
+					<li><%= link_to 'Admin', admin_path(org_path: params[:org_path]), class: "btn btn-default" %></li>
 				<% end %>
 
-				<li><%= link_to 'Logout', admin_logout_path, class: "btn btn-default" %></li>
+				<li><%= link_to 'Logout', admin_logout_path(org_path: params[:org_path]), class: "btn btn-default" %></li>
 			</ul>
 		</div><!-- .container  -->
 	</div><!-- .heading -->

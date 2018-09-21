@@ -291,9 +291,14 @@ module ApplicationHelper
     return true
   end
 
-  def get_org_slug
-    return request.env['SERVER_NAME'] + '/' + params[:sub_organization_slugs] if params[:sub_organization_slugs]
+  def get_org_path
+    return request.env['SERVER_NAME'] + '/' + params[:org_path] if params[:org_path]
     return request.env['SERVER_NAME']
+  end
+
+  def get_org_slug
+    organization = Organization.all.select{ |org| org.full_slug == get_org_path }.first
+    organization.slug  
   end
 
   def get_org

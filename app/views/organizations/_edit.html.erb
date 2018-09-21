@@ -1,5 +1,15 @@
 <div class="row">
-  <% if @organization[:slug] %>
+  <% if @organization.errors.any? %>
+    <div id="error_expl" class="alert alert-danger">
+      <ul>
+      <% @organization.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% if !@organization.new_record? %>
     <% form_action = organization_path slug: full_org_path(@organization) %>
   <% else %>
     <% form_action = organization_path slug: '' %>
@@ -178,11 +188,11 @@
 
     <fieldset>
         <legend>Settings</fieldset>
-        <% if params[:action] != 'new' || params[:action] == 'create' %>
+        <% if !@organization.new_record? %>
           <div class="form-group">
             <div>
             <%= f.label :default_workflow_step_id, :class => 'control-label' %>
-              <%= f.collection_select :default_workflow_step_id, @workflow_steps.where(step_type: "start_step"), :id, :slug, {include_blank: true},{class:"form-control"} %>
+              <%= f.collection_select :default_workflow_step_id, @workflow_steps&.where(step_type: "start_step"), :id, :slug, {include_blank: true},{class:"form-control"} %>
             </div>
             <%=f.error_span(:next_workflow_step_id) %>
           </div>
@@ -265,7 +275,7 @@
       &nbsp;
       &nbsp;
       &nbsp;
-      <%= link_to 'cancel', (@organization[:id] ? organization_path(id: @organization[:id]) : organizations_path) %>
+      <%= link_to 'cancel', (@organization[:id] ? organization_path(id: @organization[:id], org_path: params[:org_path]) : organizations_path) %>
     </div>
 
   <% end %><!-- form -->

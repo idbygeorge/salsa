@@ -30,7 +30,7 @@
               <%= Document.where('documents.updated_at = documents.created_at').count %> abandoned
             </div>
 
-            <%= link_to 'Add Organization', new_organization_path, class: 'btn btn-success' %>
+            <%= link_to 'Add Organization', new_organization_path(org_path: params[:org_path]), class: 'btn btn-success' %>
 
             <hr>
           <% end %>
@@ -39,14 +39,14 @@
             <ul class="nav nav-sidebar">
               <% if session[:admin_authorized] %>
               <li class="nav-header clearfix">
-                <%= link_to 'Orphaned SALSAs', organizations_path %>
+                <%= link_to 'Orphaned SALSAs', organizations_path(org_path: params[:org_path]) %>
               </li>
               <% end %>
 
               <% @organizations.each do |org| %>
                 <li class="depth-<%= org.depth %> <% if !org.slug? or (org.slug.include? '/' and (org.slug.index('/') > 0)) %>alert-danger<% end %>">
                   <% unless !org.slug? or (org.slug.include? '/' and (org.slug.index('/') > 0)) %>
-                    <%= link_to org[:name], organization_path(slug: full_org_path(org)) %>
+                    <%= link_to org[:name], controller: 'organizations', action: 'show', slug: full_org_path(org).split('/'), org_path: params[:org_path] %>
                   <% else %>
                     <a>
                       <span class="badge pull-right alert-danger">bad slug</span>
@@ -79,7 +79,7 @@
       </div><!--/row-->
 
       <footer>
-        <p><%= link_to 'Salsa', root_path %></p>
+        <p><%= link_to 'Salsa', root_path(org_path: params[:org_path]) %></p>
       </footer>
 
     </div> <!-- /container -->

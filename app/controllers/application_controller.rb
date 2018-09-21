@@ -33,7 +33,7 @@ class ApplicationController < ActionController::Base
   end
 
   def check_organization_workflow_enabled
-    if slugs = params[:slug].split((/(?=\/)/))
+    if slugs = params[:org_slug]&.split((/(?=\/)/))
       organization = Organization.find_by(slug: slugs[-1])
     else
       organization = Organization.find_by(slug: get_org_slug)
@@ -66,12 +66,12 @@ class ApplicationController < ActionController::Base
 
     org_slug = get_org_slug
 
-    if params[:sub_organization_slugs]
-      org_slug += '/' + params[:sub_organization_slugs]
+    if params[:org_path]
+      org_slug += '/' + params[:org_path]
     end
 
     # find the matching organization based on the request
-    @organization = Organization.all.select{ |org| org.full_slug == get_org_slug }.first
+    @organization = Organization.all.select{ |org| org.full_slug == get_org_path }.first
 
     # get a placeholder org matching the org slug if there is no matching or in the database
     @organization = Organization.new  slug: org_slug unless @organization

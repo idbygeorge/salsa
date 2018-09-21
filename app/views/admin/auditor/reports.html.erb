@@ -5,9 +5,9 @@
     </p>
     <div class="pull-right">
       <% if params[:show_archived] %>
-        <%= link_to "Reports", admin_auditor_reports_path, class: "btn btn-info"%>
+        <%= link_to "Reports", admin_auditor_reports_path(org_path: params[:org_path]), class: "btn btn-info"%>
       <% else %>
-        <%= link_to "Archived Reports", admin_auditor_reports_path(show_archived: true), class: "btn btn-info"%>
+        <%= link_to "Archived Reports", admin_auditor_reports_path(show_archived: true, org_path: params[:org_path]), class: "btn btn-info"%>
       <% end %>
     </div>
 
@@ -17,12 +17,12 @@
       <div class="pull-right">
         <div class="">
           <% if params[:show_archived] %>
-            <%= link_to "Restore Report #{report.id}", admin_auditor_restore_report_path(report: report.id), class: "btn btn-primary"%>
+            <%= link_to "Restore Report #{report.id}", admin_auditor_restore_report_path(report: report.id, org_path: params[:org_path]), class: "btn btn-primary"%>
           <% else %>
-            <%= link_to "Archive Report #{report.id}", admin_auditor_archive_report_path(report: report.id), class: "btn btn-danger"%>
+            <%= link_to "Archive Report #{report.id}", admin_auditor_archive_report_path(report: report.id, org_path: params[:org_path]), class: "btn btn-danger"%>
           <% end %>
           <% if File.exist?(ReportHelper.zipfile_path(@org.slug, report.id))%>
-            <%= link_to "Download Report #{report.id}", admin_auditor_download_path(report: report.id), class: "btn btn-success"%>
+            <%= link_to "Download Report #{report.id}", admin_auditor_download_path(report: report.id, org_path: params[:org_path]), class: "btn btn-success"%>
           <% end %>
         </div>
       </div>

@@ -24,11 +24,7 @@ class DocumentsController < ApplicationController
 
       @document.save!
 
-      if params[:sub_organization_slugs]
-        redirect_to edit_sub_org_document_path(id: @document.edit_id, sub_organization_slugs: params[:sub_organization_slugs])
-      else
-        redirect_to edit_document_path(id: @document.edit_id)
-      end
+      redirect_to edit_document_path(:id => @document.edit_id, :org_path => params[:org_path], :batch_token => params[:batch_token])
     else
       redirect_to root_path, :flash => { :error => "You are not authorized to create a document" }
     end
@@ -47,20 +43,12 @@ class DocumentsController < ApplicationController
       document = document_template.dup
       document.reset_ids
       document.save!
-      if params[:sub_organization_slugs]
-        redirect_to edit_sub_org_document_path(:id => document.edit_id, :batch_token => params[:batch_token])
-      else
-        redirect_to edit_document_path(:id => document.edit_id, :batch_token => params[:batch_token])
-      end
+      redirect_to edit_document_path(:id => document.edit_id, :org_path => params[:org_path], :batch_token => params[:batch_token])
       return
     end
     raise ActionController::RoutingError.new('Not Found') unless document || @document
     if document
-      if params[:sub_organization_slugs]
-        redirect_to edit_+sub_org_document_path(:id => document.edit_id, :batch_token => params[:batch_token])
-      else
-        redirect_to edit_document_path(:id => document.edit_id, :batch_token => params[:batch_token])
-      end
+      redirect_to edit_document_path(:id => document.edit_id, :org_path => params[:org_path], :batch_token => params[:batch_token])
       return
     end
 
@@ -83,7 +71,7 @@ class DocumentsController < ApplicationController
   end
 
   def edit
-    if check_lock @organization[:slug], params[:batch_token]
+    if check_lock @organization.slug, params[:batch_token]
       if params[:version].to_i > 0
         @document_version = params[:version].to_i
         @document = @document.versions[@document_version].reify
@@ -158,9 +146,9 @@ class DocumentsController < ApplicationController
 
       @document = @document.versions[params[:version].to_i].reify if params[:version]
 
-      @view_pdf_url = view_pdf_url
-      @view_url = view_url
-      @template_url = template_url(@document)
+      @view_pdf_url = view_pdf_url(org_path: params[:org_path])
+      @view_url = view_url(org_path: params[:org_path])
+      @template_url = template_url(@document, org_path: params[:org_path])
 
       # backwards compatibility alias
       @syllabus = @document
@@ -310,7 +298,7 @@ class DocumentsController < ApplicationController
       return redirect_to lms_course_document_path(lms_course_id: params[:lms_course_id])
     elsif params[:document_token] && @document
       # show options to user (make child, make new)
-      @template_url = template_url(@document)
+      @template_url = template_url(@document, org_path: params[:org_path])
       if existing_doc && existing_doc.id != @document.id
         has_existing_document = true
       else
@@ -410,9 +398,9 @@ class DocumentsController < ApplicationController
     @document = Document.find_by_edit_id(params[:id])
 
     raise ActionController::RoutingError.new('Not Found') unless @document
-    @view_pdf_url = view_pdf_url
-    @view_url = view_url
-    @template_url = template_url(@document)
+    @view_pdf_url = view_pdf_url(org_path: params[:org_path])
+    @view_url = view_url(org_path: params[:org_path])
+    @template_url = template_url(@document, org_path: params[:org_path])
 
     # use the component that was used when this document was created
     if @document.component_version
@@ -441,15 +429,8 @@ class DocumentsController < ApplicationController
     document_slug = get_org_slug
 
     if @document[:edit_id]
-      @salsa_link = document_path(@document[:edit_id])
+      @salsa_link = document_path(@document[:edit_id],org_path: params[:org_path])
 
-      if params[:sub_organization_slugs]
-        if @document[:edit_id]
-          @salsa_link = sub_org_document_path @document[:edit_id], sub_organization_slugs: params[:sub_organization_slugs]
-        else
-          @salsa_link = new_sub_org_document_path sub_organization_slugs: params[:sub_organization_slugs]
-        end
-      end
     end
 
     if @organization && @organization[:id]
@@ -460,7 +441,7 @@ class DocumentsController < ApplicationController
       end
 
       # find the org to bind this to
-      org = Organization.all.select{ |o| o.full_slug == get_org_slug }.first
+      org = Organization.all.select{ |o| o.full_slug == get_org_path }.first
     end
 
     # if there is no org yet, show an error

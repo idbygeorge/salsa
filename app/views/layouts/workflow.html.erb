@@ -39,7 +39,7 @@
 
         <div class="">
           <ul class="navbar-nav navbar-right">
-            <li class="logout"><%= link_to "Logout", admin_logout_path, class:"navbar-nav" %></li>
+            <li class="logout"><%= link_to "Logout", admin_logout_path(org_path: params[:org_path]), class:"navbar-nav" %></li>
           </ul>
         </div>
       </div>

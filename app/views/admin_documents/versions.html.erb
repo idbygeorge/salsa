@@ -19,7 +19,7 @@
         <td><%= dv.index %></td>
         <td><%= dv.event %></td>
         <td><%= User.find_by(id: dv.whodunnit)&.email if dv.whodunnit %></td>
-        <td><%= link_to 'Revert to this version', admin_revert_document_path(@document, dv.id), method: :post, class:"btn btn-xs btn-danger" %></td>
+        <td><%= link_to 'Revert to this version', admin_revert_document_path(@document, dv.id, org_path: params[:org_path]), method: :post, class:"btn btn-xs btn-danger" %></td>
       </tr>
     <% end %>
   </tbody>
