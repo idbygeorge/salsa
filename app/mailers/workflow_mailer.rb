@@ -13,8 +13,8 @@ class WorkflowMailer < ApplicationMailer
       if @next_component && @next_component.role == "supervisor"
         user = UserAssignment.where(role: "supervisor",organization_id: document&.organization&.parents&.map(&:id)).includes(:organization).reorder("organizations.depth DESC").first&.user
       elsif @next_component && @next_component.role == "approver"
-        user_ids = @document.approvers_that_have_not_signed.map(&:whodunnit)
-        user = UserAssignment.where(user_id: user_ids, role: "approver",organization_id: @document&.organization&.parents&.map(&:id)).includes(:organization).reorder("organizations.depth DESC").first&.user
+        user_ids = document.approvers_that_have_not_signed.map(&:whodunnit)
+        user = UserAssignment.where(user_id: user_ids, role: "approver",organization_id: document&.organization&.parents&.map(&:id)).includes(:organization).reorder("organizations.depth DESC").first&.user
       end
       mail(to: user&.email, subject: @subject)
     end

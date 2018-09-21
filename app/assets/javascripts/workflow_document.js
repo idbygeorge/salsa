@@ -1,6 +1,15 @@
 
 (function($) {
   $(function(){
+    if( !$(".user-name").val() ){
+      $(".user-name").text($('#user-info').data('user-name'));
+      $(".user-name").val($('#user-info').data('user-name'));
+    }
+    if( !$(".user-remote-id").val() ){
+      $(".user-remote-id").text($('#user-info').data('user-remote-id'));
+      $(".user-remote-id").val($('#user-info').data('user-remote-id'));
+    }
+
     var document_workflow_step = $('[data-document-slug]').attr('data-document-slug');
     var document_step_type = $('[data-document-step-type]').attr('data-document-step-type');
     if(document_step_type !== "default_step"){

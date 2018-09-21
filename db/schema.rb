@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180906205400) do
+ActiveRecord::Schema.define(version: 20180919211806) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -73,6 +73,7 @@ ActiveRecord::Schema.define(version: 20180906205400) do
     t.integer "workflow_step_id"
     t.integer "user_id"
     t.integer "period_id"
+    t.datetime "published_at"
     t.index ["component_id"], name: "index_documents_on_component_id"
     t.index ["edit_id"], name: "index_documents_on_edit_id", unique: true
     t.index ["lms_course_id"], name: "index_documents_on_lms_course_id"
@@ -133,6 +134,14 @@ ActiveRecord::Schema.define(version: 20180906205400) do
     t.boolean "disable_document_view", default: false
     t.boolean "force_https", default: false
     t.boolean "enable_workflow_report", default: false
+    t.boolean "enable_shibboleth", default: false
+    t.string "idp_sso_target_url"
+    t.string "idp_slo_target_url"
+    t.string "idp_entity_id"
+    t.text "idp_cert"
+    t.string "idp_cert_fingerprint"
+    t.string "idp_cert_fingerprint_algorithm"
+    t.string "authn_context"
     t.index ["depth"], name: "index_organizations_on_depth"
     t.index ["lft"], name: "index_organizations_on_lft"
     t.index ["lms_id"], name: "index_organizations_on_lms_id"

@@ -55,7 +55,7 @@ class OrganizationsController < AdminController
     @export_types = Organization.export_types
     @organization = Organization.create organization_params
 
-    redirect_to organization_path(slug: full_org_path(@organization))
+    redirect_to organization_path(slug: full_org_path(@organization)) if !@organization.new_record?
   end
 
   def update
@@ -124,6 +124,7 @@ class OrganizationsController < AdminController
     return redirect_to start_workflow_form_path
   end
 
+
   private
 
   def get_documents path=params[:slug], page=params[:page], per=25, key=params[:key]
@@ -148,9 +149,12 @@ class OrganizationsController < AdminController
 
   def organization_params
     if has_role 'admin'
-        params.require(:organization).permit(:name, :export_type, :slug, :enable_workflows, :inherit_workflows_from_parents, :parent_id, :lms_authentication_source, :lms_authentication_id, :lms_authentication_key, :lms_info_slug, :home_page_redirect, :skip_lms_publish, :enable_anonymous_actions, :track_meta_info_from_document, :disable_document_view, :force_https, :enable_workflow_report, default_account_filter: [:account_filter])
+
+      params.require(:organization).permit(:name, :export_type, :slug, :enable_workflows, :inherit_workflows_from_parents, :parent_id, :lms_authentication_source, :lms_authentication_id, :lms_authentication_key, :lms_info_slug, :home_page_redirect, :skip_lms_publish, :enable_shibboleth, :idp_sso_target_url, :idp_slo_target_url, :idp_entity_id, :idp_cert, :idp_cert_fingerprint, :idp_cert_fingerprint_algorithm, :authn_context, :enable_anonymous_actions, :track_meta_info_from_document, :disable_document_view, :force_https, :enable_workflow_report, default_account_filter: [:account_filter])
+
+
     elsif has_role 'organization_admin'
-        params.require(:organization).permit(:name, :export_type, :enable_workflows, :lms_authentication_source, :lms_authentication_id, :lms_authentication_key, :lms_info_slug, :home_page_redirect, :skip_lms_publish, :enable_anonymous_actions, :track_meta_info_from_document, :force_https)
+      params.require(:organization).permit(:name, :export_type, :enable_workflows, :lms_authentication_source, :lms_authentication_id, :lms_authentication_key, :lms_info_slug, :home_page_redirect, :skip_lms_publish, :enable_anonymous_actions, :track_meta_info_from_document, :force_https)
     end
   end
 end

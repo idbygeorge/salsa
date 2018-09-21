@@ -38,6 +38,8 @@ end
 #postgresql for db
 gem "pg", "0.20"
 
+gem 'devise_saml_authenticatable'
+
 group :production do
   gem "rails_12factor"
 
