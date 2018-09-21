@@ -175,7 +175,7 @@ module ApplicationHelper
     if get_org.enable_shibboleth && session[:saml_authenticated_user]
       username = session[:saml_authenticated_user]['id'].to_s
       user_assignments = UserAssignment.where('organization_id in (?) OR (role = ?)', org.self_and_ancestors.map(&:id), 'admin').where("lower(username) = ?", username.downcase)
-    elsif org[:lms_authentication_source] && org[:lms_authentication_source] == session[:oauth_endpoint]
+    elsif org[:lms_authentication_source] && org[:lms_authentication_source] == session[:oauth_endpoint] && session[:saml_authenticated_user]
       username = session[:saml_authenticated_user]['id'].to_s
       user_assignments = UserAssignment.where('organization_id = ? OR (role = ?)', org.self_and_ancestors.map(&:id), 'admin').where("lower(username) = ?", username.downcase)
     else
@@ -292,6 +292,7 @@ module ApplicationHelper
   end
 
   def get_org_slug
+
     request.env['SERVER_NAME']
   end
 
