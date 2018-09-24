@@ -40,7 +40,8 @@ class OrganizationUsersController < AdminUsersController
 
 
   def remove_assignment
-    @user_assignment = UserAssignment.find_by id: params[:id], organization_id: Organization.find_by(slug: params[:slug])
+    organization = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
+    @user_assignment = UserAssignment.find_by id: params[:id], organization_id: organization.id
     return redirect_to organization_users_path(org_path: params[:org_path]) if @user_assignment.blank?
     @user_assignment.destroy
 
@@ -72,7 +73,7 @@ class OrganizationUsersController < AdminUsersController
     if !has_role("admin")
       @roles.delete("Global Administrator")
     end
-    @user_assignment = UserAssignment.find_by id: params[:id], organization_id: Organization.find_by(slug: params[:slug])
+    @user_assignment = UserAssignment.find_by id: params[:id], organization_id: @organization.id
     return redirect_to organization_users_path(org_path: params[:org_path]) if @user_assignment.blank?
   end
 
