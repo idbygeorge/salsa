@@ -6,7 +6,7 @@
   </h1>
 </div>
 
-<%= form_for("Start Workflow", url: start_workflow_path, html: { class: "form-horizontal col-md-9" } ) do |f| %>
+<%= form_for("Start Workflow", url: start_workflow_path(org_path: params[:org_path]), html: { class: "form-horizontal col-md-9" } ) do |f| %>
 
   <div class="form-group">
     <%= f.label :document_name, class: "control-label" %>

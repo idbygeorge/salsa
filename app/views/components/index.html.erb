@@ -61,7 +61,7 @@
 
   <hr>
 
-  <%= form_tag import_components_path(params[:slug]), multipart: true, :html => { :class => "form-horizontal col-md-9" } do %>
+  <%= form_tag import_components_path(params[:slug], org_path: params[:org_path]), multipart: true, :html => { :class => "form-horizontal col-md-9" } do %>
     <div class="form-group-">
       <div class="controls">
         <%= file_field_tag :file, accept: '.zip', class: "form-control-file btn btn-file " %>

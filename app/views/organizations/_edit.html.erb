@@ -10,9 +10,9 @@
   <% end %>
 
   <% if !@organization.new_record? %>
-    <% form_action = organization_path slug: full_org_path(@organization) %>
+    <% form_action = organization_path slug: full_org_path(@organization), org_path: params[:org_path] %>
   <% else %>
-    <% form_action = organization_path slug: '' %>
+    <% form_action = organization_path slug: '', org_path: params[:org_path] %>
   <% end %>
 
   <%= form_for(@organization, url: form_action, :html => { :class => "form-horizontal col-md-9" } ) do |f| %>
