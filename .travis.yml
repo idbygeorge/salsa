@@ -6,8 +6,6 @@ addons:
   apt:
     packages:
       - docker-ce
-after_success:
-  - bundle exec codeclimate-test-reporter
 before_script:
   - mkdir tmp/db/postgres-data -p
   - mkdir tmp/log -p
@@ -19,7 +17,7 @@ before_script:
   - psql -c 'create database travis_ci_test;' -U postgres
   - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
   - chmod +x ./cc-test-reporter
-  - ./cc-test-reporter before-build
+  - sudo docker-compose run salsa bash ./cc-test-reporter before-build
   - sudo docker-compose build
   - sudo docker-compose run salsa rake db:create
   - sudo docker-compose run salsa rake db:schema:load
@@ -32,7 +30,7 @@ script:
   - sudo docker-compose run salsa bash ./cucumber.sh
 
 after_script:
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+  - sudo docker-compose run salsa bash ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 
 dist: trusty
 language: ruby
