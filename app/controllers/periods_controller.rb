@@ -33,7 +33,7 @@ class PeriodsController < OrganizationsController
     @period.organization_id = Organization.all.select{ |o| o.full_slug == params[:slug] }.first.id
     respond_to do |format|
       if @period.save
-        format.html { redirect_to periods_path(params[:slug]), notice: 'Period was successfully created.' }
+        format.html { redirect_to periods_path(params[:slug], org_path: params[:org_path]), notice: 'Period was successfully created.' }
         format.json { render :index, status: :created }
       else
         format.html { render :new }
@@ -47,7 +47,7 @@ class PeriodsController < OrganizationsController
     @period.organization_id = Organization.all.select{ |o| o.full_slug == params[:slug] }.first.id
     respond_to do |format|
       if @period.update(period_params)
-        format.html { redirect_to periods_path(params[:slug]), notice: 'Period was successfully updated.' }
+        format.html { redirect_to periods_path(params[:slug], org_path: params[:org_path]), notice: 'Period was successfully updated.' }
         format.json { render :index, status: :ok}
       else
         format.html { render :edit }

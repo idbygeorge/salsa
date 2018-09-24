@@ -52,7 +52,7 @@ class AdminDocumentsController < AdminController
         slug = @document.organization.full_slug
       end
 
-      redirect_to organization_path(slug: slug)
+      redirect_to organization_path(slug: slug,org_path:params[:org_path])
     else
       flash[:error] = @document.errors.messages
 

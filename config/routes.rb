@@ -122,6 +122,7 @@ Rails.application.routes.draw do
     get "default/tos"
     get "default/faq"
   end
+  get ":org_path", as: 'sub_root', to: 'default#index'
 
   # get path: 'doc/:alias', constraints: { alias: /.+/ }, as: 'org_document_alias', controller: 'documents', action: 'alias'
   #

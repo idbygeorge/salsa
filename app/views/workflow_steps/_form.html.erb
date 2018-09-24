@@ -37,8 +37,8 @@
   <div class="form-group">
     <div class="col-sm-3">
       <fieldset>
-        <legend>Step Type</legend>  
-      
+        <legend>Step Type</legend>
+
         <% @step_types.each do |step_type| %>
           <div class="radio">
             <%= f.radio_button :step_type, step_type %>
@@ -53,13 +53,13 @@
   <div class="form-group">
     <div class="col-lg-offset-2 col-lg-10">
       <%= f.submit nil, :class => 'btn btn-primary' %>
-      <%= link_to 'Cancel', workflow_steps_path(params[:slug]), :class => 'btn btn-default' %>
+      <%= link_to 'Cancel', workflow_steps_path(params[:slug], org_path:params[:org_path]), :class => 'btn btn-default' %>
     </div>
   </div>
 
 <% end %>
 <% if @workflow&.slug && Component.find_by(slug:"#{@workflow_step.slug}_email") %>
-  <%= link_to 'Edit Step Email', edit_component_path(@workflow_step.organization.slug, "#{@workflow_step.slug}_email"), :class => 'btn btn-default', target: "_blank" %>
+  <%= link_to 'Edit Step Email', edit_component_path(@workflow_step.organization.slug, "#{@workflow_step.slug}_email", org_path:params[:org_path]), :class => 'btn btn-default', target: "_blank" %>
 <% elsif @workflow_step&.slug %>
-  <%= link_to 'Add Step Email', new_component_path(get_org_slug, :component_slug => "#{@workflow_step.slug}_email"), :class => 'btn btn-default', target: "_blank" %>
+  <%= link_to 'Add Step Email', new_component_path(get_org_slug, :component_slug => "#{@workflow_step.slug}_email", org_path:params[:org_path]), :class => 'btn btn-default', target: "_blank" %>
 <% end %>

@@ -39,7 +39,7 @@ class ComponentsController < ApplicationController
       if @component.valid?
         if valid_slug?(params[:slug])
           @component.save
-          return redirect_to components_path, notice: "Component was successfully created."
+          return redirect_to components_path(org_path: params[:org_path]), notice: "Component was successfully created."
         else
           flash[:error] = "Invalid Slug"
           return render action: :new
@@ -61,7 +61,7 @@ class ComponentsController < ApplicationController
     if available_component_formats.include? component_params[:format]
       if @component.valid? && valid_slug?(@component.slug) == true
         @component.update component_params
-        return redirect_to components_path, notice: "Component was successfully updated."
+        return redirect_to components_path(org_path: params[:org_path]), notice: "Component was successfully updated."
       end
     end
 
@@ -102,7 +102,7 @@ class ComponentsController < ApplicationController
   def import_components
     if !params[:file]
       flash[:error] = "You must select a file before importing components"
-      return redirect_to components_path
+      return redirect_to components_path(org_path: params[:org_path])
     end
     Zip::File.open(params[:file].path) do |zipfile|
       zipfile.each do |file|
@@ -123,7 +123,7 @@ class ComponentsController < ApplicationController
         end
       end
     end
-    return redirect_to components_path, notice: "Imported Components"
+    return redirect_to components_path(org_path: params[:org_path]), notice: "Imported Components"
   end
 
   def load_components
@@ -142,7 +142,7 @@ class ComponentsController < ApplicationController
           format: File.extname(file_path).delete('.')
         )
     end
-    return redirect_to components_path, notice: "Loaded Default Components"
+    return redirect_to components_path(org_path: params[:org_path]), notice: "Loaded Default Components"
   end
 
   private

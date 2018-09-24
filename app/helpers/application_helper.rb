@@ -37,9 +37,9 @@ module ApplicationHelper
 
     if output == ''
       # if there is a parent, recheck using it as the org
-      if org.parent
+      if org&.parent
         output = salsa_partial(name, org.parent)
-      elsif org.slug.include? '/'
+      elsif org&.slug&.include? '/'
         output = salsa_partial(name, Organization.new(slug: org.slug.gsub(/\/[^\/]+$/, '')))
       # otherwise, show the default if it exists
       elsif File.exists?("app/views/instances/default/#{path}_#{partial}.html.erb")
@@ -123,9 +123,9 @@ module ApplicationHelper
     else
       if current_page?(admin_path)
         flash.keep
-        return redirect_to admin_login_path
+        return redirect_to admin_login_path(org_path: params[:org_path])
       else
-        return redirect_to admin_path
+        return redirect_to admin_path(org_path: params[:org_path])
       end
     end
   end
@@ -254,7 +254,7 @@ module ApplicationHelper
   def find_org_by_path path
     path = get_org_slug unless path
 
-    unless path.include? '/'
+    unless path&.include? '/'
       organization = Organization.find_by slug:path
     else
       path.split('/').each do |slug|
@@ -298,11 +298,12 @@ module ApplicationHelper
 
   def get_org_slug
     organization = Organization.all.select{ |org| org.full_slug == get_org_path }.first
-    organization.slug  
+    return get_org_path if organization.blank?
+    organization&.slug
   end
 
   def get_org
-    Organization.find_by slug: get_org_slug
+    Organization.all.select{ |org| org.full_slug == get_org_path }.first
   end
 
   def get_document_meta

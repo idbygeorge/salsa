@@ -38,7 +38,7 @@
       </a>
 
       <% if @organization.lms_authentication_key != '' %>
-          <a class="btn btn-default" href="//<%= "#{org_slug_parts(@organization)[0]}#{redirect_port}" + admin_auditor_reports_path %>">
+          <a class="btn btn-default" href="//<%= "#{org_slug_parts(@organization)[0]}#{redirect_port}"%><% if @organization.depth > 0 %>/<%= org_slug_parts(@organization)[1] %><% end %><%= admin_auditor_reports_path %>">
             View Dashboard
           </a>
       <% end %>

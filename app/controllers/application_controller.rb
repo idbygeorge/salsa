@@ -10,7 +10,8 @@ class ApplicationController < ActionController::Base
   protected
 
   def https_enabled?
-    get_org&.force_https
+    org = get_org
+    org&.force_https if org
   end
 
   def redirect_if_user_archived
@@ -18,7 +19,7 @@ class ApplicationController < ActionController::Base
       user = User.find_by(id: session[:authenticated_user], archived: false)
       if !user
         flash[:notice] = "You have been logged out because your account has been deactivated"
-        redirect_to admin_logout_path
+        redirect_to admin_logout_path(org_path: params[:org_path])
       end
     end
 
@@ -40,7 +41,7 @@ class ApplicationController < ActionController::Base
     end
     if organization&.enable_workflows != true
       flash[:error] = "that page is not enabled"
-      redirect_to organization_path(params[:slug])
+      redirect_to organization_path(params[:slug], org_path: params[:org_path])
     end
   end
 
@@ -115,7 +116,7 @@ class ApplicationController < ActionController::Base
         @lms_user = @lms_client.get("/api/v1/users/self/profile") if @lms_client.token
       rescue
         # clear the session and start over
-        redirect_to oauth2_logout_path
+        redirect_to oauth2_logout_path(org_path: params[:org_path])
       end
     elsif @lms_client_id
       @lms_client = Canvas::API.new(:host => @oauth_endpoint, :client_id => @lms_client_id, :secret => @lms_secret)

@@ -28,7 +28,7 @@
       </div>
       <p>
         Report #<%=report.id%>
-        <a class="" href="/admin/report?report=<%=report.id%>">Load report</a>
+        <%= link_to "Load report", admin_auditor_report_path(report: report.id, org_path: params[:org_path])%>
       </p>
       <ul>
         <%if report.generating_at%>

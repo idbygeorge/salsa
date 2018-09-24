@@ -12,7 +12,7 @@ class OrganizationsController < AdminController
     @roots = @organizations.roots
 
     if @roots.count == 1
-      redirect_to organization_path(slug: full_org_path(@roots[0]))
+      redirect_to organization_path(slug: full_org_path(@roots[0]), org_path: params[:org_path])
     end
   end
 
@@ -32,7 +32,7 @@ class OrganizationsController < AdminController
       Document.where(:id => params[:document_ids]).update_all(["organization_id=?", org_id])
     end
 
-    redirect_to organizations_path
+    redirect_to organizations_path( org_path: params[:org_path])
   end
 
   def show
@@ -57,7 +57,7 @@ class OrganizationsController < AdminController
 
     respond_to do |format|
       if @organization.save
-        format.html { redirect_to organization_path(full_org_path(@organization)), notice: 'Organization was successfully created.' }
+        format.html { redirect_to organization_path(full_org_path(@organization), org_path: params[:org_path]), notice: 'Organization was successfully created.' }
         format.json { render :show, status: :created }
       else
         format.html { render :new }
@@ -80,14 +80,14 @@ class OrganizationsController < AdminController
 
     @organization.update organization_params
 
-    redirect_to organization_path(slug: full_org_path(@organization))
+    redirect_to organization_path(slug: full_org_path(@organization), org_path: params[:org_path])
   end
 
   def destroy
     @organization = find_org_by_path params[:slug]
     @organization.destroy
 
-    redirect_to organizations_path
+    redirect_to organizations_paths( org_path: params[:org_path])
   end
 
   def import
@@ -129,7 +129,7 @@ class OrganizationsController < AdminController
     end
 
     flash[:notice] = "successfully started workflow for #{counter} users for the #{Period.find(start_workflow_params[:period_id].to_i).name} period"
-    return redirect_to start_workflow_form_path
+    return redirect_to start_workflow_form_path( org_path: params[:org_path])
   end
 
 

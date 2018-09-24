@@ -9,7 +9,7 @@
     <% if role.organization %>
       <em><%= role.organization.name %></em>
       <div class="nowrap">
-        <%= link_to full_org_path(role.organization), organization_path(full_org_path role.organization, org_path: params[:org_path]) %>
+        <%= link_to full_org_path(role.organization), organization_path(full_org_path(role.organization), org_path: params[:org_path]) %>
       </div>
     <% else %>
       GLOBAL
