@@ -46,7 +46,7 @@
     <div class="form-group">
       <%= f.submit class: 'btn btn-success' %>
       &nbsp; &nbsp;
-      <%= link_to 'cancel', (@user[:id] ? polymorphic_path([params[:controller].singularize],id: @user.id) : polymorphic_path([params[:controller]])), class:"btn btn-default" %>
+      <%= link_to 'cancel', (@user[:id] ? polymorphic_path([params[:controller].singularize],id: @user.id) : polymorphic_path([params[:controller]], org_path: params[:org_path])), class:"btn btn-default" %>
     </div>
 
   <% end %><!-- form -->

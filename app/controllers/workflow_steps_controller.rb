@@ -12,7 +12,7 @@ class WorkflowStepsController < OrganizationsController
   # GET /workflow_steps
   # GET /workflow_steps.json
   def index
-    @organization = Organization.find_by(slug: params[:slug])
+    @organization = @organizations.all.select{ |o| o.full_slug == params[:slug] }.first
     org_ids = @organization.organization_ids + [@organization.id]
     @workflows = WorkflowStep.workflows org_ids
     workflow_array = []
@@ -32,26 +32,26 @@ class WorkflowStepsController < OrganizationsController
 
   # GET /workflow_steps/new
   def new
-    @organization = Organization.find_by(slug: params[:slug])
+    @organization = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
     @workflow_step = WorkflowStep.new
   end
 
   # GET /workflow_steps/1/edit
   def edit
-    @organization = Organization.find_by(slug: params[:slug])
+    @organization = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
   end
 
   # POST /workflow_steps
   # POST /workflow_steps.json
   def create
-    @organization = Organization.find_by(slug: params[:slug])
+    @organization = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
     @workflow_step = WorkflowStep.new(workflow_step_params)
     @workflow_step.organization_id = @organization.id
     find_or_create_component @workflow_step
 
     respond_to do |format|
       if @workflow_step.save
-        format.html { redirect_to workflow_steps_path(params[:slug]), notice: 'Workflow step was successfully created.' }
+        format.html { redirect_to workflow_steps_path(params[:slug], org_path: params[:org_path]), notice: 'Workflow step was successfully created.' }
         format.json { render :index, status: :created }
       else
         format.html { render :new }
@@ -63,11 +63,11 @@ class WorkflowStepsController < OrganizationsController
   # PATCH/PUT /workflow_steps/1
   # PATCH/PUT /workflow_steps/1.json
   def update
-    @organization = Organization.find_by(slug: params[:slug])
+    @organization = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
     find_or_create_component @workflow_step
     respond_to do |format|
       if @workflow_step.update(workflow_step_params)
-        format.html { redirect_to workflow_steps_path(params[:slug]), notice: 'Workflow step was successfully updated.' }
+        format.html { redirect_to workflow_steps_path(params[:slug], org_path: params[:org_path]), notice: 'Workflow step was successfully updated.' }
         format.json { render :index, status: :ok}
       else
         format.html { render :edit }
@@ -81,7 +81,7 @@ class WorkflowStepsController < OrganizationsController
   def destroy
     @workflow_step.destroy
     respond_to do |format|
-      format.html { redirect_to workflow_steps_url, notice: 'Workflow step was successfully destroyed.' }
+      format.html { redirect_to workflow_steps_url( org_path: params[:org_path]), notice: 'Workflow step was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
@@ -101,11 +101,11 @@ class WorkflowStepsController < OrganizationsController
     end
 
     def redirect_if_wrong_organization
-      if params[:slug] != @workflow_step.organization.slug
+      if params[:slug].split('/')[-1] != @workflow_step.organization.slug
         if params[:action] != 'index'
-          redirect_to "/admin/organization/#{@workflow_step.organization.slug}/workflow_steps/#{params[:id]}/#{params[:action]}"
+          redirect_to "#{params[:org_path]}/admin/organization/#{@workflow_step.organization.full_slug}/workflow_steps/#{params[:id]}/#{params[:action]}"
         else
-          redirect_to workflow_steps_path(@workflow_steps.organization.slug)
+          redirect_to workflow_steps_path(@workflow_steps.organization.full_slug, org_path: params[:org_path])
         end
       end
     end
@@ -116,7 +116,7 @@ class WorkflowStepsController < OrganizationsController
 
     def set_workflow_steps
 
-      org = Organization.find_by(slug: params[:slug])
+      org = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
       organization_ids = org.organization_ids + [org.id]
       @workflow_steps = WorkflowStep.where(organization_id: organization_ids)
       if @workflow_step

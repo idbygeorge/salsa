@@ -10,7 +10,7 @@ class DocumentsController < ApplicationController
   before_action :set_paper_trail_whodunnit
 
   def index
-    redirect_to :new
+    redirect_to new_document_path(org_path: params[:org_path])
   end
 
   def new
@@ -24,11 +24,7 @@ class DocumentsController < ApplicationController
 
       @document.save!
 
-      if params[:sub_organization_slugs]
-        redirect_to edit_sub_org_document_path(id: @document.edit_id, sub_organization_slugs: params[:sub_organization_slugs])
-      else
-        redirect_to edit_document_path(id: @document.edit_id)
-      end
+      redirect_to edit_document_path(:id => @document.edit_id, :org_path => params[:org_path], :batch_token => params[:batch_token])
     else
       redirect_to root_path, :flash => { :error => "You are not authorized to create a document" }
     end
@@ -47,12 +43,12 @@ class DocumentsController < ApplicationController
       document = document_template.dup
       document.reset_ids
       document.save!
-      redirect_to edit_document_path(:id => document.edit_id, :batch_token => params[:batch_token])
+      redirect_to edit_document_path(:id => document.edit_id, :org_path => params[:org_path], :batch_token => params[:batch_token])
       return
     end
     raise ActionController::RoutingError.new('Not Found') unless document || @document
     if document
-      redirect_to edit_document_path(:id => document.edit_id, :batch_token => params[:batch_token])
+      redirect_to edit_document_path(:id => document.edit_id, :org_path => params[:org_path], :batch_token => params[:batch_token])
       return
     end
 
@@ -75,7 +71,7 @@ class DocumentsController < ApplicationController
   end
 
   def edit
-    if check_lock @organization[:slug], params[:batch_token]
+    if check_lock @organization.slug, params[:batch_token]
       if params[:version].to_i > 0
         @document_version = params[:version].to_i
         @document = @document.versions[@document_version].reify
@@ -93,10 +89,10 @@ class DocumentsController < ApplicationController
         render :layout => 'edit', :template => '/documents/content'
       elsif current_user != nil
         flash[:notice] = "you are not authorized to edit that document"
-        redirect_to admin_path
+        redirect_to admin_path(org_path: params[:org_path])
       else
         flash[:notice] = "you are not authorized to edit that document please login to continue"
-        redirect_to admin_path
+        redirect_to admin_path(org_path: params[:org_path])
       end
     else
       render :layout => 'dialog', :template => '/documents/republishing'
@@ -162,9 +158,9 @@ class DocumentsController < ApplicationController
       session[:redirect_course_id] = params[:lms_course_id]
 
       if params[:document_token]
-        redirect_to '/oauth2/login', lms_course_id: params[:lms_course_id], document_token: params[:document_token]
+        redirect_to '/oauth2/login', lms_course_id: params[:lms_course_id], document_token: params[:document_token], org_path: params[:org_path]
       else
-        redirect_to '/oauth2/login', lms_course_id: params[:lms_course_id]
+        redirect_to '/oauth2/login', lms_course_id: params[:lms_course_id], org_path: params[:org_path]
       end
     end
 
@@ -191,6 +187,7 @@ class DocumentsController < ApplicationController
     meta_data_from_doc = params[:meta_data_from_doc]
     saved = false
     republishing = true
+    @organization = @document.organization if !@document.organization.blank?
     verify_org
     user = current_user if current_user
     assigned_to_user = @document.assigned_to? user
@@ -298,10 +295,10 @@ class DocumentsController < ApplicationController
       @document = Document.new(name: lms_course['name'], lms_course_id: params[:lms_course_id], organization: organization, payload: @document[:payload])
       @document.save!
 
-      return redirect_to lms_course_document_path(lms_course_id: params[:lms_course_id])
+      return redirect_to lms_course_document_path(lms_course_id: params[:lms_course_id], org_path: params[:org_path])
     elsif params[:document_token] && @document
       # show options to user (make child, make new)
-      @template_url = template_url(@document)
+      @template_url = template_url(@document, org_path: params[:org_path])
       if existing_doc && existing_doc.id != @document.id
         has_existing_document = true
       else
@@ -394,7 +391,7 @@ class DocumentsController < ApplicationController
   end
 
   def sub_org_slugs
-    params[:sub_organization_slugs] + '/' if params[:sub_organization_slugs]
+    params[:org_path] + '/' if params[:org_path]
   end
 
   def lookup_document
@@ -432,17 +429,8 @@ class DocumentsController < ApplicationController
     document_slug = get_org_slug
 
     if @document[:edit_id]
-      @salsa_link = document_path(@document[:edit_id])
+      @salsa_link = document_path(@document[:edit_id],org_path: params[:org_path])
 
-      if params[:sub_organization_slugs]
-        document_slug += '/' + params[:sub_organization_slugs]
-
-        if @document[:edit_id]
-          @salsa_link = sub_org_document_path @document[:edit_id], sub_organization_slugs: params[:sub_organization_slugs]
-        else
-          @salsa_link = new_sub_org_document_path sub_organization_slugs: params[:sub_organization_slugs]
-        end
-      end
     end
 
     if @organization && @organization[:id]
@@ -453,7 +441,7 @@ class DocumentsController < ApplicationController
       end
 
       # find the org to bind this to
-      org = Organization.find_by slug: document_slug
+      org = Organization.all.select{ |o| o.full_slug == get_org_path }.first
     end
 
     # if there is no org yet, show an error

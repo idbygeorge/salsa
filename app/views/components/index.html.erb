@@ -1,6 +1,6 @@
-<%= link_to "Add Component", new_component_path, class: 'btn btn-success pull-right', id: 'Add Component' %>
+<%= link_to "Add Component", new_component_path(org_path: params[:org_path]), class: 'btn btn-success pull-right', id: 'Add Component' %>
 <h1>
-  <%= link_to organization_path(@organization.slug) do %>
+  <%= link_to organization_path(params[:slug], org_path: params[:org_path]) do %>
     <small><%= @organization.name %></small>
   <% end %>
   <br>
@@ -9,19 +9,19 @@
 
 <ul class="nav nav-pills">
   <li <% if current_page? components_path category: 'document' %>class="active"<% end %>>
-    <%= link_to 'Documents', components_path(category: 'document') %>
+    <%= link_to 'Documents', components_path(category: 'document', org_path: params[:org_path]) %>
   </li>
   <li <% if current_page? components_path category: 'section' %>class="active"<% end %>>
-    <%= link_to 'Sections', components_path(category: 'section') %>
+    <%= link_to 'Sections', components_path(category: 'section', org_path: params[:org_path]) %>
   </li>
   <li <% if current_page? components_path category: 'element' %>class="active"<% end %>>
-    <%= link_to 'Elements', components_path(category: 'element') %>
+    <%= link_to 'Elements', components_path(category: 'element', org_path: params[:org_path]) %>
   </li>
   <li <% if current_page? components_path category: 'mailer' %>class="active"<% end %>>
-    <%= link_to 'Mailers', components_path(category: 'mailer') %>
+    <%= link_to 'Mailers', components_path(category: 'mailer', org_path: params[:org_path]) %>
   </li>
   <li <% if !params[:category] %>class="active"<% end %>>
-    <%= link_to 'All Components', components_path %>
+    <%= link_to 'All Components', components_path(org_path: params[:org_path]) %>
   </li>
 </ul>
 
@@ -32,8 +32,8 @@
       <li class="media">
 
         <h2>
-          <%= link_to component.name, edit_component_path(@organization[:slug], component.slug, category: component.category) %>
-          <a class="clearfix pull-right btn btn-default" href="<%= edit_component_path @organization[:slug], component.slug %>">Edit</a>
+          <%= link_to component.name, edit_component_path(params[:slug], component.slug, category: component.category, org_path: params[:org_path]) %>
+          <a class="clearfix pull-right btn btn-default" href="<%= edit_component_path params[:slug], component.slug , org_path: params[:org_path]%>">Edit</a>
         </h2>
         <p><%= component.description %></p>
         <em>
@@ -55,13 +55,13 @@
 
 <% if has_role('admin') %>
   <hr>
-  
-  <%= link_to "Load Default Components To Database", load_components_path, :data => { :confirm => 'Are you sure? this WILL RESET YOUR SALSA CONFIGURATION TO DEFAULT' }, class: 'btn btn-danger'%>
-  <%= link_to "Export Components To Zipfile", export_components_path, class: 'btn btn-danger'%>
-  
+
+  <%= link_to "Load Default Components To Database", load_components_path(org_path: params[:org_path]), :data => { :confirm => 'Are you sure? this WILL RESET YOUR SALSA CONFIGURATION TO DEFAULT' }, class: 'btn btn-danger'%>
+  <%= link_to "Export Components To Zipfile", export_components_path(org_path: params[:org_path]), class: 'btn btn-danger'%>
+
   <hr>
 
-  <%= form_tag import_components_path(@organization.slug), multipart: true, :html => { :class => "form-horizontal col-md-9" } do %>
+  <%= form_tag import_components_path(params[:slug]), multipart: true, :html => { :class => "form-horizontal col-md-9" } do %>
     <div class="form-group-">
       <div class="controls">
         <%= file_field_tag :file, accept: '.zip', class: "form-control-file btn btn-file " %>

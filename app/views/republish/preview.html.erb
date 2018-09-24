@@ -1,6 +1,6 @@
 <div class="pull-right text-right">
-  <%= link_to @organization.documents.where('documents.updated_at != documents.created_at').count.to_s + ' documents', organization_path(id: @organization[:id]) %><br>
-  <%= link_to @organization.documents.where('documents.updated_at = documents.created_at').count.to_s + ' abandoned', organization_path(id: @organization[:id], key: 'abandoned') %>
+  <%= link_to @organization.documents.where('documents.updated_at != documents.created_at').count.to_s + ' documents', organization_path(id: @organization[:id], org_path:params[:org_path]) %><br>
+  <%= link_to @organization.documents.where('documents.updated_at = documents.created_at').count.to_s + ' abandoned', organization_path(id: @organization[:id], key: 'abandoned', org_path:params[:org_path]) %>
 </div>
 
 <h1 class="page-header">
@@ -10,7 +10,7 @@
     </small>
   <% end %>
 
-  <%= link_to  @organization[:name], organization_path(slug: full_org_path( @organization)) %>
+  <%= link_to  @organization[:name], organization_path(slug: full_org_path( @organization), org_path:params[:org_path]) %>
 </h1>
 
 <div id="organizationControl row">

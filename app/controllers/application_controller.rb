@@ -10,7 +10,8 @@ class ApplicationController < ActionController::Base
   protected
 
   def https_enabled?
-    get_org&.force_https
+    org = get_org
+    org&.force_https if org
   end
 
   def redirect_if_user_archived
@@ -18,7 +19,7 @@ class ApplicationController < ActionController::Base
       user = User.find_by(id: session[:authenticated_user], archived: false)
       if !user
         flash[:notice] = "You have been logged out because your account has been deactivated"
-        redirect_to admin_logout_path
+        redirect_to admin_logout_path(org_path: params[:org_path])
       end
     end
 
@@ -33,14 +34,14 @@ class ApplicationController < ActionController::Base
   end
 
   def check_organization_workflow_enabled
-    if params[:slug]
-      organization = Organization.find_by(slug: params[:slug])
+    if slugs = params[:org_slug]&.split((/(?=\/)/))
+      organization = Organization.find_by(slug: slugs[-1])
     else
       organization = Organization.find_by(slug: get_org_slug)
     end
     if organization&.enable_workflows != true
-      flash[:error] = "that page does not exist"
-      redirect_to organization_path(params[:slug])
+      flash[:error] = "that page is not enabled"
+      redirect_to organization_path(params[:slug], org_path: params[:org_path])
     end
   end
 
@@ -48,8 +49,8 @@ class ApplicationController < ActionController::Base
     if session[:authenticated_user]
       return User.find_by(id: session[:authenticated_user], archived: false)
     elsif session[:saml_authenticated_user]
-      user = UserAssignment.find_by("lower(username) = ?", session[:saml_authenticated_user]["id"].to_s.downcase).user
-      return user if user.archived == false
+      user = UserAssignment.find_by("lower(username) = ?", session[:saml_authenticated_user]["id"].to_s.downcase)&.user
+      return user if user&.archived == false
     end
   end
 
@@ -66,12 +67,12 @@ class ApplicationController < ActionController::Base
 
     org_slug = get_org_slug
 
-    if params[:sub_organization_slugs]
-      org_slug += '/' + params[:sub_organization_slugs]
+    if params[:org_path]
+      org_slug += '/' + params[:org_path]
     end
 
     # find the matching organization based on the request
-    @organization = Organization.find_by slug: org_slug
+    @organization = Organization.all.select{ |org| org.full_slug == get_org_path }.first
 
     # get a placeholder org matching the org slug if there is no matching or in the database
     @organization = Organization.new  slug: org_slug unless @organization
@@ -115,7 +116,7 @@ class ApplicationController < ActionController::Base
         @lms_user = @lms_client.get("/api/v1/users/self/profile") if @lms_client.token
       rescue
         # clear the session and start over
-        redirect_to oauth2_logout_path
+        redirect_to oauth2_logout_path(org_path: params[:org_path])
       end
     elsif @lms_client_id
       @lms_client = Canvas::API.new(:host => @oauth_endpoint, :client_id => @lms_client_id, :secret => @lms_secret)

@@ -57,7 +57,7 @@ class WorkflowDocumentsController < ApplicationController
 
     if @document.update document_params
       flash[:notice] = "You have assigned a document to #{@user.email} on #{@wfs.slug}" if @user && @wfs
-      redirect_to workflow_document_index_path
+      redirect_to workflow_document_index_path(org_path: params[:org_path])
     else
       flash[:error] = @document.errors.messages
 

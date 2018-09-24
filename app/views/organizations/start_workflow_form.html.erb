@@ -1,6 +1,6 @@
 <div class="page-header">
   <h1>
-    <%= link_to organization_path(@organization.slug) do %><small><%= @organization.name %></small><% end %>
+    <%= link_to organization_path(params[:slug], org_path:params[:org_path]) do %><small><%= @organization.name %></small><% end %>
     <br>
     <%=t '.title', :default => "Start Workflow" %>
   </h1>
@@ -25,7 +25,7 @@
     <div class="form-group">
       <%= f.label :period_id, class: "control-label" %>
       <div class="controls">
-        <%= f.collection_select :period_id, @periods, :id, :slug, {include_blank: true},{class:"form-control"} %>
+        <%= f.collection_select :period_id, @periods, :id, :to_s, {include_blank: true},{class:"form-control"} %>
       </div>
     </div>
 
