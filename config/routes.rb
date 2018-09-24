@@ -1,5 +1,13 @@
 Rails.application.routes.draw do
 
+  devise_for :users, controllers: {
+    sessions: 'users/sessions',
+    saml_sessions: 'users/saml_sessions'
+  }
+  devise_scope :user do
+    post '/auth/shibboleth', to: 'users/saml_sessions#create'
+  end
+
   root 'default#index'
 
   resources :documents, path: 'SALSA', constraints: { slug: /.*/ }
@@ -42,19 +50,17 @@ Rails.application.routes.draw do
       post "archive"
       post "restore"
     end
-    
+
     get "user_activation/:id", to: 'admin#user_activation', as: 'admin_user_activation'
     post "create_user/:id", to: 'admin#create_user', as: 'admin_create_user'
 
     # user assignment routes
     post 'user/assignment', as: 'admin_user_assignments', to: 'admin_users#assign'
-    patch 'user/assignment/:id', as: 'admin_update_user_assignments', to: 'admin_users#update_assignment'
+    patch 'user/assignment/:id', as: 'admin_user_update_assignments', to: 'admin_users#update_assignment'
 
-    get "import_users", to: 'admin_users#import_users', as: 'admin_import_users'
-    post "import_users", to: 'admin_users#create_users', as: 'create_users'
 
-    get 'user/remove_assignment/:id', as: 'admin_remove_assignment', to: 'admin_users#remove_assignment'
-    get 'user/edit_assignment/:id', as: 'admin_edit_assignment', to: 'admin_users#edit_assignment'
+    get 'user/remove_assignment/:id', as: 'admin_user_remove_assignment', to: 'admin_users#remove_assignment'
+    get 'user/edit_assignment/:id', as: 'admin_user_edit_assignment', to: 'admin_users#edit_assignment'
 
     resources :documents, as: 'admin_document', controller: 'admin_documents'
     get "documents/:id/versions", as: 'admin_document_versions', to: 'admin_documents#versions'
@@ -72,6 +78,19 @@ Rails.application.routes.draw do
     get "organization/republish/:slug", to: 'republish#update_lock', as: 'republish_update', constraints: { slug: /.*/ }
 
     scope 'organization/:slug' do
+      resources :users, as: 'organization_users', controller: 'organization_users' , constraints: {slug: /.+/ }do
+        post "archive"
+        post "restore"
+      end
+
+      post 'users/assignment', as: 'organization_user_assignments', to: 'organization_users#assign', constraints: {slug: /.+/ }
+      patch 'users/:id/assignment/', as: 'organization_user_update_assignments', to: 'organization_users#update_assignment', constraints: {slug: /.+/ }
+
+      get 'user/remove_assignment/:id', as: 'organization_user_remove_assignment', to: 'organization_users#remove_assignment', constraints: {slug: /.+/ }
+      get 'user/edit_assignment/:id', as: 'organization_user_edit_assignment', to: 'organization_users#edit_assignment', constraints: {slug: /.+/ }
+
+      get "import_users", to: 'organization_users#import_users', as: 'organization_import_users', constraints: {slug: /.+/ }
+      post "import_users", to: 'organization_users#create_users', as: 'create_users', constraints: {slug: /.+/ }
       resources :periods, constraints: {slug: /.+/ }
       resources :workflow_steps, constraints: { slug: /.+/ }
       post 'start_workflow', to: 'organizations#start_workflow', as: 'start_workflow', action: "start_workflow", constraints: { slug: /.+/ }

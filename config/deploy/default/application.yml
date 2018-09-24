@@ -9,9 +9,30 @@
 # production:
 #   stripe_api_key: sk_live_EeHnL644i6zo4Iyq4v1KdV9H
 #   stripe_publishable_key: pk_live_9lcthxpSIHbGwmdO941O1XVU
-
 development:
   ZIPFILE_FOLDER: /tmp/zipfiles
+  SES_SMTP_FROM:
+  SES_SMTP_USERNAME:
+  SES_SMTP_PASSWORD:
+  SES_SMTP_ADDRESS:
+  SSO_KEY: |
+    -----BEGIN PRIVATE KEY-----
+    -----END PRIVATE KEY-----
+
+  SSO_CERT: |
+    -----BEGIN CERTIFICATE-----
+    -----END CERTIFICATE-----
 
 production:
   ZIPFILE_FOLDER: zipfiles
+  SES_SMTP_FROM: 
+  SES_SMTP_USERNAME:
+  SES_SMTP_PASSWORD:
+  SES_SMTP_ADDRESS:
+  SSO_KEY: |
+    -----BEGIN PRIVATE KEY-----
+    -----END PRIVATE KEY-----
+
+  SSO_CERT: |
+    -----BEGIN CERTIFICATE-----
+    -----END CERTIFICATE-----

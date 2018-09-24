@@ -36,12 +36,16 @@
 
   <div class="form-group">
     <div class="col-sm-3">
-      <%= f.label "Step_type", :class => 'control-label col-lg-2' %>
-      <br>
-      <% @step_types.each do |step_type| %>
-        <%= f.radio_button :step_type, step_type %>
-        <%= f.label :step_type, step_type.humanize %>
-      <% end %>
+      <fieldset>
+        <legend>Step Type</legend>  
+      
+        <% @step_types.each do |step_type| %>
+          <div class="radio">
+            <%= f.radio_button :step_type, step_type %>
+            <%= f.label :step_type, step_type.humanize, value: step_type %>
+          </div>
+        <% end %>
+      </fieldset>
     </div>
     <%=f.error_span(:step_type) %>
   </div>

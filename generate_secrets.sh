@@ -1,13 +1,18 @@
 #!/bin/bash
-if [ ! -f ./config/secrets.yml ]; then
+# Absolute path to this script, e.g. /home/user/bin/foo.sh
+SCRIPT=$(readlink -f "$0")
+# Absolute path this script is in, thus /home/user/bin
+SCRIPTPATH=$(dirname "$SCRIPT")
+
+if [ ! -f $SCRIPTPATH/config/secrets.yml ]; then
   echo -e "\nGenerating a secrets.yml file"
 
   # Random Keys
-  KEY_DEV=$(sudo docker-compose run salsa rake secret)
-  KEY_TEST=$(sudo docker-compose run salsa rake secret)
+  KEY_DEV=`docker-compose run salsa rake secret`
+  KEY_TEST=`docker-compose run salsa rake secret`
 
   # Generate the file
-  cat > ./config/secrets.yml <<EOL
+  cat > $SCRIPTPATH/config/secrets.yml <<EOL
 # Be sure to restart your server when you modify this file.
 
 # Your secret key is used for verifying the integrity of signed cookies.
@@ -33,9 +38,9 @@ production:
 EOL
 fi
 
-mkdir ./tmp/ssl -p
+mkdir $SCRIPTPATH/tmp/ssl -p
 
-if [ ! -f ./tmp/ssl/localhost.crt ] || [ ! -f ./tmp/ssl/localhost.key ]; then
+if [ ! -f $SCRIPTPATH/tmp/ssl/localhost.crt ] || [ ! -f $SCRIPTPATH/tmp/ssl/localhost.key ]; then
   echo -e "\nGenerating ssl new cert and key"
-  openssl req -new -newkey rsa:2048 -sha1 -days 365 -nodes -x509 -keyout tmp/ssl/localhost.key -out tmp/ssl/localhost.crt
+  openssl req -new -newkey rsa:2048 -sha1 -days 365 -nodes -x509 -keyout $SCRIPTPATH/tmp/ssl/localhost.key -out $SCRIPTPATH/tmp/ssl/localhost.crt
 fi

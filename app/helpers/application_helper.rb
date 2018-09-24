@@ -58,6 +58,15 @@ module ApplicationHelper
     "instances/custom/#{org.slug}" if File.directory?("app/views/instances/custom/#{org.slug}")
   end
 
+  def require_approver_permissions
+    check_for_admin_password
+
+    unless has_role 'approver'
+      return redirect_or_error
+    end
+  end
+
+
   def require_supervisor_permissions
     check_for_admin_password
 
@@ -69,7 +78,7 @@ module ApplicationHelper
   def require_staff_permissions
     check_for_admin_password
 
-    unless has_role('staff') || has_role('supervisor')
+    unless has_role('staff') || has_role('supervisor') || has_role('approver')
       return redirect_or_error
     end
   end
@@ -113,6 +122,7 @@ module ApplicationHelper
       return render :file => "public/401.html", :status => :unauthorized, :layout => false
     else
       if current_page?(admin_path)
+        flash.keep
         return redirect_to admin_login_path
       else
         return redirect_to admin_path
@@ -157,18 +167,22 @@ module ApplicationHelper
     # # if they are authorized as an admin, let them in
     if session[:admin_authorized] == true
       return result = true
-    elsif !org && (session[:lms_authenticated_user] == nil || session[:authenticated_user] == nil)
+    elsif !org && (session[:saml_authenticated_user] == nil || session[:authenticated_user] == nil)
       return result
     end
 
-    if org[:lms_authentication_source] && org[:lms_authentication_source] == session[:oauth_endpoint]
-      username = session[:lms_authenticated_user]['id'].to_s
-      @user_assignments = UserAssignment.where('organization_id = ? OR (role = ?)', org[:id], 'admin').where(username: username)
+    user_assignments = nil
+    if get_org.enable_shibboleth && session[:saml_authenticated_user]
+      username = session[:saml_authenticated_user]['id'].to_s
+      user_assignments = UserAssignment.where('organization_id in (?) OR (role = ?)', org.self_and_ancestors.map(&:id), 'admin').where("lower(username) = ?", username.downcase)
+    elsif org[:lms_authentication_source] && org[:lms_authentication_source] == session[:oauth_endpoint] && session[:saml_authenticated_user]
+      username = session[:saml_authenticated_user]['id'].to_s
+      user_assignments = UserAssignment.where('organization_id = ? OR (role = ?)', org.self_and_ancestors.map(&:id), 'admin').where("lower(username) = ?", username.downcase)
     else
-      @user_assignments = UserAssignment.where('organization_id IN (?) OR (role = ?)', org.organization_ids + [org.id], 'admin').where(user_id: session[:authenticated_user])
+      user_assignments = UserAssignment.where('organization_id IN (?) OR (role = ?)', org.self_and_ancestors.map(&:id), 'admin').where(user_id: session[:authenticated_user])
     end
 
-    @user_assignments&.each do |ua|
+    user_assignments&.each do |ua|
       if (ua[:role] == role || ua[:role] == 'admin') && (ua.cascades == false && ua.organization_id == org.id)
         result = true
       elsif (ua[:role] == role || ua[:role] == 'admin') && ua.cascades == true
@@ -185,10 +199,8 @@ module ApplicationHelper
   end
 
   def get_organizations
-    if session[:lms_authenticated_user]
-      user = UserAssignment.find_by_username(
-        session[:lms_authenticated_user]['id'].to_s
-      ).user
+    if session[:saml_authenticated_user]
+      user = UserAssignment.find_by("lower(username) = ?", session[:saml_authenticated_user]["id"].to_s.downcase).user
     elsif session[:authenticated_user]
       user = User.find session[:authenticated_user]
     end
@@ -249,7 +261,7 @@ module ApplicationHelper
         unless organization
           organization = Organization.find_by slug: slug, depth: 0
         else
-          organization = organization.children.find_by slug: "/" + slug
+          organization = organization.descendants.find_by slug: "/" + slug
         end
       end
     end
@@ -280,6 +292,7 @@ module ApplicationHelper
   end
 
   def get_org_slug
+
     request.env['SERVER_NAME']
   end
 

@@ -55,7 +55,7 @@ class OrganizationsController < AdminController
     @export_types = Organization.export_types
     @organization = Organization.create organization_params
 
-    redirect_to organization_path(slug: full_org_path(@organization))
+    redirect_to organization_path(slug: full_org_path(@organization)) if !@organization.new_record?
   end
 
   def update
@@ -87,11 +87,11 @@ class OrganizationsController < AdminController
   end
 
   def start_workflow_form
-    @organization = get_org
+    @organization = Organization.find_by(slug:params[:slug])
     @workflow_steps = WorkflowStep.where(organization_id: @organization.organization_ids+[@organization.id], step_type: "start_step")
     user_ids = @organization.user_assignments.map(&:user_id)
     @users = User.find_by(id: user_ids)
-    @periods = Period.where(organization_id: @organization.id)
+    @periods = Period.where(organization_id: @organization.organization_ids+[@organization.id])
   end
 
   def start_workflow
@@ -101,24 +101,29 @@ class OrganizationsController < AdminController
       flash[:error] = "all fields must be filled"
       return redirect_back(fallback_location: start_workflow_form_path)
     end
-    organization = get_org
+    organization = Organization.find_by slug: params[:slug]
     if start_workflow_params[:start_for_sub_organizations]
-      organizations = organization.children + [organization]
+      organizations = organization.descendants + [organization]
     else
       organizations = [organization]
     end
+    counter = 0
     organizations.each do |org|
-      user_ids = org.user_assignments.where(role:"staff").map(&:user_id)
+      user_ids = org.user_assignments.where(role: ["supervisor","staff"]).map(&:user_id)
       users = User.where(id: user_ids, archived: false)
       users.each do |user|
-        document = Document.create(name: start_workflow_params[:document_name], workflow_step_id: start_workflow_params[:starting_workflow_step_id].to_i, organization_id: org.id, period_id: start_workflow_params[:period_id].to_i, user_id: user.id)
-        WorkflowMailer.welcome_email(document, user, org, document.workflow_step.slug,component_allowed_liquid_variables(document.workflow_step.slug, user, org)).deliver_later
+        next if Document.find_by(period_id:start_workflow_params[:period_id].to_i)
+        document = Document.create(workflow_step_id: start_workflow_params[:starting_workflow_step_id].to_i, organization_id: org.id, period_id: start_workflow_params[:period_id].to_i, user_id: user.id)
+        document.update(name: start_workflow_params[:document_name] )
+        WorkflowMailer.welcome_email(document, user, org, document.workflow_step.slug,component_allowed_liquid_variables(document.workflow_step.slug, user, org, document )).deliver_later
+        counter +=1
       end
     end
 
-    flash[:notice] = "successfully started workflow for period"
+    flash[:notice] = "successfully started workflow for #{counter} users for the #{Period.find(start_workflow_params[:period_id].to_i).name} period"
     return redirect_to start_workflow_form_path
   end
+
 
   private
 
@@ -144,9 +149,12 @@ class OrganizationsController < AdminController
 
   def organization_params
     if has_role 'admin'
-        params.require(:organization).permit(:name, :export_type, :slug, :enable_workflows, :inherit_workflows_from_parents, :parent_id, :lms_authentication_source, :lms_authentication_id, :lms_authentication_key, :lms_info_slug, :home_page_redirect, :skip_lms_publish, :enable_anonymous_actions, :track_meta_info_from_document, :disable_document_view, :force_https, :enable_workflow_report, default_account_filter: [:account_filter])
+
+      params.require(:organization).permit(:name, :export_type, :slug, :enable_workflows, :inherit_workflows_from_parents, :parent_id, :lms_authentication_source, :lms_authentication_id, :lms_authentication_key, :lms_info_slug, :home_page_redirect, :skip_lms_publish, :enable_shibboleth, :idp_sso_target_url, :idp_slo_target_url, :idp_entity_id, :idp_cert, :idp_cert_fingerprint, :idp_cert_fingerprint_algorithm, :authn_context, :enable_anonymous_actions, :track_meta_info_from_document, :disable_document_view, :force_https, :enable_workflow_report, default_account_filter: [:account_filter])
+
+
     elsif has_role 'organization_admin'
-        params.require(:organization).permit(:name, :export_type, :enable_workflows, :lms_authentication_source, :lms_authentication_id, :lms_authentication_key, :lms_info_slug, :home_page_redirect, :skip_lms_publish, :enable_anonymous_actions, :track_meta_info_from_document, :force_https)
+      params.require(:organization).permit(:name, :export_type, :enable_workflows, :lms_authentication_source, :lms_authentication_id, :lms_authentication_key, :lms_info_slug, :home_page_redirect, :skip_lms_publish, :enable_anonymous_actions, :track_meta_info_from_document, :force_https)
     end
   end
 end

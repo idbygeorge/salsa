@@ -24,8 +24,10 @@ class ApplicationController < ActionController::Base
 
   end
 
-  def component_allowed_liquid_variables step_slug, user=nil, organization=nil
+  def component_allowed_liquid_variables step_slug, user=nil, organization=nil, document=nil
     hash = {"user_name" => "#{user&.name}","user_email" => "#{user&.email}", "organization_name" => "#{organization&.name}"}
+    hash["document_url"] = document_url(document&.edit_id, host: "http://#{full_org_path(organization)}")  if document
+    hash["document_name"] = document.name if document
     hash["step_slug"] = "#{step_slug}" if step_slug != nil
     return hash
   end
@@ -34,7 +36,7 @@ class ApplicationController < ActionController::Base
     if params[:slug]
       organization = Organization.find_by(slug: params[:slug])
     else
-      organization = Organization.find_by(slug: request.env["SERVER_NAME"])
+      organization = Organization.find_by(slug: get_org_slug)
     end
     if organization&.enable_workflows != true
       flash[:error] = "that page does not exist"
@@ -44,18 +46,25 @@ class ApplicationController < ActionController::Base
 
   def current_user
     if session[:authenticated_user]
-      User.find_by(id: session[:authenticated_user], archived: false)
+      return User.find_by(id: session[:authenticated_user], archived: false)
+    elsif session[:saml_authenticated_user]
+      user = UserAssignment.find_by("lower(username) = ?", session[:saml_authenticated_user]["id"].to_s.downcase)&.user
+      return user if user&.archived == false
     end
   end
 
   def get_roles
-    @roles = UserAssignment.roles
+    if has_role("admin")
+      @roles = UserAssignment.roles
+    else
+      @roles = {'Approver'=>'approver','Supervisor'=>'supervisor','Staff'=>'staff'}
+    end
   end
 
   def init_view_folder
     @google_analytics_id = APP_CONFIG['google_analytics_id'] if APP_CONFIG['google_analytics_id']
 
-    org_slug = request.env['SERVER_NAME']
+    org_slug = get_org_slug
 
     if params[:sub_organization_slugs]
       org_slug += '/' + params[:sub_organization_slugs]
@@ -75,7 +84,7 @@ class ApplicationController < ActionController::Base
     if session[:institution] && session[:institution] != ''
       @institution = session['institution']
     elsif !params[:institution] || params[:institution] == ''
-      @institution = request.env['SERVER_NAME']
+      @institution = get_org_slug
     else
       @institution = params[:institution]
     end
@@ -96,7 +105,7 @@ class ApplicationController < ActionController::Base
     @oauth_endpoint = "https://#{@institution}.instructure.com" unless @oauth_endpoint
     @lms_client_id = APP_CONFIG['canvas_id'] unless @lms_client_id
     @lms_secret = APP_CONFIG['canvas_key'] unless @lms_secret
-    @callback_url = "http://#{request.env['SERVER_NAME']}#{redirect_port}/oauth2/callback" unless @callback_url
+    @callback_url = "http://#{get_org_slug}#{redirect_port}/oauth2/callback" unless @callback_url
 
     if canvas_access_token && canvas_access_token != ''
       @lms_client = Canvas::API.new(:host => @oauth_endpoint, :token => canvas_access_token)

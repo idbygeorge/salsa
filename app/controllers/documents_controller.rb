@@ -87,12 +87,16 @@ class DocumentsController < ApplicationController
       @can_use_edit_token = can_use_edit_token(@document.lms_course_id)
       if @organization.enable_workflows && @document.assigned_to?(current_user) && @document.workflow_step_id
         render :layout => 'edit', :template => '/documents/content'
+      elsif @organization.enable_workflows && has_role("supervisor") && @document.workflow_step&.step_type == "end_step"
+        render :layout => 'edit', :template => '/documents/content'
       elsif !@organization.enable_workflows || !@document.workflow_step_id || !@document.user_id
         render :layout => 'edit', :template => '/documents/content'
       elsif current_user != nil
-        redirect_to admin_path, notice:"you are not authorized to edit that document"
+        flash[:notice] = "you are not authorized to edit that document"
+        redirect_to admin_path
       else
-        redirect_to root_path, notice:"you are not authorized to edit that document"
+        flash[:notice] = "you are not authorized to edit that document please login to continue"
+        redirect_to admin_path
       end
     else
       render :layout => 'dialog', :template => '/documents/republishing'
@@ -222,9 +226,11 @@ class DocumentsController < ApplicationController
       end
       if params[:publish] == "true" && @organization.enable_workflows && user
         if @document.workflow_step_id && @document.assigned_to?(user)
-          WorkflowMailer.step_email(@document,user, @organization, @document.workflow_step.slug, component_allowed_liquid_variables(@document.workflow_step, user,@organization)).deliver_later
-          @document.workflow_step_id = @document.workflow_step.next_workflow_step_id if @document.workflow_step&.next_workflow_step_id
+          WorkflowMailer.step_email(@document,user, @organization, @document.workflow_step.slug, component_allowed_liquid_variables(@document.workflow_step, user,@organization, @document)).deliver_later
+          @document.paper_trail_event = 'publish'
+          @document.published_at = DateTime.now
           @document.save!
+          @document.update(workflow_step_id: @document.workflow_step.next_workflow_step_id) if @document.workflow_step&.next_workflow_step_id && (@document.workflow_step.component.role != "approver"|| @document.signed_by_all_approvers)
         end
         flash[:notice] = 'The workflow document step has been completed'
         flash.keep(:notice)
@@ -315,7 +321,7 @@ class DocumentsController < ApplicationController
   end
 
   def can_use_edit_token(lms_course_id = nil)
-    is_authorized = is_lms_authenticated_user? && has_canvas_access_token? && lms_course_id
+    is_authorized = is_saml_authenticated_user? && has_canvas_access_token? && lms_course_id
     user = current_user
     workflow_authorized = @organization.enable_workflows && user && @document&.workflow_step_id && @document.assigned_to?(user)
     if workflow_authorized
@@ -355,8 +361,8 @@ class DocumentsController < ApplicationController
     courses = canvas.get("/api/v1/courses?per_page=50")
   end
 
-  def is_lms_authenticated_user?
-    if session[:lms_authenticated_user]
+  def is_saml_authenticated_user?
+    if session[:saml_authenticated_user]
       true
     else
       false
@@ -375,16 +381,16 @@ class DocumentsController < ApplicationController
     if Rails.env.production?
       "https://s3-#{APP_CONFIG['aws_region']}.amazonaws.com/#{APP_CONFIG['aws_bucket']}/hosted/#{@document.view_id}.pdf"
     else
-      "http://#{request.env['SERVER_NAME']}#{redirect_port}/#{sub_org_slugs}SALSA/#{@document.view_id}.pdf"
+      "http://#{get_org_slug}#{redirect_port}/#{sub_org_slugs}SALSA/#{@document.view_id}.pdf"
     end
   end
 
   def view_url
-    "http://#{request.env['SERVER_NAME']}#{redirect_port}/#{sub_org_slugs}SALSA/#{@document.view_id}"
+    "http://#{get_org_slug}#{redirect_port}/#{sub_org_slugs}SALSA/#{@document.view_id}"
   end
 
   def template_url document
-    "http://#{request.env['SERVER_NAME']}#{redirect_port}/#{sub_org_slugs}SALSA/#{document.template_id}"
+    "http://#{get_org_slug}#{redirect_port}/#{sub_org_slugs}SALSA/#{document.template_id}"
   end
 
   def sub_org_slugs
@@ -423,7 +429,7 @@ class DocumentsController < ApplicationController
   end
 
   def verify_org
-    document_slug = request.env['SERVER_NAME']
+    document_slug = get_org_slug
 
     if @document[:edit_id]
       @salsa_link = document_path(@document[:edit_id])
@@ -453,7 +459,7 @@ class DocumentsController < ApplicationController
     # if there is no org yet, show an error
     raise "error: no org found matching #{document_slug}"  unless org
 
-    @document[:organization_id] = org[:id] if @document
+    @document[:organization_id] = org[:id] if @document && (!org.enable_workflows || @document.new_record?)
 
     @organization = org
   end

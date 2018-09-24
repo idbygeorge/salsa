@@ -6,7 +6,13 @@
 <% end %>
 <% end %>
 
-<h1>Update Organization</h1>
+<div class="page-header">
+  <h1>
+    <%= link_to organization_path(@organization.slug) do %><small><%= @organization.name %></small><% end %>
+    <br>
+    <%=t '.title', :default => "Update Organization" %>
+  </h1>
+</div>
 
 <% if @organization.lms_authentication_key != '' %>
     <div class="pull-right">

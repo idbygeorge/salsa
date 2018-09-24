@@ -1,4 +1,7 @@
-<a class="btn btn-default pull-right" href="<%= edit_admin_user_path(id: @user[:id]) %>">
+<% if params[:controller] == "organization_users" %>
+  <h1><%= link_to organization_path(params[:slug]) do %><small><%= @organization.name %></small><% end %></h1>
+<% end %>
+<a class="btn btn-default pull-right" href="<%= polymorphic_path([:edit,params[:controller].singularize.to_sym], id: @user) %>">
   Edit User
 </a>
 

@@ -54,12 +54,6 @@
             <%= f.select(:role, @roles, {:include_blank => ''}, {class: 'form-control'}) %>
           </div>
         </div>
-        <div class="col-md-6">
-          <div class="form-group">
-            <%= f.label :role_organization_level, class: "control-label" %>
-            <%= f.collection_select(:role_organization_level,@organization_levels, :last, :first, {:include_blank => ''}, {class: 'form-control'}) %>
-          </div>
-        </div>
       </div>
     <% end %>
 
@@ -74,21 +68,23 @@
     <% end %>
   </fieldset>
 
-  <div class="col-md-12">
-    <div class="form-group">
-      <%= f.label :subject, class: "control-label" %>
-      <div class="controls">
-      <%= f.text_field :subject, class: 'form-control', rows: 12 %>
-      </div>
-      <div class="help-block">
-        when using liquid format refer to <a href="https://github.com/Shopify/liquid/wiki/Liquid-for-Designers" target="_blank">Liquid guide for designers</a>
-        <br>
-        and the available variables are <b><%= @available_liquid_variables.keys.join(', ') %></b>
-        and for the user_welcome_email there is the <b>user_activation_url</b> variable<br>
-        and for the workflow_welcome_email and step_emails there is the <b>document_url</b> variable
+  <% if @organization.enable_workflows %>
+    <div class="col-md-12">
+      <div class="form-group">
+        <%= f.label :subject, class: "control-label" %>
+        <div class="controls">
+        <%= f.text_field :subject, class: 'form-control', rows: 12 %>
+        </div>
+        <div class="help-block">
+          when using liquid format refer to <a href="https://github.com/Shopify/liquid/wiki/Liquid-for-Designers" target="_blank">Liquid guide for designers</a>
+          <br>
+          and the available variables are <b><%= @available_liquid_variables.keys.join(', ') %></b>
+          and for the user_welcome_email there is the <b>user_activation_url</b> variable<br>
+          and for the workflow_welcome_email and step_emails there is the <b>document_url</b> variable
+        </div>
       </div>
     </div>
-  </div>
+  <% end %>
   <div class="col-md-12">
     <div class="form-group">
       <%= f.label :layout, class: "control-label" %>

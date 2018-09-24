@@ -112,10 +112,11 @@ class ComponentsController < ApplicationController
           slug: file.name.remove(/\..*/, /\b_/).gsub(/ /, '_')
         )
         if params[:overwrite] == "true" || component.new_record?
+          component.category = "document" if component.category.blank?
+          component.category = "mailer" if File.extname(file.name).delete('.') == "liquid"
           component.update(
             name: file.name.remove(/\..*/),
             description: "",
-            category: "document",
             layout: content,
             format: File.extname(file.name).delete('.')
           )
@@ -155,14 +156,14 @@ class ComponentsController < ApplicationController
   end
 
   def valid_slugs component_slug
-    org = get_org
+    @organization = get_org if @organization.blank?
     slugs = ['salsa', 'section_nav', 'control_panel', 'footer', 'dynamic_content_1', 'dynamic_content_2', 'dynamic_content_3', 'user_welcome_email']
-    if org.enable_workflows
-      wfsteps = WorkflowStep.where(organization_id: org.organization_ids+[org.id])
+    if @organization.enable_workflows
+      wfsteps = WorkflowStep.where(organization_id: @organization.organization_ids+[@organization.id])
       slugs += wfsteps.map(&:slug).map! {|x| x + "_mailer" }
       slugs.push "workflow_welcome_email"
     end
-    slugs.delete_if { |a| org.components.map(&:slug).include?(a) }
+    slugs.delete_if { |a| @organization.components.map(&:slug).include?(a) }
     if action_name != "new"
       slugs.push component_slug
     end
@@ -174,7 +175,7 @@ class ComponentsController < ApplicationController
   end
 
   def get_organization_levels
-     @orgs = @organization.parents.push(@organization) + @organization.children
+     @orgs = @organization.parents.push(@organization) + @organization.descendants
      organization_levels = @orgs.map { |h| h.slice(:slug, :level).values }
      @organization_levels = organization_levels.sort {|a,b|  a[1] <=> b[1] }
   end
@@ -198,8 +199,7 @@ class ComponentsController < ApplicationController
       :subject,
       :layout,
       :format,
-      :role,
-      :role_organization_level
+      :role
     )
   end
 end

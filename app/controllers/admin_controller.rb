@@ -31,9 +31,7 @@ class AdminController < ApplicationController
       redirect_to organizations_path, notice: flash[:notice]
     elsif has_role 'auditor'
       redirect_to admin_auditor_reports_path, notice: flash[:notice]
-    elsif has_role('supervisor', assignment_org = get_user_assignment_org(session[:authenticated_user],'supervisor')) && assignment_org.enable_workflows == true
-      redirect_to workflow_steps_path(assignment_org.slug), notice: flash[:notice]
-    elsif has_role('staff', assignment_org = get_user_assignment_org(session[:authenticated_user],'staff')) && assignment_org.enable_workflows == true
+    elsif ( has_role('staff', assignment_org = get_user_assignment_org(session[:authenticated_user],'staff')) || has_role('approver', assignment_org = get_user_assignment_org(session[:authenticated_user],'approver')) || has_role('supervisor', assignment_org = get_user_assignment_org(session[:authenticated_user],'supervisor')) ) && assignment_org&.enable_workflows == true
       redirect_to workflow_document_index_path, notice: flash[:notice]
     else
       redirect_or_error
@@ -54,7 +52,7 @@ class AdminController < ApplicationController
 
     # allow using the login form for the admin password if it is set
     if APP_CONFIG['admin_password']
-        if params[:user][:email] == 'admin@' + (params[:slug] || request.env['SERVER_NAME'])
+        if params[:user][:email] == 'admin@' + (params[:slug] || get_org_slug)
           session[:admin_authorized] = params[:user][:password] == APP_CONFIG['admin_password']
 
           return redirect_to admin_path
@@ -87,7 +85,7 @@ class AdminController < ApplicationController
   end
 
   def canvas_accounts
-    org_slug = request.env['SERVER_NAME']
+    org_slug = get_org_slug
     @org = Organization.find_by slug: org_slug
 
     org_meta = OrganizationMeta.where(
@@ -114,7 +112,7 @@ class AdminController < ApplicationController
   end
 
   def canvas_courses
-    @org = Organization.find_by slug: request.env['SERVER_NAME']
+    @org = Organization.find_by slug: get_org_slug
     per_page = 10
     per_page = params[:per] if params[:per]
     if params[:show_course_meta]
@@ -130,7 +128,7 @@ class AdminController < ApplicationController
   def canvas_accounts_sync
     @canvas_access_token = params[:canvas_token]
 
-    org_slug = request.env['SERVER_NAME']
+    org_slug = get_org_slug
 
     @org = Organization.find_by slug: org_slug
 
@@ -158,7 +156,7 @@ class AdminController < ApplicationController
   def canvas_courses_sync
     @canvas_access_token = params[:canvas_token]
     accounts = params[:account_ids]
-    org_slug = request.env['SERVER_NAME']
+    org_slug = get_org_slug
 
     CanvasHelper.courses_sync_as_job org_slug, @canvas_access_token, accounts
 
@@ -199,6 +197,10 @@ class AdminController < ApplicationController
     if user
       user.update user_params
       user.activate
+      ua = UserAssignment.find_or_initialize_by(user_id: user.id, organization_id:get_org.id )
+      ua.username = params[:user_remote_id]
+      ua.role = "staff" if ua.role.blank?
+      ua.save
       redirect_to admin_path
     else
       return render :file => "public/410.html", :status => :gone, :layout => false
@@ -224,7 +226,7 @@ class AdminController < ApplicationController
     user_remote_id = params[:q] if params[:search_remote_account_id]
 
     user_ids = User.where("email = ? OR id = ? OR name ~* ? ", user_email, user_id, user_name).map(&:id)
-    user_ids += UserAssignment.where("username = '?' ", user_remote_id).map(&:user_id)
+    user_ids += UserAssignment.where("lower(username) = '?' ", user_remote_id.to_s.downcase).map(&:user_id)
 
     sql = ["organization_id IN (?) AND (lms_course_id = ? OR name ~* ? OR edit_id ~* ? OR view_id ~* ? OR template_id ~* ? )"]
     param = [@organizations.pluck(:id), params[:q], ".*#{params[:q]}.*"]

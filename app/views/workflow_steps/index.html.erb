@@ -1,6 +1,10 @@
 <%- model_class = WorkflowStep -%>
 <div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
+  <h1>
+    <%= link_to organization_path(@organization.slug) do %><small><%= @organization.name %></small><% end %>
+    <br>
+    <%=t '.title', :default => model_class.model_name.human.pluralize.titleize %>
+  </h1>
 </div>
 <table class="table table-striped">
   <thead>
@@ -9,6 +13,7 @@
       <th><%= model_class.human_attribute_name(:slug) %></th>
       <th><%= model_class.human_attribute_name(:next_workflow_step_id) %></th>
       <th><%= model_class.human_attribute_name(:step_type) %></th>
+      <th><%= model_class.human_attribute_name(:component_id) %></th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>

@@ -24,7 +24,7 @@
     <div class="form-group">
       <%= f.label :user_id, class: "control-label" %>
       <div class="controls">
-        <%= f.collection_select :user_id, UserAssignment.where(organization_id:@organization.children.map(&:id) + [@organization.id]).map(&:user), :id, :email, {include_blank: true},{class:"form-control"} %>
+        <%= f.collection_select :user_id, @users, :id, :email, {include_blank: true},{class:"form-control"} %>
       </div>
     </div>
   <% end %>

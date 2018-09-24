@@ -16,15 +16,26 @@ class Document < ApplicationRecord
     result = false
     if self.workflow_step&.component_id && user != nil && self.workflow_step.step_type != "end_step" && user.user_assignments.where.not(organization_id: nil).exists?
       component = self.workflow_step.component
-      user_assignment = user.user_assignments.find_by(organization_id:self.organization_id)
-      user_org = user_assignment.organization
-      if (component.role == nil || component.role == "") && ((user_assignment.role == "supervisor" && user_org.level == component.role_organization_level) || user.id == self.user_id)
+      if component.role == "supervisor"
+        ua = UserAssignment.where(role: "supervisor",organization_id: self.organization&.parents.map(&:id)).includes(:organization).reorder("organizations.depth DESC").first
+        user_assignment = user.user_assignments.find_by(id:ua&.id)
+      elsif component.role == "approver"
+        user_ids = self.approvers_that_have_not_signed.map(&:id)
+        ua = UserAssignment.where(user_id: user_ids, role: "approver",organization_id: self.organization&.parents&.map(&:id)).includes(:organization).reorder("organizations.depth DESC").first
+        user_assignment = user.user_assignments.find_by(id:ua&.id)
+      else
+        user_assignment = user.user_assignments.find_by(organization_id: self.organization&.parents.map(&:id).push(self.organization_id))
+      end
+      user_org = user_assignment&.organization
+      if user_assignment.blank?
+        false
+      elsif component.role.blank? && ((user_assignment&.role == "supervisor" && user_org.level < self.organization&.level) || user.id == self.user_id)
         result = true
-      elsif component.role == "staff" && user_assignment.role == "staff" && self.user_id == user.id && self.workflow_step_id != ""
+      elsif component.role == "staff" &&  ["supervisor","staff"].include?(user_assignment.role) && self.user_id == user.id && self.workflow_step_id != ""
         result = true
-      elsif component.role == "supervisor" && user_assignment.role == "supervisor" && user_assignment.cascades && user_org.level <= component.role_organization_level
+      elsif component.role == "supervisor" && user_assignment.role == "supervisor" && user_org.level < self.organization&.level
         result = true
-      elsif component.role == "supervisor" && user_assignment.role == "supervisor" && !user_assignment.cascades && user_org.level == component.role_organization_level
+      elsif component.role == "approver" && user_assignment.role == "approver" && user_org.level < self.organization&.level
         result = true
       else
         result = false
@@ -49,6 +60,31 @@ class Document < ApplicationRecord
     else
       nil
     end
+  end
+
+  def approvers
+    orgs = self.organization.parents + [self.organization]
+    approvers_array = []
+    orgs.each do |org|
+      approvers_array += org.user_assignments.where(role: "approver").map(&:user_id)
+    end
+    return User.where(id: approvers_array)
+  end
+
+  def approvers_that_signed
+    self.approvers.where(id: self.versions.where(event:"publish",whodunnit: self.approvers.map(&:id)).map(&:whodunnit))
+  end
+
+  def approvers_that_have_not_signed
+    self.approvers.where.not(id: self.versions.where(event:"publish",whodunnit: self.approvers.map(&:id)).map(&:whodunnit))
+  end
+
+  def signed_by_all_approvers
+    result = false
+    self.approvers.each do |user|
+      result = true if !self.versions.where(event:"publish",whodunnit: user[:id]).blank?
+    end
+    result
   end
 
   def normalize_blank_values
