@@ -22,7 +22,7 @@
 
     <div class="container">
 
-      <%= form_for User.new, url: admin_authenticate_path, html: {class: "form"} do |f| %>
+      <%= form_for User.new, url: admin_authenticate_path(org_path: params[:org_path]), html: {class: "form"} do |f| %>
 
         <h2 class="form-signin-heading">Salsa Dashboard</h2>
 

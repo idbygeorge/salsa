@@ -1,4 +1,4 @@
-<%= form_for(@period, url: period_form_path, html: { class: "form-horizontal col-md-9" } ) do |f| %>
+<%= form_for(@period, url: period_form_path(org_path: params[:org_path]), html: { class: "form-horizontal col-md-9" } ) do |f| %>
 
   <% if @period.errors.any? %>
     <div class="alert alert-danger">

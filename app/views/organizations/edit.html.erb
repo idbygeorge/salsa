@@ -1,5 +1,5 @@
 <% if session[:admin_authorized] %>
-<%= form_for @organization, url: organization_path, method: :delete, html: { class: 'pull-right' } do |f| %>
+<%= form_for @organization, url: organization_path(org_path: params[:org_path]), method: :delete, html: { class: 'pull-right' } do |f| %>
   <div class="form-group">
     <%= f.submit "Delete #{@organization[:name]}", class: 'btn btn-danger' %>
   </div>
@@ -17,12 +17,12 @@
 <% if @organization.lms_authentication_key != '' %>
     <div class="pull-right">
 
-      <a class="btn btn-info" href="http://<%=@organization.slug + canvas_accounts_path %>">
+      <a class="btn btn-info" href="http://<%=@organization.slug + canvas_accounts_path(org_path: params[:org_path]) %>">
         <span class="glyphicon glyphicon-refresh"></span>
         LMS Accounts
       </a>
 
-      <a class="btn btn-info" href="http://<%=@organization.slug + canvas_courses_path %>">
+      <a class="btn btn-info" href="http://<%=@organization.slug + canvas_courses_path(org_path: params[:org_path]) %>">
         <span class="glyphicon glyphicon-refresh"></span>
         LMS Courses
       </a>

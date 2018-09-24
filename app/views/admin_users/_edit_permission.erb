@@ -1,7 +1,7 @@
 <% if action == 'Update' %>
-  <% path = polymorphic_path([params[:controller].singularize,:update_assignments]) %>
+  <% path = polymorphic_path([params[:controller].singularize,:update_assignments], org_path: params[:org_path]) %>
 <% else %>
-  <% path = polymorphic_path([params[:controller].singularize,:assignments]) %>
+  <% path = polymorphic_path([params[:controller].singularize,:assignments], org_path: params[:org_path]) %>
 <% end %>
 
 <%= form_for permission, url: path, html: {class: "form"} do |f| %>
