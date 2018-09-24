@@ -30,7 +30,7 @@ script:
   - sudo docker-compose run salsa bash ./cucumber.sh
 
 after_script:
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT --prefix $(cd -P -- "$(dirname -- "$0")" && pwd -P)
 
 dist: trusty
 language: ruby
