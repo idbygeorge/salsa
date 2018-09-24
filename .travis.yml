@@ -7,6 +7,7 @@ addons:
     packages:
       - docker-ce
 before_script:
+  - pwd
   - mkdir tmp/db/postgres-data -p
   - mkdir tmp/log -p
   - cp config/deploy/travis-ci/database.yml config/database.yml
@@ -30,7 +31,7 @@ script:
   - sudo docker-compose run salsa bash ./cucumber.sh
 
 after_script:
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT --prefix $(cd -P -- "$(dirname -- "$0")" && pwd -P)
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
 
 dist: trusty
 language: ruby
