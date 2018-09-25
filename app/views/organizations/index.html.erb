@@ -1,8 +1,8 @@
 <% if session[:admin_authorized] %>
 <div class="row">
   <div class="pull-right text-right">
-    <%= link_to Document.where('documents.organization_id IS NULL AND documents.updated_at != documents.created_at').count.to_s + ' documents', organizations_path %><br>
-    <%= link_to Document.where('documents.organization_id IS NULL AND documents.updated_at = documents.created_at').count.to_s + ' abandoned', organizations_path( key: 'abandoned') %>
+    <%= link_to Document.where('documents.organization_id IS NULL AND documents.updated_at != documents.created_at').count.to_s + ' documents', organizations_path(org_path:params[:org_path]) %><br>
+    <%= link_to Document.where('documents.organization_id IS NULL AND documents.updated_at = documents.created_at').count.to_s + ' abandoned', organizations_path( key: 'abandoned', org_path:params[:org_path]) %>
   </div>
 
   <h1>

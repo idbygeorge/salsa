@@ -1,18 +1,19 @@
 class OrganizationsController < AdminController
+  before_action :redirect_to_sub_org
   before_action :require_admin_permissions, only: [:new, :create, :destroy]
   before_action :require_organization_admin_permissions, except: [:new, :create, :destroy, :show, :index]
   before_action :require_designer_permissions, only: [
       :show,
       :index
   ]
-  before_action :get_organizations, only: [:index, :new, :edit, :show, :start_workflow_form]
+  before_action :get_organizations, only: [:index, :new, :edit, :create, :show, :start_workflow_form]
   layout 'admin'
   def index
     get_documents
     @roots = @organizations.roots
 
     if @roots.count == 1
-      redirect_to organization_path(slug: full_org_path(@roots[0]))
+      redirect_to organization_path(slug: full_org_path(@roots[0]), org_path: params[:org_path])
     end
   end
 
@@ -32,7 +33,7 @@ class OrganizationsController < AdminController
       Document.where(:id => params[:document_ids]).update_all(["organization_id=?", org_id])
     end
 
-    redirect_to organizations_path
+    redirect_to organizations_path( org_path: params[:org_path])
   end
 
   def show
@@ -53,9 +54,17 @@ class OrganizationsController < AdminController
   # commit actions
   def create
     @export_types = Organization.export_types
-    @organization = Organization.create organization_params
+    @organization = Organization.new organization_params
 
-    redirect_to organization_path(slug: full_org_path(@organization)) if !@organization.new_record?
+    respond_to do |format|
+      if @organization.save
+        format.html { redirect_to organization_path(full_org_path(@organization), org_path: params[:org_path]), notice: 'Organization was successfully created.' }
+        format.json { render :show, status: :created }
+      else
+        format.html { render :new }
+        format.json { render json: @organization.errors, status: :unprocessable_entity }
+      end
+    end
   end
 
   def update
@@ -72,14 +81,14 @@ class OrganizationsController < AdminController
 
     @organization.update organization_params
 
-    redirect_to organization_path(slug: full_org_path(@organization))
+    redirect_to organization_path(slug: full_org_path(@organization), org_path: params[:org_path])
   end
 
   def destroy
     @organization = find_org_by_path params[:slug]
     @organization.destroy
 
-    redirect_to organizations_path
+    redirect_to organizations_paths( org_path: params[:org_path])
   end
 
   def import
@@ -87,7 +96,7 @@ class OrganizationsController < AdminController
   end
 
   def start_workflow_form
-    @organization = Organization.find_by(slug:params[:slug])
+    @organization = @organizations.all.select{ |o| o.full_slug == params[:slug] }.first
     @workflow_steps = WorkflowStep.where(organization_id: @organization.organization_ids+[@organization.id], step_type: "start_step")
     user_ids = @organization.user_assignments.map(&:user_id)
     @users = User.find_by(id: user_ids)
@@ -101,7 +110,7 @@ class OrganizationsController < AdminController
       flash[:error] = "all fields must be filled"
       return redirect_back(fallback_location: start_workflow_form_path)
     end
-    organization = Organization.find_by slug: params[:slug]
+    organization = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
     if start_workflow_params[:start_for_sub_organizations]
       organizations = organization.descendants + [organization]
     else
@@ -112,7 +121,7 @@ class OrganizationsController < AdminController
       user_ids = org.user_assignments.where(role: ["supervisor","staff"]).map(&:user_id)
       users = User.where(id: user_ids, archived: false)
       users.each do |user|
-        next if Document.find_by(period_id:start_workflow_params[:period_id].to_i)
+        next if user.documents.map(&:period_id).include?(start_workflow_params[:period_id].to_i)
         document = Document.create(workflow_step_id: start_workflow_params[:starting_workflow_step_id].to_i, organization_id: org.id, period_id: start_workflow_params[:period_id].to_i, user_id: user.id)
         document.update(name: start_workflow_params[:document_name] )
         WorkflowMailer.welcome_email(document, user, org, document.workflow_step.slug,component_allowed_liquid_variables(document.workflow_step.slug, user, org, document )).deliver_later
@@ -121,7 +130,7 @@ class OrganizationsController < AdminController
     end
 
     flash[:notice] = "successfully started workflow for #{counter} users for the #{Period.find(start_workflow_params[:period_id].to_i).name} period"
-    return redirect_to start_workflow_form_path
+    return redirect_to start_workflow_form_path( org_path: params[:org_path])
   end
 
 
@@ -150,7 +159,8 @@ class OrganizationsController < AdminController
   def organization_params
     if has_role 'admin'
 
-      params.require(:organization).permit(:name, :export_type, :slug, :enable_workflows, :inherit_workflows_from_parents, :parent_id, :lms_authentication_source, :lms_authentication_id, :lms_authentication_key, :lms_info_slug, :home_page_redirect, :skip_lms_publish, :enable_shibboleth, :idp_sso_target_url, :idp_slo_target_url, :idp_entity_id, :idp_cert, :idp_cert_fingerprint, :idp_cert_fingerprint_algorithm, :authn_context, :enable_anonymous_actions, :track_meta_info_from_document, :disable_document_view, :force_https, :enable_workflow_report, default_account_filter: [:account_filter])
+      params.require(:organization).permit(:name, :export_type, :slug, :enable_workflows, :inherit_workflows_from_parents, :parent_id, :lms_authentication_source, :lms_authentication_id, :lms_authentication_key, :lms_info_slug, :home_page_redirect, :skip_lms_publish, :enable_shibboleth, :idp_sso_target_url, :idp_slo_target_url, :idp_entity_id, :idp_cert, :idp_cert_fingerprint, :idp_cert_fingerprint_algorithm, :authn_context, :enable_anonymous_actions, :track_meta_info_from_document, :disable_document_view,
+      :force_https, :enable_workflow_report, :default_account_filter, default_account_filter: [:account_filter])
 
 
     elsif has_role 'organization_admin'

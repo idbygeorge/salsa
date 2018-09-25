@@ -1,12 +1,12 @@
 <div class="page-header">
   <h1>
-    <%= link_to organization_path(@organization.slug) do %><small><%= @organization.name %></small><% end %>
+    <%= link_to organization_path(params[:slug], org_path: params[:org_path]) do %><small><%= @organization.name %></small><% end %>
     <br>
     <%=t '.title', :default => "Import Users" %>
   </h1>
 </div>
 
-<%= form_for("users", url: organization_import_users_path(params[:slug]), :html => { :class => "form-horizontal col-md-9 col-lg-6" } ) do |f| %>
+<%= form_for("users", url: organization_import_users_path(params[:slug], org_path: params[:org_path]), :html => { :class => "form-horizontal col-md-9 col-lg-6" } ) do |f| %>
 
   <% if flash[:errors] != []  && flash[:errors] != nil%>
       <div class="alert alert-danger">
