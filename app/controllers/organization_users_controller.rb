@@ -29,7 +29,9 @@ class OrganizationUsersController < AdminUsersController
     #     @user.password = SecureRandom.urlsafe_base64
     #     @user.password_confirmation = @user.password
     # end
-
+    if @user.archived
+      @user.archived = false
+    end
     if @user.save
       @user_assignment = UserAssignment.create(user_id:@user.id, organization_id:@organization.id ,role:"staff", cascades: true)
       return redirect_to polymorphic_path([params[:controller].singularize],id: @user.id, org_path: params[:org_path])

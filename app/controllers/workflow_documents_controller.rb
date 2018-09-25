@@ -1,11 +1,11 @@
 class WorkflowDocumentsController < ApplicationController
+  before_action :redirect_to_sub_org
   layout :set_layout
   before_action :check_organization_workflow_enabled
   before_action :set_paper_trail_whodunnit, only: [:revert_document]
   before_action :get_organizations_if_supervisor
   before_action :require_staff_permissions, only: [:index]
   before_action :require_supervisor_permissions, except: [:index]
-  before_action :redirect_to_sub_org
 
   def index
     org = get_org
