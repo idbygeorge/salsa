@@ -49,7 +49,7 @@ class AdminUsersController < AdminController
     @new_permission = @user_assignment
     respond_to do |format|
       if @user_assignment.save
-        format.html { redirect_to admin_user_path(org_path:params[:org_path]), id: @user[:id], notice: 'User Assignment was successfully created.' }
+        format.html { redirect_to admin_user_path(org_path:params[:org_path], id: @user[:id]), notice: 'User Assignment was successfully created.' }
         format.json { render :show, status: :created, location: @user_assignment }
       else
         format.html { render :show }
