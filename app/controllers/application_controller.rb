@@ -54,7 +54,7 @@ class ApplicationController < ActionController::Base
     else
       organization = Organization.find_by(slug: get_org_slug)
     end
-    if organization.setting('enable_workflows') != true
+    if organization&.setting('enable_workflows') != true
       return render :file => "public/401.html", :status => :unauthorized, :layout => false
     end
   end
