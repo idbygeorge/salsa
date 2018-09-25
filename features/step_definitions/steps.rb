@@ -44,23 +44,35 @@ Then(/^the (\w+) (\w+) should be (\w+)$/) do |class_name, record_name, value|
   end
 end
 
+Given(/^there is a organization with a sub organization$/) do
+  @organization = create(:organization)
+  @sub_organization = create(:organization, parent_id: @organization.id)
+end
+
 Given(/^there is a (\w+) with a (\w+) of "(.*?)"$/) do |class_name, field_name, field_value|
   instance_variable_set("@#{class_name}", create(class_name, field_name => field_value))
 end
+
 Given(/^there is a (\w+)$/) do |class_name|
   case class_name
   when /workflow/
     recordA = create(:workflow_step, slug: "final_step", step_type: "end_step", organization_id: @organization.id)
     recordB = create(:workflow_step, slug: "step_4", next_workflow_step_id:recordA.id, organization_id: @organization.id)
     componentB = recordB.component
-    componentB.role = ""
+    componentB.role = "approver"
     componentB.save
     recordC = create(:workflow_step, slug: "step_3", next_workflow_step_id: recordB.id, organization_id: @organization.id)
+    componentC = recordC.component
+    componentC.role = "supervisor"
+    componentC.save
     recordD = create(:workflow_step, slug: "step_2", next_workflow_step_id: recordC.id, organization_id: @organization.id)
     componentD = recordD.component
     componentD.role = "supervisor"
     componentD.save
     recordE = create(:workflow_step, slug: "step_1", next_workflow_step_id: recordD.id, step_type: "start_step", organization_id: @organization.id)
+    componentE = recordE.component
+    componentE.role = "staff"
+    componentE.save
     @workflows = WorkflowStep.workflows(@organization.id)
   when /document/ || /canvas_document/
     record = create(class_name, organization_id: @organization.id)
@@ -75,9 +87,15 @@ Given("the user has a document with a workflow_step of {int}") do |int|
   @document = create(:document, organization_id: @organization.id, user_id: @user.id, workflow_step_id: @workflows.first[int.to_i-1].id)
 end
 
-Given(/^there is a user with the role of (\w+)/) do |role|
+Given(/^there is a user with the role of (\w+)$/) do |role|
   user = create(:user, email: Faker::Internet.free_email)
   user_assignment = create(:user_assignment, user_id: user.id, role: role, organization_id: @organization.id)
+  instance_variable_set("@user",user)
+end
+
+Given(/^there is a user with the role of (\w+) on the sub organization$/) do |role|
+  user = create(:user, email: Faker::Internet.free_email)
+  user_assignment = create(:user_assignment, user_id: user.id, role: role, organization_id: @sub_organization.id)
   instance_variable_set("@user",user)
 end
 
@@ -103,6 +121,21 @@ Given(/^there is a document on the (\w+) step in the workflow and assigned to th
     @document = create(:document, workflow_step_id: @workflows.first[3].id, user_id: @user.id, organization_id: @organization.id)
   when /last/
     @document = create(:document, workflow_step_id: @workflows.first.last.id, user_id: @user.id, organization_id: @organization.id)
+  else
+    pending
+  end
+end
+
+Given(/^there is a document on the (\w+) step in the workflow and assigned to the user on the sub org$/) do |step|
+  case step
+  when /first/
+    @document = create(:document, workflow_step_id: @workflows.first.first.id, user_id: @user.id, organization_id: @sub_organization.id)
+  when /second/
+    @document = create(:document, workflow_step_id: @workflows.first[1].id, user_id: @user.id, organization_id: @sub_organization.id)
+  when /fourth/
+    @document = create(:document, workflow_step_id: @workflows.first[3].id, user_id: @user.id, organization_id: @sub_organization.id)
+  when /last/
+    @document = create(:document, workflow_step_id: @workflows.first.last.id, user_id: @user.id, organization_id: @sub_organization.id)
   else
     pending
   end

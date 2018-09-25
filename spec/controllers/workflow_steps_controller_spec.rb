@@ -82,7 +82,7 @@ RSpec.describe WorkflowStepsController, type: :controller do
 
       it "redirects to the created workflow_step" do
         post :create, params: {workflow_step: valid_attributes}, session: valid_session
-        expect(response).to redirect_to(WorkflowStep.last)
+        expect(response).to redirect_to(WorkflowStep.last, org_path: params[:org_path])
       end
     end
 
@@ -110,7 +110,7 @@ RSpec.describe WorkflowStepsController, type: :controller do
       it "redirects to the workflow_step" do
         workflow_step = WorkflowStep.create! valid_attributes
         put :update, params: {id: workflow_step.to_param, workflow_step: valid_attributes}, session: valid_session
-        expect(response).to redirect_to(workflow_step)
+        expect(response).to redirect_to(workflow_step, org_path: params[:org_path])
       end
     end
 
@@ -134,7 +134,7 @@ RSpec.describe WorkflowStepsController, type: :controller do
     it "redirects to the workflow_steps list" do
       workflow_step = WorkflowStep.create! valid_attributes
       delete :destroy, params: {id: workflow_step.to_param}, session: valid_session
-      expect(response).to redirect_to(workflow_steps_url)
+      expect(response).to redirect_to(workflow_steps_url, org_path: params[:org_path])
     end
   end
 

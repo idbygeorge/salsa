@@ -10,6 +10,8 @@ class User < ApplicationRecord
                     uniqueness: { case_sensitive: false }
   # validates :password, presence: true, length: { minimum: 8 }
 
+  has_many :user_assignments
+  has_many :documents
   has_secure_password
 
   has_many :user_assignments

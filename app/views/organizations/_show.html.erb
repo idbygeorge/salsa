@@ -48,7 +48,7 @@
 
             <label for="<%= "document_#{document.id}" %>"><%= document.name %></label>
 
-            <%= link_to 'edit', edit_admin_document_path(document) %>
+            <%= link_to 'edit', edit_admin_document_path(document, org_path: params[:org_path]) %>
 
             <time datetime="<%= document.created_at %>">Created <%= time_ago_in_words document.created_at %> ago</time>
 
@@ -81,7 +81,7 @@
                   <% end %>
 
                   <div>
-                    Course Edit Link: <%= link_to "#{org_base}#{lms_course_document_path(lms_course_id: document.lms_course_id)}", "#{org_base}#{lms_course_document_path(lms_course_id: document.lms_course_id)}", target: "_blank" %>
+                    Course Edit Link: <%= link_to "#{org_base}#{lms_course_document_path(lms_course_id: document.lms_course_id, org_path: params[:org_path])}", "#{org_base}#{lms_course_document_path(lms_course_id: document.lms_course_id, org_path: params[:org_path])}", target: "_blank", org_path: params[:org_path] %>
                   </div>
                 </div>
               <% end %>
@@ -97,16 +97,16 @@
 
           	<div>
               <% if !document.organization&.disable_document_view %>
-                View: <%= link_to "#{org_base}#{document_path(id: document.view_id)}", "#{org_base}#{document_path(id: document.view_id)}", target: "_blank" %>
+                View: <%= link_to "#{org_base}#{document_path(id: document.view_id, org_path: params[:org_path])}", "#{org_base}#{document_path(id: document.view_id, org_path: params[:org_path])}", target: "_blank", org_path: params[:org_path] %>
                 <br>
               <% end %>
 
               <% if document.organization && document.organization[:enable_anonymous_actions] %>
-                  Edit: <%= link_to "#{org_base}#{document_path(id: document.edit_id)}", "#{org_base}#{document_path(id: document.edit_id)}", target: "_blank" %>
+                  Edit: <%= link_to "#{org_base}#{document_path(id: document.edit_id, org_path: params[:org_path])}", "#{org_base}#{document_path(id: document.edit_id, org_path: params[:org_path])}", target: "_blank", org_path: params[:org_path] %>
 
                   <% if document.template_id %>
                     <br>
-                    Template: <%= link_to "#{org_base}#{document_path(id: document.template_id)}", "#{org_base}#{document_path(id: document.template_id)}", target: "_blank" %>
+                    Template: <%= link_to "#{org_base}#{document_path(id: document.template_id, org_path: params[:org_path])}", "#{org_base}#{document_path(id: document.template_id, org_path: params[:org_path])}", target: "_blank", org_path: params[:org_path] %>
                   <% end %>
               <% end %>
 

@@ -25,14 +25,14 @@
           <td>
             <% if !document.organization&.disable_document_view  %>
               <%= link_to "View",
-                        document_path(document.view_id), :class => 'btn btn-default btn-xs' %>
+                        document_path(document.view_id, org_path: params[:org_path]), :class => 'btn btn-default btn-xs' %>
             <% end %>
             <%= link_to "Versions",
-                        admin_document_versions_path(document), :class => 'btn btn-default btn-xs' %>
+                        admin_document_versions_path(document, org_path: params[:org_path]), :class => 'btn btn-default btn-xs' %>
             <%= link_to t('.edit', :default => t("helpers.links.edit")),
-                        edit_admin_document_path(document), :class => 'btn btn-default btn-xs' %>
+                        edit_admin_document_path(document, org_path: params[:org_path]), :class => 'btn btn-default btn-xs' %>
             <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                        admin_document_path(document),
+                        admin_document_path(document, org_path: params[:org_path]),
                         :method => :delete,
                         :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
                         :class => 'btn btn-xs btn-danger' %>
@@ -43,5 +43,5 @@
 </table>
 <%= paginate(@documents) %>
 <%= link_to t('.new', :default => t("helpers.links.new")),
-            new_document_path,
+            new_document_path(org_path: params[:org_path]),
             :class => 'btn btn-primary' %>
