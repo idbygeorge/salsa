@@ -158,7 +158,7 @@ module ApplicationHelper
       if params[:slug]
         org = find_org_by_path params[:slug]
       else
-        org = find_org_by_path get_org_slug
+        org = find_org_by_path get_org_path
       end
     end
 
@@ -172,14 +172,14 @@ module ApplicationHelper
     end
 
     user_assignments = nil
-    if get_org.enable_shibboleth && session[:saml_authenticated_user]
+    if get_org&.enable_shibboleth && session[:saml_authenticated_user]
       username = session[:saml_authenticated_user]['id'].to_s
       user_assignments = UserAssignment.where('organization_id in (?) OR (role = ?)', org.self_and_ancestors.map(&:id), 'admin').where("lower(username) = ?", username.downcase)
-    elsif org[:lms_authentication_source] && org[:lms_authentication_source] == session[:oauth_endpoint] && session[:saml_authenticated_user]
+    elsif org&.lms_authentication_source && org&.lms_authentication_source == session[:oauth_endpoint] && session[:saml_authenticated_user]
       username = session[:saml_authenticated_user]['id'].to_s
       user_assignments = UserAssignment.where('organization_id = ? OR (role = ?)', org.self_and_ancestors.map(&:id), 'admin').where("lower(username) = ?", username.downcase)
     else
-      user_assignments = UserAssignment.where('organization_id IN (?) OR (role = ?)', org.self_and_ancestors.map(&:id), 'admin').where(user_id: session[:authenticated_user])
+      user_assignments = UserAssignment.where('organization_id IN (?) OR (role = ?)', org&.self_and_ancestors.map(&:id), 'admin').where(user_id: session[:authenticated_user])
     end
 
     user_assignments&.each do |ua|
@@ -252,12 +252,13 @@ module ApplicationHelper
   end
 
   def find_org_by_path path
-    path = get_org_slug unless path
+    path = get_org_path unless path
 
     unless path&.include? '/'
       organization = Organization.find_by slug:path
     else
       path.split('/').each do |slug|
+        next if slug.blank?
         unless organization
           organization = Organization.find_by slug: slug, depth: 0
         else

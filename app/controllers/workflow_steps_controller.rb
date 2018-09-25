@@ -8,6 +8,7 @@ class WorkflowStepsController < OrganizationsController
   before_action :get_step_types
   before_action :require_supervisor_permissions
   before_action :redirect_if_wrong_organization, only: [:show, :edit, :update, :destroy]
+  before_action :redirect_to_sub_org
 
   # GET /workflow_steps
   # GET /workflow_steps.json

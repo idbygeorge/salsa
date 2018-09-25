@@ -8,6 +8,19 @@ class ApplicationController < ActionController::Base
   include ApplicationHelper
 
   protected
+  def redirect_to_sub_org
+    org_path = current_user&.user_assignments&.includes(:organization)&.reorder("organizations.depth DESC")&.first&.organization&.path
+    return redirect_to polymorphic_path([params[:controller]&.singularize,params[:action]],org_path: org_path) if !request.env['PATH_INFO'].include? org_path.to_s
+  end
+
+  def after_sign_in_path_for(resource)
+    sign_in_url = new_user_session_url
+    if request.referer == sign_in_url
+      super
+    else
+      stored_location_for(resource) || request.referer || admin_path || root_path
+    end
+  end
 
   def https_enabled?
     org = get_org
@@ -34,14 +47,15 @@ class ApplicationController < ActionController::Base
   end
 
   def check_organization_workflow_enabled
-    if slugs = params[:org_slug]&.split((/(?=\/)/))
+    if slugs = params[:slug]&.split((/(?=\/)/))
+      organization = Organization.find_by(slug: slugs[-1])
+    elsif slugs = params[:org_slug]&.split((/(?=\/)/))
       organization = Organization.find_by(slug: slugs[-1])
     else
       organization = Organization.find_by(slug: get_org_slug)
     end
-    if organization&.enable_workflows != true
-      flash[:error] = "that page is not enabled"
-      redirect_to organization_path(params[:slug], org_path: params[:org_path])
+    if organization.setting('enable_workflows') != true
+      return render :file => "public/401.html", :status => :unauthorized, :layout => false
     end
   end
 

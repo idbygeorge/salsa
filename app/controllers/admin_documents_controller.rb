@@ -7,7 +7,7 @@ class AdminDocumentsController < AdminController
   layout 'admin'
 
   def index
-    @documents = Document.where.not(view_id: nil).page(params[:page]).per(params[:per])
+    @documents = Document.where.not(view_id: nil).reorder(created_at: :desc).page(params[:page]).per(params[:per])
   end
 
   def new

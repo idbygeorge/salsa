@@ -1,7 +1,7 @@
 class Admin::PeriodsController < AdminController
   before_action :get_organizations, only: [:index,:show,:edit,:new]
   def index
-    @periods = Period.all.page(params[:page]).per(params[:per])
+    @periods = Period.all.reorder(created_at: :desc).page(params[:page]).per(params[:per])
   end
 
   def new

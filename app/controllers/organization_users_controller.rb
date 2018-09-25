@@ -2,6 +2,7 @@ class OrganizationUsersController < AdminUsersController
   skip_before_action :require_admin_permissions
   before_action :require_admin_permissions, only: [:archive,:restore]
   before_action :require_supervisor_permissions
+  before_action :redirect_to_sub_org
 
   def index
     @organization = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
@@ -97,18 +98,18 @@ class OrganizationUsersController < AdminUsersController
   end
 
   def archive
-    user_ids = UserAssignment.where(organization_id: Organization.find_by(slug: params[:slug])).map(&:user_id)
+    user_ids = UserAssignment.where(organization_id: find_org_by_path(params[:slug])).map(&:user_id)
     users = User.where(id: user_ids)
-    @user = users.find_by id: params["#{params[:controller].singularize}_id".to_sym]
+    @user = users.find_by id: params["#{params[:controller].singularize}_id".to_sym].to_i
     @user.update(archived: true)
     flash[:notice] = "#{@user.email} has been archived"
     return redirect_to polymorphic_path([params[:controller]], org_path: params[:org_path])
   end
 
   def restore
-    user_ids = UserAssignment.where(organization_id: Organization.find_by(slug: params[:slug])).map(&:user_id)
+    user_ids = UserAssignment.where(organization_id: find_org_by_path(params[:slug])).map(&:user_id)
     users = User.where(id: user_ids)
-    @user = users.find params["#{params[:controller].singularize}_id".to_sym]
+    @user = users.find params["#{params[:controller].singularize}_id".to_sym].to_i
     @user.update(archived: false)
     flash[:notice] = "#{@user.email} has been restored"
     return redirect_to polymorphic_path([params[:controller]], org_path: params[:org_path])
