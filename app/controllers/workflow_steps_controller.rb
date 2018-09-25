@@ -2,13 +2,13 @@ class WorkflowStepsController < OrganizationsController
   skip_before_action :require_designer_permissions
   skip_before_action :require_admin_permissions
   skip_before_action :require_organization_admin_permissions
+  before_action :redirect_to_sub_org
   before_action :check_organization_workflow_enabled
   before_action :set_workflow_step, only: [:show, :edit, :update, :destroy]
   before_action :set_workflow_steps
   before_action :get_step_types
   before_action :require_supervisor_permissions
   before_action :redirect_if_wrong_organization, only: [:show, :edit, :update, :destroy]
-  before_action :redirect_to_sub_org
 
   # GET /workflow_steps
   # GET /workflow_steps.json
