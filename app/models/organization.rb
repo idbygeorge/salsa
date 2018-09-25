@@ -23,6 +23,11 @@ class Organization < ApplicationRecord
     slugs.join('/').gsub(/\/\//,'/')
   end
 
+  def path
+    slugs = self.parents.reverse.map(&:slug) + [self.slug.gsub(/\//,'')]
+    slugs[1..-1].join('/').gsub(/\/\//,'/').gsub(/^\//,'')
+  end
+
   def parents
     parents = []
     parent = self.parent
@@ -52,7 +57,8 @@ class Organization < ApplicationRecord
   end
 
   def setting(setting)
-    org = organization.self_and_ancestors.where.not("#{setting}": nil).reorder(:depth).last
+    org = self.self_and_ancestors.where.not("#{setting}": nil).reorder(:depth).last
+    org[setting]
   end
 
   def self.descendants

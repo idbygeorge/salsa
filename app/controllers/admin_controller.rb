@@ -24,15 +24,16 @@ class AdminController < ApplicationController
       :canvas_accounts,
       :canvas_courses
   ]
+
   force_ssl only:[:canvas_courses, :canvas_accounts,:canvas_courses,:canvas_accounts_sync]
 
   def landing
     if has_role 'designer'
-      redirect_to organizations_path(org_path:params[:org_path]), notice: flash[:notice]
+      redirect_to organizations_path, notice: flash[:notice]
     elsif has_role 'auditor'
-      redirect_to admin_auditor_reports_path(org_path:params[:org_path]), notice: flash[:notice]
+      redirect_to admin_auditor_reports_path, notice: flash[:notice]
     elsif ( has_role('staff', assignment_org = get_user_assignment_org(session[:authenticated_user],'staff')) || has_role('approver', assignment_org = get_user_assignment_org(session[:authenticated_user],'approver')) || has_role('supervisor', assignment_org = get_user_assignment_org(session[:authenticated_user],'supervisor')) ) && assignment_org&.enable_workflows == true
-      redirect_to workflow_document_index_path(org_path:params[:org_path]), notice: flash[:notice]
+      redirect_to workflow_document_index_path(org_path:assignment_org.path), notice: flash[:notice]
     else
       redirect_or_error
     end
@@ -40,9 +41,11 @@ class AdminController < ApplicationController
 
   def login
   	@organization = find_org_by_path params[:slug]
-
+    if @organization.setting("enable_shibboleth")
+      return redirect_to new_user_session_path(org_path: params[:org_path])
+    end
   	if @organization and @organization[:lms_authentication_source] != "" and @organization[:lms_authentication_source] != nil
-  		redirect_to oauth2_login_path(org_path:params[:org_path])
+  		redirect_to oauth2_login_path
 	  else
   		render action: :login, layout: false
   	end
@@ -55,7 +58,7 @@ class AdminController < ApplicationController
         if params[:user][:email] == 'admin@' + (params[:slug] || get_org_slug)
           session[:admin_authorized] = params[:user][:password] == APP_CONFIG['admin_password']
 
-          return redirect_to admin_path(org_path:params[:org_path])
+          return redirect_to admin_path
         end
     end
 
@@ -81,7 +84,7 @@ class AdminController < ApplicationController
     end
 
     session[:authenticated_user] = user.id
-    redirect_to admin_path(org_path:params[:org_path]), notice: 'Logged in successfully'
+    redirect_to admin_path, notice: 'Logged in successfully'
   end
 
   def canvas_accounts
@@ -150,7 +153,7 @@ class AdminController < ApplicationController
       false
     end
 
-    redirect_to canvas_accounts_path(org_path:params[:org_path])
+    redirect_to canvas_accounts_path
   end
 
   def canvas_courses_sync
@@ -160,7 +163,7 @@ class AdminController < ApplicationController
 
     CanvasHelper.courses_sync_as_job org_slug, @canvas_access_token, accounts
 
-    redirect_to canvas_courses_path(org_path:params[:org_path])
+    redirect_to canvas_courses_path
   end
 
   def sync_canvas_accounts account, org_id = nil
@@ -189,7 +192,7 @@ class AdminController < ApplicationController
     notice = flash[:notice]
     reset_session
     flash[:notice] = notice
-    redirect_to root_path(org_path:params[:org_path]);
+    redirect_to root_path;
   end
 
   def create_user
@@ -201,7 +204,7 @@ class AdminController < ApplicationController
       ua.username = params[:user_remote_id]
       ua.role = "staff" if ua.role.blank?
       ua.save
-      redirect_to admin_path(org_path:params[:org_path])
+      redirect_to admin_path
     else
       return render :file => "public/410.html", :status => :gone, :layout => false
     end
@@ -267,7 +270,7 @@ class AdminController < ApplicationController
         @lms_user = @lms_client.get("/api/v1/users/self/profile") if @lms_client.token
       rescue
         # clear the session and start over
-        redirect_to oauth2_logout_path(org_path:params[:org_path])
+        redirect_to oauth2_logout_path
       end
     elsif @lms_client_id
       @lms_client = Canvas::API.new(:host => @oauth_endpoint, :client_id => @lms_client_id, :secret => @lms_secret)

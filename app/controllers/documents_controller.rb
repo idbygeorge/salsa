@@ -8,6 +8,7 @@ class DocumentsController < ApplicationController
   before_action :lookup_document, :only => [:edit, :update]
   before_action :init_view_folder, :only => [:new, :edit, :update, :show, :course]
   before_action :set_paper_trail_whodunnit
+  before_action :redirect_to_sub_org
 
   def index
     redirect_to new_document_path(org_path: params[:org_path])

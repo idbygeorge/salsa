@@ -6,6 +6,7 @@ class OrganizationsController < AdminController
       :index
   ]
   before_action :get_organizations, only: [:index, :new, :edit, :create, :show, :start_workflow_form]
+  before_action :redirect_to_sub_org
   layout 'admin'
   def index
     get_documents

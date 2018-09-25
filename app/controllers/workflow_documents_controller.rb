@@ -5,6 +5,7 @@ class WorkflowDocumentsController < ApplicationController
   before_action :get_organizations_if_supervisor
   before_action :require_staff_permissions, only: [:index]
   before_action :require_supervisor_permissions, except: [:index]
+  before_action :redirect_to_sub_org
 
   def index
     org = get_org
@@ -24,9 +25,9 @@ class WorkflowDocumentsController < ApplicationController
       @documents = Document.where(organization_id:org.descendants.map(&:id).push(org.id)).where('documents.updated_at != documents.created_at')
       @user_documents = @documents.where(user_id: current_user&.id) if current_user
       @documents = get_documents(current_user, @documents)
-      @user_documents = @user_documents.where.not(id: @documents.map(&:id)) if @user_documents
+      @user_documents = @user_documents.where.not(id: @documents.map(&:id)).reorder(created_at: :desc) if @user_documents
     end
-    @documents = @documents.page(params[:page]).per(params[:per])
+    @documents = @documents.reorder(created_at: :desc).page(params[:page]).per(params[:per])
   end
 
   def edit

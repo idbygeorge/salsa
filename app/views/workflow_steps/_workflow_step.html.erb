@@ -3,6 +3,7 @@
   <td><%= workflow_step.slug %></td>
   <td><%= WorkflowStep.find(workflow_step.next_workflow_step_id).slug if workflow_step&.next_workflow_step_id %></td>
   <td><%= workflow_step.step_type %></td>
+  <td><%= workflow_step.organization&.name %></td>
   <td>
     <% if workflow_step.component&.id %>
       <%= link_to "#{workflow_step.component&.id}: #{workflow_step.component&.slug}", edit_component_path(params[:slug],workflow_step.slug, org_path:params[:org_path]) %>

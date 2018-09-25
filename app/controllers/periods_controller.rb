@@ -5,10 +5,11 @@ class PeriodsController < OrganizationsController
 
   before_action :get_organizations, only: [:index]
   before_action :require_organization_admin_permissions
+  before_action :redirect_to_sub_org
 
   def index
     @organization = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
-    @periods = Period.where(organization_id: @organization.id).page(params[:page]).per(params[:per])
+    @periods = Period.where(organization_id: @organization.id).reorder(start_date: :desc).page(params[:page]).per(params[:per])
   end
 
   def new

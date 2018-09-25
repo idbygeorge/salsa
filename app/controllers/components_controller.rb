@@ -8,6 +8,7 @@ class ComponentsController < ApplicationController
   before_action :get_organization
   before_action :get_organization_levels
   before_action :get_roles
+  before_action :redirect_to_sub_org
 
   def index
     @available_liquid_variables = component_allowed_liquid_variables true
