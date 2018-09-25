@@ -1,6 +1,7 @@
 class ComponentsController < ApplicationController
   layout 'components'
 
+  before_action :redirect_to_sub_org
   before_action :require_organization_admin_permissions
   before_action :require_admin_permissions, only: [:load_components, :export_components, :import_components]
 
@@ -8,7 +9,6 @@ class ComponentsController < ApplicationController
   before_action :get_organization
   before_action :get_organization_levels
   before_action :get_roles
-  before_action :redirect_to_sub_org
 
   def index
     @available_liquid_variables = component_allowed_liquid_variables true

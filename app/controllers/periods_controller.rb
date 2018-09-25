@@ -3,9 +3,9 @@ class PeriodsController < OrganizationsController
   skip_before_action :require_admin_permissions
   skip_before_action :require_designer_permissions
 
+  before_action :redirect_to_sub_org
   before_action :get_organizations, only: [:index]
   before_action :require_organization_admin_permissions
-  before_action :redirect_to_sub_org
 
   def index
     @organization = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
