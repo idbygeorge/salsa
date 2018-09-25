@@ -9,7 +9,8 @@ class ApplicationController < ActionController::Base
 
   protected
   def redirect_to_sub_org
-    org_path = current_user&.user_assignments&.includes(:organization)&.reorder("organizations.depth DESC")&.first&.organization&.path
+    root_org = Organization.find_by(slug: request.env["SERVER_NAME"])
+    org_path = current_user&.user_assignments&.where(organization_id: root_org.descendants.map(&:id))&.includes(:organization)&.reorder("organizations.depth DESC")&.first&.organization&.path
     return redirect_to polymorphic_path([params[:controller]&.singularize,params[:action]],org_path: org_path) if !request.env['PATH_INFO'].include? org_path.to_s
   end
 
@@ -49,7 +50,7 @@ class ApplicationController < ActionController::Base
   def check_organization_workflow_enabled
     if slugs = params[:slug]&.split((/(?=\/)/))
       organization = Organization.find_by(slug: slugs[-1])
-    elsif slugs = params[:org_slug]&.split((/(?=\/)/))
+    elsif slugs = ("/" + params[:org_path])&.split((/(?=\/)/))
       organization = Organization.find_by(slug: slugs[-1])
     else
       organization = Organization.find_by(slug: get_org_slug)
