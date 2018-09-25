@@ -50,7 +50,8 @@ class ApplicationController < ActionController::Base
   def check_organization_workflow_enabled
     if slugs = params[:slug]&.split((/(?=\/)/))
       organization = Organization.find_by(slug: slugs[-1])
-    elsif slugs = ("/" + params[:org_path])&.split((/(?=\/)/))
+    elsif slugs = params[:org_path]&.split((/(?=\/)/))
+      slugs[0] = "/#{slugs[0]}"
       organization = Organization.find_by(slug: slugs[-1])
     else
       organization = Organization.find_by(slug: get_org_slug)
