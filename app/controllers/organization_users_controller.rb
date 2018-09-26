@@ -1,6 +1,6 @@
 class OrganizationUsersController < AdminUsersController
   skip_before_action :require_admin_permissions
-  before_action :redirect_to_sub_org
+  before_action :redirect_to_sub_org, only:[:index,:new,:show,:edit,:import_users,:edit_assignment]
   before_action :require_admin_permissions, only: [:archive,:restore]
   before_action :require_supervisor_permissions
 
