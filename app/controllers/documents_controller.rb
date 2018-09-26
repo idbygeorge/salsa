@@ -379,16 +379,16 @@ class DocumentsController < ApplicationController
     if Rails.env.production?
       "https://s3-#{APP_CONFIG['aws_region']}.amazonaws.com/#{APP_CONFIG['aws_bucket']}/hosted/#{@document.view_id}.pdf"
     else
-      "http://#{get_org_slug}#{redirect_port}/#{sub_org_slugs}SALSA/#{@document.view_id}.pdf"
+      "http://#{request.env['SERVER_NAME']}#{redirect_port}/#{sub_org_slugs}SALSA/#{@document.view_id}.pdf"
     end
   end
 
   def view_url
-    "http://#{get_org_slug}#{redirect_port}/#{sub_org_slugs}SALSA/#{@document.view_id}"
+    "http://#{request.env['SERVER_NAME']}#{redirect_port}/#{sub_org_slugs}SALSA/#{@document.view_id}"
   end
 
   def template_url document
-    "http://#{get_org_slug}#{redirect_port}/#{sub_org_slugs}SALSA/#{document.template_id}"
+    "http://#{request.env['SERVER_NAME']}#{redirect_port}/#{sub_org_slugs}SALSA/#{document.template_id}"
   end
 
   def sub_org_slugs
