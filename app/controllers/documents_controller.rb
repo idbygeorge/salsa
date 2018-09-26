@@ -4,7 +4,7 @@ class DocumentsController < ApplicationController
 
   layout 'view'
 
-  before_action :redirect_to_sub_org
+  before_action :redirect_to_sub_org, only:[:index,:new,:show,:edit,:course, :course_list]
   before_action :lms_connection_information, :only => [:update, :edit, :course, :course_list]
   before_action :lookup_document, :only => [:edit, :update]
   before_action :init_view_folder, :only => [:new, :edit, :update, :show, :course]
@@ -379,16 +379,16 @@ class DocumentsController < ApplicationController
     if Rails.env.production?
       "https://s3-#{APP_CONFIG['aws_region']}.amazonaws.com/#{APP_CONFIG['aws_bucket']}/hosted/#{@document.view_id}.pdf"
     else
-      "http://#{get_org_slug}#{redirect_port}/#{sub_org_slugs}SALSA/#{@document.view_id}.pdf"
+      "http://#{request.env['SERVER_NAME']}#{redirect_port}/#{sub_org_slugs}SALSA/#{@document.view_id}.pdf"
     end
   end
 
   def view_url
-    "http://#{get_org_slug}#{redirect_port}/#{sub_org_slugs}SALSA/#{@document.view_id}"
+    "http://#{request.env['SERVER_NAME']}#{redirect_port}/#{sub_org_slugs}SALSA/#{@document.view_id}"
   end
 
   def template_url document
-    "http://#{get_org_slug}#{redirect_port}/#{sub_org_slugs}SALSA/#{document.template_id}"
+    "http://#{request.env['SERVER_NAME']}#{redirect_port}/#{sub_org_slugs}SALSA/#{document.template_id}"
   end
 
   def sub_org_slugs
