@@ -332,11 +332,12 @@ Devise.setup do |config|
         user.send "name=", "#{saml_response.attribute_value_by_resource_key("first_name")} #{saml_response.attribute_value_by_resource_key("last_name")}"
       when /id/
         org = Organization.find_by(slug: URI.parse(saml_response.raw_response.destination).host)
-        ua = UserAssignment.find_or_initialize_by(user_id: user.id, organization_id: org.id )
-        if ua.new_record?
+        ua = user.user_assignments.find_by(organization_id: org.descendants.map(&:id))
+        ua = UserAssignment.find_or_initialize_by(user_id: user.id, organization_id: org.id ) if ua.blank?
+        if ua.new_record? || ua.username.blank?
           ua.username = saml_response.attribute_value_by_resource_key(key)
-          ua.role = "staff"
-          user.archived = true
+          ua.role = "staff" if ua.role.blank?
+          user.archived = true if ua.new_record?
           ua.save
         end
       else
