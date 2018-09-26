@@ -16,8 +16,6 @@ Rails.application.routes.draw do
       post "documents/:id/revert_document/:version_id", as: 'workflow_revert_document', to: 'workflow_documents#revert_document'
     end
 
-    get '/:alias/:document', to: redirect('/SALSA/%{document}'), constraints: { alias: /(syllabuses|salsas?)/ }
-    get '/:alias/:document/:action', to: redirect('/SALSA/%{document}/%{action}'), constraints: { alias: /(syllabuses|salsas?)/, action: /(edit|template)?/ }
 
     get '/status/server', to: 'default#status_server'
 
@@ -35,7 +33,7 @@ Rails.application.routes.draw do
       get "reports", to: 'auditor#reports', as: 'auditor_reports'
     end
 
-    scope 'admin' do
+    scope '/admin' do
       get "search", to: 'admin#search', as: 'admin_search'
       get "canvas/accounts", to: 'admin#canvas_accounts', as: 'canvas_accounts'
       post "canvas/accounts/sync", to: 'admin#canvas_accounts_sync', as: 'canvas_accounts_sync'
@@ -81,7 +79,7 @@ Rails.application.routes.draw do
       get "organization/preview/:slug", to: 'republish#preview', as: 'republish_preview', constraints: { slug: /.*/ }
       get "organization/republish/:slug", to: 'republish#update_lock', as: 'republish_update', constraints: { slug: /.*/ }
 
-      scope 'organization/*slug', constraints: {slug: /.+/ } do
+      scope '/organization/*slug', constraints: {slug: /.+/ } do
         resources :users, as: 'organization_users', controller: 'organization_users' do
           post "archive"
           post "restore"
@@ -121,6 +119,9 @@ Rails.application.routes.draw do
     get "default/maintenance"
     get "default/tos"
     get "default/faq"
+    
+    get '/:alias/:document', to: redirect('/SALSA/%{document}'), constraints: { alias: /(syllabuses|salsas?)/ }
+    get '/:alias/:document/:action', to: redirect('/SALSA/%{document}/%{action}'), constraints: { alias: /(syllabuses|salsas?)/, action: /(edit|template)?/ }
   end
   get ":org_path", as: 'sub_root', to: 'default#index'
 
