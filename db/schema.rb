@@ -214,7 +214,12 @@ ActiveRecord::Schema.define(version: 20180919211806) do
     t.string "reset_digest"
     t.datetime "reset_sent_at"
     t.boolean "archived", default: false
+    t.string "encrypted_password", default: "", null: false
+    t.string "reset_password_token"
+    t.datetime "reset_password_sent_at"
+    t.datetime "remember_created_at"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   create_table "versions", force: :cascade do |t|

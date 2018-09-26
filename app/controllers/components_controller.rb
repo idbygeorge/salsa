@@ -1,6 +1,7 @@
 class ComponentsController < ApplicationController
   layout 'components'
 
+  before_action :redirect_to_sub_org
   before_action :require_organization_admin_permissions
   before_action :require_admin_permissions, only: [:load_components, :export_components, :import_components]
 
@@ -39,7 +40,7 @@ class ComponentsController < ApplicationController
       if @component.valid?
         if valid_slug?(params[:slug])
           @component.save
-          return redirect_to components_path, notice: "Component was successfully created."
+          return redirect_to components_path(org_path: params[:org_path]), notice: "Component was successfully created."
         else
           flash[:error] = "Invalid Slug"
           return render action: :new
@@ -61,7 +62,7 @@ class ComponentsController < ApplicationController
     if available_component_formats.include? component_params[:format]
       if @component.valid? && valid_slug?(@component.slug) == true
         @component.update component_params
-        return redirect_to components_path, notice: "Component was successfully updated."
+        return redirect_to components_path(org_path: params[:org_path]), notice: "Component was successfully updated."
       end
     end
 
@@ -102,7 +103,7 @@ class ComponentsController < ApplicationController
   def import_components
     if !params[:file]
       flash[:error] = "You must select a file before importing components"
-      return redirect_to components_path
+      return redirect_to components_path(org_path: params[:org_path])
     end
     Zip::File.open(params[:file].path) do |zipfile|
       zipfile.each do |file|
@@ -123,7 +124,7 @@ class ComponentsController < ApplicationController
         end
       end
     end
-    return redirect_to components_path, notice: "Imported Components"
+    return redirect_to components_path(org_path: params[:org_path]), notice: "Imported Components"
   end
 
   def load_components
@@ -142,7 +143,7 @@ class ComponentsController < ApplicationController
           format: File.extname(file_path).delete('.')
         )
     end
-    return redirect_to components_path, notice: "Loaded Default Components"
+    return redirect_to components_path(org_path: params[:org_path]), notice: "Loaded Default Components"
   end
 
   private
@@ -156,7 +157,7 @@ class ComponentsController < ApplicationController
   end
 
   def valid_slugs component_slug
-    @organization = get_org if @organization.blank?
+    @organization = get_organization if @organization.blank?
     slugs = ['salsa', 'section_nav', 'control_panel', 'footer', 'dynamic_content_1', 'dynamic_content_2', 'dynamic_content_3', 'user_welcome_email']
     if @organization.enable_workflows
       wfsteps = WorkflowStep.where(organization_id: @organization.organization_ids+[@organization.id])
@@ -171,7 +172,7 @@ class ComponentsController < ApplicationController
   end
 
   def get_organization
-    @organization = Organization.find_by slug: params[:slug]
+    @organization = Organization.all.select{ |org| org.full_slug == params[:slug] }.first
   end
 
   def get_organization_levels

@@ -20,8 +20,8 @@
         <td><%= dv.event %></td>
         <td><%= User.find(dv.whodunnit).email if dv.whodunnit %></td>
         <td><%= dv.reify.workflow_step&.slug if dv.reify&.workflow_step_id %></td>
-        <td><%= link_to 'Preview', document_path(@document.view_id), target:"_blank", class:"btn btn-xs btn-default" %></td>
-        <td><%= link_to 'Revert to this version', workflow_revert_document_path(@document, dv.id), method: :post, class:"btn btn-xs btn-danger" %></td>
+        <td><%= link_to 'Preview', document_path(@document.view_id, org_path:params[:org_path]), target:"_blank", class:"btn btn-xs btn-default" %></td>
+        <td><%= link_to 'Revert to this version', workflow_revert_document_path(@document, dv.id, org_path:params[:org_path]), method: :post, class:"btn btn-xs btn-danger" %></td>
       </tr>
     <% end %>
   </tbody>

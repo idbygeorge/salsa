@@ -7,7 +7,7 @@
         </div>
     </div>
 <% else %>
-    <%= form_tag canvas_courses_sync_path, class: 'form form-horizontal' do %>
+    <%= form_tag canvas_courses_sync_path(org_path: params[:org_path]), class: 'form form-horizontal' do %>
         <div class="form-group">
             <%= label_tag :canvas_token, 'Canvas Admin Token' %>
             <%= password_field_tag :canvas_token, '', class: 'form-control' %>
