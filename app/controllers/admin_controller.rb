@@ -29,13 +29,13 @@ class AdminController < ApplicationController
 
   def landing
     if current_user&.archived
-      redirect_or_error
+      return render :file => "public/account_inactive.html", :status => :unauthorized, :layout => false
     end
     if has_role 'designer'
       redirect_to organizations_path, notice: flash[:notice]
     elsif has_role 'auditor'
       redirect_to admin_auditor_reports_path, notice: flash[:notice]
-    elsif ( has_role('staff', assignment_org = get_user_assignment_org(session[:authenticated_user],'staff')) || has_role('approver', assignment_org = get_user_assignment_org(session[:authenticated_user],'approver')) || has_role('supervisor', assignment_org = get_user_assignment_org(session[:authenticated_user],'supervisor')) ) && assignment_org&.enable_workflows == true
+    elsif ( has_role('staff', assignment_org = get_user_assignment_org(session[:authenticated_user],'staff')) || has_role('approver', assignment_org = get_user_assignment_org(session[:authenticated_user],'approver')) || has_role('supervisor', assignment_org = get_user_assignment_org(session[:authenticated_user],'supervisor')) ) && assignment_org&.setting('enable_workflows') == true
       redirect_to workflow_document_index_path(org_path:assignment_org.path), notice: flash[:notice]
     else
       redirect_or_error

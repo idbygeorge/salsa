@@ -338,7 +338,6 @@ Devise.setup do |config|
           ua.role = "staff"
           user.archived = true
           ua.save
-          debugger
         end
       else
         user.send "#{key}=", saml_response.attribute_value_by_resource_key(key)
