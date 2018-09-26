@@ -46,7 +46,6 @@
 
     <% end %>
     <% if @organization.enable_workflows && has_role('supervisor', get_org) %>
-      <a class="btn btn-default" href="<%= start_workflow_form_path(slug: @organization[:slug]) %>">
       <a class="btn btn-default" href="<%= start_workflow_form_path(slug: params[:slug], org_path: params[:org_path]) %>">
         Start Workflows
       </a>
