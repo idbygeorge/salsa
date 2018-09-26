@@ -34,7 +34,7 @@ class AdminUsersController < AdminController
   def restore
     @user = User.find params["#{params[:controller].singularize}_id".to_sym]
     @user.update(archived: false)
-    flash[:notice] = "#{@user.email} has been restored"
+    flash[:notice] = "#{@user.email} has been activated"
     return redirect_to polymorphic_path([params[:controller]],org_path:params[:org_path])
   end
 

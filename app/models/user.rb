@@ -17,12 +17,14 @@ class User < ApplicationRecord
   has_many :user_assignments
 
   def self.saml_resource_locator(model, saml_response, auth_value)
-    UserAssignment.find_by("lower(username) = ?", auth_value.to_s.downcase)&.user
+    user = UserAssignment.find_by("lower(username) = ?", auth_value.to_s.downcase)&.user
+    user = User.find_by(email: saml_response.attribute_value_by_resource_key("email")) if user.blank?
+    return user
   end
 
-  def self.authenticate_with_saml(saml_response, relay_state)
-    super
-  end
+  # def self.authenticate_with_saml(saml_response, relay_state)
+  #   super
+  # end
 
   def activate
     if !self.activated

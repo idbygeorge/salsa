@@ -1,5 +1,5 @@
 class WorkflowDocumentsController < ApplicationController
-  before_action :redirect_to_sub_org
+  before_action :redirect_to_sub_org, only:[:index,:edit,:versions]
   layout :set_layout
   before_action :check_organization_workflow_enabled
   before_action :set_paper_trail_whodunnit, only: [:revert_document]

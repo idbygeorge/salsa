@@ -11,7 +11,7 @@ class ApplicationController < ActionController::Base
   def redirect_to_sub_org
     root_org = Organization.find_by(slug: request.env["SERVER_NAME"])
     org_path = current_user&.user_assignments&.where(organization_id: root_org.descendants.map(&:id))&.includes(:organization)&.reorder("organizations.depth DESC")&.first&.organization&.path
-    return redirect_to polymorphic_path([params[:controller]&.singularize,params[:action]],org_path: org_path) if !request.env['PATH_INFO'].include? org_path.to_s
+    return redirect_to full_url_for(request.parameters.merge(org_path:org_path)) if !current_page?(full_url_for(request.parameters.merge(org_path:org_path)))
   end
 
   def after_sign_in_path_for(resource)
@@ -32,8 +32,7 @@ class ApplicationController < ActionController::Base
     if session[:authenticated_user]
       user = User.find_by(id: session[:authenticated_user], archived: false)
       if !user
-        flash[:notice] = "You have been logged out because your account has been deactivated"
-        redirect_to admin_logout_path(org_path: params[:org_path])
+        return render :file => "public/account_inactive.html", :status => :unauthorized, :layout => false
       end
     end
 
