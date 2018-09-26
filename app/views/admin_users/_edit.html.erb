@@ -1,8 +1,8 @@
 <div class="row">
   <% if @user.id %>
-    <% form_path = polymorphic_path([params[:controller].singularize],id: @user.id) %>
+    <% form_path = polymorphic_path([params[:controller].singularize],id: @user.id,org_path: params[:org_path]) %>
   <% else %>
-    <% form_path = polymorphic_path([params[:controller]]) %>
+    <% form_path = polymorphic_path([params[:controller]], org_path: params[:org_path]) %>
   <% end %>
 
   <%= form_for(@user, url: form_path, :html => { :class => "form-horizontal col-md-9 col-lg-6" } ) do |f| %>
@@ -46,7 +46,7 @@
     <div class="form-group">
       <%= f.submit class: 'btn btn-success' %>
       &nbsp; &nbsp;
-      <%= link_to 'cancel', (@user[:id] ? polymorphic_path([params[:controller].singularize],id: @user.id) : polymorphic_path([params[:controller]])), class:"btn btn-default" %>
+      <%= link_to 'cancel', (@user[:id] ? polymorphic_path([params[:controller].singularize],id: @user.id) : polymorphic_path([params[:controller]], org_path: params[:org_path])), class:"btn btn-default" %>
     </div>
 
   <% end %><!-- form -->

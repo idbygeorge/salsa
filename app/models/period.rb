@@ -11,4 +11,8 @@ class Period < ApplicationRecord
   def end_date
     self.start_date + self.duration.days if self.start_date && self.duration
   end
+
+  def to_s
+    return "#{self.slug} from organization: #{self.organization.slug} "
+  end
 end

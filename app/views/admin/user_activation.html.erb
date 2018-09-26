@@ -22,7 +22,7 @@
 
     <div class="container">
 
-      <%= form_for User.new, url: admin_create_user_path(params[:id]), html: {class: "form"} do |f| %>
+      <%= form_for User.new, url: admin_create_user_path(params[:id], org_path: params[:org_path]), html: {class: "form"} do |f| %>
 
         <h2 class="form-signin-heading">Activate User</h2>
 

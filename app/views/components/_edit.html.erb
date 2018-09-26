@@ -1,7 +1,7 @@
 <% if @component[:id] %>
-  <% post_url = component_path(@organization[:slug], @component[:slug]) %>
+  <% post_url = component_path(params[:slug], @component[:slug],org_path: params[:org_path]) %>
 <% else %>
-  <% post_url = component_path(@organization[:slug], '') %>
+  <% post_url = component_path(params[:slug], '', org_path: params[:org_path]) %>
 <% end %>
 
 <% if @component.errors.any? %>

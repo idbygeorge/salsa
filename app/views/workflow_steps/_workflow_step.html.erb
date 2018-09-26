@@ -1,18 +1,19 @@
 <tr>
-  <td><%= link_to "#{workflow_step.name}: #{workflow_step.component&.name}", edit_workflow_step_path(params[:slug],workflow_step), id:"Edit" %></td>
+  <td><%= link_to "#{workflow_step.name}: #{workflow_step.component&.name}", edit_workflow_step_path(params[:slug],workflow_step, org_path:params[:org_path]), id:"Edit" %></td>
   <td><%= workflow_step.slug %></td>
   <td><%= WorkflowStep.find(workflow_step.next_workflow_step_id).slug if workflow_step&.next_workflow_step_id %></td>
   <td><%= workflow_step.step_type %></td>
+  <td><%= workflow_step.organization&.name %></td>
   <td>
     <% if workflow_step.component&.id %>
-      <%= link_to "#{workflow_step.component&.id}: #{workflow_step.component&.slug}", edit_component_path(params[:slug],workflow_step.slug) %>
+      <%= link_to "#{workflow_step.component&.id}: #{workflow_step.component&.slug}", edit_component_path(params[:slug],workflow_step.slug, org_path:params[:org_path]) %>
     <% end %>
   </td>
   <td>
     <% if has_role('supervisor',workflow_step.organization) %>
 
     <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-                workflow_step_path(params[:slug],workflow_step),
+                workflow_step_path(params[:slug],workflow_step, org_path:params[:org_path]),
                 :method => :delete,
                 :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
                 :class => 'btn btn-xs btn-danger' %>

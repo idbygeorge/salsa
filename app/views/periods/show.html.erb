@@ -1,5 +1,5 @@
 
-<h1><%= link_to organization_path(params[:slug]) do %><small><%= @organization.name %></small><% end %></h1>
+<h1><%= link_to organization_path(params[:slug], org_path:params[:org_path]) do %><small><%= @organization.name %></small><% end %></h1>
 <%- model_class = Period -%>
 <div class="page-header">
   <h1><%=t '.title', :default => model_class.model_name.human.titleize %></h1>
@@ -21,11 +21,11 @@
 </dl>
 
 <%= link_to t('.back', :default => t("helpers.links.back")),
-              periods_path(params[:slug]), :class => 'btn btn-default'  %>
+              periods_path(params[:slug], org_path:params[:org_path]), :class => 'btn btn-default'  %>
 <%= link_to t('.edit', :default => t("helpers.links.edit")),
-              edit_period_path(params[:slug],@period), :class => 'btn btn-default' %>
+              edit_period_path(params[:slug],@period, org_path:params[:org_path]), :class => 'btn btn-default' %>
 <%= link_to t('.destroy', :default => t("helpers.links.destroy")),
-              period_path(params[:slug],@period),
+              period_path(params[:slug],@period, org_path:params[:org_path]),
               :method => 'delete',
               :data => { :confirm => t('.confirm', :default => t("helpers.links.confirm", :default => 'Are you sure?')) },
               :class => 'btn btn-danger' %>

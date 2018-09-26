@@ -9,7 +9,7 @@
     <% if role.organization %>
       <em><%= role.organization.name %></em>
       <div class="nowrap">
-        <%= link_to full_org_path(role.organization), organization_path(full_org_path role.organization) %>
+        <%= link_to full_org_path(role.organization), organization_path(full_org_path(role.organization), org_path: params[:org_path]) %>
       </div>
     <% else %>
       GLOBAL
@@ -25,8 +25,8 @@
   </td>
 
   <td class="text-right">
-    <%= link_to '<span class="glyphicon glyphicon-edit"></span>'.html_safe, polymorphic_path([params[:controller].singularize,:edit_assignment], id: role.id), class: 'btn-xs' %>
-    <%= link_to '<span class="glyphicon glyphicon-trash"></span>'.html_safe, polymorphic_path([params[:controller].singularize,:remove_assignment], id: role.id), class: 'btn-xs text-danger' %>
+    <%= link_to '<span class="glyphicon glyphicon-edit"></span>'.html_safe, polymorphic_path([params[:controller].singularize,:edit_assignment], id: role.id, org_path: params[:org_path]), class: 'btn-xs' %>
+    <%= link_to '<span class="glyphicon glyphicon-trash"></span>'.html_safe, polymorphic_path([params[:controller].singularize,:remove_assignment], id: role.id, org_path: params[:org_path]), class: 'btn-xs text-danger' %>
   </td>
 </tr>
 <% end %>

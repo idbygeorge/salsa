@@ -20,14 +20,14 @@ class Admin::AuditorController < ApplicationController
     report = ReportArchive.where(id: params[:report]).first
     report.is_archived = true
     report.save
-    return redirect_to '/admin/reports'
+    return redirect_to admin_auditor_reports_path(org_path:params[:org_path])
   end
 
   def restore_report
     report = ReportArchive.where(id: params[:report]).first
     report.is_archived = false
     report.save
-    return redirect_to '/admin/reports?show_archived=true'
+    return redirect_to admin_auditor_reports_path(show_archived: true, org_path:params[:org_path])
   end
 
   def reports
@@ -83,7 +83,7 @@ class Admin::AuditorController < ApplicationController
         if @reports.count == 1
           @report = @reports.first;
         else
-          return redirect_to '/admin/reports'
+          return redirect_to admin_auditor_reports_path(org_path:params[:org_path])
         end
       end
     end
@@ -94,15 +94,15 @@ class Admin::AuditorController < ApplicationController
       args = [ @org.id, account_filter, params ]
       jobs.each do |job|
         if job['args'] == args
-          return redirect_to '/admin/report-status'
+          return redirect_to admin_auditor_report_status_path(org_path:params[:org_path])
         end
       end
       @queued = ReportHelper.generate_report_as_job @org.id, account_filter, params_hash
 
-      redirect_to '/admin/report'
+      redirect_to admin_auditor_report_path(org_path:params[:org_path])
     else
       if !@report.payload
-        return redirect_to '/admin/report-status'
+        return redirect_to admin_auditor_report_status_path(org_path:params[:org_path])
       end
       @report_data = JSON.parse(@report.payload)
 
