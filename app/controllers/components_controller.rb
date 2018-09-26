@@ -1,7 +1,7 @@
 class ComponentsController < ApplicationController
   layout 'components'
 
-  before_action :redirect_to_sub_org
+  before_action :redirect_to_sub_org, only:[:index,:new,:show,:edit]
   before_action :require_organization_admin_permissions
   before_action :require_admin_permissions, only: [:load_components, :export_components, :import_components]
 

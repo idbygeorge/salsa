@@ -4,7 +4,7 @@ class DocumentsController < ApplicationController
 
   layout 'view'
 
-  before_action :redirect_to_sub_org
+  before_action :redirect_to_sub_org, only:[:index,:new,:show,:edit,:course, :course_list]
   before_action :lms_connection_information, :only => [:update, :edit, :course, :course_list]
   before_action :lookup_document, :only => [:edit, :update]
   before_action :init_view_folder, :only => [:new, :edit, :update, :show, :course]
