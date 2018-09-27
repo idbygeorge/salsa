@@ -18,9 +18,9 @@ class UserMailer < ApplicationMailer
       @template = Liquid::Template.parse(@mail_component.layout)
       @new_unassigned_user_email = @template.render(allowed_variables).html_safe
       @subject = Liquid::Template.parse(@mail_component.subject).render(allowed_variables).html_safe
-      mail_user = organization.user_assignments.find_by(role:"organization_admin")&.user
-      mail_user = UserAssignment.find_by(role:"admin").user if mail_user.blank?
-      mail(to: mail_user.email, subject: @subject)
+      mail_users_emails = organization&.user_assignments&.where(role:"organization_admin")&.map(&:user).map(&:email)
+      mail_users_emails = UserAssignment.where(role:"admin").map(&:user).map(&:email) if mail_users_emails.blank?
+      mail(to: mail_users_emails, subject: @subject)
     end
   end
 end
