@@ -14,6 +14,7 @@ class DocumentsController < ApplicationController
     redirect_to new_document_path(org_path: params[:org_path])
   end
 
+
   def new
     if can_use_edit_token(params[:lms_course_id])
       @document = Document.new(name: 'Unnamed')
@@ -299,7 +300,7 @@ class DocumentsController < ApplicationController
       return redirect_to lms_course_document_path(lms_course_id: params[:lms_course_id], org_path: params[:org_path])
     elsif params[:document_token] && @document
       # show options to user (make child, make new)
-      @template_url = template_url(@document, org_path: params[:org_path])
+      @template_url = template_url(@document)
       if existing_doc && existing_doc.id != @document.id
         has_existing_document = true
       else
