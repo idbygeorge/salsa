@@ -113,8 +113,8 @@ class OrganizationUsersController < AdminUsersController
     users = User.where(id: user_ids)
     @user = users.find params["#{params[:controller].singularize}_id".to_sym].to_i
     @user.update(archived: false)
-    flash[:notice] = "#{@user.email} has been restored"
-    return redirect_to polymorphic_path([params[:controller]], org_path: params[:org_path])
+    flash[:notice] = "#{@user.email} has been activated"
+    return redirect_to organization_user_edit_assignment_path(slug: params[:slug],id: @user.user_assignments.find_by(organization_id:find_org_by_path(params[:slug]).id).id)
   end
 
   def create_users

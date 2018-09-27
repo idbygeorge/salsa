@@ -32,8 +32,7 @@ class ApplicationController < ActionController::Base
     if session[:authenticated_user]
       user = User.find_by(id: session[:authenticated_user], archived: false)
       if !user
-        flash[:notice] = "You have been logged out because your account has been deactivated"
-        redirect_to admin_logout_path(org_path: params[:org_path])
+        return render :file => "public/account_inactive.html", :status => :unauthorized, :layout => false
       end
     end
 
