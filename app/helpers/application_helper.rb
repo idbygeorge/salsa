@@ -206,16 +206,16 @@ module ApplicationHelper
     end
 
     # only show orgs that the logged in user should see
-    unless session[:admin_authorized] || user.user_assignments.find_by(role: "admin")
+    unless session[:admin_authorized] || user&.user_assignments&.find_by(role: "admin")
       # load all orgs that the user has a cascade == true assignment
 
-      cascade_permissions = user.user_assignments.where(cascades: true)
-      cascade_organizations = Organization.where(id: cascade_permissions.map(&:organization_id))
+      cascade_permissions = user&.user_assignments&.where(cascades: true)
+      cascade_organizations = Organization.where(id: cascade_permissions&.map(&:organization_id))
 
       filter_query = ['id IN (?)']
-      filter_values = [user.user_assignments.map(&:organization_id)]
+      filter_values = [user&.user_assignments&.map(&:organization_id)]
 
-      cascade_organizations.each do |org|
+      cascade_organizations&.each do |org|
         filter_query.push '(lft > ? AND rgt < ?)'
         filter_values.push org.lft
         filter_values.push org.rgt
