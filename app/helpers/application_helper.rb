@@ -298,13 +298,13 @@ module ApplicationHelper
   end
 
   def get_org_slug
-    organization = Organization.all.select{ |org| org.full_slug == get_org_path }.first
+    organization = find_org_by_path(get_org_path)
     return get_org_path if organization.blank?
     organization&.slug
   end
 
   def get_org
-    Organization.all.select{ |org| org.full_slug == get_org_path }.first
+    find_org_by_path(get_org_path)
   end
 
   def get_document_meta

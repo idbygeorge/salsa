@@ -8,22 +8,22 @@ class PeriodsController < OrganizationsController
   before_action :require_organization_admin_permissions
 
   def index
-    @organization = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
+    @organization = find_org_by_path(params[:slug])
     @periods = Period.where(organization_id: @organization.id).reorder(start_date: :desc).page(params[:page]).per(params[:per])
   end
 
   def new
-    @organization = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
+    @organization = find_org_by_path(params[:slug])
     @period = Period.new
   end
 
   def show
-    @organization = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
+    @organization = find_org_by_path(params[:slug])
     @period = Period.find(params[:id])
   end
 
   def edit
-    @organization = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
+    @organization = find_org_by_path(params[:slug])
     @period = Period.find(params[:id])
   end
 
@@ -31,7 +31,7 @@ class PeriodsController < OrganizationsController
   # POST /periods.json
   def create
     @period = Period.new(period_params)
-    @period.organization_id = Organization.all.select{ |o| o.full_slug == params[:slug] }.first.id
+    @period.organization_id = find_org_by_path(params[:slug]).id
     respond_to do |format|
       if @period.save
         format.html { redirect_to periods_path(params[:slug], org_path: params[:org_path]), notice: 'Period was successfully created.' }
@@ -45,7 +45,7 @@ class PeriodsController < OrganizationsController
 
   def update
     @period = Period.find(params[:id])
-    @period.organization_id = Organization.all.select{ |o| o.full_slug == params[:slug] }.first.id
+    @period.organization_id = find_org_by_path(params[:slug]).id
     respond_to do |format|
       if @period.update(period_params)
         format.html { redirect_to periods_path(params[:slug], org_path: params[:org_path]), notice: 'Period was successfully updated.' }

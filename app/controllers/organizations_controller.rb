@@ -110,7 +110,7 @@ class OrganizationsController < AdminController
       flash[:error] = "all fields must be filled"
       return redirect_back(fallback_location: start_workflow_form_path)
     end
-    organization = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
+    organization = find_org_by_path(params[:slug])
     if start_workflow_params[:start_for_sub_organizations]
       organizations = organization.descendants + [organization]
     else

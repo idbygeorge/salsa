@@ -172,7 +172,7 @@ class ComponentsController < ApplicationController
   end
 
   def get_organization
-    @organization = Organization.all.select{ |org| org.full_slug == params[:slug] }.first
+    @organization = find_org_by_path(params[:slug])
   end
 
   def get_organization_levels

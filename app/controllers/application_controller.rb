@@ -88,7 +88,7 @@ class ApplicationController < ActionController::Base
     end
 
     # find the matching organization based on the request
-    @organization = Organization.all.select{ |org| org.full_slug == get_org_path }.first
+    @organization = find_org_by_path(get_org_path)
 
     # get a placeholder org matching the org slug if there is no matching or in the database
     @organization = Organization.new  slug: org_slug unless @organization

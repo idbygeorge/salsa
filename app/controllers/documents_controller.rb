@@ -443,7 +443,7 @@ class DocumentsController < ApplicationController
       end
 
       # find the org to bind this to
-      org = Organization.all.select{ |o| o.full_slug == get_org_path }.first
+      org = find_org_by_path(get_org_path)
     end
 
     # if there is no org yet, show an error
