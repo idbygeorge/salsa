@@ -22,6 +22,7 @@
     } else if(document_workflow_step !== ""){
       $(".workflow_step:not(#"+document_workflow_step+")").hide()
       $("#"+document_workflow_step).show()
+      $("#"+document_workflow_step).find(":input").prop('disabled', false);
     } else {
       $(".workflow_step").hide()
     }

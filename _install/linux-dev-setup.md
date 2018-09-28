@@ -20,6 +20,10 @@ Install docker composer (as root)
 
     chmod +x /usr/local/bin/docker-compose
 
+  add user to docker group
+
+    sudo usermod -aG docker $USER
+
 These example Dockerfile and docker-compose.yml expect to be in a folder above the application folder.
 
 ../Dockerfile
@@ -97,13 +101,13 @@ Make the postgres data folder in the project's tmp folder
 
 Build (do once for first run, then only if Gemfile or Dockerfile change)
 
-    sudo docker-compose build
+    docker-compose build
 
 Database commands
 
-    sudo docker-compose run salsa rake db:create
-    sudo docker-compose run salsa rake db:migrate
-    sudo docker-compose run salsa rake db:seed
+    docker-compose run salsa rake db:create
+    docker-compose run salsa rake db:migrate
+    docker-compose run salsa rake db:seed
 
   Generate secrets
 
@@ -113,7 +117,7 @@ Database commands
 
 ## Running the application
 
-    sudo docker-compose up
+    docker-compose up
 
 First time for a new hostname (support multi-tennants via differnet hostnames) visit http://0.0.0.0:3000/admin/organizations/new
 
@@ -126,7 +130,7 @@ there are also documents created but you still need to publish them by going to 
 
 ## Stopping application
 
-    sudo docker-compose down
+    docker-compose down
 
 ## Deploying with capistrano
   you should have a file in `config/deploy/<server-name>.rb` that looks like:
@@ -146,23 +150,23 @@ there are also documents created but you still need to publish them by going to 
 ## Other useful docker commands
 
     docker images #list all docker images
-    sudo docker rmi ########    #remove docker image id from above command (useful to recreate db or application image if needed)
+    docker rmi ########    #remove docker image id from above command (useful to recreate db or application image if needed)
 
 ##### testing with cucumber
 
   to run all cucumber tests
 
-    sudo docker-compose run salsa bash ./cucumber.sh
+    docker-compose run salsa bash ./cucumber.sh
 
   to run a specific test
 
-    sudo docker-compose run salsa bash
+    docker-compose run salsa bash
     cucumber features/name_of_test.feature RAILS_ENV=test
 
 
 ##### debuging
   to run server in development mode
-    sudo docker-compose run --service-ports salsa
+    docker-compose run --service-ports salsa
 
   example of how to use debugger that will activate the debugger when trying to load admin/organization/show page
 
@@ -177,7 +181,7 @@ there are also documents created but you still need to publish them by going to 
 ### Running the queue (que gem)
    if no documents are published at the time of generating the report the que gem will add errors to the que_jobs table and no html files will be in the archive
 
-    sudo docker-compose exec salsa sh
+    docker-compose exec salsa sh
     cd /home/apps/salsa && RAILS_ENV=development que ./config/environment.rb
 
     #adding a report through rake

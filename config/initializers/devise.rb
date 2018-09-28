@@ -6,14 +6,14 @@ class IdPSettingsAdapter
     org = Organization.find_by(enable_shibboleth: true,idp_entity_id: idp_entity_id)
     idp_settings = nil
     if !org.blank?
-        idp_settings = {
-          assertion_consumer_service_url: "https://#{org.full_org_path}/auth/shibboleth",
-          issuer: "oasis4he-a11y-docs",
-          idp_entity_id: "#{org.idp_entity_id}",
-          idp_slo_target_url: "#{org.idp_slo_target_url}",
-          idp_sso_target_url: "#{org.idp_sso_target_url}",
-          idp_cert: "#{org.idp_cert}"
-        }
+      idp_settings = {
+        assertion_consumer_service_url: "https://#{org.full_org_path}/auth/shibboleth",
+        issuer: "oasis4he-a11y-docs",
+        idp_entity_id: "#{org.idp_entity_id}",
+        idp_slo_target_url: "#{org.idp_slo_target_url}",
+        idp_sso_target_url: "#{org.idp_sso_target_url}",
+        idp_cert: "#{org.idp_cert}"
+      }
     else
       idp_settings = {}
     end
@@ -313,20 +313,16 @@ Devise.setup do |config|
 # ==> Configuration for :saml_authenticatable
 
   # Create user if the user does not exist. (Default is false)
-  config.saml_create_user = true
+  config.saml_create_user = false
 
   # Update the attributes of the user after a successful login. (Default is false)
-  config.saml_update_user = true
+  config.saml_update_user = false
 
   # Set the default user key. The user will be looked up by this key. Make
   # sure that the Authentication Response includes the attribute.
   config.saml_default_user_key = :id
   config.saml_resource_locator = Proc.new do |model, saml_response, auth_value|
     User.saml_resource_locator(model, saml_response, auth_value)
-  end
-
-  config.saml_update_resource_hook = Proc.new do |user, saml_response, auth_value|
-    User.saml_update_resource_hook(user, saml_response, auth_value)
   end
 
 
