@@ -30,7 +30,7 @@ script:
   - sudo docker-compose run salsa bash ./cucumber.sh
 
 after_script:
-  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT --prefix /home/travis/build/keith-ferney/salsa
+  - sudo docker-compose run salsa bash ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT --prefix /home/apps/salsa -r bff7805609100c597affe2b7103b64a96d4222fe74ad2675097a937591d8695c
 
 dist: trusty
 language: ruby
