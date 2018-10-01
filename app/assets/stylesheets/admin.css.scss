@@ -3,6 +3,16 @@
 
 body { padding-top: 50px; }
 
+.nav > li.active-org{
+  border-right: 7px;
+  border-right-color: grey;
+  border-right-style: solid;
+  background-color: rgba(0,0,0,0.1);
+  a:hover{
+    background-color: rgba(0,0,0,0.11);
+  }
+}
+
 .navbar .nav { float: none; }
 .nav li.logout { float: right; }
 

@@ -5,7 +5,7 @@ class OrganizationUsersController < AdminUsersController
   before_action :require_supervisor_permissions
 
   def index
-    @organization = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
+    @organization = find_org_by_path(params[:slug])
     page = 1
     page = params[:page] if params[:page]
     show_archived = params[:show_archived] == "true"
@@ -15,12 +15,12 @@ class OrganizationUsersController < AdminUsersController
   end
 
   def new
-    @organization = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
+    @organization = find_org_by_path(params[:slug])
     @user = User.new
   end
 
   def create
-    @organization = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
+    @organization = find_org_by_path(params[:slug])
     @user = User.find_or_initialize_by(email: user_params[:email])
 
     @user.attributes = user_params
@@ -43,7 +43,7 @@ class OrganizationUsersController < AdminUsersController
 
 
   def remove_assignment
-    organization = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
+    organization = find_org_by_path(params[:slug])
     @user_assignment = UserAssignment.find_by id: params[:id], organization_id: organization.id
     return redirect_to organization_users_path(org_path: params[:org_path]) if @user_assignment.blank?
     @user_assignment.destroy
@@ -72,7 +72,7 @@ class OrganizationUsersController < AdminUsersController
   end
 
   def edit_assignment
-    @organization = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
+    @organization = find_org_by_path(params[:slug])
     if !has_role("admin")
       @roles.delete("Global Administrator")
     end
@@ -81,7 +81,7 @@ class OrganizationUsersController < AdminUsersController
   end
 
   def show
-    @organization = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
+    @organization = find_org_by_path(params[:slug])
     user_ids = UserAssignment.where(organization_id: @organization.id ).map(&:user_id)
     users = User.where(id: user_ids, archived: false)
     @user = users.find_by id: params[:id]
@@ -92,7 +92,7 @@ class OrganizationUsersController < AdminUsersController
   end
 
   def edit
-    @organization = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
+    @organization = find_org_by_path(params[:slug])
     user_ids = UserAssignment.where(organization_id: Organization.find_by(slug: params[:slug])).map(&:user_id)
     users = User.where(id: user_ids, archived: false)
     @user = users.find_by id: params[:id]
@@ -118,7 +118,7 @@ class OrganizationUsersController < AdminUsersController
   end
 
   def create_users
-    org = Organization.all.select{ |o| o.full_slug == params[:slug] }.first
+    org = find_org_by_path(params[:slug])
     users_emails = params[:users][:emails].gsub(/ */,'').split(/(\r\n|\n|,)/).delete_if {|x| x.match(/\A(\r\n|\n|,|)\z/) }
     user_errors = Array.new
     users_created = 0

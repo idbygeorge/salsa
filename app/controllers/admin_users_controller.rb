@@ -2,7 +2,7 @@ class AdminUsersController < AdminController
   skip_before_action :require_designer_permissions
   before_action :require_admin_permissions, except:[:import_users,:create_users]
   before_action :require_supervisor_permissions, only:[:import_users,:create_users]
-  before_action :get_organizations, only: [:index, :new, :edit, :show, :edit_assignment, :import_users]
+  before_action :get_organizations, only: [:index, :new, :edit, :show, :edit_assignment, :import_users, :users_search]
   before_action :get_roles, only: [:edit_assignment, :assign, :index ,:show]
 
   def index
@@ -22,6 +22,23 @@ class AdminUsersController < AdminController
 
   def edit
     @user = User.find params[:id]
+  end
+
+  def users_search page=params[:page], per=25
+    @organization = find_org_by_path(params[:slug]) if params[:controller] == "organization_users"
+    search_user_text = ''
+    user_name = user_email = user_id = user_remote_id = nil
+
+    user_email = params[:q] if params[:search_user_email]
+    user_id = params[:q].to_i if params[:search_user_id]
+    user_name = ".*#{params[:q]}.*" if params[:search_user_name]
+    user_remote_id = params[:q] if params[:search_remote_account_id]
+    users = User.where(id: UserAssignment.where(organization_id: @organization.id).map(&:user))
+    user_ids = users.where("email = ? OR id = ? OR name ~* ? ", user_email, user_id, user_name).map(&:id)
+    user_ids += UserAssignment.where(organization_id: @organization.id).where("lower(username) = '?' ", user_remote_id.to_s.downcase).map(&:user_id)
+
+    @users = User.where(id: user_ids).page(page).per(per)
+    render "index"
   end
 
   def archive
