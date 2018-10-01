@@ -14,6 +14,7 @@ class DocumentsController < ApplicationController
     redirect_to new_document_path(org_path: params[:org_path])
   end
 
+
   def new
     if can_use_edit_token(params[:lms_course_id])
       @document = Document.new(name: 'Unnamed')
@@ -297,10 +298,10 @@ class DocumentsController < ApplicationController
       @document.save!
 
       return redirect_to lms_course_document_path(lms_course_id: params[:lms_course_id], org_path: params[:org_path])
-    elsif params[:document_token] && @document
+    elsif params[:document_token]
       # show options to user (make child, make new)
-      @template_url = template_url(@document, org_path: params[:org_path])
-      if existing_doc && existing_doc.id != @document.id
+      @template_url = template_url(@document) if @document
+      if existing_doc && existing_doc.id != @document&.id
         has_existing_document = true
       else
         #existing_doc same as current_document
@@ -442,7 +443,7 @@ class DocumentsController < ApplicationController
       end
 
       # find the org to bind this to
-      org = Organization.all.select{ |o| o.full_slug == get_org_path }.first
+      org = find_org_by_path(get_org_path)
     end
 
     # if there is no org yet, show an error
