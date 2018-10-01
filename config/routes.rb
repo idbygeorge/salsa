@@ -86,6 +86,8 @@ Rails.application.routes.draw do
           post "restore"
         end
 
+        get "users_search", to: 'organization_users#users_search', as: 'organization_users_search'
+
         post 'users/assignment', as: 'organization_user_assignments', to: 'organization_users#assign'
         patch 'users/:id/assignment/', as: 'organization_user_update_assignments', to: 'organization_users#update_assignment'
 
