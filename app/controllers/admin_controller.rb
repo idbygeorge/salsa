@@ -24,15 +24,19 @@ class AdminController < ApplicationController
       :canvas_accounts,
       :canvas_courses
   ]
+
   force_ssl only:[:canvas_courses, :canvas_accounts,:canvas_courses,:canvas_accounts_sync]
 
   def landing
+    if current_user&.archived
+      return render :file => "public/account_inactive.html", :status => :unauthorized, :layout => false
+    end
     if has_role 'designer'
       redirect_to organizations_path, notice: flash[:notice]
     elsif has_role 'auditor'
       redirect_to admin_auditor_reports_path, notice: flash[:notice]
-    elsif ( has_role('staff', assignment_org = get_user_assignment_org(session[:authenticated_user],'staff')) || has_role('approver', assignment_org = get_user_assignment_org(session[:authenticated_user],'approver')) || has_role('supervisor', assignment_org = get_user_assignment_org(session[:authenticated_user],'supervisor')) ) && assignment_org&.enable_workflows == true
-      redirect_to workflow_document_index_path, notice: flash[:notice]
+    elsif ( has_role('staff', assignment_org = get_user_assignment_org(session[:authenticated_user],'staff')) || has_role('approver', assignment_org = get_user_assignment_org(session[:authenticated_user],'approver')) || has_role('supervisor', assignment_org = get_user_assignment_org(session[:authenticated_user],'supervisor')) ) && assignment_org&.setting('enable_workflows') == true
+      redirect_to workflow_document_index_path(org_path:assignment_org.path), notice: flash[:notice]
     else
       redirect_or_error
     end
@@ -40,7 +44,9 @@ class AdminController < ApplicationController
 
   def login
   	@organization = find_org_by_path params[:slug]
-
+    if @organization.setting("enable_shibboleth")
+      return redirect_to new_user_session_path(org_path: params[:org_path])
+    end
   	if @organization and @organization[:lms_authentication_source] != "" and @organization[:lms_authentication_source] != nil
   		redirect_to oauth2_login_path
 	  else

@@ -28,14 +28,14 @@ class AdminUsersController < AdminController
     @user = User.find params["#{params[:controller].singularize}_id".to_sym]
     @user.update(archived: true)
     flash[:notice] = "#{@user.email} has been archived"
-    return redirect_to polymorphic_path([params[:controller]])
+    return redirect_to polymorphic_path([params[:controller]],org_path:params[:org_path])
   end
 
   def restore
     @user = User.find params["#{params[:controller].singularize}_id".to_sym]
     @user.update(archived: false)
-    flash[:notice] = "#{@user.email} has been restored"
-    return redirect_to polymorphic_path([params[:controller]])
+    flash[:notice] = "#{@user.email} has been activated"
+    return redirect_to polymorphic_path([params[:controller]],org_path:params[:org_path])
   end
 
   def assign
@@ -49,7 +49,7 @@ class AdminUsersController < AdminController
     @new_permission = @user_assignment
     respond_to do |format|
       if @user_assignment.save
-        format.html { redirect_to admin_user_path id: @user[:id], notice: 'User Assignment was successfully created.' }
+        format.html { redirect_to admin_user_path(org_path:params[:org_path], id: @user[:id]), notice: 'User Assignment was successfully created.' }
         format.json { render :show, status: :created, location: @user_assignment }
       else
         format.html { render :show }
@@ -62,7 +62,7 @@ class AdminUsersController < AdminController
     @user_assignment = UserAssignment.find params[:id]
     @user_assignment.destroy
 
-    redirect_to polymorphic_path([params[:controller].singularize],id: @user_assignment.user_id)
+    redirect_to polymorphic_path([params[:controller].singularize],id: @user_assignment.user_id,org_path:params[:org_path])
   end
 
   def edit_assignment
@@ -84,7 +84,7 @@ class AdminUsersController < AdminController
 
       render action: :edit_assignment
     else
-      redirect_to polymorphic_path([params[:controller].singularize],id: @user.id)
+      redirect_to polymorphic_path([params[:controller].singularize],id: @user.id,org_path:params[:org_path])
     end
   end
 
@@ -103,7 +103,7 @@ class AdminUsersController < AdminController
     # end
 
     if @user.save
-        return redirect_to polymorphic_path([params[:controller].singularize],id: @user.id)
+        return redirect_to polymorphic_path([params[:controller].singularize],id: @user.id,org_path:params[:org_path])
     else
         flash[:error] = 'Error creating user'
         return render action: :new
@@ -113,14 +113,14 @@ class AdminUsersController < AdminController
   def update
     @user = User.find params[:id]
     @user.update user_params
-    redirect_to polymorphic_path([params[:controller].singularize],id: @user.id)
+    redirect_to polymorphic_path([params[:controller].singularize],id: @user.id,org_path:params[:org_path])
   end
 
   def destroy
     @user = User.find params[:id]
     @user.destroy
 
-    redirect_to polymorphic_path([params[:controller]])
+    redirect_to polymorphic_path([params[:controller]],org_path:params[:org_path])
   end
 
   private

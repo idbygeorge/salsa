@@ -1,4 +1,5 @@
 class WorkflowDocumentsController < ApplicationController
+  before_action :redirect_to_sub_org, only:[:index,:edit,:versions]
   layout :set_layout
   before_action :check_organization_workflow_enabled
   before_action :set_paper_trail_whodunnit, only: [:revert_document]
@@ -24,9 +25,9 @@ class WorkflowDocumentsController < ApplicationController
       @documents = Document.where(organization_id:org.descendants.map(&:id).push(org.id)).where('documents.updated_at != documents.created_at')
       @user_documents = @documents.where(user_id: current_user&.id) if current_user
       @documents = get_documents(current_user, @documents)
-      @user_documents = @user_documents.where.not(id: @documents.map(&:id)) if @user_documents
+      @user_documents = @user_documents.where.not(id: @documents.map(&:id)).reorder(created_at: :desc) if @user_documents
     end
-    @documents = @documents.page(params[:page]).per(params[:per])
+    @documents = @documents.reorder(created_at: :desc).page(params[:page]).per(params[:per])
   end
 
   def edit
@@ -57,7 +58,7 @@ class WorkflowDocumentsController < ApplicationController
 
     if @document.update document_params
       flash[:notice] = "You have assigned a document to #{@user.email} on #{@wfs.slug}" if @user && @wfs
-      redirect_to workflow_document_index_path
+      redirect_to workflow_document_index_path(org_path: params[:org_path])
     else
       flash[:error] = @document.errors.messages
 
