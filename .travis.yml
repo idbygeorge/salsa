@@ -1,3 +1,6 @@
+env:
+  global:
+    - CC_TEST_REPORTER_ID=$CC_TEST_REPORTER_ID
 addons:
   postgresql: 9.6
   apt:
