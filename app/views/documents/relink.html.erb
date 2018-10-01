@@ -5,11 +5,13 @@
     <% params.permit! %>
     <%= link_to 'Go to existing SALSA', lms_course_document_path(lms_course_id, org_path: params[:org_path]), {class: 'btn btn-primary'} %>
   </div>
-<%end%>
-<div class="btn-horizontal">
-  <% params.permit! %>
-  <%= link_to 'Use this SALSA syllabus as my template', lms_course_document_path(params.merge({ canvas_course_id: @document[:lms_course_id], canvas: true }), org_path: params[:org_path]), {class: 'btn btn-primary'} %>
-</div>
+<% end %>
+<% if @document %>
+  <div class="btn-horizontal">
+    <% params.permit! %>
+    <%= link_to 'Use this SALSA syllabus as my template', lms_course_document_path(params.merge({ canvas_course_id: @document[:lms_course_id], canvas: true , org_path: params[:org_path]})), {class: 'btn btn-primary'} %>
+  </div>
+<% end %>
 
 <div class="btn-horizontal">
   <%= link_to 'Create a new SALSA syllabus', lms_course_document_path(lms_course_id: params[:lms_course_id], create_new: true, org_path: params[:org_path]), {class: 'btn btn-default'} %>
