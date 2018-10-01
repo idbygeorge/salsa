@@ -27,7 +27,7 @@ script:
   - sudo docker-compose run salsa bash ./cucumber.sh
 
 after_script:
-  - sudo docker-compose run salsa ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT --prefix /home/apps/salsa
+  - sudo docker-compose run salsa ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT --prefix /home/apps/salsa -r $CC_TEST_REPORTER_ID
 
 dist: trusty
 language: ruby
