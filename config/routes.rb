@@ -43,6 +43,7 @@ Rails.application.routes.draw do
       get "login/(:slug)", to: 'admin#login', as: 'admin_login', constraints: { slug: /.*/ }
       post "login/(:slug)", to: 'admin#authenticate', as: 'admin_authenticate', constraints: { slug: /.*/ }
 
+      get "users_search", to: 'admin_users#users_search', as: 'admin_users_search'
       resources :users, as: 'admin_users', controller: 'admin_users' do
         post "archive"
         post "restore"
@@ -119,7 +120,7 @@ Rails.application.routes.draw do
     get "default/maintenance"
     get "default/tos"
     get "default/faq"
-    
+
     get '/:alias/:document', to: redirect('/SALSA/%{document}'), constraints: { alias: /(syllabuses|salsas?)/ }
     get '/:alias/:document/:action', to: redirect('/SALSA/%{document}/%{action}'), constraints: { alias: /(syllabuses|salsas?)/, action: /(edit|template)?/ }
   end

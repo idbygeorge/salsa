@@ -24,6 +24,22 @@ class AdminUsersController < AdminController
     @user = User.find params[:id]
   end
 
+  def users_search page=params[:page], per=25
+    search_user_text = ''
+    user_name = user_email = user_id = user_remote_id = nil
+
+    user_email = params[:q] if params[:search_user_email]
+    user_id = params[:q].to_i if params[:search_user_id]
+    user_name = ".*#{params[:q]}.*" if params[:search_user_name]
+    user_remote_id = params[:q] if params[:search_remote_account_id]
+
+    user_ids = User.where("email = ? OR id = ? OR name ~* ? ", user_email, user_id, user_name).map(&:id)
+    user_ids += UserAssignment.where("lower(username) = '?' ", user_remote_id.to_s.downcase).map(&:user_id)
+
+    @users = User.where(id: user_ids).page(page).per(per)
+    render "index"
+  end
+
   def archive
     @user = User.find params["#{params[:controller].singularize}_id".to_sym]
     @user.update(archived: true)
