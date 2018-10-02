@@ -168,7 +168,7 @@ function liteOff(x){
               }
             }
             $(".workflow_step").show()
-            $(".content").find(":input").prop('disabled', true);
+            $(".workflow_step").find(":input").prop('disabled', true);
             notification('Saving...');
         });
 
