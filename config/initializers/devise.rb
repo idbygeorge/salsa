@@ -6,14 +6,14 @@ class IdPSettingsAdapter
     org = Organization.find_by(enable_shibboleth: true,idp_entity_id: idp_entity_id)
     idp_settings = nil
     if !org.blank?
-        idp_settings = {
-          assertion_consumer_service_url: "https://#{org.full_org_path}/auth/shibboleth",
-          issuer: "oasis4he-a11y-docs",
-          idp_entity_id: "#{org.idp_entity_id}",
-          idp_slo_target_url: "#{org.idp_slo_target_url}",
-          idp_sso_target_url: "#{org.idp_sso_target_url}",
-          idp_cert: "#{org.idp_cert}"
-        }
+      idp_settings = {
+        assertion_consumer_service_url: "https://#{org.full_org_path}/auth/shibboleth",
+        issuer: "oasis4he-a11y-docs",
+        idp_entity_id: "#{org.idp_entity_id}",
+        idp_slo_target_url: "#{org.idp_slo_target_url}",
+        idp_sso_target_url: "#{org.idp_sso_target_url}",
+        idp_cert: "#{org.idp_cert}"
+      }
     else
       idp_settings = {}
     end
@@ -328,7 +328,6 @@ Devise.setup do |config|
   config.saml_update_resource_hook = Proc.new do |user, saml_response, auth_value|
     User.saml_update_resource_hook(user, saml_response, auth_value)
   end
-
 
   # Optional. This stores the session index defined by the IDP during login.  If provided it will be used as a salt
   # for the user's session to facilitate an IDP initiated logout request.

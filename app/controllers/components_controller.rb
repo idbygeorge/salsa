@@ -115,9 +115,9 @@ class ComponentsController < ApplicationController
         if params[:overwrite] == "true" || component.new_record?
           component.category = "document" if component.category.blank?
           component.category = "mailer" if File.extname(file.name).delete('.') == "liquid"
+          component.name = file.name.remove(/\..*/) if component.name.blank?
+          component.description = "" if component.description.blank?
           component.update(
-            name: file.name.remove(/\..*/),
-            description: "",
             layout: content,
             format: File.extname(file.name).delete('.')
           )
