@@ -20,6 +20,10 @@ Install docker composer (as root)
 
     chmod +x /usr/local/bin/docker-compose
 
+  Create the docker group.
+
+    sudo groupadd docker
+
   add user to docker group
 
     sudo usermod -aG docker $USER
@@ -174,7 +178,7 @@ there are also documents created but you still need to publish them by going to 
       def show
         debugger
         get_documents params[:slug]
-      end  
+      end
     end
 
 
