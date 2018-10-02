@@ -135,8 +135,11 @@ class AdminUsersController < AdminController
 
   def update
     @user = User.find params[:id]
-    @user.update user_params
-    redirect_to polymorphic_path([params[:controller].singularize],id: @user.id,org_path:params[:org_path])
+    if @user.update user_params
+      redirect_to polymorphic_path([params[:controller].singularize],id: @user.id,org_path:params[:org_path])
+    else
+      return render action: :edit, params: params
+    end
   end
 
   def destroy
