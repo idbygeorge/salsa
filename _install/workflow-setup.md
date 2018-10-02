@@ -31,9 +31,13 @@
   components should have been created with the slug matching your workflow steps
   go and edit these components to match what you want each step to look like and assign a role to each component depending on who should be able to access each step and set the format to html
 
-  | Role    | Slug   | Next Workflow Step | step_type    |
-  |------    |------  |--------------------|-----------   |
-  | Archived | step_5 | nil                | end_step     |
+  | Name                    | Slug   | Role       | Format |
+  |-------------------------|--------|------------|--------|
+  | Staff Form              | step_1 | Staff      | html   |
+  | Co Review               | step_2 | Supervisor | html   |
+  | Supervisor final review | step_3 | Supervisor | html   |
+  | Approver review         | step_4 | Approver   | html   |
+  | Archived                | step_5 | nil        | html   |
 
 ## Add Period(s)
   go to the manage periods page for the organization then add a period for each period you want to start a workflow in
