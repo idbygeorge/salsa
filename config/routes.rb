@@ -124,7 +124,9 @@ Rails.application.routes.draw do
     get "default/faq"
 
     get '/:alias/:document', to: redirect('/SALSA/%{document}'), constraints: { alias: /(syllabuses|salsas?)/ }
-    get '/:alias/:document/:action', to: redirect('/SALSA/%{document}/%{action}'), constraints: { alias: /(syllabuses|salsas?)/, action: /(edit|template)?/ }
+    get '/:alias/:document/:edit', to: redirect('/SALSA/%{document}/edit'), constraints: { alias: /(syllabuses|salsas?)/ }
+    get '/:alias/:document/:template', to: redirect('/SALSA/%{document}/template'), constraints: { alias: /(syllabuses|salsas?)/ }
+    
   end
   get ":org_path", as: 'sub_root', to: 'default#index'
 
