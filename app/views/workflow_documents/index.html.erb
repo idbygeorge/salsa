@@ -1,7 +1,4 @@
 <%- model_class = Document -%>
-<div class="page-header">
-  <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %> You are assigned to</h1>
-</div>
 <% if has_role("supervisor") %>
   <div class="btn-group pull-right">
     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
