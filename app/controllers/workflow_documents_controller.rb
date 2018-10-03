@@ -38,7 +38,8 @@ class WorkflowDocumentsController < ApplicationController
       @workflow_steps = WorkflowStep.where(organization_id: @document.organization_id).order(step_type: :desc)
     end
     @periods = Period.where(organization_id: @document.organization&.parents&.map(&:id).push(@document.organization&.id))
-    @users = UserAssignment.where(organization_id:@document.organization.descendants.map(&:id) + [@document.organization.id]).map(&:user).push @document.user
+    @users = UserAssignment.where(organization_id:@document.organization.descendants.map(&:id) + [@document.organization.id]).map(&:user)
+    @users.push @document.user if @document.user
   end
 
   def update

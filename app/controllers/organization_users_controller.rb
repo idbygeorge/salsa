@@ -146,7 +146,7 @@ class OrganizationUsersController < AdminUsersController
   end
 
   def import_users
-    @organization = @organizations.all.select{ |o| o.full_slug == params[:slug] }.first
+    @organization = find_org_by_path(params[:slug])
   end
 
 end
