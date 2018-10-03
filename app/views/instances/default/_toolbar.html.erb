@@ -2,12 +2,12 @@
     <nav id="toolbar">
     <ul>
         <li>
-        <%= link_to "Save", document_path(@document.edit_id), :authenticity_token => form_authenticity_token(), :method => :put, :remote => true, :id => 'tb_save' %>
+        <%= link_to "Save", document_path(@document.edit_id, org_path: params[:org_path]), :authenticity_token => form_authenticity_token(), :method => :put, :remote => true, :id => 'tb_save' %>
         </li>
         <li><a href="#" id='tb_link'><i class="fi-plus"></i>My SALSA</a></li>
         <li><%= link_to '<i class="fi-check"></i>Preview'.html_safe, @view_url, :target => '_blank', :id => "tb_preview" %></li>
         <li>
-        <%= link_to '<i class="general fi-arrow-right"></i>Publish'.html_safe, document_path(@document.edit_id, :publish => true), :authenticity_token => form_authenticity_token(), :method => :put, :remote => true, :id => 'tb_share' %>
+        <%= link_to '<i class="general fi-arrow-right"></i>Publish'.html_safe, document_path(@document.edit_id, :publish => true, org_path: params[:org_path]), :authenticity_token => form_authenticity_token(), :method => :put, :remote => true, :id => 'tb_share' %>
         </li>
     </ul>
     <!-- <ul style="float:right">
@@ -62,7 +62,7 @@
 
     <div style="padding: 20px 0px 10px;">
         <p id="send_canvas" <% if !@document[:lms_course_id] %>class="hidden"<% end %>>
-         <%= link_to "Send to Canvas", document_path(@document.edit_id, canvas: true), :authenticity_token => form_authenticity_token(), :method => :put, :remote => true, :id => 'tb_send_canvas', :class => 'button' %>
+         <%= link_to "Send to Canvas", document_path(@document.edit_id, canvas: true, org_path: params[:org_path]), :authenticity_token => form_authenticity_token(), :method => :put, :remote => true, :id => 'tb_send_canvas', :class => 'button' %>
          <br>
         </p>
     </div>

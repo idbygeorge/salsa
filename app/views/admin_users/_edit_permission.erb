@@ -1,7 +1,7 @@
 <% if action == 'Update' %>
-  <% path = polymorphic_path([params[:controller].singularize,:update_assignments]) %>
+  <% path = polymorphic_path([params[:controller].singularize,:update_assignments], org_path: params[:org_path]) %>
 <% else %>
-  <% path = polymorphic_path([params[:controller].singularize,:assignments]) %>
+  <% path = polymorphic_path([params[:controller].singularize,:assignments], org_path: params[:org_path]) %>
 <% end %>
 
 <%= form_for permission, url: path, html: {class: "form"} do |f| %>
@@ -77,7 +77,7 @@
   <td class="text">
     <button type="submit" class="btn btn-success"><span class="glyphicon glyphicon-plus"></span> <%= action %> Access</button>
     <% if action != 'Add' %>
-      <%= link_to 'cancel', polymorphic_path([params[:controller].singularize],id: permission.user_id), class:"btn btn-default" %>
+      <%= link_to 'cancel', polymorphic_path([params[:controller].singularize],id: permission.user_id, org_path: params[:org_path]), class:"btn btn-default" %>
     <% end %>
   </td>
 </tr>

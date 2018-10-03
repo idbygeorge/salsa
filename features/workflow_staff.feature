@@ -30,13 +30,3 @@ I want to complete a workflow step
     And there is a document on the last step in the workflow and assigned to the current user
     And I am on the "/workflow/documents" page
     Then I should not see "Edit"
-
-  @javascript
-  Scenario: complete step_4
-    Given that I am logged in as a staff on the organization
-    And there is a document on the fourth step in the workflow and assigned to the current user
-    And I am on the "/workflow/documents" page
-    Then I click the "#edit_document" link
-    # TODO add javascript tag so we can save the document
-    And I click the "#tb_share" link
-    Then the document should be on step_5

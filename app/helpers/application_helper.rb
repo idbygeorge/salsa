@@ -37,9 +37,9 @@ module ApplicationHelper
 
     if output == ''
       # if there is a parent, recheck using it as the org
-      if org.parent
+      if org&.parent
         output = salsa_partial(name, org.parent)
-      elsif org.slug.include? '/'
+      elsif org&.slug&.include? '/'
         output = salsa_partial(name, Organization.new(slug: org.slug.gsub(/\/[^\/]+$/, '')))
       # otherwise, show the default if it exists
       elsif File.exists?("app/views/instances/default/#{path}_#{partial}.html.erb")
@@ -123,9 +123,9 @@ module ApplicationHelper
     else
       if current_page?(admin_path)
         flash.keep
-        return redirect_to admin_login_path
+        return redirect_to admin_login_path(org_path: params[:org_path])
       else
-        return redirect_to admin_path
+        return redirect_to admin_path(org_path: params[:org_path])
       end
     end
   end
@@ -158,7 +158,7 @@ module ApplicationHelper
       if params[:slug]
         org = find_org_by_path params[:slug]
       else
-        org = find_org_by_path request.env['SERVER_NAME']
+        org = find_org_by_path get_org_path
       end
     end
 
@@ -172,14 +172,14 @@ module ApplicationHelper
     end
 
     user_assignments = nil
-    if get_org.enable_shibboleth && session[:saml_authenticated_user]
+    if get_org&.enable_shibboleth && session[:saml_authenticated_user]
       username = session[:saml_authenticated_user]['id'].to_s
       user_assignments = UserAssignment.where('organization_id in (?) OR (role = ?)', org.self_and_ancestors.map(&:id), 'admin').where("lower(username) = ?", username.downcase)
-    elsif org[:lms_authentication_source] && org[:lms_authentication_source] == session[:oauth_endpoint]
+    elsif org&.lms_authentication_source && org&.lms_authentication_source == session[:oauth_endpoint] && session[:saml_authenticated_user]
       username = session[:saml_authenticated_user]['id'].to_s
       user_assignments = UserAssignment.where('organization_id = ? OR (role = ?)', org.self_and_ancestors.map(&:id), 'admin').where("lower(username) = ?", username.downcase)
     else
-      user_assignments = UserAssignment.where('organization_id IN (?) OR (role = ?)', org.self_and_ancestors.map(&:id), 'admin').where(user_id: session[:authenticated_user])
+      user_assignments = UserAssignment.where('organization_id IN (?) OR (role = ?)', org&.self_and_ancestors.map(&:id), 'admin').where(user_id: session[:authenticated_user])
     end
 
     user_assignments&.each do |ua|
@@ -206,16 +206,16 @@ module ApplicationHelper
     end
 
     # only show orgs that the logged in user should see
-    unless session[:admin_authorized] || user.user_assignments.find_by(role: "admin")
+    unless session[:admin_authorized] || user&.user_assignments&.find_by(role: "admin")
       # load all orgs that the user has a cascade == true assignment
 
-      cascade_permissions = user.user_assignments.where(cascades: true)
-      cascade_organizations = Organization.where(id: cascade_permissions.map(&:organization_id))
+      cascade_permissions = user&.user_assignments&.where(cascades: true)
+      cascade_organizations = Organization.where(id: cascade_permissions&.map(&:organization_id))
 
       filter_query = ['id IN (?)']
-      filter_values = [user.user_assignments.map(&:organization_id)]
+      filter_values = [user&.user_assignments&.map(&:organization_id)]
 
-      cascade_organizations.each do |org|
+      cascade_organizations&.each do |org|
         filter_query.push '(lft > ? AND rgt < ?)'
         filter_values.push org.lft
         filter_values.push org.rgt
@@ -252,12 +252,13 @@ module ApplicationHelper
   end
 
   def find_org_by_path path
-    path = request.env['SERVER_NAME'] unless path
+    path = get_org_path unless path
 
-    unless path.include? '/'
+    unless path&.include? '/'
       organization = Organization.find_by slug:path
     else
       path.split('/').each do |slug|
+        next if slug.blank?
         unless organization
           organization = Organization.find_by slug: slug, depth: 0
         else
@@ -291,16 +292,23 @@ module ApplicationHelper
     return true
   end
 
+  def get_org_path
+    return request.env['SERVER_NAME'] + '/' + params[:org_path] if params[:org_path]
+    return request.env['SERVER_NAME']
+  end
+
   def get_org_slug
-    request.env['SERVER_NAME']
+    organization = find_org_by_path(get_org_path)
+    return get_org_path if organization.blank?
+    organization&.slug
   end
 
   def get_org
-    Organization.find_by slug: get_org_slug
+    find_org_by_path(get_org_path)
   end
 
   def get_document_meta
-    org_slug = request.env['SERVER_NAME']
+    org_slug = get_org_slug
     ReportHelper.get_document_meta org_slug, nil, params
   end
 end

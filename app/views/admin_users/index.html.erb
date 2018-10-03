@@ -1,74 +1,14 @@
-<%= link_to 'Add User',  polymorphic_path([:new,params[:controller].singularize]), class: 'btn btn-success pull-right' %>
+<%= link_to 'Add User',  polymorphic_path([:new,params[:controller].singularize], org_path: params[:org_path]), class: 'btn btn-success pull-right' %>
 <% if has_role("admin") %>
   <% if params[:show_archived] == "true" %>
-    <%= link_to 'Users', polymorphic_path([params[:controller]],show_archived: false), class: 'btn btn-success pull-right' %>
+    <%= link_to 'Users', polymorphic_path([params[:controller]],show_archived: false, org_path: params[:org_path]), class: 'btn btn-success pull-right' %>
   <% else %>
-    <%= link_to 'Archived Users', polymorphic_path([params[:controller]],show_archived: true), class: 'btn btn-success pull-right' %>
+    <%= link_to 'Archived Users', polymorphic_path([params[:controller]],show_archived: true, org_path: params[:org_path]), class: 'btn btn-success pull-right' %>
   <% end %>
 <% end %>
 
 <% if params[:controller] == "organization_users" %>
-  <h1><%= link_to organization_path(params[:slug]) do %><small><%= @organization.name %></small><% end %></h1>
+  <h1><%= link_to organization_path(params[:slug], org_path: params[:org_path]) do %><small><%= @organization.name %></small><% end %></h1>
 <% end %>
 
-<h1>System Users</h1>
-
-<table class="table table-responsive table-striped">
-  <thead>
-    <th>
-      Contact
-    </th>
-    <th>
-      Permissions
-    </th>
-    <% if has_role("admin") %>
-      <th>
-        Actions
-      </th>
-    <% end %>
-  </thead>
-
-  <tbody>
-  <% @users.each do |user| %>
-    <tr>
-      <td>
-        <address>
-          <strong class="text-large"><%= link_to user.name, polymorphic_path([params[:controller].singularize],id: user.id) %></strong><br>
-          <%= link_to user.email, "mailto:${user.email}" %>
-        </address>
-      </td>
-
-      <td>
-        <ul class="list-group">
-          <% user.user_assignments.each do |ua| %>
-            <li class="list-group-item">
-              <% if ua.cascades %>
-                <span class="badge xs-badge">cascades</span>
-              <% end %>
-
-              <% if ua.organization %>
-                <%= ua.organization.name %> - <%= ua.role %>
-              <% else %>
-                <span class="alert-warning">GLOBAL</span>
-              <% end %>
-            </li>
-          <% end %>
-        </ul>
-      </td>
-      <% if has_role("admin") %>
-        <td>
-          <% if params[:show_archived] == "true" %>
-            <%= link_to "Restore", polymorphic_path([params[:controller].singularize,:restore],"#{params[:controller].singularize}_id".to_sym => user.id), method:"post", class:"btn btn-primary" %>
-          <% else %>
-            <%= link_to "Archive", polymorphic_path([params[:controller].singularize,:archive],"#{params[:controller].singularize}_id".to_sym => user.id), method:"post", class:"btn btn-danger" %>
-
-          <% end %>
-        </td>
-      <% end %>
-    </tr>
-  <% end %>
-  </tbody>
-</table>
-
-
-<%= paginate @users %>
+<%= render :partial => "list" %>

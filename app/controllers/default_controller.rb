@@ -7,10 +7,10 @@ class DefaultController < ApplicationController
 
   def index
     root_org_slug = get_org_slug
-    org = Organization.find_by slug: root_org_slug
+    org = find_org_by_path(get_org_path)
 
     if org and org.home_page_redirect?
-      redirect_to org.home_page_redirect
+      redirect_to org.home_page_redirect, org_path: params[:org_path]
     else
       render layout: 'home'
     end

@@ -1,8 +1,8 @@
 <%- model_class = WorkflowStep -%>
 <div class="page-header">
   <h1>
-    <%= link_to organization_path(@organization.slug) do %><small><%= @organization.name %></small><% end %>
+    <%= link_to organization_path(params[:slug], org_path:params[:org_path]) do %><small><%= @organization.name %></small><% end %>
     <br>
     <%=t '.title', :default => [:'helpers.titles.new', 'New %{model}'], :model => model_class.model_name.human.titleize %></h1>
 </div>
-<%= render :partial => 'form', locals:{workflow_step_form_path: workflow_steps_path} %>
+<%= render :partial => 'form', locals:{workflow_step_form_path: workflow_steps_path(org_path: params[:org_path])} %>

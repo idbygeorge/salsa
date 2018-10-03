@@ -168,6 +168,7 @@ function liteOff(x){
               }
             }
             $(".workflow_step").show()
+            $(".workflow_step").find(":input").prop('disabled', true);
             notification('Saving...');
         });
 
@@ -184,11 +185,12 @@ function liteOff(x){
             } else if(document_workflow_step !== ""){
               $(".workflow_step:not(#"+document_workflow_step+")").hide()
               $("#"+document_workflow_step).show()
+              $("#"+document_workflow_step).find(":input").prop('disabled', false);
             } else {
               $(".workflow_step").hide()
             }
 
-            if(document_step_type !== "end_step" && document_step_type !== ""){
+            if(document_step_type == "default_step"){
               $(".workflow_step.staff").show().fadeTo(500,0.5)
               $(".workflow_step.staff").find(":input").prop('disabled', true);
             }
