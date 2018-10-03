@@ -207,6 +207,7 @@ class AdminController < ApplicationController
       ua.username = params[:user_remote_id]
       ua.role = "staff" if ua.role.blank?
       ua.save
+      flash[:notice] = "Account Successfully Activated"
       redirect_to admin_path
     else
       return render :file => "public/410.html", :status => :gone, :layout => false
@@ -215,7 +216,9 @@ class AdminController < ApplicationController
 
   def user_activation
     user = User.find_by(activation_digest: (params[:id]))
-    if user
+    if get_org.root_org_setting("enable_shibboleth")
+      return redirect_to new_user_session_path
+    elsif user
   		render action: :user_activation, layout: false
     else
       return render :file => "public/410.html", :status => :gone, :layout => false
