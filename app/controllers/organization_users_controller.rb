@@ -115,7 +115,7 @@ class OrganizationUsersController < AdminUsersController
   end
 
   def create_users
-    org = Organization.find_by slug: params[:slug]
+    org = Organization.find(params[:users][:organization_id])
     users_emails = params[:users][:emails].gsub(/ */,'').split(/(\r\n|\n|,)/).delete_if {|x| x.match(/\A(\r\n|\n|,|)\z/) }
     user_errors = Array.new
     users_created = 0
