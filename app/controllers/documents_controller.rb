@@ -83,11 +83,11 @@ class DocumentsController < ApplicationController
 
       verify_org
       @can_use_edit_token = can_use_edit_token(@document.lms_course_id)
-      if @organization.enable_workflows && @document.assigned_to?(current_user) && @document.workflow_step_id
+      if @organization.root_org_setting("enable_workflows") && @document.assigned_to?(current_user) && @document.workflow_step_id
         render :layout => 'edit', :template => '/documents/content'
-      elsif @organization.enable_workflows && has_role("supervisor") && @document.workflow_step&.step_type == "end_step"
+      elsif @organization.root_org_setting("enable_workflows") && has_role("supervisor") && @document.workflow_step&.step_type == "end_step"
         render :layout => 'edit', :template => '/documents/content'
-      elsif !@organization.enable_workflows || !@document.workflow_step_id || !@document.user_id
+      elsif !@organization.root_org_setting("enable_workflows") || !@document.workflow_step_id || !@document.user_id
         render :layout => 'edit', :template => '/documents/content'
       elsif current_user != nil
         flash[:notice] = "you are not authorized to edit that document"
@@ -195,7 +195,7 @@ class DocumentsController < ApplicationController
     assigned_to_user = @document.assigned_to? user
     if (check_lock @organization[:slug], params[:batch_token]) && can_use_edit_token(@document.lms_course_id)
       republishing = false;
-      if meta_data_from_doc && @organization.lms_authentication_id && @organization.track_meta_info_from_document
+      if meta_data_from_doc && @organization.lms_authentication_id && @organization.root_org_setting("track_meta_info_from_document")
         create_meta_data_from_document(meta_data_from_doc, @document, @organization)
         meta_data_from_doc_saved = true
       elsif canvas_course_id && !@organization.skip_lms_publish
@@ -214,16 +214,16 @@ class DocumentsController < ApplicationController
           @document.payload = request.raw_post
           @document.payload = nil if @document.payload == ''
           @document.lms_published_at = DateTime.now
-          if !@organization.enable_workflows || !@document.workflow_step_id || !@document.user_id
+          if !@organization.root_org_setting("enable_workflows") || !@document.workflow_step_id || !@document.user_id
             @document.save!
             saved = true;
-          elsif @organization.enable_workflows && user && @document.workflow_step_id && assigned_to_user
+          elsif @organization.root_org_setting("enable_workflows") && user && @document.workflow_step_id && assigned_to_user
             @document.save!
             saved = true;
           end
         end
       end
-      if params[:publish] == "true" && @organization.enable_workflows && user
+      if params[:publish] == "true" && @organization.root_org_setting("enable_workflows") && user
         if @document.workflow_step_id && @document.assigned_to?(user)
           WorkflowMailer.step_email(@document,user, @organization, @document.workflow_step.slug, component_allowed_liquid_variables(@document.workflow_step, user,@organization, @document)).deliver_later
           @document.paper_trail_event = 'publish'
@@ -241,9 +241,9 @@ class DocumentsController < ApplicationController
         msg = { :status => "error", :message => "You do not have permisson to save this document"}
       elsif republishing
        msg = { :status => "error", :message => "Documents for this organization are currently being republished. Please copy your changes and try again later.", :version => @document.versions.count }
-     elsif @organization.track_meta_info_from_document == false && meta_data_from_doc != nil
+     elsif @organization.root_org_setting("track_meta_info_from_document") == false && meta_data_from_doc != nil
         msg = { :status => "error", :message => "Tried to save document meta when document meta not enabled for this organization", :version => @document.versions.count }
-     elsif !(@organization.enable_workflows && user && @document.workflow_step_id && assigned_to_user)&& @document.user_id
+     elsif !(@organization.root_org_setting("enable_workflows") && user && @document.workflow_step_id && assigned_to_user)&& @document.user_id
         msg = { :status => "error", :message => "You are not authorized to edit this document", :version => @document.versions.count }
      elsif !saved && !meta_data_from_doc_saved
         msg = { :status => "error", :message => "This is not a current version of this document! Please copy your changes and refresh the page to get the current version.", :version => @document.versions.count }
@@ -322,10 +322,10 @@ class DocumentsController < ApplicationController
   def can_use_edit_token(lms_course_id = nil)
     is_authorized = is_saml_authenticated_user? && has_canvas_access_token? && lms_course_id
     user = current_user
-    workflow_authorized = @organization.enable_workflows && user && @document&.workflow_step_id && @document.assigned_to?(user)
+    workflow_authorized = @organization.root_org_setting("enable_workflows") && user && @document&.workflow_step_id && @document.assigned_to?(user)
     if workflow_authorized
       true
-    elsif @organization[:enable_anonymous_actions]
+    elsif @organization.root_org_setting("enable_anonymous_actions")
       true
     elsif has_role('designer')
       true
@@ -343,7 +343,7 @@ class DocumentsController < ApplicationController
   def authorized_to_edit_course lms_course_id
     courses = get_canvas_courses
     user = current_user
-    workflow_authorized = @organization.enable_workflows && user && @document.workflow_step_id && @document.assigned_to?(user)
+    workflow_authorized = @organization.root_org_setting("enable_workflows") && user && @document.workflow_step_id && @document.assigned_to?(user)
     if workflow_authorized
       true
     elsif courses.pluck("id").include?(lms_course_id.to_i)
@@ -449,7 +449,7 @@ class DocumentsController < ApplicationController
     # if there is no org yet, show an error
     raise "error: no org found matching #{document_slug}"  unless org
 
-    @document[:organization_id] = org[:id] if @document && (!org.enable_workflows || @document.new_record?)
+    @document[:organization_id] = org[:id] if @document && (!org.root_org_setting("enable_workflows") || @document.new_record?)
 
     @organization = org
   end

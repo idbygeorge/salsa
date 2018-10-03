@@ -224,7 +224,7 @@
         <div class="form-group">
           <div class="controls">
             <%= f.hidden_field :force_https, class: '' %>
-            <%= check_box_tag :check_ssl, 1, @organization.force_https, data: { "https_check_url" => "https://#{full_org_path(@organization) if @organization.blank?}/status/server" }  %>
+            <%= check_box_tag :check_ssl, 1, @organization.force_https, data: { "https_check_url" => "https://#{full_org_path(@organization) if !@organization.blank?}/status/server" }  %>
             <%= f.label :force_https, class: "control-label" %>
           </div>
         </div>

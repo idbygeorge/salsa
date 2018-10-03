@@ -32,7 +32,7 @@ class WorkflowDocumentsController < ApplicationController
 
   def edit
     get_document params[:id]
-    if @document.organization.inherit_workflows_from_parents
+    if @document.organization.root_org_setting("inherit_workflows_from_parents")
       @workflow_steps = WorkflowStep.where(organization_id: @document.organization.organization_ids + [@document.organization_id]).order(step_type: :desc)
     else
       @workflow_steps = WorkflowStep.where(organization_id: @document.organization_id).order(step_type: :desc)

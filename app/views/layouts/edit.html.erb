@@ -21,7 +21,7 @@
 
 <%= csrf_meta_tag %>
 </head>
-<body id="edit_syllabus" data-lms-login-id="<%= @lms_user['login_id'] if @lms_user %>" data-organization-config="{&quot;track_meta_info_from_document&quot;:<%= @organization.track_meta_info_from_document %>}">
+<body id="edit_syllabus" data-lms-login-id="<%= @lms_user['login_id'] if @lms_user %>" data-organization-config="{&quot;track_meta_info_from_document&quot;:<%= @organization.root_org_setting("track_meta_info_from_document") %>}">
   <!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome </a> to experience this site.</p><![endif]-->
 
 <div id="editor_view" data-lms-course="<% if @lms_course %><%= @lms_course.to_json %><% elsif @document[:lms_course_id] %>{&quot;id&quot;:<%= @document[:lms_course_id] %>, &quot;name&quot;: &quot;Course: <%= @document[:lms_course_id] %>&quot;}<% end %>" <% if @document.component %>data-org-config="<%= "{\"css\":\"https://s3-us-west-2.amazonaws.com/salsa.assets/#{@organization.slug}/#{@document.component.slug}/css/salsa-#{@document.component_version}.css\"}" %>"<% end %>>

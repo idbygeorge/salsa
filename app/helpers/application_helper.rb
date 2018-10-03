@@ -172,7 +172,7 @@ module ApplicationHelper
     end
 
     user_assignments = nil
-    if get_org&.enable_shibboleth && session[:saml_authenticated_user]
+    if get_org&.root_org_setting("enable_shibboleth") && session[:saml_authenticated_user]
       username = session[:saml_authenticated_user]['id'].to_s
       user_assignments = UserAssignment.where('organization_id in (?) OR (role = ?)', org.self_and_ancestors.map(&:id), 'admin').where("lower(username) = ?", username.downcase)
     elsif org&.lms_authentication_source && org&.lms_authentication_source == session[:oauth_endpoint] && session[:saml_authenticated_user]
