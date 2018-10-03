@@ -159,7 +159,7 @@ class ComponentsController < ApplicationController
   def valid_slugs component_slug
     @organization = get_organization if @organization.blank?
     slugs = ['salsa', 'section_nav', 'control_panel', 'footer', 'dynamic_content_1', 'dynamic_content_2', 'dynamic_content_3', 'user_welcome_email']
-    if @organization.enable_workflows
+    if @organization.root_org_setting("enable_workflows")
       wfsteps = WorkflowStep.where(organization_id: @organization.organization_ids+[@organization.id])
       slugs += wfsteps.map(&:slug).map! {|x| x + "_mailer" }
       slugs.push "workflow_welcome_email"

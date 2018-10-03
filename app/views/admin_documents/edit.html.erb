@@ -20,7 +20,7 @@
       <%= f.text_field :lms_course_id, class: 'form-control input-xxlarge' %>
     </div>
   </div>
-  <% if @workflow_steps && @document.organization&.enable_workflows %>
+  <% if @workflow_steps && @document.organization&.root_org_setting("enable_workflows") %>
     <div class="form-group">
       <%= f.label :workflow_step_id, class: "control-label" %>
       <div class="controls">

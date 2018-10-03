@@ -101,7 +101,7 @@
                 <br>
               <% end %>
 
-              <% if document.organization && document.organization[:enable_anonymous_actions] %>
+              <% if document.organization && document.organization.root_org_setting("enable_anonymous_actions") %>
                   Edit: <%= link_to "#{org_base}#{document_path(id: document.edit_id, org_path: params[:org_path])}", "#{org_base}#{document_path(id: document.edit_id, org_path: params[:org_path])}", target: "_blank", org_path: params[:org_path] %>
 
                   <% if document.template_id %>

@@ -37,6 +37,13 @@ class Admin::AuditorController < ApplicationController
     else
       @reports = ReportArchive.where(organization_id: @org.id, is_archived: false).order(updated_at: :desc ).all
     end
+    if @reports.blank? && !params[:show_archived]
+      params_hash = params.permit(:account_filter, :controller, :action).to_hash
+      params_hash[:account_filter] = @org.default_account_filter
+      ReportHelper.generate_report_as_job @org.id, @org.default_account_filter, params_hash
+      return redirect_to admin_auditor_reports_path(org_path:params[:org_path])
+    end
+
     @default_report = nil
     @reports.each do |report|
       if report.payload && @org.default_account_filter && report.report_filters && report.report_filters["account_filter"] == @org.default_account_filter

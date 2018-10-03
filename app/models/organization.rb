@@ -40,7 +40,7 @@ class Organization < ApplicationRecord
 
   def organization_ids
     org_ids = [self.id]
-    if self.inherit_workflows_from_parents
+    if self.root_org_setting("inherit_workflows_from_parents")
       org_ids = self.parents.map{|x| x[:id]}
     end
     return org_ids
@@ -59,6 +59,17 @@ class Organization < ApplicationRecord
   def setting(setting)
     org = self.self_and_ancestors.where.not("#{setting}": nil).reorder(:depth).last
     org[setting]
+  end
+
+  def root_org_setting(setting)
+    if self.slug.start_with?('/')
+      org = self.self_and_ancestors.reorder(:depth).first
+      result = org[setting]
+    else
+      org = self
+      result = org[setting]
+    end
+      result
   end
 
   def self.descendants
