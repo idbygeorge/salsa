@@ -82,11 +82,11 @@ class OrganizationUsersController < AdminUsersController
 
   def show
     @organization = find_org_by_path(params[:slug])
-    user_ids = UserAssignment.where(organization_id: @organization.id ).map(&:user_id)
+    user_ids = UserAssignment.where(organization_id: @organizations.map(&:id) ).map(&:user_id)
     users = User.where(id: user_ids, archived: false)
     @user = users.find_by id: params[:id]
     return redirect_to organization_users_path(org_path: params[:org_path]) if @user.blank?
-    @user_assignments = @user.user_assignments.where(organization_id: @organization.id) if @user.user_assignments.count > 0
+    @user_assignments = @user.user_assignments.where(organization_id: @organizations.map(&:id)) if @user.user_assignments.count > 0
 
     @new_permission = @user.user_assignments.new
   end
@@ -118,7 +118,8 @@ class OrganizationUsersController < AdminUsersController
   end
 
   def create_users
-    org = find_org_by_path(params[:slug])
+    org = Organization.find_by(id: params[:users][:organization_id])
+    org = find_org_by_path(params[:slug]) if org.blank?
     users_emails = params[:users][:emails].gsub(/ */,'').split(/(\r\n|\n|,)/).delete_if {|x| x.match(/\A(\r\n|\n|,|)\z/) }
     user_errors = Array.new
     users_created = 0
@@ -145,7 +146,7 @@ class OrganizationUsersController < AdminUsersController
   end
 
   def import_users
-    @organization = @organizations.all.select{ |o| o.full_slug == params[:slug] }.first
+    @organization = find_org_by_path(params[:slug])
   end
 
 end

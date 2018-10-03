@@ -207,6 +207,7 @@ class AdminController < ApplicationController
       ua.username = params[:user_remote_id]
       ua.role = "staff" if ua.role.blank?
       ua.save
+      flash[:notice] = "Account Successfully Activated"
       redirect_to admin_path
     else
       return render :file => "public/410.html", :status => :gone, :layout => false
@@ -215,7 +216,9 @@ class AdminController < ApplicationController
 
   def user_activation
     user = User.find_by(activation_digest: (params[:id]))
-    if user
+    if get_org.root_org_setting("enable_shibboleth")
+      return redirect_to new_user_session_path
+    elsif user
   		render action: :user_activation, layout: false
     else
       return render :file => "public/410.html", :status => :gone, :layout => false
@@ -229,10 +232,10 @@ class AdminController < ApplicationController
     user_email = params[:q] if params[:search_user_email]
     user_id = params[:q].to_i if params[:search_user_id]
     user_name = ".*#{params[:q]}.*" if params[:search_user_name]
-    user_remote_id = params[:q] if params[:search_remote_account_id]
+    user_remote_id = params[:q] if params[:search_connected_account_id]
 
     user_ids = User.where("email = ? OR id = ? OR name ~* ? ", user_email, user_id, user_name).map(&:id)
-    user_ids += UserAssignment.where("lower(username) = '?' ", user_remote_id.to_s.downcase).map(&:user_id)
+    user_ids += UserAssignment.where("lower(username) = ? ", user_remote_id.to_s.downcase).map(&:user_id)
 
     sql = ["organization_id IN (?) AND (lms_course_id = ? OR name ~* ? OR edit_id ~* ? OR view_id ~* ? OR template_id ~* ? )"]
     param = [@organizations.pluck(:id), params[:q], ".*#{params[:q]}.*"]

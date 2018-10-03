@@ -209,7 +209,7 @@ Then("the Report zip file should have documents in it") do
 end
 
 Given("the organization enable_workflows option is enabled") do
-  @organization.enable_workflows = true
+  @organization.root_org_setting("enable_workflows") = true
   @organization.save
 end
 

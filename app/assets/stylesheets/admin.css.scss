@@ -4,9 +4,9 @@
 body { padding-top: 50px; }
 
 .nav > li.active-org{
-  border-right: 7px;
-  border-right-color: grey;
-  border-right-style: solid;
+  border-left: 7px;
+  border-left-color: grey;
+  border-left-style: solid;
   background-color: rgba(0,0,0,0.1);
   a:hover{
     background-color: rgba(0,0,0,0.11);

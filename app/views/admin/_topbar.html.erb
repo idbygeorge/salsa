@@ -78,7 +78,7 @@
           <li class="active"><%= link_to "Documents", admin_document_index_path(org_path:params[:org_path]) %></li>
           <li class="active"><%= link_to "Users", admin_users_path(org_path:params[:org_path]) %></li>
         <% end %>
-        <% if get_org&.enable_workflows %>
+        <% if get_org&.root_org_setting("enable_workflows") %>
           <li class="active"><%= link_to "Workflow Documents", workflow_document_index_path(org_path:params[:org_path]) %></li>
         <% end %>
         <li class="active"><%= link_to "Organizations", organizations_path(org_path:params[:org_path]) %></li>

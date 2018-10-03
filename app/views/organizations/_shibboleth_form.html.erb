@@ -1,0 +1,69 @@
+
+      <% if @organization.slug.start_with?("/") %>
+          <fieldset class="shibboleth_config collapse" disabled>
+          <legend>shibboleth Information (Controlled by root organization)</legend>
+        <% else %>
+          <fieldset class="shibboleth_config collapse">
+        <% end %>
+
+          <div class="form-group">
+            <div class="controls">
+              <%= f.check_box :enable_shibboleth, class: '' %>
+              <%= f.label :enable_shibboleth, class: "control-label" %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :idp_entity_id,"IDP entity ID", class: "control-label" %>
+            <div class="controls">
+              <%= f.text_field :idp_entity_id, class: 'form-control' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :idp_sso_target_url, class: "control-label" %>
+            <div class="controls">
+              <%= f.text_field :idp_sso_target_url, class: 'form-control' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :idp_slo_target_url, class: "control-label" %>
+            <div class="controls">
+              <%= f.text_field :idp_slo_target_url, class: 'form-control' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :idp_cert, "IDP Cert", class: "control-label" %>
+            <div class="controls">
+              <%= f.text_area :idp_cert, class: 'form-control' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :idp_cert_fingerprint, "IDP Cert Fingerprint", class: "control-label" %>
+            <div class="controls">
+              <%= f.text_field :idp_cert_fingerprint, class: 'form-control' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :idp_cert_fingerprint_algorithm, "IDP Cert Fingerprint Algorithm", class: "control-label" %>
+            <div class="controls">
+              <%= f.text_field :idp_cert_fingerprint_algorithm, class: 'form-control' %>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <%= f.label :authn_context, class: "control-label" %>
+            <div class="controls">
+              <%= f.text_field :authn_context, class: 'form-control' %>
+            </div>
+          </div>
+
+        </fieldset>
+
+        <div class="form-group">
+            <button data-toggle="collapse" data-target=".shibboleth_config" type="button" class="shibboleth_config collapse in">shibboleth Configuration (Controlled by root organization)</button>
+        </div>

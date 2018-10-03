@@ -32,13 +32,14 @@ class WorkflowDocumentsController < ApplicationController
 
   def edit
     get_document params[:id]
-    if @document.organization.inherit_workflows_from_parents
+    if @document.organization.root_org_setting("inherit_workflows_from_parents")
       @workflow_steps = WorkflowStep.where(organization_id: @document.organization.organization_ids + [@document.organization_id]).order(step_type: :desc)
     else
       @workflow_steps = WorkflowStep.where(organization_id: @document.organization_id).order(step_type: :desc)
     end
     @periods = Period.where(organization_id: @document.organization&.parents&.map(&:id).push(@document.organization&.id))
-    @users = UserAssignment.where(organization_id:@document.organization.descendants.map(&:id) + [@document.organization.id]).map(&:user).push @document.user
+    @users = UserAssignment.where(organization_id:@document.organization.descendants.map(&:id) + [@document.organization.id]).map(&:user)
+    @users.push @document.user if @document.user
   end
 
   def update

@@ -38,7 +38,7 @@
             <%= f.label :name %>
             <%= f.text_field :name, class: 'form-control' %>
         </div>
-        <% if get_org.enable_shibboleth %>
+        <% if get_org.root_org_setting("enable_shibboleth") %>
           <div class="form-group">
               <%= f.label :user_remote_id, "Remote user ID" %>
               <%= f.text_field_tag :user_remote_id ,"", class: 'form-control' %>

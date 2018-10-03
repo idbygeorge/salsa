@@ -1,4 +1,4 @@
-<% if get_org.enable_workflows %>
+<% if get_org.root_org_setting("enable_workflows") %>
   <%= render :partial => "workflow_documents/list", locals:{ user_documents: @user_documents, documents: @documents } %>
 <% else %>
 <%= render :partial => "organizations/show" %>
