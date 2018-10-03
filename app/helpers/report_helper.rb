@@ -67,7 +67,7 @@ module ReportHelper
 
     Zip::File.open(zipfile_path(org_slug, report_id), Zip::File::CREATE) do |zipfile|
       zipfile.get_output_stream('content.css'){ |os| os.write CompassRails.sprockets.find_asset('application.css').to_s }
-      if @organization.export_type == "Program Outcomes"
+      if @organization.root_org_setting("export_type")== "Program Outcomes"
         document_metas = []
       else
         document_metas = {}
@@ -80,7 +80,7 @@ module ReportHelper
         if doc.lms_course_id
           identifier = "#{doc.lms_course_id}".gsub(/[^A-Za-z0-9]+/, '_')
         end
-        if @organization.root_org_setting("track_meta_info_from_document") && @organization.export_type == "Program Outcomes"
+        if @organization.root_org_setting("track_meta_info_from_document") && @organization.root_org_setting("export_type")== "Program Outcomes"
           program_outcomes_format(doc, document_metas)
         elsif @organization.root_org_setting("track_meta_info_from_document") && dm = "#{DocumentMeta.where("key LIKE :prefix AND document_id IN (:document_id)", prefix: "salsa_%", document_id: doc.id).select(:key, :value).to_json(:except => :id)}" != "[]"
           document_metas["lms_course-#{doc.lms_course_id}"] = JSON.parse(dm)

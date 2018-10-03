@@ -120,156 +120,22 @@
         <div class="form-group">
             <button data-toggle="collapse" data-target=".lms_config" type="button" class="lms_config collapse in">LMS Configuration</button>
         </div>
-        <fieldset class="shibboleth_config collapse">
-          <legend>shibboleth Information</legend>
-
-          <div class="form-group">
-            <div class="controls">
-              <%= f.check_box :enable_shibboleth, class: '' %>
-              <%= f.label :enable_shibboleth, class: "control-label" %>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <%= f.label :idp_entity_id,"IDP entity ID", class: "control-label" %>
-            <div class="controls">
-              <%= f.text_field :idp_entity_id, class: 'form-control' %>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <%= f.label :idp_sso_target_url, class: "control-label" %>
-            <div class="controls">
-              <%= f.text_field :idp_sso_target_url, class: 'form-control' %>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <%= f.label :idp_slo_target_url, class: "control-label" %>
-            <div class="controls">
-              <%= f.text_field :idp_slo_target_url, class: 'form-control' %>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <%= f.label :idp_cert, "IDP Cert", class: "control-label" %>
-            <div class="controls">
-              <%= f.text_area :idp_cert, class: 'form-control' %>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <%= f.label :idp_cert_fingerprint, "IDP Cert Fingerprint", class: "control-label" %>
-            <div class="controls">
-              <%= f.text_field :idp_cert_fingerprint, class: 'form-control' %>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <%= f.label :idp_cert_fingerprint_algorithm, "IDP Cert Fingerprint Algorithm", class: "control-label" %>
-            <div class="controls">
-              <%= f.text_field :idp_cert_fingerprint_algorithm, class: 'form-control' %>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <%= f.label :authn_context, class: "control-label" %>
-            <div class="controls">
-              <%= f.text_field :authn_context, class: 'form-control' %>
-            </div>
-          </div>
-
-        </fieldset>
-
-        <div class="form-group">
-            <button data-toggle="collapse" data-target=".shibboleth_config" type="button" class="shibboleth_config collapse in">shibboleth Configuration</button>
-        </div>
+        <% if @organization.slug.start_with?("/") %>
+          <% f.object = @organization.parents.last %>
+          <%= render partial: "shibboleth_form", locals: {f: f} %>
+          <% f.object = @organization %>
+        <% else %>
+          <%= render partial: "shibboleth_form", locals: {f: f} %>
+        <% end %>
     <% end %>
 
-    <fieldset>
-        <legend>Settings</fieldset>
-        <% if !@organization.new_record? %>
-          <div class="form-group">
-            <div>
-            <%= f.label :default_workflow_step_id, :class => 'control-label' %>
-              <%= f.collection_select :default_workflow_step_id, @workflow_steps&.where(step_type: "start_step"), :id, :slug, {include_blank: true},{class:"form-control"} %>
-            </div>
-            <%=f.error_span(:next_workflow_step_id) %>
-          </div>
-        <% end %>
-        <div class="form-group">
-          <%= f.label :home_page_redirect, class: "control-label" %>
-          <div class="controls">
-            <%= f.text_field :home_page_redirect, class: 'form-control' %>
-            <div class="help-block">
-                URL to redirect to instead of showing the home page
-            </div>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div class="controls">
-            <%= f.check_box :enable_anonymous_actions, class: '' %>
-            <%= f.label :enable_anonymous_actions, 'Enable Editing for Unauthorized Users', class: "control-label" %>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div class="controls">
-            <%= f.check_box :disable_document_view, class: '' %>
-            <%= f.label :disable_document_view, class: "control-label" %>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div class="controls">
-            <%= f.hidden_field :force_https, class: '' %>
-            <%= check_box_tag :check_ssl, 1, @organization.force_https, data: { "https_check_url" => "https://#{full_org_path(@organization) if !@organization.blank?}/status/server" }  %>
-            <%= f.label :force_https, class: "control-label" %>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div class="controls">
-            <%= f.check_box :enable_workflows, class: '' %>
-            <%= f.label :enable_workflows, class: "control-label" %>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div class="controls">
-            <%= f.check_box :enable_workflow_report, class: '' %>
-            <%= f.label :enable_workflow_report, class: "control-label" %>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div class="controls">
-            <%= f.check_box :inherit_workflows_from_parents, class: '' %>
-            <%= f.label :inherit_workflows_from_parents, class: "control-label" %>
-          </div>
-        </div>
-
-        <div class="form-group">
-          <div class="controls">
-            <%= f.check_box :track_meta_info_from_document, class: '' %>
-            <%= f.label :track_meta_info_from_document, class: "control-label" %>
-          </div>
-          <div class="help-block">
-            requires all data-meta tags in the document to have unique values
-          </div>
-        </div>
-
-        <div class="form-group hide">
-          <%= f.label :export_type, 'Export Types for report zipfile json', class: "control-label" %>
-          <div class="controls">
-            <%= f.select :export_type, options_for_select(@export_types,  @organization.export_type), { class: 'form-control' }%>
-
-          </div>
-        </div>
-
-    </fieldset>
-
+    <% if @organization.slug.start_with?("/") %>
+      <% f.object = @organization.parents.last %>
+      <%= render partial: "settings", locals: {f: f}  %>
+      <% f.object = @organization %>
+    <% else %>
+      <%= render partial: "settings", locals: {f: f}  %>
+    <% end %>
     <div class="form-group">
       <%= f.submit class: 'btn btn-default' %>
       &nbsp;
