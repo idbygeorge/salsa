@@ -25,7 +25,7 @@ class ApplicationController < ActionController::Base
 
   def https_enabled?
     org = get_org
-    org&.force_https if org
+    org&.root_org_setting("force_https") if org
   end
 
   def redirect_if_user_archived
