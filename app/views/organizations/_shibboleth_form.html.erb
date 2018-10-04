@@ -1,5 +1,5 @@
 
-      <% if @organization.slug.start_with?("/") %>
+      <% if @organization&.slug&.start_with?("/") %>
           <fieldset class="shibboleth_config collapse" disabled>
           <legend>shibboleth Information (Controlled by root organization)</legend>
         <% else %>
