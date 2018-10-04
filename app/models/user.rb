@@ -30,22 +30,26 @@ class User < ApplicationRecord
         user.send "name=", "#{saml_response.attribute_value_by_resource_key("first_name")} #{saml_response.attribute_value_by_resource_key("last_name")}"
       when /id/
         org = Organization.find_by(slug: URI.parse(saml_response.raw_response.destination).host)
-        ua = user.user_assignments.find_by(organization_id: org.descendants.map(&:id))
-        ua = UserAssignment.find_or_initialize_by(user_id: user.id, organization_id: org.id ) if ua.blank?
-        if ua.new_record? || ua.username.blank?
+        ua = user.user_assignments.where(organization_id: org.descendants.map(&:id))
+        new_ua = UserAssignment.find_or_initialize_by(user_id: user.id, organization_id: org.id )
+        new_ua.username = saml_response.attribute_value_by_resource_key(key)
+        ua.each do |ua|
           ua.username = saml_response.attribute_value_by_resource_key(key)
-          ua.role = "staff" if ua.role.blank?
-          user.archived = true if ua.new_record?
+          ua.save
+        end
+        user.archived = true if new_ua.new_record?
+        user.activated = true if !new_ua.new_record?
+        if new_ua.new_record? || new_ua.username.blank?
 
           UserMailer.new_unassigned_user_email(user, org, {"user_name" => "#{user&.name}","user_email" => "#{user&.email}", "organization_name" => "#{org&.name}", "archived_users_url" => "#{org.full_slug}/admin/organization/#{org.full_slug}/users?show_archived=true"}).deliver_later if ua.new_record?
-          ua.save
+          new_ua.save
         end
       else
         user.send "#{key}=", saml_response.attribute_value_by_resource_key(key)
       end
     end
 
-    user.send "password=", SecureRandom.urlsafe_base64
+    user.send "password=", SecureRandom.urlsafe_base64 if user.password_digest.blank?
 
     if (Devise.saml_use_subject)
       user.send "#{Devise.saml_default_user_key}=", auth_value
