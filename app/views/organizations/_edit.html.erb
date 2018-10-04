@@ -120,7 +120,7 @@
         <div class="form-group">
             <button data-toggle="collapse" data-target=".lms_config" type="button" class="lms_config collapse in">LMS Configuration</button>
         </div>
-        <% if @organization.slug.start_with?("/") %>
+        <% if @organization&.slug&.start_with?("/") %>
           <% f.object = @organization.parents.last %>
           <%= render partial: "shibboleth_form", locals: {f: f} %>
           <% f.object = @organization %>
@@ -129,7 +129,7 @@
         <% end %>
     <% end %>
 
-    <% if @organization.slug.start_with?("/") %>
+    <% if @organization&.slug&.start_with?("/") %>
       <% f.object = @organization.parents.last %>
       <%= render partial: "settings", locals: {f: f}  %>
       <% f.object = @organization %>

@@ -62,7 +62,7 @@ class Organization < ApplicationRecord
   end
 
   def root_org_setting(setting)
-    if self.slug.start_with?('/')
+    if self.slug&.start_with?('/')
       org = self.self_and_ancestors.reorder(:depth).first
       result = org[setting]
     else
