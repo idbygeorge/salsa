@@ -21,8 +21,8 @@
 
     <div class="form-group">
       <div class="controls">
-        <%= f.check_box(:enable_anonymous_actions, class: '', "#{"disabled" if @organization.slug.start_with?("/")}".to_sym => true) %>
-        <%= f.label :enable_anonymous_actions, "Enable Editing for Unauthorized Users #{ "(Controlled by root org)" if @organization.slug.start_with?("/") }", class: "control-label" %>
+        <%= f.check_box(:enable_anonymous_actions, class: '', "#{"disabled" if @organization&.slug&.start_with?("/")}".to_sym => true) %>
+        <%= f.label :enable_anonymous_actions, "Enable Editing for Unauthorized Users #{ "(Controlled by root org)" if @organization&.slug&.start_with?("/") }", class: "control-label" %>
       </div>
     </div>
 
@@ -35,37 +35,37 @@
 
     <div class="form-group">
       <div class="controls">
-        <%= f.hidden_field :force_https, class: '' , "#{"disabled" if @organization.slug.start_with?("/")}".to_sym => true%>
-        <%= check_box_tag :check_ssl, 1, @organization.force_https, data: { "https_check_url" => "https://#{full_org_path(@organization) if !@organization.blank?}/status/server" } , "#{"disabled" if @organization.slug.start_with?("/")}".to_sym => true %>
-        <%= f.label :force_https, "Force HTTPS #{ "(Controlled by root org)" if @organization.slug.start_with?("/") }", class: "control-label" %>
+        <%= f.hidden_field :force_https, class: '' , "#{"disabled" if @organization&.slug&.start_with?("/")}".to_sym => true%>
+        <%= check_box_tag :check_ssl, 1, @organization.force_https, data: { "https_check_url" => "https://#{full_org_path(@organization) if !@organization.new_record?}/status/server" } , "#{"disabled" if @organization&.slug&.start_with?("/")}".to_sym => true %>
+        <%= f.label :force_https, "Force HTTPS #{ "(Controlled by root org)" if @organization&.slug&.start_with?("/") }", class: "control-label" %>
       </div>
     </div>
 
     <div class="form-group">
       <div class="controls">
-        <%= f.check_box :enable_workflows, class: '' , "#{"disabled" if @organization.slug.start_with?("/")}".to_sym => true%>
-        <%= f.label :enable_workflows, "Enable workflows #{ "(Controlled by root org)" if @organization.slug.start_with?("/") }", class: "control-label" %>
+        <%= f.check_box :enable_workflows, class: '' , "#{"disabled" if @organization&.slug&.start_with?("/")}".to_sym => true%>
+        <%= f.label :enable_workflows, "Enable workflows #{ "(Controlled by root org)" if @organization&.slug&.start_with?("/") }", class: "control-label" %>
       </div>
     </div>
 
     <div class="form-group">
       <div class="controls">
-        <%= f.check_box :enable_workflow_report, class: '' , "#{"disabled" if @organization.slug.start_with?("/")}".to_sym => true%>
-        <%= f.label :enable_workflow_report, "Enable workflow report #{ "(Controlled by root org)" if @organization.slug.start_with?("/") }", class: "control-label" %>
+        <%= f.check_box :enable_workflow_report, class: '' , "#{"disabled" if @organization&.slug&.start_with?("/")}".to_sym => true%>
+        <%= f.label :enable_workflow_report, "Enable workflow report #{ "(Controlled by root org)" if @organization&.slug&.start_with?("/") }", class: "control-label" %>
       </div>
     </div>
 
     <div class="form-group">
       <div class="controls">
-        <%= f.check_box :inherit_workflows_from_parents, class: '' , "#{"disabled" if @organization.slug.start_with?("/")}".to_sym => true%>
-        <%= f.label :inherit_workflows_from_parents, "Inherit workflows from parents #{ "(Controlled by root org)" if @organization.slug.start_with?("/") }", class: "control-label" %>
+        <%= f.check_box :inherit_workflows_from_parents, class: '' , "#{"disabled" if @organization&.slug&.start_with?("/")}".to_sym => true%>
+        <%= f.label :inherit_workflows_from_parents, "Inherit workflows from parents #{ "(Controlled by root org)" if @organization&.slug&.start_with?("/") }", class: "control-label" %>
       </div>
     </div>
 
     <div class="form-group">
       <div class="controls">
-        <%= f.check_box :track_meta_info_from_document, class: '' , "#{"disabled" if @organization.slug.start_with?("/")}".to_sym => true%>
-        <%= f.label :track_meta_info_from_document, "Track meta info from document #{ "(Controlled by root org)" if @organization.slug.start_with?("/") }", class: "control-label" %>
+        <%= f.check_box :track_meta_info_from_document, class: '' , "#{"disabled" if @organization&.slug&.start_with?("/")}".to_sym => true%>
+        <%= f.label :track_meta_info_from_document, "Track meta info from document #{ "(Controlled by root org)" if @organization&.slug&.start_with?("/") }", class: "control-label" %>
       </div>
       <div class="help-block">
         requires all data-meta tags in the document to have unique values
@@ -73,9 +73,9 @@
     </div>
 
     <div class="form-group hide">
-      <%= f.label :export_type, "Export Types for report zipfile json #{ "(Controlled by root org)" if @organization.slug.start_with?("/") }", class: "control-label" %>
+      <%= f.label :export_type, "Export Types for report zipfile json #{ "(Controlled by root org)" if @organization&.slug&.start_with?("/") }", class: "control-label" %>
       <div class="controls">
-        <%= f.select :export_type, options_for_select(@export_types,  @organization.root_org_setting("export_type")), { class: 'form-control' }, "#{"disabled" if @organization.slug.start_with?("/")}".to_sym => true%>
+        <%= f.select :export_type, options_for_select(@export_types,  @organization.root_org_setting("export_type")), { class: 'form-control' }, "#{"disabled" if @organization&.slug&.start_with?("/")}".to_sym => true%>
 
       </div>
     </div>
