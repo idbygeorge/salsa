@@ -15,7 +15,7 @@
 
           <tr>
             <td><%= link_to document.name, edit_document_path(document.edit_id, org_path:params[:org_path]), id:"edit_document" %></td>
-            <td><%= link_to("#{document.organization.parent.name} : #{document.organization.name}", edit_document_path(document.edit_id, org_path:params[:org_path])) if document.organization %></td>
+            <td><%= link_to("#{document.organization.parent&.name} : #{document.organization.name}", edit_document_path(document.edit_id, org_path:params[:org_path])) if document.organization %></td>
             <td><%= link_to(document.workflow_step&.component&.name, edit_document_path(document.edit_id, org_path:params[:org_path])) if document.workflow_step_id %></td>
             <td><%= "#{document.user&.name} : #{document.user&.email}" if document.user %></td>
             <td>
