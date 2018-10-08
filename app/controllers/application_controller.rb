@@ -72,8 +72,10 @@ class ApplicationController < ActionController::Base
   def get_roles
     if has_role("admin")
       @roles = UserAssignment.roles
-    else
+    elsif has_role("organization_admin")
       @roles = UserAssignment.roles.except("Global Administrator")
+    else
+      @roles = {"Staff"=>"staff"}
     end
   end
 
