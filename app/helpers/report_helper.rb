@@ -5,6 +5,10 @@ module ReportHelper
   def self.generate_report_as_job (org_id, account_filter, params)
     @reports = ReportArchive.where(organization_id: org_id).all
     @report = nil;
+    org = Organization.find(org_id)
+    if account_filter.blank?
+      account_filter = org.default_account_filter
+    end
     @reports.each do |report|
       if report.report_filters && report.report_filters == params
         @report = report
