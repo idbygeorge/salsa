@@ -12,7 +12,8 @@ class User < ApplicationRecord
 
   has_many :user_assignments
   has_many :documents
-  has_secure_password
+  has_secure_password validations: false
+  validates_presence_of :password, on: :create
 
   has_many :user_assignments
 
