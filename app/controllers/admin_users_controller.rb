@@ -30,28 +30,30 @@ class AdminUsersController < AdminController
 
     user_email = params[:q] if params[:search_user_email]
     user_id = params[:q].to_i if params[:search_user_id]
-    user_name = ".*#{params[:q]}.*" if params[:search_user_name]
+    user_name = "#{params[:q]}" if params[:search_user_name]
     user_remote_id = params[:q] if params[:search_connected_account_id]
 
     if params[:controller] == "organization_users"
       @organization = find_org_by_path(params[:slug])
       users = User.where(id: UserAssignment.where(organization_id: @organization.id).map(&:user))
       user_ids = users.where("email = ? OR id = ? OR name ~* ? ", user_email, user_id, user_name).map(&:id)
-      user_ids += UserAssignment.where(organization_id: @organization.id).where("lower(username) = ? ", user_remote_id.to_s.downcase).map(&:user_id)
+      user_ids += UserAssignment.where(organization_id: @organization.id).where("lower(username) = ? ", user_remote_id.to_s.downcase).map(&:user_id) if !user_remote_id.blank?
     else
       user_ids = User.where("email = ? OR id = ? OR name ~* ? ", user_email, user_id, user_name).map(&:id)
-      user_ids += UserAssignment.where("lower(username) = ? ", user_remote_id.to_s.downcase).map(&:user_id)
+      user_ids += UserAssignment.where("lower(username) = ? ", user_remote_id.to_s.downcase).map(&:user_id) if !user_remote_id.blank?
     end
-
     @users = User.where(id: user_ids).page(page).per(per)
     render "index"
   end
 
   def archive
     @user = User.find params["#{params[:controller].singularize}_id".to_sym]
-    @user.update(archived: true)
-    flash[:notice] = "#{@user.email} has been archived"
-    return redirect_to polymorphic_path([params[:controller]],org_path:params[:org_path])
+    if @user.update(archived: true)
+      flash[:notice] = "#{@user.email} has been archived"
+    else
+      flash[:error] = "#{@user.email} has NOT been archived because #{@user.errors.messages}"
+    end
+      return redirect_to polymorphic_path([params[:controller]],org_path:params[:org_path])
   end
 
   def restore
