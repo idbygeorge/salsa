@@ -21,14 +21,14 @@
 <thead>
   <tr>
     <th>
-      LMS User ID
+      <%= f.label :username, "Remote User ID" %>
     </th>
     <th>
-      Role
+      <%= f.label :role %>
     </th>
     <% if has_role("admin") %>
       <th>
-        Organization
+        <%= f.label :organization_id %>
       </th>
     <% end %>
     <th>
@@ -63,15 +63,15 @@
 
   <% end %>
   <td>
+    <%= f.label :cascades_true, "Yes" %>
     <% if permission[:cascades] == nil %>
       <%= f.radio_button :cascades, true, checked: true %>
     <% else %>
       <%= f.radio_button :cascades, true %>
     <% end %>
 
-    <%= f.label :cascades, "Yes" %>
+    <%= f.label :cascades_false, "No" %>
     <%= f.radio_button :cascades, false %>
-    <%= f.label :cascades, "No" %>
   </td>
 
   <td class="text">
