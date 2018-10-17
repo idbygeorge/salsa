@@ -35,9 +35,11 @@
 
     <div class="form-group">
       <div class="controls">
-        <%= f.hidden_field :force_https, class: '' , "#{"disabled" if @organization&.slug&.start_with?("/")}".to_sym => true%>
-        <%= check_box_tag :check_ssl, 1, @organization.force_https, data: { "https_check_url" => "https://#{full_org_path(@organization) if !@organization.new_record?}/status/server" } , "#{"disabled" if @organization&.slug&.start_with?("/")}".to_sym => true %>
-        <%= f.label :force_https, "Force HTTPS #{ "(Controlled by root org)" if @organization&.slug&.start_with?("/") }", class: "control-label" %>
+        <%= label :check, :ssl, {class: "control-label"} do %>
+          <%= f.hidden_field :force_https, class: '' , "#{"disabled" if @organization&.slug&.start_with?("/")}".to_sym => true%>
+          <%= check_box_tag :check_ssl, 1, @organization.force_https, data: { "https_check_url" => "https://#{full_org_path(@organization) if !@organization.new_record?}/status/server" } , "#{"disabled" if @organization&.slug&.start_with?("/")}".to_sym => true %>
+         <%= "Force HTTPS #{ "(Controlled by root org)" if @organization&.slug&.start_with?("/") }" %>
+        <% end %>
       </div>
     </div>
 
