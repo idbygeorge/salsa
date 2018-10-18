@@ -48,14 +48,8 @@ class ApplicationController < ActionController::Base
   end
 
   def check_organization_workflow_enabled
-    if slugs = params[:slug]&.split((/(?=\/)/))
-      organization = Organization.find_by(slug: slugs[-1])
-    elsif slugs = params[:org_path]&.split((/(?=\/)/))
-      slugs[0] = "/#{slugs[0]}"
-      organization = Organization.find_by(slug: slugs[-1])
-    else
-      organization = Organization.find_by(slug: get_org_slug)
-    end
+    organization = find_org_by_path(params[:slug])
+    organization = find_org_by_path(get_org_path) if organization.blank?
     if organization.root_org_setting('enable_workflows') != true
       return render :file => "public/401.html", :status => :unauthorized, :layout => false
     end
