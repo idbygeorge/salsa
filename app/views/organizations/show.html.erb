@@ -45,18 +45,20 @@
       </a>
 
     <% end %>
+    <% if has_role('supervisor') %>
+      <a class="btn btn-default" href="<%= organization_import_users_path(params[:slug], org_path: params[:org_path]) %>">
+        Import Users
+      </a>
+      <a class="btn btn-default" href="<%= organization_users_path(params[:slug], org_path: params[:org_path]) %>">
+        Users
+      </a>
+    <% end %>
     <% if @organization.root_org_setting("enable_workflows") && has_role('supervisor', get_org) %>
       <a class="btn btn-default" href="<%= start_workflow_form_path(slug: params[:slug], org_path: params[:org_path]) %>">
         Start Workflows
       </a>
       <a class="btn btn-default" href="<%= workflow_steps_path(params[:slug], org_path: params[:org_path]) %>">
         Workflow Steps
-      </a>
-      <a class="btn btn-default" href="<%= organization_import_users_path(params[:slug], org_path: params[:org_path]) %>">
-        Import Users
-      </a>
-      <a class="btn btn-default" href="<%= organization_users_path(params[:slug], org_path: params[:org_path]) %>">
-        Users
       </a>
 
     <% end %>
