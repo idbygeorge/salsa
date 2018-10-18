@@ -17,11 +17,11 @@ class Document < ApplicationRecord
     if self.workflow_step&.component_id && user != nil && self.workflow_step.step_type != "end_step" && user.user_assignments.where.not(organization_id: nil).exists?
       component = self.workflow_step.component
       if component.role == "supervisor"
-        ua = UserAssignment.where(role: "supervisor",organization_id: self.organization&.parents.map(&:id)).includes(:organization).reorder("organizations.depth DESC").first
-        user_assignment = user.user_assignments.find_by(id:ua&.id)
+        uas = self.closest_roles("supervisor")
+        user_assignment = user.user_assignments.find_by(id:uas.map(&:id))
       elsif component.role == "approver"
         user_ids = self.approvers_that_have_not_signed.map(&:id)
-        ua = UserAssignment.where(user_id: user_ids, role: "approver",organization_id: self.organization&.parents&.map(&:id)).includes(:organization).reorder("organizations.depth DESC").first
+        ua = self.closest_role("approver", user_ids)
         user_assignment = user.user_assignments.find_by(id:ua&.id)
       else
         user_assignment = user.user_assignments.find_by(organization_id: self.organization&.parents.map(&:id).push(self.organization_id))
@@ -33,9 +33,11 @@ class Document < ApplicationRecord
         result = true
       elsif component.role == "staff" &&  ["supervisor","staff"].include?(user_assignment.role) && self.user_id == user.id && self.workflow_step_id != ""
         result = true
+      elsif component.role == "supervisor" && user_assignment.role == "supervisor" && user_org.level <= self.organization&.level && self.user.user_assignments.find_by(organization_id:self.organization_id).role == "staff"
+        result = true
       elsif component.role == "supervisor" && user_assignment.role == "supervisor" && user_org.level < self.organization&.level
         result = true
-      elsif component.role == "approver" && user_assignment.role == "approver" && user_org.level < self.organization&.level
+      elsif component.role == "approver" && user_assignment.role == "approver" && user_org.level <= self.organization&.level
         result = true
       else
         result = false
@@ -46,20 +48,59 @@ class Document < ApplicationRecord
     result
   end
 
-  def assignee
+  def assignees
     if self.workflow_step_id
       component = self.workflow_step.component
       if component.role == "staff"
-        self.user
+        User.where(id: self.user_id)
+      elsif component.role == "supervisor" && self.user.user_assignments.find_by(organization_id:self.organization_id).role == "staff"
+        User.where(id: self.closest_roles("supervisor").map(&:user_id))
       elsif component.role == "supervisor"
-        uas = UserAssignment.find_by(organization_id: self.organization_id)
-        User.find_by(user_assignment_id:ua.id)
+        User.where(id: self.closest_roles_without_current_org("supervisor").map(&:user_id))
+      elsif component.role == "approver"
+        user_ids = self.approvers_that_have_not_signed.map(&:id)
+        User.where(id: self.closest_user_with_role("approver", user_ids)&.id)
       else
         nil
       end
     else
       nil
     end
+
+  end
+
+
+  def closest_roles_without_current_org(role, user_ids=nil)
+    user_assignments = UserAssignment.all
+    user_assignments = user_assignments.where(user_id: user_ids) if !user_ids.blank?
+    user_assignments = user_assignments&.where(role: role,organization_id: self.organization&.ancestors&.map(&:id))&.includes(:organization)&.reorder("organizations.depth DESC")
+    org_id = user_assignments&.first&.organization_id
+    user_assignments.where(organization_id: org_id)
+  end
+
+
+  def closest_roles(role, user_ids=nil)
+    user_assignments = UserAssignment.all
+    user_assignments = user_assignments.where(user_id: user_ids) if !user_ids.blank?
+    user_assignments = user_assignments&.where(role: role,organization_id: self.organization&.self_and_ancestors&.map(&:id))&.includes(:organization)&.reorder("organizations.depth DESC")
+    org_id = user_assignments&.first&.organization_id
+    return user_assignments.where(organization_id: org_id)
+  end
+
+  def closest_role(role, user_ids=nil)
+    user_assignments = UserAssignment.all
+    user_assignments = user_assignments.where(user_id: user_ids) if !user_ids.blank?
+    return user_assignments.where(role: role,organization_id: self.organization&.self_and_ancestors&.map(&:id)).includes(:organization).reorder("organizations.depth DESC").first
+  end
+
+  # Find closest user with role
+  def closest_user_with_role(role, user_ids=nil)
+    self.closest_role(role, user_ids)&.user
+  end
+
+  # Find all users on the closest organization with the role
+  def closest_users_with_role role, user_ids=nil
+    return User.where(id: self.closest_roles(role,user_ids).map(&:user_id))
   end
 
   def approvers

@@ -5,6 +5,7 @@
       <th>Organization</th>
       <th>Workflow Step</th>
       <th>User</th>
+      <th>Assignee(s)</th>
       <th><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
@@ -18,6 +19,12 @@
             <td><%= link_to("#{document.organization.parent&.name} : #{document.organization.name}", edit_document_path(document.edit_id, org_path:params[:org_path])) if document.organization %></td>
             <td><%= link_to(document.workflow_step&.component&.name, edit_document_path(document.edit_id, org_path:params[:org_path])) if document.workflow_step_id %></td>
             <td><%= "#{document.user&.name} : #{document.user&.email}" if document.user %></td>
+            <td>
+              <% document.assignees&.each do |assignee| %>
+                <%= "#{assignee&.name} : #{assignee&.email}" if document.user %>
+                <br>
+              <% end %>
+            </td>
             <td>
               <% if has_role 'supervisor' %>
                 <%= link_to "Versions", workflow_document_versions_path(document, org_path:params[:org_path]), :class => 'btn btn-default btn-xs' %>
@@ -40,6 +47,12 @@
             <td><%= "#{document.organization.parent.name} : #{document.organization.name}" %></td>
             <td><%= document.workflow_step&.component&.name  %></td>
             <td><%= "#{document.user&.name} : #{document.user&.email}" if document.user %></td>
+            <td>
+              <% document.assignees&.each do |assignee| %>
+                <%= "#{assignee&.name} : #{assignee&.email}" if document.user %>
+                <br>
+              <% end %>
+            </td>
             <td>
               <%= link_to "View", document_path(document.view_id, org_path:params[:org_path]), :class => 'btn btn-default btn-xs' %>
             </td>

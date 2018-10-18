@@ -1,4 +1,5 @@
 class AdminController < ApplicationController
+  before_action :redirect_to_sub_org, only:[:landing,:index,:edit,:versions]
   before_action :require_designer_permissions, except: [
     :landing,
     :login,
@@ -35,7 +36,7 @@ class AdminController < ApplicationController
       redirect_to organizations_path, notice: flash[:notice]
     elsif has_role 'auditor'
       redirect_to admin_auditor_reports_path, notice: flash[:notice]
-    elsif ( has_role('staff', assignment_org = get_user_assignment_org(session[:authenticated_user],'staff')) || has_role('approver', assignment_org = get_user_assignment_org(session[:authenticated_user],'approver')) || has_role('supervisor', assignment_org = get_user_assignment_org(session[:authenticated_user],'supervisor')) ) && assignment_org&.setting('enable_workflows') == true
+    elsif ( has_role('staff', assignment_org = get_user_assignment_org(session[:authenticated_user],'staff')) || has_role('approver', assignment_org = get_user_assignment_org(session[:authenticated_user],'approver')) || has_role('supervisor', assignment_org = get_user_assignment_org(session[:authenticated_user],'supervisor')) ) && assignment_org&.root_org_setting('enable_workflows') == true
       redirect_to workflow_document_index_path(org_path:assignment_org.path), notice: flash[:notice]
     else
       redirect_or_error
@@ -44,7 +45,7 @@ class AdminController < ApplicationController
 
   def login
   	@organization = find_org_by_path params[:slug]
-    if @organization.setting("enable_shibboleth")
+    if @organization&.setting("enable_shibboleth")
       return redirect_to new_user_session_path(org_path: params[:org_path])
     end
   	if @organization and @organization[:lms_authentication_source] != "" and @organization[:lms_authentication_source] != nil
