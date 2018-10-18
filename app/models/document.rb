@@ -51,9 +51,10 @@ class Document < ApplicationRecord
   def assignees
     if self.workflow_step_id
       component = self.workflow_step.component
+      return nil if component.blank?
       if component.role == "staff"
         User.where(id: self.user_id)
-      elsif component.role == "supervisor" && self.user.user_assignments.find_by(organization_id:self.organization_id).role == "staff"
+      elsif component.role == "supervisor" && self.user&.user_assignments&.find_by(organization_id:self.organization_id)&.role == "staff"
         User.where(id: self.closest_roles("supervisor").map(&:user_id))
       elsif component.role == "supervisor"
         User.where(id: self.closest_roles_without_current_org("supervisor").map(&:user_id))
