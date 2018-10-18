@@ -28,7 +28,6 @@ $(document).ready(function() {
       // array of course IDs that will use Salsa instead of the syllabus editor in Canvas
       // add course IDs to this array to enable Salsa for them
       var coursesUsingSalsa = [
-	'88611'
       // Example:
       // '1297671'
 
