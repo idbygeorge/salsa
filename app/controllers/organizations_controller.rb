@@ -84,11 +84,11 @@ class OrganizationsController < AdminController
     redirect_to organization_path(slug: full_org_path(@organization), org_path: params[:org_path])
   end
 
-  def destroy
+  def delete
     @organization = find_org_by_path params[:slug]
-    @organization.destroy
+    @organization.delete
 
-    redirect_to organizations_paths( org_path: params[:org_path])
+    redirect_to organizations_path( org_path: params[:org_path])
   end
 
   def import

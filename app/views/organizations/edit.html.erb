@@ -1,9 +1,6 @@
-<% if session[:admin_authorized] %>
-<%= form_for @organization, url: organization_path(org_path: params[:org_path]), method: :delete, html: { class: 'pull-right' } do |f| %>
-  <div class="form-group">
-    <%= f.submit "Delete #{@organization[:name]}", class: 'btn btn-danger' %>
-  </div>
-<% end %>
+<% if has_role("admin") %>
+    <%= link_to "Delete #{@organization[:name]}", organization_path(org_path: params[:org_path]),
+            data: {:confirm => 'Are you sure?'}, :method => :delete, class: 'btn btn-danger pull-right' %>
 <% end %>
 
 <div class="page-header">
