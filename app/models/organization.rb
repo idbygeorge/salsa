@@ -65,6 +65,7 @@ class Organization < ApplicationRecord
     if self.slug&.start_with?('/')
       org = self.self_and_ancestors.reorder(depth: :asc).first
       result = org[setting]
+      puts "\e[31m#{org.name}\e[0m"
     else
       org = self
       result = org[setting]
