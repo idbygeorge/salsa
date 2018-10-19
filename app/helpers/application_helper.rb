@@ -146,9 +146,9 @@ module ApplicationHelper
     if user_id != nil
       current_user = User.find(user_id)
       if current_assignment = current_user.user_assignments.find_by(role: role)
-        current_assignment.organization
+        return current_assignment.organization
       else
-        nil
+        return nil
       end
     end
   end
@@ -257,12 +257,12 @@ module ApplicationHelper
     unless path&.include? '/'
       organization = Organization.find_by slug:path
     else
-      path.split('/').each do |slug|
+      path.split((/(?=\/)/)).each do |slug|
         next if slug.blank?
         unless organization
           organization = Organization.find_by slug: slug, depth: 0
         else
-          organization = organization.descendants.find_by slug: "/" + slug
+          organization = organization.descendants.find_by slug: slug
         end
       end
     end

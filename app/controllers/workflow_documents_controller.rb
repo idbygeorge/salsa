@@ -22,7 +22,7 @@ class WorkflowDocumentsController < ApplicationController
       wfs = @workflow_steps.find_by(id: params[:step_filter].to_i)
       @documents = @documents.where(workflow_step_id: wfs&.id )
     else
-      @documents = Document.where(organization_id:org.descendants.map(&:id).push(org.id)).where('documents.updated_at != documents.created_at')
+      @documents = Document.where(organization_id:org.self_and_descendants.map(&:id).push(org.id)).where('documents.updated_at != documents.created_at')
       @user_documents = @documents.where(user_id: current_user&.id) if current_user
       @documents = get_documents(current_user, @documents)
       @user_documents = @user_documents.where.not(id: @documents.map(&:id)).reorder(created_at: :desc) if @user_documents

@@ -28,7 +28,7 @@ class DocumentsController < ApplicationController
 
       redirect_to edit_document_path(:id => @document.edit_id, :org_path => params[:org_path], :batch_token => params[:batch_token])
     else
-      redirect_to root_path, :flash => { :error => "You are not authorized to create a document" }
+      redirect_to root_path(org_path: params[:org_path]), :flash => { :error => "You are not authorized to create a document" }
     end
   end
 

@@ -11,6 +11,7 @@ class ApplicationController < ActionController::Base
   def redirect_to_sub_org
     root_org = Organization.find_by(slug: request.env["SERVER_NAME"])
     org_path = current_user&.user_assignments&.where(organization_id: root_org.descendants.map(&:id))&.includes(:organization)&.reorder("organizations.depth DESC")&.first&.organization&.path
+    org_path = params[:org_path] if org_path.blank?
     return redirect_to full_url_for(request.parameters.merge(org_path:org_path)) if !current_page?(full_url_for(request.parameters.merge(org_path:org_path)))
   end
 
@@ -47,15 +48,9 @@ class ApplicationController < ActionController::Base
   end
 
   def check_organization_workflow_enabled
-    if slugs = params[:slug]&.split((/(?=\/)/))
-      organization = Organization.find_by(slug: slugs[-1])
-    elsif slugs = params[:org_path]&.split((/(?=\/)/))
-      slugs[0] = "/#{slugs[0]}"
-      organization = Organization.find_by(slug: slugs[-1])
-    else
-      organization = Organization.find_by(slug: get_org_slug)
-    end
-    if organization.setting('enable_workflows') != true
+    organization = find_org_by_path(params[:slug])
+    organization = find_org_by_path(get_org_path) if organization.blank?
+    if organization.root_org_setting('enable_workflows') != true
       return render :file => "public/401.html", :status => :unauthorized, :layout => false
     end
   end
