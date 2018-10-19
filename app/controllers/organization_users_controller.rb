@@ -93,9 +93,9 @@ class OrganizationUsersController < AdminUsersController
 
   def edit
     @organization = find_org_by_path(params[:slug])
-    user_ids = UserAssignment.where(organization_id: Organization.find_by(slug: params[:slug])).map(&:user_id)
+    user_ids = UserAssignment.where(organization_id: @organization&.id).map(&:user_id)
     users = User.where(id: user_ids, archived: false)
-    @user = users.find_by id: params[:id]
+    @user = users.find_by id: params[:id]&.to_i
     return redirect_to organization_users_path(org_path: params[:org_path]) if @user.blank?
   end
 
