@@ -4,10 +4,12 @@
 body { padding-top: 50px; }
 
 .nav > li.active-org{
-  border-left: 7px;
-  border-left-color: grey;
-  border-left-style: solid;
-  background-color: rgba(0,0,0,0.1);
+  a{
+    border-left: 7px;
+    border-left-color: grey;
+    border-left-style: solid;
+    background-color: rgba(0,0,0,0.1);
+  }
   a:hover{
     background-color: rgba(0,0,0,0.11);
   }
