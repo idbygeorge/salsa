@@ -34,21 +34,24 @@ class User < ApplicationRecord
         user.send "password=", SecureRandom.urlsafe_base64 if user.password_digest.blank?
         user.save! if user.new_record?
         ua = user.user_assignments.where(organization_id: org.descendants.map(&:id))
-        new_ua = UserAssignment.find_or_initialize_by(user_id: user.id, organization_id: org.id )
-        new_ua.username = saml_response.attribute_value_by_resource_key(key)
-        new_ua.role = "staff" if new_ua.new_record?
-        new_ua.cascades = true if new_ua.new_record?
-        user.archived = true if new_ua.new_record?
-        user.activated = true if !new_ua.new_record?
-        ua.each do |ua|
-          ua.username = saml_response.attribute_value_by_resource_key(key)
-          ua.save
-        end
-        if new_ua.new_record? || new_ua.username.blank?
+        if ua.blank?
+          new_ua = UserAssignment.find_or_initialize_by(user_id: user.id, organization_id: org.id )
+          new_ua.username = saml_response.attribute_value_by_resource_key(key)
+          new_ua.role = "staff" if new_ua.new_record?
+          new_ua.cascades = true if new_ua.new_record?
+          user.archived = true if new_ua.new_record?
+          user.activated = true if !new_ua.new_record?
+          if new_ua.new_record? || new_ua.username.blank?
 
           UserMailer.new_unassigned_user_email(user, org, {"user_name" => "#{user&.name}","user_email" => "#{user&.email}", "organization_name" => "#{org&.name}", "archived_users_url" => "#{org.full_slug}/admin/organization/#{org.full_slug}/users?show_archived=true"}).deliver_later if new_ua.new_record?
           new_ua.save
         end
+        end
+        ua.each do |ua|
+          ua.username = saml_response.attribute_value_by_resource_key(key)
+          ua.save
+        end
+
       else
         user.send "#{key}=", saml_response.attribute_value_by_resource_key(key)
       end
