@@ -5,7 +5,7 @@
     <% form_path = polymorphic_path([params[:controller]], org_path: params[:org_path]) %>
   <% end %>
 
-  <%= form_for(@user, url: form_path, :html => { :class => "form-horizontal col-md-9 col-lg-6" } ) do |f| %>
+  <%= form_for(@user, url: form_path, :html => { :class => "form-horizontal col-md-9 col-lg-6", autocomplete: :off } ) do |f| %>
 
     <% if @user.errors.any? %>
         <ul>

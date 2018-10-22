@@ -121,7 +121,7 @@ module ApplicationHelper
     if session[:authenticated_user]
       return render :file => "public/401.html", :status => :unauthorized, :layout => false
     else
-      if current_page?(admin_path)
+      if current_page?(admin_path(org_path: params[:org_path]))
         flash.keep
         return redirect_to admin_login_path(org_path: params[:org_path])
       else

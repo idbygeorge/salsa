@@ -1,5 +1,4 @@
 <%= form_tag( polymorphic_path([params[:controller], :search], org_path: params[:org_path]), method: 'get', class: "form-horizontal col-md-12 navbar-form pull-left", role: "search" ) do |f| %>
-  <% if has_role('designer') %>
     <div class="col-sm-12">
 
       <div class="input-group">
@@ -47,5 +46,4 @@
         </div>
       </div>
     </div>
-  <% end %>
 <% end %>

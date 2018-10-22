@@ -1,5 +1,5 @@
 class AdminController < ApplicationController
-  before_action :redirect_to_sub_org, only:[:landing,:index,:edit,:versions]
+  before_action :redirect_to_sub_org, only:[:landing]
   before_action :require_designer_permissions, except: [
     :landing,
     :login,
