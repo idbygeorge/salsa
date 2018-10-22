@@ -3,9 +3,14 @@
 
 body { padding-top: 50px; }
 
+.nav.nav-sidebar > li > a{
+  border-left: 7px;
+  border-left-color: #f5f5f5;
+  border-left-style: solid;
+}
+
 .nav > li.active-org{
   a{
-    border-left: 7px;
     border-left-color: grey;
     border-left-style: solid;
     background-color: rgba(0,0,0,0.1);
