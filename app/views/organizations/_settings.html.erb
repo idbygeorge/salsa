@@ -10,10 +10,10 @@
       </div>
     <% end %>
     <div class="form-group">
-      <%= f.label :home_page_redirect, class: "control-label" %>
+      <%= f.label :home_page_redirect, class: "control-label", "aria-describedby" => "home-page-redirect-help" %>
       <div class="controls">
         <%= f.text_field :home_page_redirect, class: 'form-control' %>
-        <div class="help-block">
+        <div class="help-block" id="home-page-redirect-help">
             URL to redirect to instead of showing the home page
         </div>
       </div>
@@ -67,9 +67,9 @@
     <div class="form-group">
       <div class="controls">
         <%= f.check_box :track_meta_info_from_document, class: '' , "#{"disabled" if @organization&.slug&.start_with?("/")}".to_sym => true%>
-        <%= f.label :track_meta_info_from_document, "Track meta info from document #{ "(Controlled by root org)" if @organization&.slug&.start_with?("/") }", class: "control-label" %>
+        <%= f.label :track_meta_info_from_document, "Track meta info from document #{ "(Controlled by root org)" if @organization&.slug&.start_with?("/") }", class: "control-label", "aria-describedby" => "track-meta-data-help" %>
       </div>
-      <div class="help-block">
+      <div class="help-block" id="track-meta-data-help">
         requires all data-meta tags in the document to have unique values
       </div>
     </div>

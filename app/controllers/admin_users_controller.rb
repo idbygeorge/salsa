@@ -25,7 +25,7 @@ class AdminUsersController < AdminController
   end
 
   def users_search page=params[:page], per=25
-    show_archived = params[:show_archived] == true
+    show_archived = params[:show_archived] == "true"
     search_user_text = ''
     user_name = user_email = user_id = user_remote_id = nil
 

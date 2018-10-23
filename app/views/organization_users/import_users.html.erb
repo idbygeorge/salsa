@@ -1,7 +1,6 @@
 <div class="page-header">
+  <%= render :partial => "organizations/breadcrumbs", locals: {organization: @organization} %>
   <h1>
-    <%= link_to organization_path(params[:slug], org_path: params[:org_path]) do %><small><%= @organization.name %></small><% end %>
-    <br>
     <%=t '.title', :default => "Import Users" %>
   </h1>
 </div>
@@ -18,18 +17,18 @@
 
   <div class="row">
     <div class="form-group col-md-6">
-      <%= f.label :remote_user_ids, class: "control-label" %>
+      <%= f.label :remote_user_ids, class: "control-label", "aria-describedby" => "remote-user-ids-help" %>
       <div class="controls col-md-12">
         <%= f.text_area :remote_user_ids, class: 'form-control input-xxlarge', rows: 6 %>
-        <div class="help-block">seperate each remote user id by a comma or newline</div>
+        <div class="help-block" id="remote-user-ids-help">seperate each remote user id by a comma or newline</div>
       </div>
     </div>
 
     <div class="form-group col-md-6">
-      <%= f.label :emails, class: "control-label" %>
+      <%= f.label :emails, class: "control-label", "aria-describedby" => "emails-help" %>
       <div class="controls col-md-12">
         <%= f.text_area :emails, class: 'form-control input-xxlarge', rows: 6 %>
-        <div class="help-block">seperate each email by a comma or newline</div>
+        <div class="help-block" id="emails-help">seperate each email by a comma or newline</div>
       </div>
     </div>
   </div>

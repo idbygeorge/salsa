@@ -74,10 +74,10 @@
           </ul>
 
           <div class="form-group">
-            <%= f.label :lms_authentication_source, class: "control-label" %>
+            <%= f.label :lms_authentication_source, class: "control-label", "aria-describedby" => "lms-authentication-source-help" %>
             <div class="controls">
               <%= f.text_field :lms_authentication_source, class: 'form-control' %>
-              <div class="help-block">
+              <div class="help-block" id="lms-authentication-source-help">
                   Canvas expects the format: <code>https://<em>instance</em>.instructure.com</code>
               </div>
             </div>
@@ -98,10 +98,10 @@
           </div>
 
           <div class="form-group">
-            <%= f.label :lms_info_slug, class: "control-label" %>
+            <%= f.label :lms_info_slug, class: "control-label", "aria-describedby" => "lms-info-slug-help" %>
             <div class="controls">
               <%= f.text_field :lms_info_slug, class: 'form-control' %>
-              <div class="help-block">
+              <div class="help-block" id="lms-info-slug-help">
                   Canvas expects the format: <code>pages/_edit_gui_salsa</code> for the wiki pages (note use of pages, not wiki).
               </div>
             </div>
@@ -110,8 +110,8 @@
           <div class="form-group">
             <div class="controls">
               <%= f.check_box :skip_lms_publish, class: '' %>
-              <%= f.label :skip_lms_publish, class: "control-label" %>
-              <div class="help-block">When enabled, the document:publish event will not try and publish the document to any configured LMS</div>
+              <%= f.label :skip_lms_publish, class: "control-label", "aria-describedby" => "skip-lms-publish-help" %>
+              <div class="help-block" id="skip-lms-publish-help">When enabled, the document:publish event will not try and publish the document to any configured LMS</div>
             </div>
           </div>
 
