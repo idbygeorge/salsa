@@ -1,12 +1,12 @@
 <!-- Breadcrumbs -->
 <div class="pull-left clearfix">
   <% organization.ancestors.each do |org| %>
-    <%= link_to organization_path(org.full_slug, org_path: params[:org_path]) do %><small><%= org.name %> </small><% end %>&raquo;
+    <%= link_to organization_path(org.full_slug, org_path: params[:org_path]) do %><small><%= org.slug %> </small><% end %>&raquo;
   <% end %>
   <% unless find_org_by_path(params[:slug]) == organization && current_page?(org_path: params[:org_path], action:"show", controller: "organizations") %>
     <%= link_to organization_path(params[:slug], org_path: params[:org_path]) do %>
       <small>
-        <%= organization.name %>
+        <%= organization.slug %>
       </small>
     <% end %>
   <% end %>
