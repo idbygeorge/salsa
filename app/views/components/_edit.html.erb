@@ -59,9 +59,9 @@
 
     <% if @available_component_formats.length > 1 %>
       <div class="form-group">
-        <%= f.label :category, class: "control-label" %>
+        <%= f.label :category, class: "control-label", "aria-describedby" => "category-help" %>
         <%= f.select :category, ['document','section','element','mailer'], { include_blank: '--'}, { class: 'form-control' } %>
-        <div class="help-block">mailer components will only work if liquid format is selected</div>
+        <div class="help-block" id="category-help">mailer components will only work if liquid format is selected</div>
       </div>
     <% else %>
       <%= f.hidden_field :category, :value => 'element' %>
@@ -75,7 +75,7 @@
         <div class="controls">
         <%= f.text_field :subject, class: 'form-control', rows: 12 %>
         </div>
-        <div class="help-block">
+        <div class="help-block" id="layout-help">
           when using liquid format refer to <a href="https://github.com/Shopify/liquid/wiki/Liquid-for-Designers" target="_blank">Liquid guide for designers</a>
           <br>
           and the available variables are <b><%= @available_liquid_variables.keys.join(', ') %></b>
@@ -87,7 +87,7 @@
   <% end %>
   <div class="col-md-12">
     <div class="form-group">
-      <%= f.label :layout, class: "control-label" %>
+      <%= f.label :layout, class: "control-label", "aria-describedby" => "layout-help" %>
       <div class="info pull-right" id="componentVersion">Version: <%= @component.versions.count %></div>
       <div class="controls">
         <div id="editor" class="hidden"></div>

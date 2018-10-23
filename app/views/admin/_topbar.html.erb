@@ -1,4 +1,4 @@
-<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
   <div class="container-fluid">
     <div class="navbar-header">
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -8,17 +8,19 @@
         <span class="icon-bar"></span>
       </button>
       <a class="navbar-brand" href="/">Salsa</a>
+      <a href="#maincontent">Skip to main content</a>
+
       <%= form_tag(admin_search_path(org_path: params[:org_path]), method: 'get', class: "form-horizontal col-md-12 navbar-form pull-left", role: "search" ) do |f| %>
         <% if has_role('designer') %>
           <div class="col-sm-12">
 
-            <div class="input-group">
+            <div class="input-group navbar-search">
 
-              <label for"srch-term">
+              <label for"srch-term" class="search-field">
                 <div class="hide">search</div>
                 <input type="text" class="form-control" placeholder="Search" name="q" id="srch-term" value="<%= params[:q] %>">
               </label>
-              <div class="input-group-btn search-btn">
+              <div class="input-group-btn search-btn pull-right">
                 <button class="btn btn-default" type="submit" id="submit-search">
                   <i class="glyphicon glyphicon-search">
                   <div class="hide">submit search</div>
@@ -89,9 +91,9 @@
         <% if get_org&.root_org_setting("enable_workflows") %>
           <li class="active"><%= link_to "Workflow Documents", workflow_document_index_path(org_path:params[:org_path]) %></li>
         <% end %>
-        <li class="active"><%= link_to "Organizations", organizations_path(org_path:params[:org_path]) %></li>
+        <li class="active"><%= link_to "Organizations", organizations_path(org_path:"") %></li>
         <li class="logout"><%= link_to "Logout", admin_logout_path(org_path:params[:org_path]) %></li>
       </ul>
     </div>
   </div>
-</div>
+</nav>

@@ -1,30 +1,28 @@
-<%= link_to "Add Component", new_component_path(org_path: params[:org_path]), class: 'btn btn-success pull-right', id: 'Add Component' %>
+<%= render :partial => "organizations/breadcrumbs", locals: {organization: @organization} %>
 <h1>
-  <%= link_to organization_path(params[:slug], org_path: params[:org_path]) do %>
-    <small><%= @organization.name %></small>
-  <% end %>
-  <br>
   Components
 </h1>
+<div class="row">
+  <ul class="nav nav-pills col-md-10">
+    <li <% if current_page? components_path category: 'document' %>class="active"<% end %>>
+      <%= link_to 'Documents', components_path(category: 'document', org_path: params[:org_path]) %>
+    </li>
+    <li <% if current_page? components_path category: 'section' %>class="active"<% end %>>
+      <%= link_to 'Sections', components_path(category: 'section', org_path: params[:org_path]) %>
+    </li>
+    <li <% if current_page? components_path category: 'element' %>class="active"<% end %>>
+      <%= link_to 'Elements', components_path(category: 'element', org_path: params[:org_path]) %>
+    </li>
+    <li <% if current_page? components_path category: 'mailer' %>class="active"<% end %>>
+      <%= link_to 'Mailers', components_path(category: 'mailer', org_path: params[:org_path]) %>
+    </li>
+    <li <% if !params[:category] %>class="active"<% end %>>
+      <%= link_to 'All Components', components_path(org_path: params[:org_path]) %>
+    </li>
+  </ul>
 
-<ul class="nav nav-pills">
-  <li <% if current_page? components_path category: 'document' %>class="active"<% end %>>
-    <%= link_to 'Documents', components_path(category: 'document', org_path: params[:org_path]) %>
-  </li>
-  <li <% if current_page? components_path category: 'section' %>class="active"<% end %>>
-    <%= link_to 'Sections', components_path(category: 'section', org_path: params[:org_path]) %>
-  </li>
-  <li <% if current_page? components_path category: 'element' %>class="active"<% end %>>
-    <%= link_to 'Elements', components_path(category: 'element', org_path: params[:org_path]) %>
-  </li>
-  <li <% if current_page? components_path category: 'mailer' %>class="active"<% end %>>
-    <%= link_to 'Mailers', components_path(category: 'mailer', org_path: params[:org_path]) %>
-  </li>
-  <li <% if !params[:category] %>class="active"<% end %>>
-    <%= link_to 'All Components', components_path(org_path: params[:org_path]) %>
-  </li>
-</ul>
-
+  <div class="col-md-2"><%= link_to "Add Component", new_component_path(org_path: params[:org_path]), class: 'btn btn-success pull-right', id: 'Add Component' %></div>
+</div>
 <% if @components.count > 0 %>
   <ul class="media-list">
     <hr>

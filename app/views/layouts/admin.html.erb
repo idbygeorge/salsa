@@ -17,51 +17,39 @@
     <%= javascript_include_tag "admin" %>
   </head>
   <body>
-    <%= render 'admin/topbar' %>
-
     <div class="container-fluid">
-      <div class="row">
+      <%= render 'admin/topbar' %>
+      <nav class="col-sm-4 col-md-3 sidebar">
+        <%# TODO: global admins should be access this if to (admin_authorized is only set if you use admin pass from config.yml)  %>
+        <% if has_role 'admin' %>
+          <div class="pull-right text-right">
+            <%= Document.where('documents.updated_at != documents.created_at').count %> documents<br>
+            <%= Document.where('documents.updated_at = documents.created_at').count %> abandoned
+          </div>
 
-        <div class="col-sm-4 col-md-3 sidebar">
-          <%# TODO: global admins should be access this if to (admin_authorized is only set if you use admin pass from config.yml)  %>
-          <% if has_role 'admin' %>
-            <div class="pull-right text-right">
-              <%= Document.where('documents.updated_at != documents.created_at').count %> documents<br>
-              <%= Document.where('documents.updated_at = documents.created_at').count %> abandoned
-            </div>
+          <%= link_to 'Add Organization', new_organization_path(org_path: params[:org_path]), class: 'btn btn-success' %>
 
-            <%= link_to 'Add Organization', new_organization_path(org_path: params[:org_path]), class: 'btn btn-success' %>
+          <hr>
+        <% end %>
 
-            <hr>
-          <% end %>
+        <% if @organizations %>
+          <ul class="nav nav-sidebar">
+            <% if session[:admin_authorized] %>
+            <li class="nav-header clearfix">
+              <%= link_to 'Orphaned SALSAs', organizations_path(org_path: params[:org_path]) %>
+            </li>
+            <% end %>
+            <% unless current_page?(org_path:params[:org_path],controller:"organizations",action:"index")%>
+              <%= render partial: "organizations/list", locals:{organizations: @organizations} %>
+            <% end %>
+          </ul>
+        <% end %>
 
-          <% if @organizations %>
-            <ul class="nav nav-sidebar">
-              <% if session[:admin_authorized] %>
-              <li class="nav-header clearfix">
-                <%= link_to 'Orphaned SALSAs', organizations_path(org_path: params[:org_path]) %>
-              </li>
-              <% end %>
-
-              <% @organizations.each do |org| %>
-                <li class="depth-<%= org.depth %> <% if !org.slug? or (org.slug.include? '/' and (org.slug.index('/') > 0)) %>alert-danger<% end %> <% if org.full_org_path == params[:slug] %>active-org<% end %>">
-                  <% unless !org.slug? or (org.slug.include? '/' and (org.slug.index('/') > 0)) %>
-                    <%= link_to org[:name], organization_path( slug: full_org_path(org), org_path: params[:org_path]) %>
-                  <% else %>
-                    <a>
-                      <span class="badge pull-right alert-danger">bad slug</span>
-                      <%= "#{org[:name]} (id: #{org[:id]})" %>
-                    </a>
-                  <% end %>
-                </li>
-              <% end %>
-            </ul>
-          <% end %>
-
-        </div><!--/span-->
+      </nav><!--/span-->
+    </div> <!-- /container -->
 
 
-        <div class="col-sm-8 col-sm-offset-4 col-md-9 col-md-offset-3 main">
+        <main id="maincontent" class="col-sm-8 col-sm-offset-4 col-md-9 col-md-offset-3 main">
           <% if flash[:error] %>
             <div class="alert alert-danger">
               <%= flash[:error] %>
@@ -75,14 +63,12 @@
 
           <%#<%= yield(:content) or yield %>
           <%= yield %>
-        </div>
-      </div><!--/row-->
+        </main>
 
       <footer>
         <p><%= link_to 'Salsa', root_path(org_path: params[:org_path]) %></p>
       </footer>
 
-    </div> <!-- /container -->
 
   </body>
 </html>

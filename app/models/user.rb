@@ -39,7 +39,7 @@ class User < ApplicationRecord
           new_ua.username = saml_response.attribute_value_by_resource_key(key)
           new_ua.role = "staff" if new_ua.new_record?
           new_ua.cascades = true if new_ua.new_record?
-          user.archived = true if new_ua.new_record?
+          user.archived = true if new_ua.new_record? && user.user_assignments.blank?
           user.activated = true if !new_ua.new_record?
           if new_ua.new_record? || new_ua.username.blank?
 
