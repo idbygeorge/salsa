@@ -121,7 +121,7 @@ module ApplicationHelper
     if session[:authenticated_user]
       return render :file => "public/401.html", :status => :unauthorized, :layout => false
     else
-      if current_page?(admin_path)
+      if current_page?(admin_path(org_path: params[:org_path]))
         flash.keep
         return redirect_to admin_login_path(org_path: params[:org_path])
       else
@@ -174,7 +174,7 @@ module ApplicationHelper
     user_assignments = nil
     if get_org&.root_org_setting("enable_shibboleth") && session[:saml_authenticated_user]
       username = session[:saml_authenticated_user]['id'].to_s
-      user_assignments = UserAssignment.where('organization_id in (?) OR (role = ?)', org.self_and_ancestors.map(&:id), 'admin').where("lower(username) = ?", username.downcase)
+      user_assignments = UserAssignment.where('organization_id in (?) OR (role = ?)', org.self_and_ancestors.map(&:id), 'admin').where("lower(username) = ? OR user_id = ?", username.downcase, session[:authenticated_user])
     elsif org&.lms_authentication_source && org&.lms_authentication_source == session[:oauth_endpoint] && session[:saml_authenticated_user]
       username = session[:saml_authenticated_user]['id'].to_s
       user_assignments = UserAssignment.where('organization_id = ? OR (role = ?)', org.self_and_ancestors.map(&:id), 'admin').where("lower(username) = ?", username.downcase)

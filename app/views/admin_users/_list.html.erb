@@ -1,64 +1,74 @@
 
-<h1 class="pull-left">System Users</h1>
-<br>
-<div class="pull-right"><%= render :partial => "search_bar" %></div>
+<div class="row">
+  <h1 class="pull-left">System Users</h1>
+  <br>
+  <div class="pull-right"><%= render :partial => "search_bar" %></div>
+</div>
+<div class="row">
+  <% if @users.count > 0 || @users.count > 0 %>
+    <table class="table table-responsive table-striped">
+      <thead>
+        <th scope="col">
+          Contact
+        </th>
+        <th scope="col">
+          Permissions
+        </th>
+        <% if has_role("admin") %>
+          <th scope="col">
+            Actions
+          </th>
+        <% end %>
+      </thead>
 
-<table class="table table-responsive table-striped">
-  <thead>
-    <th>
-      Contact
-    </th>
-    <th>
-      Permissions
-    </th>
-    <% if has_role("admin") %>
-      <th>
-        Actions
-      </th>
-    <% end %>
-  </thead>
+      <tbody>
+      <% @users.each do |user| %>
+        <tr>
+          <td scope="row">
+            <address>
+              <strong class="text-large"><%= link_to user.name, polymorphic_path([params[:controller].singularize],id: user.id, org_path: params[:org_path]) %></strong><br>
+              <%= link_to user.email, "mailto:${user.email}" %>
+            </address>
+          </td>
 
-  <tbody>
-  <% @users.each do |user| %>
-    <tr>
-      <td>
-        <address>
-          <strong class="text-large"><%= link_to user.name, polymorphic_path([params[:controller].singularize],id: user.id, org_path: params[:org_path]) %></strong><br>
-          <%= link_to user.email, "mailto:${user.email}" %>
-        </address>
-      </td>
+          <td>
+            <ul class="list-group">
+              <% user.user_assignments.where(organization_id: @organizations.map(&:id)+([nil] if has_role("admin")).to_a).each do |ua| %>
+                <li class="list-group-item">
+                  <% if ua.cascades %>
+                    <span class="badge xs-badge">cascades</span>
+                  <% end %>
 
-      <td>
-        <ul class="list-group">
-          <% user.user_assignments.where(organization_id: @organizations.map(&:id)+([nil] if has_role("admin")).to_a).each do |ua| %>
-            <li class="list-group-item">
-              <% if ua.cascades %>
-                <span class="badge xs-badge">cascades</span>
+                  <% if ua.organization %>
+                    <%= ua.organization.name %> - <%= ua.role %>
+                  <% else %>
+                    <span class="alert-warning">GLOBAL</span>
+                  <% end %>
+                </li>
               <% end %>
-
-              <% if ua.organization %>
-                <%= ua.organization.name %> - <%= ua.role %>
+            </ul>
+          </td>
+          <% if has_role("admin") %>
+            <td>
+              <% if params[:show_archived] == "true" %>
+                <%= link_to "Activate", polymorphic_path([params[:controller].singularize,:restore],"#{params[:controller].singularize}_id".to_sym => user.id, org_path: params[:org_path]), method:"post", class:"btn btn-primary" %>
               <% else %>
-                <span class="alert-warning">GLOBAL</span>
-              <% end %>
-            </li>
-          <% end %>
-        </ul>
-      </td>
-      <% if has_role("admin") %>
-        <td>
-          <% if params[:show_archived] == "true" %>
-            <%= link_to "Activate", polymorphic_path([params[:controller].singularize,:restore],"#{params[:controller].singularize}_id".to_sym => user.id, org_path: params[:org_path]), method:"post", class:"btn btn-primary" %>
-          <% else %>
-            <%= link_to "Archive", polymorphic_path([params[:controller].singularize,:archive],"#{params[:controller].singularize}_id".to_sym => user.id, org_path: params[:org_path]), method:"post", class:"btn btn-danger" %>
+                <%= link_to "Archive", polymorphic_path([params[:controller].singularize,:archive],"#{params[:controller].singularize}_id".to_sym => user.id, org_path: params[:org_path]), method:"post", class:"btn btn-danger" %>
 
+              <% end %>
+            </td>
           <% end %>
-        </td>
+        </tr>
       <% end %>
-    </tr>
+      </tbody>
+    </table>
+
+  <% else %>
+    <div class="alert alert-warning">
+      No users were found for this organization.
+    </div>
   <% end %>
-  </tbody>
-</table>
+</div>
 
 
 <%= paginate @users %>

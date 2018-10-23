@@ -1,5 +1,6 @@
 <% if params[:controller] == "organization_users" %>
-  <h1><%= link_to organization_path(params[:slug], org_path: params[:org_path]) do %><small><%= @organization.name %></small><% end %></h1>
+<%= render :partial => "organizations/breadcrumbs", locals: {organization: @organization} %>
+
 <% end %>
 <h1>Edit User</h1>
 <%= render 'edit_permission', permission: @user_assignment, action: 'Update' %>

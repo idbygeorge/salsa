@@ -1,30 +1,18 @@
-<div class="pull-right text-right">
-  <%= link_to @organization.documents.where('documents.updated_at != documents.created_at').count.to_s + ' documents', organization_path(id: @organization[:id], org_path: params[:org_path]) %><br>
-  <%= link_to @organization.documents.where('documents.updated_at = documents.created_at').count.to_s + ' abandoned', organization_path(id: @organization[:id], key: 'abandoned', org_path: params[:org_path]) %>
+
+<%= render :partial => "organizations/breadcrumbs", locals: {organization: @organization} %>
+<div class="row">
+  <h1 class="page-header col-md-6">
+    <%= @organization[:name] %>
+  </h1>
+  <div class="pull-right col-md-6 text-right clearfix">
+    <%= link_to @organization.documents.where('documents.updated_at != documents.created_at').count.to_s + ' documents', organization_path(id: @organization[:id], org_path: params[:org_path]) %><br>
+    <%= link_to @organization.documents.where('documents.updated_at = documents.created_at').count.to_s + ' abandoned', organization_path(id: @organization[:id], key: 'abandoned', org_path: params[:org_path]) %>
+  </div>
 </div>
 
-<h1 class="page-header">
-  <% @organization.ancestors.each do |org| %>
-    <%= link_to organization_path(org.full_slug, org_path: params[:org_path]) do %><small><%= org.name %> &raquo;<br></small><% end %>
-  <% end %>
+<div id="organizationControl" class="row">
 
-  <%= @organization[:name] %>
-</h1>
-
-<div id="organizationControl row">
-  <div class="pull-right">
-    <!-- Trigger the modal with a button -->
-    <% if has_role 'organization_admin' %>
-      <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#republishSearch">Republish...</button>
-    <% end %>
-
-    <a target="_blank" class="btn btn-success" href="//<%= "#{org_slug_parts(@organization)[0]}#{redirect_port}" %><% if @organization.depth > 0 %>/<%= org_slug_parts(@organization)[1] %><% end %>/SALSA/new">
-      <span class="glyphicon glyphicon-plus"></span>
-      SALSA
-    </a>
-  </div>
-
-  <p>
+  <p class="col-md-9">
     <% if has_role 'organization_admin' %>
       <a class="btn btn-default" href="<%= edit_organization_path(id: @organization[:id], org_path: params[:org_path]) %>">
         Update Organization
@@ -62,10 +50,22 @@
       </a>
 
     <% end %>
-    <hr>
   </p>
+  <div class="col-md-3 clearfix text-right">
+    <!-- Trigger the modal with a button -->
+    <% if has_role 'organization_admin' %>
+      <button type="button" class="btn btn-primary " data-toggle="modal" data-target="#republishSearch">Republish...</button>
+    <% end %>
+    <% unless !@organization.root_org_setting("enable_anonymous_actions") && @organization.root_org_setting("enable_workflows") %>
+      <a target="_blank" class="btn btn-success" href="//<%= "#{org_slug_parts(@organization)[0]}#{redirect_port}" %><% if @organization.depth > 0 %>/<%= org_slug_parts(@organization)[1] %><% end %>/SALSA/new">
+        <span class="glyphicon glyphicon-plus"></span>
+        SALSA
+      </a>
+    <% end %>
+  </div>
 
 </div>
+<hr>
 
 
 <div class="row">

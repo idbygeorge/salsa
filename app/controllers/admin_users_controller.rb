@@ -25,6 +25,7 @@ class AdminUsersController < AdminController
   end
 
   def users_search page=params[:page], per=25
+    show_archived = params[:show_archived] == "true"
     search_user_text = ''
     user_name = user_email = user_id = user_remote_id = nil
 
@@ -42,7 +43,7 @@ class AdminUsersController < AdminController
       user_ids = User.where("email = ? OR id = ? OR name ~* ? ", user_email, user_id, user_name).map(&:id)
       user_ids += UserAssignment.where("lower(username) = ? ", user_remote_id.to_s.downcase).map(&:user_id) if !user_remote_id.blank?
     end
-    @users = User.where(id: user_ids).page(page).per(per)
+    @users = User.where(id: user_ids,archived: show_archived).page(page).per(per)
     render "index"
   end
 

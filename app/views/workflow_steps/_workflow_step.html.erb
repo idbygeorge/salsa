@@ -1,5 +1,5 @@
 <tr>
-  <td><%= link_to "#{workflow_step.name}: #{workflow_step.component&.name}", edit_workflow_step_path(params[:slug],workflow_step, org_path:params[:org_path]), id:"Edit" %></td>
+  <td scope="row"><%= link_to "#{workflow_step.name}: #{workflow_step.component&.name}", edit_workflow_step_path(params[:slug],workflow_step, org_path:params[:org_path]), id:"Edit" %></td>
   <td><%= workflow_step.slug %></td>
   <td><%= WorkflowStep.find(workflow_step.next_workflow_step_id).slug if workflow_step&.next_workflow_step_id %></td>
   <td><%= workflow_step.step_type %></td>

@@ -4,9 +4,9 @@
 <% end %>
 
 <div class="page-header">
+
+  <%= render :partial => "organizations/breadcrumbs", locals: {organization: @organization} %>
   <h1>
-    <%= link_to organization_path(params[:slug], org_path:params[:org_path]) do %><small><%= @organization.name %></small><% end %>
-    <br>
     <%=t '.title', :default => "Update Organization" %>
   </h1>
 </div>

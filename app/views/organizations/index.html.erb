@@ -1,3 +1,25 @@
+
+<div class="row">
+  <h1>
+    Organizations
+  </h1>
+
+  <div class="list-group col-md-6">
+    <% @organizations.each do |org| %>
+      <li class="list-group-item depth-<%= org.depth %>">
+        <% unless !org.slug? or (org.slug.include? '/' and (org.slug.index('/') > 0)) %>
+          <div class="depth-<%= org.depth %>"><%= link_to org[:name], organization_path( slug: full_org_path(org), org_path: params[:org_path]) %></div>
+        <% else %>
+          <a>
+            <span class="badge pull-right alert-danger">bad slug</span>
+            <%= "#{org[:name]} (id: #{org[:id]})" %>
+          </a>
+        <% end %>
+      </li>
+    <% end %>
+  </div>
+</div>
+
 <% if session[:admin_authorized] %>
 <div class="row">
   <div class="pull-right text-right">
@@ -15,14 +37,4 @@
 </div>
 
 <%= render 'show' %>
-<% else %>
-
-<div class="row">
-  <h1>
-    Salsa Admin
-  </h1>
-
-  Select the organization on you want to manage. The root organizations are where you access the dashboard from.
-</div>
-
 <% end %>

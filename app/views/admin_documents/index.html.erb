@@ -5,19 +5,19 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th><%= model_class.human_attribute_name(:name) %></th>
-      <th><%= model_class.human_attribute_name(:organization) %></th>
-      <th><%= model_class.human_attribute_name(:lms_course_id) %></th>
-      <th><%= model_class.human_attribute_name(:workflow_step_id) %></th>
-      <th><%= model_class.human_attribute_name(:user_id) %></th>
-      <th><%=t '.actions', :default => t("helpers.actions") %></th>
+      <th scope="col"><%= model_class.human_attribute_name(:name) %></th>
+      <th scope="col"><%= model_class.human_attribute_name(:organization) %></th>
+      <th scope="col"><%= model_class.human_attribute_name(:lms_course_id) %></th>
+      <th scope="col"><%= model_class.human_attribute_name(:workflow_step_id) %></th>
+      <th scope="col"><%= model_class.human_attribute_name(:user_id) %></th>
+      <th scope="col"><%=t '.actions', :default => t("helpers.actions") %></th>
     </tr>
   </thead>
   <tbody>
     <% @documents.each do |document| %>
 
         <tr>
-          <td><%= document.name %></td>
+          <td scope="row"><%= document.name %></td>
           <td><%= document.organization&.slug %></td>
           <td><%= document.lms_course_id %></td>
           <td><%= document.workflow_step&.slug %></td>
