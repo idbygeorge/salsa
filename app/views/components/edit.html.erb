@@ -1,6 +1,5 @@
+<%= render :partial => "organizations/breadcrumbs", locals: {organization: @organization} %>
 <h1>
-<%= link_to organization_path(params[:slug], org_path: params[:org_path]) do %>
-  <small><%= @organization[:slug] %></small><br>
-<% end %>
+
 Update Component</h1>
 <%= render 'edit' %>

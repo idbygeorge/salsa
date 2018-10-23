@@ -1,4 +1,5 @@
 <%= form_tag( polymorphic_path([params[:controller], :search], org_path: params[:org_path]), method: 'get', class: "form-horizontal col-md-12 navbar-form pull-left", role: "search" ) do |f| %>
+<%= hidden_field_tag "show_archived", params[:show_archived] %>
     <div class="col-sm-12">
 
       <div class="input-group">

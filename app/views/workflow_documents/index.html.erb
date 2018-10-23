@@ -15,4 +15,10 @@
     </ul>
   </div>
 <% end %>
-<%= render :partial => "list", locals:{ user_documents: @user_documents, documents: @documents } %>
+<% if @user_documents.count > 0 %>
+  <%= render :partial => "list", locals:{ user_documents: @user_documents, documents: @documents } %>
+<% else %>
+  <div class="alert alert-warning">
+    No documents were found.
+  </div>
+<% end %>
