@@ -33,7 +33,7 @@ class Document < ApplicationRecord
         result = true
       elsif component.role == "staff" &&  ["supervisor","staff"].include?(user_assignment.role) && self.user_id == user.id && self.workflow_step_id != ""
         result = true
-      elsif component.role == "supervisor" && user_assignment.role == "supervisor" && user_org.level <= self.organization&.level && self.user&.user_assignments.find_by(organization_id:self.organization_id).role == "staff"
+      elsif component.role == "supervisor" && user_assignment.role == "supervisor" && user_org.level <= self.organization&.level && self.user&.user_assignments&.find_by(organization_id:self.organization_id)&.role == "staff"
         result = true
       elsif component.role == "supervisor" && user_assignment.role == "supervisor" && user_org.level < self.organization&.level
         result = true
