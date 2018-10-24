@@ -32,7 +32,8 @@ class AdminController < ApplicationController
 
   def landing
     if current_user&.archived
-      return render salsa_partial("unassigned_user", get_org)
+      return redirect_to admin_unassigned_user_path
+
     end
     if has_role 'designer'
       redirect_to organizations_path, notice: flash[:notice]
