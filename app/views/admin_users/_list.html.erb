@@ -5,7 +5,7 @@
   <div class="pull-right"><%= render :partial => "search_bar" %></div>
 </div>
 <div class="row">
-  <% if @users.count > 0 || @users.count > 0 %>
+  <% if !@users.blank? %>
     <table class="table table-responsive table-striped">
       <thead>
         <th scope="col">

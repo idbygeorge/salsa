@@ -6,7 +6,7 @@
   </h1>
 </div>
 
-<% if @workflow_steps.count > 0 || @workflows.count > 0 %>
+<% if !@workflow_steps.blank? || !@workflows.blank? %>
   <table class="table table-striped">
     <thead>
       <tr>
