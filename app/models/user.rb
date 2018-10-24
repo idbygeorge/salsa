@@ -43,7 +43,6 @@ class User < ApplicationRecord
           user.activated = true if !new_ua.new_record?
           if new_ua.new_record? || new_ua.username.blank?
 
-            UserMailer.new_unassigned_user_email(user, org, {"user_name" => "#{user&.name}","user_email" => "#{user&.email}", "organization_name" => "#{org&.name}", "archived_users_url" => "#{org.full_slug}/admin/organization/#{org.full_slug}/users?show_archived=true"}).deliver_later if new_ua.new_record?
             new_ua.save
           end
         end

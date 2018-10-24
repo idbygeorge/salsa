@@ -16,13 +16,16 @@ Rails.application.routes.draw do
       post "documents/:id/revert_document/:version_id", as: 'workflow_revert_document', to: 'workflow_documents#revert_document'
     end
 
-
     get '/status/server', to: 'default#status_server'
 
     get '/admin', to: 'admin#landing', as: 'admin'
 
     namespace :admin do
       resources :periods
+
+      get "unassigned_user", to: 'unassigned_user'
+      get "request_access", to: 'request_access'
+
       get "report", to: 'auditor#report', as: 'auditor_report'
       post "report", to: 'auditor#report', as: 'auditor_generate_report'
       get "download", to: 'auditor#download', as: 'auditor_download'
@@ -34,6 +37,7 @@ Rails.application.routes.draw do
     end
 
     scope '/admin' do
+      get "orphaned_documents", to: 'organizations#orphaned_documents'
       get "search", to: 'admin#search', as: 'admin_search'
       get "canvas/accounts", to: 'admin#canvas_accounts', as: 'canvas_accounts'
       post "canvas/accounts/sync", to: 'admin#canvas_accounts_sync', as: 'canvas_accounts_sync'
@@ -126,7 +130,7 @@ Rails.application.routes.draw do
     get '/:alias/:document', to: redirect('/SALSA/%{document}'), constraints: { alias: /(syllabuses|salsas?)/ }
     get '/:alias/:document/:edit', to: redirect('/SALSA/%{document}/edit'), constraints: { alias: /(syllabuses|salsas?)/ }
     get '/:alias/:document/:template', to: redirect('/SALSA/%{document}/template'), constraints: { alias: /(syllabuses|salsas?)/ }
-    
+
   end
   get ":org_path", as: 'sub_root', to: 'default#index'
 

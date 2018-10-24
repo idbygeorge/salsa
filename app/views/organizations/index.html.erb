@@ -1,10 +1,12 @@
 
 <div class="row">
-  <h1>
+  <h1 class="col-md-6">
     Organizations
   </h1>
-
-  <div class="list-group col-md-6">
+  <% if has_role 'admin' %>
+    <%= link_to 'Add Organization', new_organization_path(org_path: params[:org_path]), class: 'btn btn-success pull-right' %>
+  <% end %>
+  <div class="list-group col-md-12">
     <% @organizations.each do |org| %>
       <li class="list-group-item depth-<%= org.depth %>">
         <% unless !org.slug? or (org.slug.include? '/' and (org.slug.index('/') > 0)) %>
@@ -19,22 +21,3 @@
     <% end %>
   </div>
 </div>
-
-<% if session[:admin_authorized] %>
-<div class="row">
-  <div class="pull-right text-right">
-    <%= link_to Document.where('documents.organization_id IS NULL AND documents.updated_at != documents.created_at').count.to_s + ' documents', organizations_path(org_path:params[:org_path]) %><br>
-    <%= link_to Document.where('documents.organization_id IS NULL AND documents.updated_at = documents.created_at').count.to_s + ' abandoned', organizations_path( key: 'abandoned', org_path:params[:org_path]) %>
-  </div>
-
-  <h1>
-    <% if params[:key] == 'abandoned' %>
-      <strong>Abandoned</strong>
-    <% end %>
-
-    Orphaned SALSAs
-  </h1>
-</div>
-
-<%= render 'show' %>
-<% end %>
