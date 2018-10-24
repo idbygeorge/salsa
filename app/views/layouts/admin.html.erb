@@ -20,11 +20,11 @@
     <a href="#maincontent" class="sr-only sr-only-focusable btn btn-info skip-content">Skip to main content</a>
     <div class="container-fluid">
       <%= render 'admin/topbar' %>
-      <% unless current_page?(org_path:params[:org_path],controller:"organizations",action:"index")%>
+      <% unless current_page?(org_path:params[:org_path],controller:"/organizations",action:"index")%>
         <%= render 'layouts/sidebar' %>
       <% end %>
     </div> <!-- /container -->
-      <main id="maincontent" class="<% unless current_page?(org_path:params[:org_path],controller:"organizations",action:"index")%>col-sm-8 col-sm-offset-4 col-md-9 col-md-offset-3 main <% else %> container col-md-6 col-sm-6 col-lg-6 col-md-offset-3 col-lg-offset-3 col-sm-offset-3 <% end %>">
+      <main id="maincontent" class="<% unless current_page?(org_path:params[:org_path],controller:"/organizations",action:"index")%>col-sm-8 col-sm-offset-4 col-md-9 col-md-offset-3 main <% else %> container col-md-6 col-sm-6 col-lg-6 col-md-offset-3 col-lg-offset-3 col-sm-offset-3 <% end %>">
 
 
         <% if flash[:error] %>
