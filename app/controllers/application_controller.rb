@@ -2,7 +2,7 @@ class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception
-  before_action :redirect_if_user_archived, except:[:logout]
+  before_action :redirect_if_user_archived, except:[:logout,:request_access,:unassigned_user]
   force_ssl if: :https_enabled?
 
   include ApplicationHelper
@@ -33,7 +33,7 @@ class ApplicationController < ActionController::Base
     if session[:authenticated_user]
       user = User.find_by(id: session[:authenticated_user], archived: false)
       if !user
-        return render :file => "public/account_inactive.html", :status => :unauthorized, :layout => false
+        return redirect_to admin_unassigned_user_path
       end
     end
 

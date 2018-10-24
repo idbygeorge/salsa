@@ -17,53 +17,30 @@
     <%= javascript_include_tag "admin" %>
   </head>
   <body>
+    <a href="#maincontent" class="sr-only sr-only-focusable btn btn-info skip-content">Skip to main content</a>
     <div class="container-fluid">
       <%= render 'admin/topbar' %>
-      <nav class="col-sm-4 col-md-3 sidebar">
-        <%# TODO: global admins should be access this if to (admin_authorized is only set if you use admin pass from config.yml)  %>
-        <% if has_role 'admin' %>
-          <div class="pull-right text-right">
-            <%= Document.where('documents.updated_at != documents.created_at').count %> documents<br>
-            <%= Document.where('documents.updated_at = documents.created_at').count %> abandoned
+      <% unless current_page?(org_path:params[:org_path],controller:"/organizations",action:"index")%>
+        <%= render 'layouts/sidebar' %>
+      <% end %>
+    </div> <!-- /container -->
+      <main id="maincontent" class="<% unless current_page?(org_path:params[:org_path],controller:"/organizations",action:"index")%>col-sm-8 col-sm-offset-4 col-md-9 col-md-offset-3 main <% else %> container col-md-6 col-sm-6 col-lg-6 col-md-offset-3 col-lg-offset-3 col-sm-offset-3 <% end %>">
+
+
+        <% if flash[:error] %>
+          <div class="alert alert-danger">
+            <%= flash[:error] %>
           </div>
 
-          <%= link_to 'Add Organization', new_organization_path(org_path: params[:org_path]), class: 'btn btn-success' %>
-
-          <hr>
+        <% elsif flash[:notice] %>
+          <div class="alert alert-info">
+            <%= flash[:notice] %>
+          </div>
         <% end %>
 
-        <% if @organizations %>
-          <ul class="nav nav-sidebar">
-            <% if session[:admin_authorized] %>
-            <li class="nav-header clearfix">
-              <%= link_to 'Orphaned SALSAs', organizations_path(org_path: params[:org_path]) %>
-            </li>
-            <% end %>
-            <% unless current_page?(org_path:params[:org_path],controller:"organizations",action:"index")%>
-              <%= render partial: "organizations/list", locals:{organizations: @organizations} %>
-            <% end %>
-          </ul>
-        <% end %>
-
-      </nav><!--/span-->
-    </div> <!-- /container -->
-
-
-        <main id="maincontent" class="col-sm-8 col-sm-offset-4 col-md-9 col-md-offset-3 main">
-          <% if flash[:error] %>
-            <div class="alert alert-danger">
-              <%= flash[:error] %>
-            </div>
-
-          <% elsif flash[:notice] %>
-            <div class="alert alert-info">
-              <%= flash[:notice] %>
-            </div>
-          <% end %>
-
-          <%#<%= yield(:content) or yield %>
-          <%= yield %>
-        </main>
+        <%#<%= yield(:content) or yield %>
+        <%= yield %>
+      </main>
 
       <footer>
         <p><%= link_to 'Salsa', root_path(org_path: params[:org_path]) %></p>

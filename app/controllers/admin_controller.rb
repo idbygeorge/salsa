@@ -2,6 +2,8 @@ class AdminController < ApplicationController
   before_action :redirect_to_sub_org, only:[:landing]
   before_action :require_designer_permissions, except: [
     :landing,
+    :unassigned_user,
+    :request_access,
     :login,
     :logout,
     :user_activation,
@@ -30,7 +32,8 @@ class AdminController < ApplicationController
 
   def landing
     if current_user&.archived
-      return render :file => "public/account_inactive.html", :status => :unauthorized, :layout => false
+      return redirect_to admin_unassigned_user_path
+
     end
     if has_role 'designer'
       redirect_to organizations_path, notice: flash[:notice]
@@ -89,6 +92,19 @@ class AdminController < ApplicationController
 
     session[:authenticated_user] = user.id
     redirect_to admin_path, notice: 'Logged in successfully'
+  end
+
+
+  def unassigned_user
+    render(:layout => "layouts/workflow")
+  end
+
+  def request_access
+    user = User.find_by(id: session[:authenticated_user])
+    org = get_org
+    UserMailer.new_unassigned_user_email(user, org, {"user_name" => "#{user&.name}","user_email" => "#{user&.email}", "organization_name" => "#{org&.name}", "archived_users_url" => "#{org.full_slug}/admin/organization/#{org.full_slug}/users?show_archived=true"}).deliver_later if !session[:access_requested]
+    session[:access_requested] = true
+    render(:layout => "layouts/workflow")
   end
 
   def canvas_accounts
@@ -285,6 +301,7 @@ class AdminController < ApplicationController
       @redirect_url = "#{@lms_client.oauth_url(@callback_url)}"
     end
   end
+
   private
 
   def user_params
