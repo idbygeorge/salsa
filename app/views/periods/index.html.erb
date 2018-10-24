@@ -5,7 +5,7 @@
   <h1><%=t '.title', :default => model_class.model_name.human.pluralize.titleize %></h1>
 </div>
 
-<% if @periods.count > 0 %>
+<% if !@periods.blank? %>
   <table class="table table-striped">
     <thead>
       <tr>
