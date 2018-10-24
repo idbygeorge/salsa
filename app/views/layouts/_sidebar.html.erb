@@ -7,8 +7,8 @@
 
     <%= link_to 'Add Organization', new_organization_path(org_path: params[:org_path]), class: 'btn btn-success' %>
 
+    <hr>
   <% end %>
-  <hr>
   <% if @organizations %>
     <ul class="nav nav-sidebar">
       <% if has_role 'admin' %>
