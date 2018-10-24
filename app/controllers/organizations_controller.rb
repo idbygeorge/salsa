@@ -6,7 +6,7 @@ class OrganizationsController < AdminController
       :show,
       :index
   ]
-  before_action :get_organizations, only: [:index, :new, :edit, :create, :show, :start_workflow_form]
+  before_action :get_organizations, only: [:index, :new, :edit, :create, :show, :start_workflow_form, :orphaned_documents]
   layout 'admin'
   def index
     get_documents
@@ -20,6 +20,10 @@ class OrganizationsController < AdminController
   def new
     @export_types = Organization.export_types
     @organization = Organization.new
+  end
+
+  def orphaned_documents
+    get_documents
   end
 
   def documents

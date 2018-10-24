@@ -1,0 +1,23 @@
+<nav class="col-sm-4 col-md-3 sidebar">
+  <% if has_role 'admin' %>
+    <div class="pull-right text-right clearfix">
+      <%= Document.where('documents.updated_at != documents.created_at').count %> documents<br>
+      <%= Document.where('documents.updated_at = documents.created_at').count %> abandoned
+    </div>
+
+    <%= link_to 'Add Organization', new_organization_path(org_path: params[:org_path]), class: 'btn btn-success' %>
+
+  <% end %>
+  <hr>
+  <% if @organizations %>
+    <ul class="nav nav-sidebar">
+      <% if has_role 'admin' %>
+        <li class="nav-header clearfix">
+          <%= link_to 'Orphaned SALSAs', orphaned_documents_path(org_path: params[:org_path]) %>
+        </li>
+      <% end %>
+      <%= render partial: "organizations/list", locals:{organizations: @organizations} %>
+    </ul>
+  <% end %>
+
+</nav><!--/span-->
