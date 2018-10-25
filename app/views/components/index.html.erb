@@ -23,7 +23,7 @@
 
   <div class="col-md-2"><%= link_to "Add Component", new_component_path(org_path: params[:org_path]), class: 'btn btn-success pull-right', id: 'Add Component' %></div>
 </div>
-<% if @components.count > 0 %>
+<% if !@components.blank? %>
   <ul class="media-list">
     <hr>
     <% @components.each do |component| %>
