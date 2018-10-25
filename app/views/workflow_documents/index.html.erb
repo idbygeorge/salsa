@@ -15,7 +15,7 @@
     </ul>
   </div>
 <% end %>
-<% if @user_documents.count > 0 %>
+<% if !@user_documents.blank? || !@documents.blank? %>
   <%= render :partial => "list", locals:{ user_documents: @user_documents, documents: @documents } %>
 <% else %>
   <div class="alert alert-warning">

@@ -135,7 +135,7 @@ class OrganizationUsersController < AdminUsersController
       user.archived = false
       user.activated = false if ua.blank?
       user.save
-      ua = UserAssignment.create(username: remote_user_id, role:"staff",user_id: user.id, organization_id: org.id, cascades: true) if ua.organization_id != org.id
+      ua = UserAssignment.create(username: remote_user_id, role:"staff",user_id: user.id, organization_id: org.id, cascades: true) if ua&.organization_id != org&.id
       user.errors.messages.each do |error|
         user_errors.push "Could not create user with remote user ID: '#{ua.username}' because: #{error[0]} #{error[1][0]}" if user.errors
       end
