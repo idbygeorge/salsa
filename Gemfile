@@ -37,7 +37,7 @@ group :test do
   gem 'database_cleaner'
 end
 
-gem 'seed_dup'
+gem 'seed_dump'
 
 #postgresql for db
 gem "pg", "0.20"
