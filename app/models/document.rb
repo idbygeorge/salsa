@@ -122,9 +122,9 @@ class Document < ApplicationRecord
   end
 
   def signed_by_all_approvers
-    result = false
+    result = true
     self.approvers.each do |user|
-      result = true if !self.versions.where(event:"publish",whodunnit: user[:id]).blank?
+      result = false if self.versions.where(event:"publish",whodunnit: user[:id]).blank?
     end
     result
   end
