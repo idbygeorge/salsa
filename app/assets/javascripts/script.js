@@ -120,7 +120,7 @@ function liteOff(x){
             }
         });
         $('#tb_save, #tb_share').on('ajax:beforeSend', function(event, xhr, settings) {
-            $(".workflow_step").show()
+            $(".workflow_step").show();
             if($('body').hasClass('disable-save')) {
                 xhr.abort();
                 return false;
