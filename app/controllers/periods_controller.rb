@@ -4,7 +4,7 @@ class PeriodsController < OrganizationsController
   skip_before_action :require_designer_permissions
 
   before_action :redirect_to_sub_org, only:[:index,:new,:show,:edit]
-  before_action :get_organizations, only: [:index]
+  before_action :get_organizations, only: [:index, :new, :edit]
   before_action :require_organization_admin_permissions
 
   def index
