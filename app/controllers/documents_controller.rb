@@ -223,7 +223,7 @@ class DocumentsController < ApplicationController
           end
         end
       end
-      if params[:publish] == "true" && @organization.root_org_setting("enable_workflows") && user
+      if params[:publish] == "true" && @organization.root_org_setting("enable_workflows") && user && saved
         if @document.workflow_step_id && @document.assigned_to?(user)
           WorkflowMailer.step_email(@document,user, @organization, @document.workflow_step.slug, component_allowed_liquid_variables(@document.workflow_step, user,@organization, @document)).deliver_later
           @document.paper_trail_event = 'publish'
