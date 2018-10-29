@@ -140,7 +140,7 @@ function liteOff(x){
               var meta_data_from_doc = [];
               $("#page").find( '[data-meta]:not(:input)' ).each(function() {
                 var key = "salsa_" + $( this ).attr( 'data-meta' )
-                var value = $( this ).text().replace(/\s+/mg, ' ')
+                var value = $( this ).val().replace(/\s+/mg, ' ')
                 meta_data_from_doc.push({
                   key : key,
                   value : value,
