@@ -139,8 +139,8 @@ function liteOff(x){
             if (organizationConfig["track_meta_info_from_document"]){
               var meta_data_from_doc = [];
               $("#page").find( '[data-meta]:not(:input)' ).each(function() {
-                var key = "salsa_" + $( this ).attr( 'data-meta' )
-                var value = $( this ).val().replace(/\s+/mg, ' ')
+                var key = "salsa_" + $( this ).attr( 'data-meta' );
+                var value = $( this ).val().replace(/\s+/mg, ' ');
                 meta_data_from_doc.push({
                   key : key,
                   value : value,
@@ -149,8 +149,8 @@ function liteOff(x){
                 });
               });
               $("#page").find( ':input:not([data-meta])' ).each(function() {
-                var key = "salsa_" + $( this ).attr("id")
-                var value = $( this ).val()
+                var key = "salsa_" + $( this ).attr("id");
+                var value = $( this ).val();
                 meta_data_from_doc.push({
                   key : key,
                   value : value,
@@ -167,7 +167,7 @@ function liteOff(x){
                 });
               }
             }
-            $(".workflow_step").show()
+            $(".workflow_step").show();
             $(".workflow_step").find(":input").prop('disabled', true);
             notification('Saving...');
         });
