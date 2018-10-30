@@ -4,7 +4,7 @@ class WorkflowMailer < ApplicationMailer
   def step_email document, user, organization, step_slug, allowed_variables
     orgs = organization.parents.push(organization)
     workflow_step = WorkflowStep.find_by(organization_id: orgs.map(&:id), slug: step_slug)
-    next_workflow_step WorkflowStep.find_by(id:workflow_step&.next_workflow_step_id)
+    next_workflow_step = WorkflowStep.find_by(id:workflow_step&.next_workflow_step_id)
     @next_component = Component.find_by(organization_id: orgs.map(&:id), slug: next_workflow_step.slug) if workflow_step&.next_workflow_step_id
     @mail_component = Component.find_by(organization_id: orgs.map(&:id), category: "mailer", slug: "#{next_workflow_step&.slug}_email", format: "liquid")
     if @mail_component
