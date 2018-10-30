@@ -14,43 +14,15 @@ class Document < ApplicationRecord
 
   def assigned_to? user
     result = false
-    if self.workflow_step&.component_id && user != nil && self.workflow_step.step_type != "end_step" && user.user_assignments.where.not(organization_id: nil).exists?
-      component = self.workflow_step.component
-      if component.role == "supervisor"
-        uas = self.closest_roles("supervisor")
-        user_assignment = user.user_assignments.find_by(id:uas.map(&:id))
-      elsif component.role == "approver"
-        user_ids = self.approvers_that_have_not_signed.map(&:id)
-        ua = self.closest_role("approver", user_ids)
-        user_assignment = user.user_assignments.find_by(id:ua&.id)
-      else
-        user_assignment = user.user_assignments.find_by(organization_id: self.organization&.parents.map(&:id).push(self.organization_id))
-      end
-      user_org = user_assignment&.organization
-      if user_assignment.blank?
-        false
-      elsif component.role.blank? && ((user_assignment&.role == "supervisor" && user_org.level < self.organization&.level) || user.id == self.user_id)
-        result = true
-      elsif component.role == "staff" &&  ["supervisor","staff"].include?(user_assignment.role) && self.user_id == user.id && self.workflow_step_id != ""
-        result = true
-      elsif component.role == "supervisor" && user_assignment.role == "supervisor" && user_org.level <= self.organization&.level && self.user&.user_assignments&.find_by(organization_id:self.organization_id)&.role == "staff"
-        result = true
-      elsif component.role == "supervisor" && user_assignment.role == "supervisor" && user_org.level < self.organization&.level
-        result = true
-      elsif component.role == "approver" && user_assignment.role == "approver" && user_org.level <= self.organization&.level
-        result = true
-      else
-        result = false
-      end
-    else
-      result = false
+    if self.assignees&.include?(user)
+      result = true
     end
     result
   end
 
   def assignees
     if self.workflow_step_id
-      component = self.workflow_step.component
+      component = self.workflow_step&.component
       return nil if component.blank?
       if component.role == "staff"
         User.where(id: self.user_id)
@@ -62,10 +34,10 @@ class Document < ApplicationRecord
         user_ids = self.approvers_that_have_not_signed.map(&:id)
         User.where(id: self.closest_user_with_role("approver", user_ids)&.id)
       else
-        nil
+        []
       end
     else
-      nil
+      []
     end
 
   end
@@ -122,9 +94,9 @@ class Document < ApplicationRecord
   end
 
   def signed_by_all_approvers
-    result = false
+    result = true
     self.approvers.each do |user|
-      result = true if !self.versions.where(event:"publish",whodunnit: user[:id]).blank?
+      result = false if self.versions.where(event:"publish",whodunnit: user[:id]).blank?
     end
     result
   end
