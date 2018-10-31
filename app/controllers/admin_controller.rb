@@ -139,7 +139,7 @@ class AdminController < ApplicationController
     per_page = 10
     per_page = params[:per] if params[:per]
     if params[:show_course_meta]
-      @document_meta = DocumentMeta.where(root_organization_id: @org.id).page(params[:page]).per(per_page)
+      @document_meta = DocumentMeta.where(root_organization_id: @org.id).reorder(created_at: :desc).page(params[:page]).per(per_page)
     end
 
     @queued = Que.execute("select run_at, job_id, error_count, last_error, queue from que_jobs where job_class = 'CanvasSyncCourseMeta'")
