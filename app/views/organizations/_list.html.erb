@@ -1,12 +1,13 @@
 <% organizations.each do |org| %>
-  <li class="depth-<%= org.depth %> <% if !org.slug? or (org.slug.include? '/' and (org.slug.index('/') > 0)) %>alert-danger<% end %> <% if org.full_org_path == params[:slug] %>active-org<% end %>">
-    <% unless !org.slug? or (org.slug.include? '/' and (org.slug.index('/') > 0)) %>
-      <%= link_to org[:name], organization_path( slug: full_org_path(org), org_path: params[:org_path]) %>
-    <% else %>
-      <a>
-        <span class="badge pull-right alert-danger">bad slug</span>
-        <%= "#{org[:name]} (id: #{org[:id]})" %>
-      </a>
-    <% end %>
-  </li>
-<% end %>
+  <%- full_path = org.full_org_path -%>
+    <li class="depth-<%= org.depth %> <% if !org.slug? or (org.slug.include? '/' and (org.slug.index('/') > 0)) %>alert-danger<% end %> <% if full_path == params[:slug] %>active-org<% end %>">
+      <% unless !org.slug? or (org.slug.include? '/' and (org.slug.index('/') > 0)) %>
+        <%= link_to org[:name], organization_path( slug: full_path, org_path: params[:org_path]) %>
+      <% else %>
+        <a>
+          <span class="badge pull-right alert-danger">bad slug</span>
+          <%= "#{org[:name]} (id: #{org[:id]})" %>
+        </a>
+      <% end %>
+    </li>
+  <% end %>

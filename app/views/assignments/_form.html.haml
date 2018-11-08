@@ -1,0 +1,25 @@
+= form_with(model: [@namespace,:user,:team,assignment], local: true) do |f|
+  - if assignment.errors.any?
+    #error_explanation
+      %h2
+        = pluralize(assignment.errors.count, "error")
+        prohibited this assignment from being saved:
+      %ul
+        - assignment.errors.full_messages.each do |message|
+          %li= message
+
+  .form-group
+    .col-md-3
+      = f.label :team_member_id, :class => 'control-label'
+      = f.collection_select(:team_member_id, @users,:id, :name)
+      = f.error_span(:team_member_id)
+
+  .form-group
+    .col-md-2
+      = f.label :role, :class => 'control-label'
+      = f.select(:role, @roles)
+      = f.error_span(:role)
+
+  %button.btn.btn-success{:type => "submit"}
+    %span.glyphicon.glyphicon-plus
+    Access

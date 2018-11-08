@@ -33,7 +33,7 @@
 
           <td>
             <ul class="list-group">
-              <% user.user_assignments.where(organization_id: @organizations.map(&:id)+([nil] if has_role("admin")).to_a).each do |ua| %>
+              <% user.user_assignments.where(organization_id: @organizations.pluck(:id)+([nil] if has_role("admin")).to_a).each do |ua| %>
                 <li class="list-group-item">
                   <% if ua.cascades %>
                     <span class="badge xs-badge">cascades</span>
