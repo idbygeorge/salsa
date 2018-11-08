@@ -1,0 +1,23 @@
+- if @namespace == :organization
+  = render :partial => "organizations/breadcrumbs", locals: {organization: find_org_by_path(params[:slug])}
+%p#notice= notice
+%h1
+  = @user.name.titlecase + "'s"
+  Assignments
+
+= render 'form', assignment: @assignment
+%table.table.table-responsive.table-striped
+  %thead
+    %tr
+      %th Team Member
+      %th Role
+      %th Actions
+  %tbody
+    - @assignments.each do |assignment|
+      %tr
+        %td= assignment.team_member.name + ":" + assignment.team_member.email
+        %td= assignment.role
+        %td
+          = link_to 'Destroy', eval("#{@namespace}_user_team_assignment_path(params[:slug],@user.id,assignment.id)"), method: :delete, data: { confirm: 'Are you sure?' }, class:"btn btn-sm btn-danger"
+%br/
+= link_to 'New Assignment', eval("new_#{@namespace}_user_team_assignment_path")
