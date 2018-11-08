@@ -102,7 +102,7 @@ class OrganizationsController < AdminController
   def start_workflow_form
     @organization = @organizations.all.select{ |o| o.full_slug == params[:slug] }.first
     @workflow_steps = WorkflowStep.where(organization_id: @organization.organization_ids+[@organization.id], step_type: "start_step")
-    user_ids = @organization.user_assignments.map(&:user_id)
+    user_ids = @organization.user_assignments.pluck(:user_id)
     @users = User.find_by(id: user_ids)
     @periods = Period.where(organization_id: @organization.organization_ids+[@organization.id])
   end
@@ -122,7 +122,7 @@ class OrganizationsController < AdminController
     end
     counter = 0
     organizations.each do |org|
-      user_ids = org.user_assignments.where(role: ["supervisor","staff"]).map(&:user_id)
+      user_ids = org.user_assignments.where(role: ["supervisor","staff"]).pluck(:user_id)
       users = User.where(id: user_ids, archived: false)
       users.each do |user|
         next if user.documents.map(&:period_id).include?(start_workflow_params[:period_id].to_i)

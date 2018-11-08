@@ -18,7 +18,7 @@ class WorkflowStepsController < OrganizationsController
     @workflows = WorkflowStep.workflows org_ids
     workflow_array = []
     @workflows.each do|wf|
-      wf.map(&:id).each do |wfid|
+      wf.pluck(:id).each do |wfid|
         workflow_array.push wfid
       end
     end

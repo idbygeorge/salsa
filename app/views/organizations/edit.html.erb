@@ -1,6 +1,5 @@
 <% if has_role("admin") %>
-    <%= link_to "Delete #{@organization[:name]}", organization_path(org_path: params[:org_path]),
-            data: {:confirm => 'Are you sure?'}, :method => :delete, class: 'btn btn-danger pull-right' %>
+  <%= link_to "Delete #{@organization[:name]}", organization_path(org_path: params[:org_path]), data: {:confirm => 'Are you sure?'}, :method => :delete, class: 'btn btn-danger pull-right' %>
 <% end %>
 
 <div class="page-header">
@@ -12,18 +11,18 @@
 </div>
 
 <% if @organization.lms_authentication_key != '' %>
-    <div class="pull-right">
+  <div class="pull-right">
 
-      <a class="btn btn-info" href="http://<%=@organization.slug + canvas_accounts_path(org_path: params[:org_path]) %>">
-        <span class="glyphicon glyphicon-refresh"></span>
-        LMS Accounts
-      </a>
+    <a class="btn btn-info" href="https://<%=@organization.slug + ':' + request.port.to_s + canvas_accounts_path(org_path: params[:org_path]) %>">
+      <span class="glyphicon glyphicon-refresh"></span>
+      LMS Accounts
+    </a>
 
-      <a class="btn btn-info" href="http://<%=@organization.slug + canvas_courses_path(org_path: params[:org_path]) %>">
-        <span class="glyphicon glyphicon-refresh"></span>
-        LMS Courses
-      </a>
-    </div>
+    <a class="btn btn-info" href="https://<%=@organization.slug + ':' + request.port.to_s + canvas_courses_path(org_path: params[:org_path]) %>">
+      <span class="glyphicon glyphicon-refresh"></span>
+      LMS Courses
+    </a>
+  </div>
 <% end %>
 
 <%= render 'edit' %>

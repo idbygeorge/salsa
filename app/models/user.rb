@@ -12,6 +12,11 @@ class User < ApplicationRecord
 
   has_many :user_assignments
   has_many :documents
+  has_many :assignments, foreign_key: "user_id"
+  has_many :assignees, class_name: 'Assignment', foreign_key: "team_member_id"
+  has_many :managers, :class_name => 'User', through: :assignments, foreign_key: "user_id"
+  has_many :team_members, :class_name => 'User', through: :assignments
+
   has_secure_password validations: false
   validates_presence_of :password, on: :create
 
@@ -33,7 +38,7 @@ class User < ApplicationRecord
         org = Organization.find_by(slug: URI.parse(saml_response.raw_response.destination).host)
         user.send "password=", SecureRandom.urlsafe_base64 if user.password_digest.blank?
         user.save! if user.new_record?
-        ua = user.user_assignments.where(organization_id: org.descendants.map(&:id))
+        ua = user.user_assignments.where(organization_id: org.descendants.pluck(:id))
         if ua.blank?
           new_ua = UserAssignment.find_or_initialize_by(user_id: user.id, organization_id: org.id )
           new_ua.username = saml_response.attribute_value_by_resource_key(key)

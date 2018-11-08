@@ -2,7 +2,7 @@ class UserMailer < ApplicationMailer
   def welcome_email user, organization, allowed_variables
     allowed_variables["user_activation_url"] = "https://#{organization.full_org_path}/admin/user_activation/#{user.activation_digest}"
     orgs = organization.parents.push(organization)
-    @mail_component = Component.find_by(organization_id: orgs.map(&:id),category: "mailer", slug: "user_welcome_email", format: "liquid")
+    @mail_component = Component.find_by(organization_id: orgs.pluck(:id),category: "mailer", slug: "user_welcome_email", format: "liquid")
     if @mail_component
       @template = Liquid::Template.parse(@mail_component.layout)
       @welcome_email = @template.render(allowed_variables).html_safe
@@ -14,7 +14,7 @@ class UserMailer < ApplicationMailer
   def new_unassigned_user_email user, organization, allowed_variables
     allowed_variables["activate_user_url"] = "https://#{organization.full_org_path}/admin/user_activation/#{user.activation_digest}"
     orgs = organization.parents.push(organization)
-    @mail_component = Component.find_by(organization_id: orgs.map(&:id),category: "mailer", slug: "new_unassigned_user_email", format: "liquid")
+    @mail_component = Component.find_by(organization_id: orgs.pluck(:id),category: "mailer", slug: "new_unassigned_user_email", format: "liquid")
     if @mail_component
       @template = Liquid::Template.parse(@mail_component.layout)
       @new_unassigned_user_email = @template.render(allowed_variables).html_safe

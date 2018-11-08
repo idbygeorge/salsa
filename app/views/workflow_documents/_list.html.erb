@@ -6,7 +6,9 @@
       <th scope="col">Workflow Step</th>
       <th scope="col">User</th>
       <th scope="col">Assignee(s)</th>
-      <th scope="col"><%=t '.actions', :default => t("helpers.actions") %></th>
+      <% if has_role('supervisor') %>
+        <th scope="col"><%=t '.actions', :default => t("helpers.actions") %></th>
+      <% end %>
     </tr>
   </thead>
   <tbody>
@@ -14,49 +16,53 @@
       <h1>Documents You are assigned to</h1>
       <% documents.each do |document| %>
 
-          <tr>
+        <tr>
+          <% if document.assigned_to?(current_user) %>
             <td scope="row"><%= link_to document.name, edit_document_path(document.edit_id, org_path:params[:org_path]), id:"edit_document" %></td>
-            <td><%= link_to("#{document.organization.parent&.name} : #{document.organization.name}", edit_document_path(document.edit_id, org_path:params[:org_path])) if document.organization %></td>
-            <td><%= link_to(document.workflow_step&.component&.name, edit_document_path(document.edit_id, org_path:params[:org_path])) if document.workflow_step_id %></td>
-            <td><%= "#{document.user&.name} : #{document.user&.email}" if document.user %></td>
-            <td>
-              <% document.assignees&.each do |assignee| %>
-                <%= "#{assignee&.name} : #{assignee&.email}" if document.user %>
-                <br>
-              <% end %>
-            </td>
-            <td>
-              <% if has_role 'supervisor' %>
-                <%= link_to "Versions", workflow_document_versions_path(document, org_path:params[:org_path]), :class => 'btn btn-default btn-xs' %>
-                <%= link_to t('.edit', :default => t("helpers.links.edit")), edit_workflow_document_path(document.id, org_path:params[:org_path]), :class => 'btn btn-default btn-xs' %>
-              <% else %>
-                <%= link_to t('.edit', :default => t("helpers.links.edit")), document_path(document.edit_id, org_path:params[:org_path]), :class => 'btn btn-default btn-xs' %>
-              <% end %>
-            </td>
-          </tr>
+          <% else %>
+            <td scope="row"><%= document.name %></td>
+          <% end %>
+          <td><%= "#{document.organization.parent&.name} : #{document.organization.name}" %></td>
+          <td><%= document.workflow_step&.component&.name %></td>
+          <td><%= "#{document.user&.name} : #{document.user&.email}" if document.user %></td>
+          <td>
+            <% document.assignees&.each do |assignee| %>
+              <%= "#{assignee&.name} : #{assignee&.email}" if document.user %>
+              <br>
+            <% end %>
+          </td>
+          <td>
+            <% if has_role('supervisor') && document.user_id != current_user.id %>
+              <%= link_to "Versions", workflow_document_versions_path(document, org_path:params[:org_path]), :class => 'btn btn-default btn-xs' %>
+              <%= link_to t('.edit', :default => t("helpers.links.edit")), edit_workflow_document_path(document.id, org_path:params[:org_path]), :class => 'btn btn-default btn-xs' %>
+            <% end %>
+          </td>
+        </tr>
       <% end %>
     <% end %>
 
     <% if !user_documents.blank? %>
       <tr>
-           <td colspan="5"><h1>Your Documents</h1></td>
+        <td colspan="5">
+          <h1>Your Documents</h1>
+        </td>
       </tr>
       <% user_documents.each do |document| %>
-          <tr>
-            <td><%= document.name %></td>
-            <td><%= "#{document.organization.parent&.name} : #{document.organization.name}" %></td>
-            <td><%= document.workflow_step&.component&.name  %></td>
-            <td><%= "#{document.user&.name} : #{document.user&.email}" if document.user %></td>
-            <td>
-              <% document.assignees&.each do |assignee| %>
-                <%= "#{assignee&.name} : #{assignee&.email}" if document.user %>
-                <br>
-              <% end %>
-            </td>
-            <td>
-              <%= link_to "View", document_path(document.view_id, org_path:params[:org_path]), :class => 'btn btn-default btn-xs' %>
-            </td>
-          </tr>
+        <tr>
+          <td><%= document.name %></td>
+          <td><%= "#{document.organization.parent&.name} : #{document.organization.name}" %></td>
+          <td><%= document.workflow_step&.component&.name %></td>
+          <td><%= "#{document.user&.name} : #{document.user&.email}" if document.user %></td>
+          <td>
+            <% document.assignees&.each do |assignee| %>
+              <%= "#{assignee&.name} : #{assignee&.email}" if document.user %>
+              <br>
+            <% end %>
+          </td>
+          <td>
+            <%= link_to "View", document_path(document.view_id, org_path:params[:org_path]), :class => 'btn btn-default btn-xs' %>
+          </td>
+        </tr>
       <% end %>
     <% end %>
   </tbody>

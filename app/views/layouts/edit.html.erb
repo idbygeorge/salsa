@@ -44,6 +44,8 @@
 
                 <span class="hidden" id="document-version" data-document-version="<%= @document.versions.count %>" data-document-step-type="<%= @document.workflow_step&.step_type %>"  data-component-role="<%= @document.workflow_step&.component&.role %>" data-document-slug="<%= @document.workflow_step&.slug %>"></span>
 
+                <span class="hidden" id="org-info" data-org-name="<%= @organization&.name %>"></span>
+
                 <span class="hidden" id="user-info" data-user-name="<%= current_user&.name %>" data-user-remote-id="<%= current_user&.user_assignments&.find_by(organization: get_org&.id)&.username&.upcase %>"></span>
 
                 <div id="page-data" data-view-id="<%= @document.view_id %>">
