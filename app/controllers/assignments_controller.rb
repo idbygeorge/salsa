@@ -77,7 +77,7 @@ class AssignmentsController < AdminController
 
   def set_users
     user_ids = []
-    find_org_by_path(params[:slug]).descendants.each do |org|
+    find_org_by_path(params[:slug]).self_and_descendants.each do |org|
       user_ids += org.users.pluck(:id)
     end
     @users = User.where(id: user_ids)
