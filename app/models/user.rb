@@ -11,6 +11,7 @@ class User < ApplicationRecord
   # validates :password, presence: true, length: { minimum: 8 }
 
   has_many :user_assignments
+  has_many :documents
   has_many :assignments, foreign_key: "user_id"
   has_many :assignees, class_name: 'Assignment', foreign_key: "team_member_id"
   has_many :managers, :class_name => 'User', through: :assignments, foreign_key: "user_id"
