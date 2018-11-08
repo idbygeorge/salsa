@@ -9,7 +9,7 @@ class OrganizationUsersController < AdminUsersController
     page = 1
     page = params[:page] if params[:page]
     show_archived = params[:show_archived] == "true"
-    user_ids = UserAssignment.where(organization_id: @organization.id).map(&:user_id)
+    user_ids = UserAssignment.where(organization_id: @organization.id).pluck(:user_id)
     @users = User.where(id: user_ids, archived: show_archived).order('name', 'email').all.page(params[:page]).per(15)
     @session = session
   end
@@ -44,7 +44,7 @@ class OrganizationUsersController < AdminUsersController
 
   def remove_assignment
     organization = find_org_by_path(params[:slug])
-    @user_assignment = UserAssignment.find_by id: params[:id], organization_id: get_organizations.map(&:id)
+    @user_assignment = UserAssignment.find_by id: params[:id], organization_id: get_organizations.pluck(:id)
     return redirect_to organization_users_path(org_path: params[:org_path]) if @user_assignment.blank?
     @user_assignment.destroy
 
@@ -76,31 +76,31 @@ class OrganizationUsersController < AdminUsersController
     if !has_role("admin")
       @roles.delete("Global Administrator")
     end
-    @user_assignment = UserAssignment.find_by id: params[:id], organization_id: @organizations.map(&:id)
+    @user_assignment = UserAssignment.find_by id: params[:id], organization_id: @organizations.pluck(:id)
     return redirect_to organization_users_path(org_path: params[:org_path]) if @user_assignment.blank?
   end
 
   def show
     @organization = find_org_by_path(params[:slug])
-    user_ids = UserAssignment.where(organization_id: @organizations.map(&:id) ).map(&:user_id)
+    user_ids = UserAssignment.where(organization_id: @organizations.pluck(:id) ).pluck(:user_id)
     users = User.where(id: user_ids, archived: false)
     @user = users.find_by id: params[:id]
     return redirect_to organization_users_path(org_path: params[:org_path]) if @user.blank?
-    @user_assignments = @user.user_assignments.where(organization_id: @organizations.map(&:id)) if @user.user_assignments.count > 0
+    @user_assignments = @user.user_assignments.where(organization_id: @organizations.pluck(:id)) if @user.user_assignments.count > 0
 
     @new_permission = @user.user_assignments.new
   end
 
   def edit
     @organization = find_org_by_path(params[:slug])
-    user_ids = UserAssignment.where(organization_id: @organization&.id).map(&:user_id)
+    user_ids = UserAssignment.where(organization_id: @organization&.id).pluck(:user_id)
     users = User.where(id: user_ids, archived: false)
     @user = users.find_by id: params[:id]&.to_i
     return redirect_to organization_users_path(org_path: params[:org_path]) if @user.blank?
   end
 
   def archive
-    user_ids = UserAssignment.where(organization_id: find_org_by_path(params[:slug])).map(&:user_id)
+    user_ids = UserAssignment.where(organization_id: find_org_by_path(params[:slug])).pluck(:user_id)
     users = User.where(id: user_ids)
     @user = users.find_by id: params["#{params[:controller].singularize}_id".to_sym].to_i
     @user.update(archived: true)
@@ -109,7 +109,7 @@ class OrganizationUsersController < AdminUsersController
   end
 
   def restore
-    user_ids = UserAssignment.where(organization_id: find_org_by_path(params[:slug])).map(&:user_id)
+    user_ids = UserAssignment.where(organization_id: find_org_by_path(params[:slug])).pluck(:user_id)
     users = User.where(id: user_ids)
     @user = users.find params["#{params[:controller].singularize}_id".to_sym].to_i
     @user.update(archived: false)

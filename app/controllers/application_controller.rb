@@ -10,7 +10,7 @@ class ApplicationController < ActionController::Base
   protected
   def redirect_to_sub_org
     root_org = Organization.find_by(slug: request.env["SERVER_NAME"])
-    org_path = current_user&.user_assignments&.where(organization_id: root_org.descendants.map(&:id))&.includes(:organization)&.reorder("organizations.depth DESC")&.first&.organization&.path
+    org_path = current_user&.user_assignments&.where(organization_id: root_org.descendants.pluck(:id))&.includes(:organization)&.reorder("organizations.depth DESC")&.first&.organization&.path
     org_path = params[:org_path] if org_path.blank?
     return redirect_to full_url_for(request.parameters.merge(org_path:org_path)) if !current_page?(full_url_for(request.parameters.merge(org_path:org_path)))
   end
@@ -111,7 +111,7 @@ class ApplicationController < ActionController::Base
       @oauth_endpoint = @organization[:lms_authentication_source] unless @organization[:lms_authentication_source] == ''
       @lms_client_id = @organization[:lms_authentication_id] unless @organization[:lms_authentication_id] == ''
       @lms_secret = @organization[:lms_authentication_key] unless @organization[:lms_authentication_key] == ''
-      @callback_url = "http://#{@organization[:slug]}#{redirect_port}/oauth2/callback" unless @organization[:slug] == ''
+      @callback_url = "https://#{@organization[:slug]}#{redirect_port}/oauth2/callback" unless @organization[:slug] == ''
     end
 
     # defaults
