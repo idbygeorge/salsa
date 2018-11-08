@@ -4,6 +4,7 @@ class AssignmentsController < AdminController
   before_action :set_users
   before_action :set_namespace
   before_action :get_organizations, only: %i[index new edit create show]
+  before_action :require_supervisor_permissions
 
   # GET /assignments
   # GET /assignments.json
@@ -75,8 +76,12 @@ class AssignmentsController < AdminController
   end
 
   def set_users
-    @users = User.all
-    @user = @users.find(params[params.keys.detect { |k| k.to_s =~ /user_id/ }.to_sym])
+    user_ids = []
+    find_org_by_path(params[:slug]).descendants.each do |org|
+      user_ids += org.users.pluck(:id)
+    end
+    @users = User.where(id: user_ids)
+    @user = User.find(params[params.keys.detect { |k| k.to_s =~ /user_id/ }.to_sym])
   end
 
   def set_roles
