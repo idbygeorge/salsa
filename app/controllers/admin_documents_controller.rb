@@ -21,7 +21,7 @@ class AdminDocumentsController < AdminController
     else
       @workflow_steps = WorkflowStep.where(organization_id: @document.organization_id).order(step_type: :desc)
     end
-    @periods = Period.where(organization_id: @document.organization&.parents&.map(&:id).push(@document.organization&.id))
+    @periods = Period.where(organization_id: @document.organization&.parents&.pluck(:id).push(@document.organization&.id))
     @users = User.where(archived: false)
     @users += [@document.user] if !@document.user.blank?
   end

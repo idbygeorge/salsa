@@ -174,12 +174,12 @@ module ApplicationHelper
     user_assignments = nil
     if get_org&.root_org_setting("enable_shibboleth") && session[:saml_authenticated_user]
       username = session[:saml_authenticated_user]['id'].to_s
-      user_assignments = UserAssignment.where('organization_id in (?) OR (role = ?)', org.self_and_ancestors.map(&:id), 'admin').where("lower(username) = ? OR user_id = ?", username.downcase, session[:authenticated_user])
+      user_assignments = UserAssignment.where('organization_id in (?) OR (role = ?)', org.self_and_ancestors.pluck(:id), 'admin').where("lower(username) = ? OR user_id = ?", username.downcase, session[:authenticated_user])
     elsif org&.lms_authentication_source && org&.lms_authentication_source == session[:oauth_endpoint] && session[:saml_authenticated_user]
       username = session[:saml_authenticated_user]['id'].to_s
-      user_assignments = UserAssignment.where('organization_id = ? OR (role = ?)', org.self_and_ancestors.map(&:id), 'admin').where("lower(username) = ?", username.downcase)
+      user_assignments = UserAssignment.where('organization_id = ? OR (role = ?)', org.self_and_ancestors.pluck(:id), 'admin').where("lower(username) = ?", username.downcase)
     else
-      user_assignments = UserAssignment.where('organization_id IN (?) OR (role = ?)', org&.self_and_ancestors.map(&:id), 'admin').where(user_id: session[:authenticated_user])
+      user_assignments = UserAssignment.where('organization_id IN (?) OR (role = ?)', org&.self_and_ancestors.pluck(:id), 'admin').where(user_id: session[:authenticated_user])
     end
 
     user_assignments&.each do |ua|
@@ -230,13 +230,7 @@ module ApplicationHelper
   end
 
   def full_org_path org
-    if org[:depth] > 0 and org[:slug].start_with? '/'
-      org_slug = org.self_and_ancestors.pluck(:slug).join ''
-    else
-      org_slug = org[:slug]
-    end
-
-    org_slug
+    org.full_org_path
   end
 
   def org_slug_parts org

@@ -1,14 +1,16 @@
 <% if params[:controller] == "organization_users" %>
-<%= render :partial => "organizations/breadcrumbs", locals: {organization: @organization} %>
+  <%= render :partial => "organizations/breadcrumbs", locals: {organization: @organization} %>
 
 <% end %>
 <a class="btn btn-default pull-right" href="<%= polymorphic_path([:edit,params[:controller].singularize.to_sym], id: @user) %>">
   Edit User
 </a>
+<%= link_to "Manage Users", polymorphic_path([params[:controller].singularize,:team_assignments],"#{params[:controller].singularize}_id".to_sym => @user.id, org_path: params[:org_path]), class:"btn btn-default pull-right" %>
 
 <h1 class="page-header">
   <%= @user[:name] %>
-  <br><small><%= @user[:email] %></span>
+  <br>
+  <small><%= @user[:email] %></span>
 </h1>
 
 <div class="row">
@@ -26,7 +28,7 @@
     </thead>
 
     <%= render(partial: 'role', collection: @user_assignments) || content_tag('tr') do %>
-      <td colspan='5'>This user has not been assigned any access to Salsa</td>
-    <% end %>
-  </table>
+    <td colspan='5'>This user has not been assigned any access to Salsa</td>
+  <% end %>
+</table>
 </div>

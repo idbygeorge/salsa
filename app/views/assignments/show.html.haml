@@ -1,0 +1,4 @@
+%p#notice= notice
+= link_to 'Edit', eval("edit_#{@namespace}_user_team_assignment_path(@assignment)")
+|
+= link_to 'Back', eval("#{@namespace}_user_team_assignments_url")

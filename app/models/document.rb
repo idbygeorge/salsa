@@ -27,11 +27,11 @@ class Document < ApplicationRecord
       if component.role == "staff"
         User.where(id: self.user_id)
       elsif component.role == "supervisor" && self.user&.user_assignments&.find_by(organization_id:self.organization_id)&.role == "staff"
-        User.where(id: self.closest_roles("supervisor").map(&:user_id))
+        User.where(id: self.closest_roles("supervisor").pluck(:user_id))
       elsif component.role == "supervisor"
-        User.where(id: self.closest_roles_without_current_org("supervisor").map(&:user_id))
+        User.where(id: self.closest_roles_without_current_org("supervisor").pluck(:user_id))
       elsif component.role == "approver"
-        user_ids = self.approvers_that_have_not_signed.map(&:id)
+        user_ids = self.approvers_that_have_not_signed.pluck(:id)
         User.where(id: self.closest_user_with_role("approver", user_ids)&.id)
       else
         []
@@ -43,27 +43,38 @@ class Document < ApplicationRecord
   end
 
 
+  #TODO fix approver permissions with assignments
   def closest_roles_without_current_org(role, user_ids=nil)
+    if user_assignees = self.user&.assignees&.where(role:role)
+      return user_assignees
+    end
     user_assignments = UserAssignment.all
     user_assignments = user_assignments.where(user_id: user_ids) if !user_ids.blank?
-    user_assignments = user_assignments&.where(role: role,organization_id: self.organization&.ancestors&.map(&:id))&.includes(:organization)&.reorder("organizations.depth DESC")
+    user_assignments = user_assignments&.where(role: role,organization_id: self.organization&.ancestors&.pluck(:id))&.includes(:organization)&.reorder("organizations.depth DESC")
     org_id = user_assignments&.first&.organization_id
     user_assignments.where(organization_id: org_id)
   end
 
 
   def closest_roles(role, user_ids=nil)
+    if user_assignees = self.user&.assignees&.where(role:role)
+      return user_assignees
+    end
     user_assignments = UserAssignment.all
     user_assignments = user_assignments.where(user_id: user_ids) if !user_ids.blank?
-    user_assignments = user_assignments&.where(role: role,organization_id: self.organization&.self_and_ancestors&.map(&:id))&.includes(:organization)&.reorder("organizations.depth DESC")
+    user_assignments = user_assignments&.where(role: role,organization_id: self.organization&.self_and_ancestors&.pluck(:id))&.includes(:organization)&.reorder("organizations.depth DESC")
     org_id = user_assignments&.first&.organization_id
-    return user_assignments.where(organization_id: org_id)
+    return user&.assignees&.where(role:role) + user_assignments.where(organization_id: org_id)
+
   end
 
   def closest_role(role, user_ids=nil)
+    if ua = self.user&.assignees&.find_by(role: role)
+      return ua
+    end
     user_assignments = UserAssignment.all
     user_assignments = user_assignments.where(user_id: user_ids) if !user_ids.blank?
-    return user_assignments.where(role: role,organization_id: self.organization&.self_and_ancestors&.map(&:id)).includes(:organization).reorder("organizations.depth DESC").first
+    return user_assignments.where(role: role,organization_id: self.organization&.self_and_ancestors&.pluck(:id)).includes(:organization).reorder("organizations.depth DESC").first
   end
 
   # Find closest user with role
@@ -73,24 +84,28 @@ class Document < ApplicationRecord
 
   # Find all users on the closest organization with the role
   def closest_users_with_role role, user_ids=nil
-    return User.where(id: self.closest_roles(role,user_ids).map(&:user_id))
+    return User.where(id: self.closest_roles(role,user_ids).pluck(:user_id))
   end
 
   def approvers
     orgs = self.organization.parents + [self.organization]
     approvers_array = []
     orgs.each do |org|
-      approvers_array += org.user_assignments.where(role: "approver").map(&:user_id)
+      approvers_array += org.user_assignments.where(role: "approver").pluck(:user_id)
     end
+    if assignees = self.user&.assignees&.where(role: "approver")
+      approvers_array += assignees.where(role: "approver").pluck(:user_id)
+    end
+
     return User.where(id: approvers_array)
   end
 
   def approvers_that_signed
-    self.approvers.where(id: self.versions.where(event:"publish",whodunnit: self.approvers.map(&:id)).map(&:whodunnit))
+    self.approvers.where(id: self.versions.where(event:"publish",whodunnit: self.approvers.pluck(:id)).pluck(:whodunnit))
   end
 
   def approvers_that_have_not_signed
-    self.approvers.where.not(id: self.versions.where(event:"publish",whodunnit: self.approvers.map(&:id)).map(&:whodunnit))
+    self.approvers.where.not(id: self.versions.where(event:"publish",whodunnit: self.approvers.pluck(:id)).pluck(&:whodunnit))
   end
 
   def signed_by_all_approvers
