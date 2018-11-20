@@ -1,5 +1,6 @@
 class AssignmentsController < AdminController
   before_action :set_assignment, only: %i[show edit update destroy]
+  before_action :check_organization_workflow_enabled
   before_action :set_roles, only: %i[edit show new index create update]
   before_action :set_users
   before_action :set_namespace
@@ -9,7 +10,6 @@ class AssignmentsController < AdminController
   # GET /assignments
   # GET /assignments.json
   def index
-    @assignments = @user.assignments
     @assignment = Assignment.new
   end
 
@@ -28,9 +28,12 @@ class AssignmentsController < AdminController
   # POST /assignments
   # POST /assignments.json
   def create
-    @assignments = @user.assignments
     @assignment = Assignment.new(assignment_params)
-    @assignment.user_id = @user.id
+    if params[:assignment][:user_id].blank?
+      @assignment.user_id = @user.id
+    else
+      @assignment.team_member_id = @user.id
+    end
 
     respond_to do |format|
       if @assignment.save
@@ -46,7 +49,11 @@ class AssignmentsController < AdminController
   # PATCH/PUT /assignments/1
   # PATCH/PUT /assignments/1.json
   def update
-    @assignment.user_id = @user.id
+    if params[:assignment][:user_id].blank?
+      @assignment.user_id = @user.id
+    else
+      @assignment.team_member_id = @user.id
+    end
     respond_to do |format|
       if @assignment.update(assignment_params)
         format.html { redirect_to @assignment, notice: 'Assignment was successfully updated.' }
@@ -76,12 +83,33 @@ class AssignmentsController < AdminController
   end
 
   def set_users
-    user_ids = []
+    user_id = params[params.keys.detect { |k| k.to_s =~ /user_id/ }.to_sym].to_i
+
+    @user = User.find(user_id)
+
+    @assignments = @user.assignments
+    @assignees = @user.assignees
+
+
+    descendant_ua_ids = []
     find_org_by_path(params[:slug]).self_and_descendants.each do |org|
-      user_ids += org.users.pluck(:id)
+      descendant_ua_ids += org.user_assignments.pluck(:id)
     end
-    @users = User.where(id: user_ids)
-    @user = User.find(params[params.keys.detect { |k| k.to_s =~ /user_id/ }.to_sym])
+    @descendant_user_assignments = UserAssignment.where(id: descendant_ua_ids)
+    @descendant_users = User.where(id: @descendant_user_assignments.pluck(:user_id) - [user_id])
+
+    ancestor_user_ids = []
+    find_org_by_path(params[:slug]).self_and_ancestors.each do |org|
+      ancestor_user_ids += org.users.pluck(:id)
+    end
+    ancestor_user_ids = ancestor_user_ids - [user_id]
+    @ancestor_users = User.where(id: ancestor_user_ids)
+
+
+
+
+    user_assignment = @user.user_assignments.find_by(role: ["staff","supervisor"])
+    @managers_up_tree = user_assignment&.workflow_roles&.where&.not(user_id: @assignees&.pluck(:user_id))
   end
 
   def set_roles
