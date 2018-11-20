@@ -25,7 +25,7 @@
   Assignments
 - if !descendant_users.blank?
   = render 'form', assignment: assignment
-- unless assignments.blank? && user.staff.blank?
+- unless assignments.blank? 
   %table.table.table-responsive.table-striped
     %thead
       %tr
