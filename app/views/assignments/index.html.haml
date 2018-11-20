@@ -1,23 +1,12 @@
 - if @namespace == :organization
   = render :partial => "organizations/breadcrumbs", locals: {organization: find_org_by_path(params[:slug])}
-%p#notice= notice
+= link_to 'Direct Assignments', eval("#{@namespace}_user_team_assignments_path"), class:"pull-right btn btn-primary"
+= link_to 'Organization Assignments', eval("#{@namespace}_user_team_assignments_path(organization: true)"), class:"pull-right btn btn-primary"
 %h1
   = @user.name.titlecase + "'s"
-  Assignments
+  Workflow Summary
 
-= render 'form', assignment: @assignment
-%table.table.table-responsive.table-striped
-  %thead
-    %tr
-      %th Team Member
-      %th Role
-      %th Actions
-  %tbody
-    - @assignments.each do |assignment|
-      %tr
-        %td= assignment.team_member.name + ":" + assignment.team_member.email
-        %td= assignment.role
-        %td
-          = link_to 'Destroy', eval("#{@namespace}_user_team_assignment_path(params[:slug],@user.id,assignment.id)"), method: :delete, data: { confirm: 'Are you sure?' }, class:"btn btn-sm btn-danger"
-%br/
-= link_to 'New Assignment', eval("new_#{@namespace}_user_team_assignment_path")
+- if params[:organization]
+  = render 'org_list', ancestor_users: @ancestor_users, user: @user, descendant_users: @descendant_users, assignment: @assignment, assignments: @assignments
+- else
+  = render 'direct_list', ancestor_users: @ancestor_users, user: @user, descendant_users: @descendant_users, assignment: @assignment, assignments: @assignments
