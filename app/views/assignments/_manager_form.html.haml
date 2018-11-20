@@ -1,0 +1,25 @@
+- if assignment.errors.any?
+  #error_explanation
+    %h2
+      = pluralize(assignment.errors.count, "error")
+      prohibited this assignment from being saved:
+    %ul
+      - assignment.errors.full_messages.each do |message|
+        %li= message
+
+%a.btn.btn-primary{onclick:"$('#manager_form').show();$(this).hide()"} Add Workflow
+= form_with(model: [@namespace,:user,:team,assignment], local: true, id: "manager_form", html:{style: "display:none"}) do |f|
+
+  .form-group
+    .col-md-4
+      = f.label :role, "Role", :class => 'control-label'
+      = f.select(:role, @roles)
+      = f.error_span(:role)
+
+  .form-group
+    .col-md-3
+      = f.label :user_id, "Manger", :class => 'control-label'
+      = f.collection_select(:user_id, @descendant_users,:id, :name)
+      = f.error_span(:user_id)
+  %button.btn.btn-success{:type => "submit"}
+    Assign

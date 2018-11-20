@@ -9,7 +9,7 @@ class OrganizationUsersController < AdminUsersController
     page = 1
     page = params[:page] if params[:page]
     show_archived = params[:show_archived] == "true"
-    user_ids = UserAssignment.where(organization_id: @organization.id).pluck(:user_id)
+    user_ids = UserAssignment.where(organization_id: @organization.self_and_descendants.pluck(:id)).pluck(:user_id)
     @users = User.where(id: user_ids, archived: show_archived).order('name', 'email').all.page(params[:page]).per(15)
     @session = session
   end
