@@ -1,5 +1,6 @@
 class AssignmentsController < AdminController
   before_action :set_assignment, only: %i[show edit update destroy]
+  before_action :check_organization_workflow_enabled
   before_action :set_roles, only: %i[edit show new index create update]
   before_action :set_users
   before_action :set_namespace
