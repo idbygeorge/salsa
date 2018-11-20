@@ -1,0 +1,36 @@
+- unless user.user_assignments.blank?
+  %table.table.table-responsive.table-striped
+    %thead
+      %tr
+        %th Role
+        %th User Name
+    %tbody
+      - user.user_assignments.each do |ua|
+        - ua.workflow_roles.each do |workflow_ua|
+          %tr
+            %td= workflow_ua.role
+            %td= workflow_ua.user.name + " : " + workflow_ua.user.email
+- else
+  %p Workflow summary not found
+
+%h1
+  = user.name.titlecase + "'s"
+  Assignments
+- unless user.user_assignments.where.not(role:"staff").blank?
+  %table.table.table-responsive.table-striped
+    %thead
+      %tr
+        %th= "#{user.name}'s' Role"
+        %th Team members Role
+        %th Team Member
+    %tbody
+      - user.user_assignments.each do |ua|
+        - unless ua.assignments.blank?
+          - ua.assignments.each do |assignment_ua|
+            %tr
+              %td= ua.role
+              %td= assignment_ua.role
+              %td= assignment_ua.user.name + " : " + assignment_ua.user.email
+
+- else
+  %p No Assignents found

@@ -13,9 +13,9 @@ class User < ApplicationRecord
   has_many :user_assignments
   has_many :documents
   has_many :assignments, foreign_key: "user_id"
-  has_many :assignees, class_name: 'Assignment', foreign_key: "team_member_id"
-  has_many :managers, :class_name => 'User', through: :assignments, foreign_key: "user_id"
-  has_many :team_members, :class_name => 'User', through: :assignments
+  has_many :assignees, class_name: 'Assignment', foreign_key: :team_member_id
+  has_many :managers, through: :assignees, source: :user
+  has_many :team_members, :class_name => 'User', through: :assignments, source: "team_member"
 
   has_secure_password validations: false
   validates_presence_of :password, on: :create
@@ -27,7 +27,6 @@ class User < ApplicationRecord
     user = User.find_by(email: saml_response.attribute_value_by_resource_key("email")) if user.blank?
     return user
   end
-
 
   def self.saml_update_resource_hook(user, saml_response, auth_value)
     saml_response.attributes.resource_keys.each do |key|

@@ -1,4 +1,5 @@
-= form_with(model: [@namespace,:user,:team,assignment], local: true) do |f|
+%a.btn.btn-primary{onclick:"$('#team_member_form').show();$(this).hide()"} Add Team Member
+= form_with(model: [@namespace,:user,:team,assignment], local: true, id: "team_member_form", html: {style: "display:none"}) do |f|
   - if assignment.errors.any?
     #error_explanation
       %h2
@@ -8,18 +9,17 @@
         - assignment.errors.full_messages.each do |message|
           %li= message
 
-  .form-group
-    .col-md-3
-      = f.label :team_member_id, :class => 'control-label'
-      = f.collection_select(:team_member_id, @users,:id, :name)
-      = f.error_span(:team_member_id)
 
   .form-group
-    .col-md-2
-      = f.label :role, :class => 'control-label'
+    .col-md-4
+      = f.label :role, "#{@user.name}'s Role", :class => 'control-label'
       = f.select(:role, @roles)
       = f.error_span(:role)
 
+  .form-group
+    .col-md-3
+      = f.label :team_member_id, :class => 'control-label'
+      = f.collection_select(:team_member_id, @descendant_users,:id, :name)
+      = f.error_span(:team_member_id)
   %button.btn.btn-success{:type => "submit"}
-    %span.glyphicon.glyphicon-plus
-    Access
+    Assign

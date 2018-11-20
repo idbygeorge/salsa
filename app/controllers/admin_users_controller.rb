@@ -36,7 +36,7 @@ class AdminUsersController < AdminController
 
     if params[:controller] == 'organization_users'
       @organization = find_org_by_path(params[:slug])
-      users = User.where(id: UserAssignment.where(organization_id: @organization.id).map(&:user))
+      users = User.where(id: UserAssignment.where(organization_id: @organization.self_and_descendants.pluck(:id)).map(&:user))
       user_ids = users.where('email = ? OR id = ? OR name ~* ? ', user_email, user_id, user_name).pluck(:id)
       user_ids += UserAssignment.where(organization_id: @organization.id).where('lower(username) = ? ', user_remote_id.to_s.downcase).pluck(:user_id) unless user_remote_id.blank?
     else
