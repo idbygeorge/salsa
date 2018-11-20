@@ -5,7 +5,9 @@
 <a class="btn btn-default pull-right" href="<%= polymorphic_path([:edit,params[:controller].singularize.to_sym], id: @user) %>">
   Edit User
 </a>
-<%= link_to "Manage Users", polymorphic_path([params[:controller].singularize,:team_assignments],"#{params[:controller].singularize}_id".to_sym => @user.id, org_path: params[:org_path]), class:"btn btn-default pull-right" %>
+<% if params[:controller] == "organization_users" && @organization.enable_workflows == true %>
+  <%= link_to "Manage Users", polymorphic_path([params[:controller].singularize,:team_assignments],"#{params[:controller].singularize}_id".to_sym => @user.id, org_path: params[:org_path]), class:"btn btn-default pull-right" %>
+<% end %>
 
 <h1 class="page-header">
   <%= @user[:name] %>
