@@ -12,9 +12,13 @@
 $(document).ready(function() {
 
   // only run if we are on the syllabus page and there is a button to edit the syllabus showing up
-  if($('#course_syllabus').length && $('.salsaLink').length) {
+  if($('#course_syllabus').length && $('.edit_syllabus_link').length) {
     // wrap in an anonymous function to avoid polluting the global namespace
     (function() {
+      // build salsaBaseUrl with canvas url or replace salsaBaseUrl with the appropriate string
+      var instancePrefix = window.location.href.replace(/https?:\/\/([^\.]+).*/, '$1');
+      var salsaBaseUrl = "https://" + instancePrefix + ".syllabustool.com";
+
       var printLink = $('#salsa_document_view_link').attr('href');
       var documentToken = null;
       var getDocumentTokenPattern = /.+\/SALSA\/(.+)$/;
@@ -28,7 +32,7 @@ $(document).ready(function() {
       // array of course IDs that will use Salsa instead of the syllabus editor in Canvas
       // add course IDs to this array to enable Salsa for them
       var coursesUsingSalsa = [
-      
+
       // Example:
       // '1297671'
 
@@ -78,7 +82,7 @@ $(document).ready(function() {
       if ( (!addSalsaLinkByDefault && whiteListCheck && blackListCheck) || (addSalsaLinkByDefault && blackListCheck)) {
         // strings to use when building the Salsa link
         // Example: http://example.syllabustool.com/lms/courses/. Replace "example" on the next line.
-        var salsaDocumentUrl = 'http://lvh.me:3000/lms/courses/' + coursenum;
+        var salsaDocumentUrl = salsaBaseUrl + '/lms/courses/' + coursenum;
 
         if(documentToken) {
           salsaDocumentUrl +=  '?document_token='+documentToken;
