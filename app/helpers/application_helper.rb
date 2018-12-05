@@ -1,26 +1,31 @@
 module ApplicationHelper
   include ActionView::Helpers::UrlHelper
 
-  def salsa_partial(name, org=@organization)
+  def salsa_partial(name, org=@organization, parent_org=nil)
     @organization = org
     path_info = name.split '/'
 
     path = ''
     partial = name
 
+    if parent_org != nil
+      component_org = parent_org
+    else
+      component_org = org
+    end
+
     if path_info.size > 1 then
       partial = path_info.pop
       path = path_info.join('/') + '/'
     end
-    view_folder = get_view_folder org
+    view_folder = get_view_folder component_org
 
     #phase 2, make this dynamic?
     #dynamic scss/erb - http://microblog.anthonyestebe.com/2014-04-28/compile-your-scss-according-to-your-model-on-rails/
     #need a way to control who can do this though... or how much?
 
     # if this document is using a configuration and that configuration has the partial being requested, use it
-    if org && org.components && org.components.find_by(slug: name)
-      component = org.components.find_by(slug: name)
+    if component_org && component_org.components && component = component_org.components.find_by(slug: name)
       output = component.layout
 
       if APP_CONFIG['allow_erb_components'] && component.format == 'erb'
@@ -37,9 +42,9 @@ module ApplicationHelper
 
     if output == ''
       # if there is a parent, recheck using it as the org
-      if org&.parent
-        output = salsa_partial(name, org.parent)
-      elsif org&.slug&.include? '/'
+      if component_org&.parent
+        output = salsa_partial(name, org, org.parent)
+      elsif component_org&.slug&.include? '/'
         output = salsa_partial(name, Organization.new(slug: org.slug.gsub(/\/[^\/]+$/, '')))
       # otherwise, show the default if it exists
       elsif File.exists?("app/views/instances/default/#{path}_#{partial}.html.erb")
@@ -175,9 +180,9 @@ module ApplicationHelper
     if get_org&.root_org_setting("enable_shibboleth") && session[:saml_authenticated_user]
       username = session[:saml_authenticated_user]['id'].to_s
       user_assignments = UserAssignment.where('organization_id in (?) OR (role = ?)', org.self_and_ancestors.pluck(:id), 'admin').where("lower(username) = ? OR user_id = ?", username.downcase, session[:authenticated_user])
-    elsif org&.lms_authentication_source && org&.lms_authentication_source == session[:oauth_endpoint] && session[:saml_authenticated_user]
+    elsif org&.root_org_setting("lms_authentication_source") && org&.root_org_setting("lms_authentication_source") == session[:oauth_endpoint] && session[:saml_authenticated_user]
       username = session[:saml_authenticated_user]['id'].to_s
-      user_assignments = UserAssignment.where('organization_id = ? OR (role = ?)', org.self_and_ancestors.pluck(:id), 'admin').where("lower(username) = ?", username.downcase)
+      user_assignments = UserAssignment.where('organization_id in (?) OR (role = ?)', org.self_and_ancestors.pluck(:id), 'admin').where("lower(username) = ?", username.downcase)
     else
       user_assignments = UserAssignment.where('organization_id IN (?) OR (role = ?)', org&.self_and_ancestors.pluck(:id), 'admin').where(user_id: session[:authenticated_user])
     end

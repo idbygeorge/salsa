@@ -51,7 +51,7 @@ class AdminController < ApplicationController
     if @organization&.setting("enable_shibboleth")
       return redirect_to new_user_session_path(org_path: params[:org_path])
     end
-  	if @organization and @organization[:lms_authentication_source] != "" and @organization[:lms_authentication_source] != nil
+  	if @organization and @organization.root_org_setting("lms_authentication_source") != "" and @organization.root_org_setting("lms_authentication_source") != nil
   		redirect_to oauth2_login_path
 	  else
   		render action: :login, layout: false
