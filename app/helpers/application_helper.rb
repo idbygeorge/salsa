@@ -199,7 +199,6 @@ module ApplicationHelper
         result = true
       end
     end
-    debugger if role == 'designer' && result == false
 
     result
   end
