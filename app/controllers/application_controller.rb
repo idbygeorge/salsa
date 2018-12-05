@@ -10,9 +10,9 @@ class ApplicationController < ActionController::Base
   protected
   def redirect_to_sub_org
     root_org = Organization.find_by(slug: request.env["SERVER_NAME"])
-    org_path = current_user&.user_assignments&.where(organization_id: root_org.descendants.pluck(:id))&.includes(:organization)&.reorder("organizations.depth ASC")&.first&.organization&.path
+    org_path = current_user&.user_assignments&.where(organization_id: root_org.descendants.pluck(:id))&.includes(:organization)&.reorder("organizations.depth DESC")&.first&.organization&.path
     org_path = params[:org_path] if org_path.blank?
-    return redirect_to full_url_for(request.parameters.merge(org_path: org_path)) if !current_page?(full_url_for(request.parameters.merge(org_path: org_path)))
+    # return redirect_to full_url_for(request.parameters.merge(org_path: org_path)) if !current_page?(full_url_for(request.parameters.merge(org_path: org_path)))
   end
 
   def after_sign_in_path_for(resource)
