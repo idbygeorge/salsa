@@ -180,9 +180,9 @@ module ApplicationHelper
     if get_org&.root_org_setting("enable_shibboleth") && session[:saml_authenticated_user]
       username = session[:saml_authenticated_user]['id'].to_s
       user_assignments = UserAssignment.where('organization_id in (?) OR (role = ?)', org.self_and_ancestors.pluck(:id), 'admin').where("lower(username) = ? OR user_id = ?", username.downcase, session[:authenticated_user])
-    elsif org&.lms_authentication_source && org&.lms_authentication_source == session[:oauth_endpoint] && session[:saml_authenticated_user]
+    elsif org&.root_org_setting("lms_authentication_source") && org&.root_org_setting("lms_authentication_source") == session[:oauth_endpoint] && session[:saml_authenticated_user]
       username = session[:saml_authenticated_user]['id'].to_s
-      user_assignments = UserAssignment.where('organization_id = ? OR (role = ?)', org.self_and_ancestors.pluck(:id), 'admin').where("lower(username) = ?", username.downcase)
+      user_assignments = UserAssignment.where('organization_id in (?) OR (role = ?)', org.self_and_ancestors.pluck(:id), 'admin').where("lower(username) = ?", username.downcase)
     else
       user_assignments = UserAssignment.where('organization_id IN (?) OR (role = ?)', org&.self_and_ancestors.pluck(:id), 'admin').where(user_id: session[:authenticated_user])
     end
@@ -199,6 +199,7 @@ module ApplicationHelper
         result = true
       end
     end
+    debugger if role == 'designer' && result == false
 
     result
   end
