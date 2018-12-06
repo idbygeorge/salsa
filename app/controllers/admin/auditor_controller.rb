@@ -1,15 +1,16 @@
 require 'tempfile'
 require 'zip'
+require 'aws-sdk-s3'
 
 class Admin::AuditorController < ApplicationController
 
   before_action :require_auditor_role
 
   def download
-    zipfile_path = ReportHelper.zipfile_path(get_org_slug, params[:report])
-    if File.file?(zipfile_path)
-      send_file (zipfile_path)
-    end
+    Aws.config[:credentials] = Aws::Credentials.new(ENV['AWS_ACCESS_KEY'], ENV['AWS_SECRET_ACCESS_KEY'])
+    signer = Aws::S3::Presigner.new
+    key = get_org.self_and_ancestors.pluck('slug').join('/')
+    redirect_to signer.presigned_url(:get_object, bucket: ENV['AWS_BUCKET'], key: key, expires_in: 60)
   end
 
   def reportStatus
