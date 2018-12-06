@@ -96,6 +96,7 @@ gem 'turbolinks'
 gem 'jbuilder'
 
 # for aws bucket usage
+gem 'aws-sdk-s3', '~> 1'
 gem 'uber-s3'
 
 # instructure canvas api

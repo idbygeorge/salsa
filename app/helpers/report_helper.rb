@@ -1,5 +1,6 @@
 require 'tempfile'
 require 'zip'
+require 'aws-sdk-s3'
 
 module ReportHelper
   def self.generate_report_as_job (org_id, account_filter, params)
@@ -102,6 +103,29 @@ module ReportHelper
         zipfile.get_output_stream("document_meta.json"){ |os| os.write document_metas.to_json  }
       end
     end
+
+    Aws.config[:credentials] = Aws::Credentials.new(ENV['AWS_ACCESS_KEY'], ENV['AWS_SECRET_ACCESS_KEY'])
+
+    s3 = Aws::S3::Resource.new(region: ENV['AWS_REGION'])
+    obj = s3.bucket(ENV['AWS_BUCKET']).object(self.s3_file_location(@organization, report_id))
+    obj.upload_file(zipfile_path(org_slug, report_id))
+  end
+
+  def self.s3_report_zip_exists?(org, report_id)
+    Aws.config[:credentials] = Aws::Credentials.new(ENV['AWS_ACCESS_KEY'], ENV['AWS_SECRET_ACCESS_KEY'])
+
+    s3 = Aws::S3::Resource.new(region: ENV['AWS_REGION'])
+    bucket =  s3.bucket(ENV['AWS_BUCKET'])
+
+    if bucket.object(self.s3_file_location(org, report_id)).exists?
+      return true
+    else
+      return false
+    end
+  end
+
+  def self.s3_file_location(org, report_id)
+    org.self_and_ancestors.pluck('slug').join('/') + "/#{org.slug}_#{report_id}.zip"
   end
 
   def self.program_outcomes_format doc, document_metas

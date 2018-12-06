@@ -99,7 +99,8 @@ class WorkflowDocumentsController < ApplicationController
   end
 
   def get_document id=params[:id]
-    @document = Document.find_by id: id
+    @document = Document.find(id)
+    raise('Insufficent permissions for this document') unless has_role('designer', @document.organization)
   end
 
   def get_organizations_if_supervisor
