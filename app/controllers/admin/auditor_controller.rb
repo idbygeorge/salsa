@@ -9,7 +9,7 @@ class Admin::AuditorController < ApplicationController
   def download
     Aws.config[:credentials] = Aws::Credentials.new(ENV['AWS_ACCESS_KEY'], ENV['AWS_SECRET_ACCESS_KEY'])
     signer = Aws::S3::Presigner.new
-    key = get_org.self_and_ancestors.pluck('slug').join('/')
+    key = ReportHelper.s3_file_location(get_org, params['report'])
     redirect_to signer.presigned_url(:get_object, bucket: ENV['AWS_BUCKET'], key: key, expires_in: 60)
   end
 
