@@ -99,7 +99,7 @@ class WorkflowDocumentsController < ApplicationController
   end
 
   def get_document id=params[:id]
-    @document = Document.find_by id: id
+    @document = Document.where(organization_id:@organization.self_and_descendants.pluck(:id)).find(id)
   end
 
   def get_organizations_if_supervisor
