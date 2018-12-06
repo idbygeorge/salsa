@@ -297,6 +297,8 @@ function liteOff(x) {
       } else {
         notification(data.message);
       }
+
+      $("#save_prompt:visible").delay(1000).fadeOut(1000);
     });
 
     // select course from LMS
