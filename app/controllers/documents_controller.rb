@@ -124,7 +124,7 @@ class DocumentsController < ApplicationController
       end
     end
     if @lms_course
-      @document = Document.find_by lms_course_id: params[:lms_course_id], organization: @organization
+      @document = Document.find_by lms_course_id: params[:lms_course_id], organization: @organization.self_and_descendants
 
       # flag to see if there is a match on the token id
       token_matches = false
