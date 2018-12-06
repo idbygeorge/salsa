@@ -66,7 +66,8 @@ class AdminDocumentsController < AdminController
   private
 
   def get_document id=params[:id]
-    @document = Document.find_by id: id
+    @document = Document.find(id)
+    raise('Insufficent permissions for this document') unless has_role('designer', @document.organization)
   end
 
   def document_params
