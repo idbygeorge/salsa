@@ -1,6 +1,5 @@
 require 'tempfile'
 require 'zip'
-require 'aws-sdk-s3'
 
 module ReportHelper
   def self.generate_report_as_job (org_id, account_filter, params)
@@ -104,29 +103,17 @@ module ReportHelper
       end
     end
 
-    Aws.config[:credentials] = Aws::Credentials.new(ENV['AWS_ACCESS_KEY'], ENV['AWS_SECRET_ACCESS_KEY'])
-
-    s3 = Aws::S3::Resource.new(region: ENV['AWS_REGION'])
-    obj = s3.bucket(ENV['AWS_BUCKET']).object(self.s3_file_location(@organization, report_id))
-    obj.upload_file(zipfile_path(org_slug, report_id))
+    FileHelper.upload_file(self.remote_file_location(@organization, report_id), zipfile_path(org_slug, report_id))
   end
 
-  def self.s3_report_zip_exists?(org, report_id)
-    Aws.config[:credentials] = Aws::Credentials.new(ENV['AWS_ACCESS_KEY'], ENV['AWS_SECRET_ACCESS_KEY'])
-
-    s3 = Aws::S3::Resource.new(region: ENV['AWS_REGION'])
-    bucket =  s3.bucket(ENV['AWS_BUCKET'])
-
-    if bucket.object(self.s3_file_location(org, report_id)).exists?
-      return true
-    else
-      return false
-    end
-  end
-
-  def self.s3_file_location(org, report_id)
+  def self.remote_file_location(org, report_id)
     org.self_and_ancestors.pluck('slug').join('/') + "/#{org.slug}_#{report_id}.zip"
   end
+
+  def self.zipfile_path (org_slug, report_id)
+    "#{ENV["ZIPFILE_FOLDER"]}/#{org_slug}_#{report_id}.zip"
+  end
+
 
   def self.program_outcomes_format doc, document_metas
     dms = DocumentMeta.where("key LIKE :prefix AND document_id IN (:document_id)", prefix: "salsa_%", document_id: doc.id)
@@ -160,10 +147,6 @@ module ReportHelper
       document_metas.push JSON.parse(salsa_hash.to_json)
       dms_array.push JSON.parse(salsa_hash.to_json)
     end
-  end
-
-  def self.zipfile_path (org_slug, report_id)
-    "#{ENV["ZIPFILE_FOLDER"]}/#{org_slug}_#{report_id}.zip"
   end
 
   def self.get_workflow_document_meta doc_ids
