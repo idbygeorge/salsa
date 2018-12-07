@@ -6,10 +6,7 @@ class Admin::AuditorController < ApplicationController
   before_action :require_auditor_role
 
   def download
-    zipfile_path = ReportHelper.zipfile_path(get_org_slug, params[:report])
-    if File.file?(zipfile_path)
-      send_file (zipfile_path)
-    end
+    redirect_to FileHelper.presigned_url(ReportHelper.remote_file_location(get_org, params['report']))
   end
 
   def reportStatus

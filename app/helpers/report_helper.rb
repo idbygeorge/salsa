@@ -102,7 +102,18 @@ module ReportHelper
         zipfile.get_output_stream("document_meta.json"){ |os| os.write document_metas.to_json  }
       end
     end
+
+    FileHelper.upload_file(self.remote_file_location(@organization, report_id), zipfile_path(org_slug, report_id))
   end
+
+  def self.remote_file_location(org, report_id)
+    org.self_and_ancestors.pluck('slug').join('/') + "/#{org.slug}_#{report_id}.zip"
+  end
+
+  def self.zipfile_path (org_slug, report_id)
+    "#{ENV["ZIPFILE_FOLDER"]}/#{org_slug}_#{report_id}.zip"
+  end
+
 
   def self.program_outcomes_format doc, document_metas
     dms = DocumentMeta.where("key LIKE :prefix AND document_id IN (:document_id)", prefix: "salsa_%", document_id: doc.id)
@@ -136,10 +147,6 @@ module ReportHelper
       document_metas.push JSON.parse(salsa_hash.to_json)
       dms_array.push JSON.parse(salsa_hash.to_json)
     end
-  end
-
-  def self.zipfile_path (org_slug, report_id)
-    "#{ENV["ZIPFILE_FOLDER"]}/#{org_slug}_#{report_id}.zip"
   end
 
   def self.get_workflow_document_meta doc_ids
