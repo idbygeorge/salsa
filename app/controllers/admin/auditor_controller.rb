@@ -7,10 +7,7 @@ class Admin::AuditorController < ApplicationController
   before_action :require_auditor_role
 
   def download
-    Aws.config[:credentials] = Aws::Credentials.new(ENV['AWS_ACCESS_KEY'], ENV['AWS_SECRET_ACCESS_KEY'])
-    signer = Aws::S3::Presigner.new
-    key = ReportHelper.s3_file_location(get_org, params['report'])
-    redirect_to signer.presigned_url(:get_object, bucket: ENV['AWS_BUCKET'], key: key, expires_in: 60)
+    redirect_to FileHelper.presigned_url(ReportHelper.remote_file_location(get_org, params['report']))
   end
 
   def reportStatus
