@@ -1,6 +1,5 @@
 require 'tempfile'
 require 'zip'
-require 'aws-sdk-s3'
 
 class Admin::AuditorController < ApplicationController
 
