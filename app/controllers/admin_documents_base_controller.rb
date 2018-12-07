@@ -1,19 +1,4 @@
-class AdminDocumentsController < AdminDocumentsBaseController
-  before_action :get_organizations, only: [:new, :edit, :update, :index, :versions]
-  before_action :require_designer_permissions
-  before_action :require_admin_permissions, only: [:index]
-  before_action :set_paper_trail_whodunnit
-
-  layout 'admin'
-
-  def index
-    @documents = Document.where.not(view_id: nil).reorder(created_at: :desc).page(params[:page]).per(params[:per])
-  end
-
-  def new
-    @document = Document.new
-  end
-
+class AdminDocumentsBaseController < AdminController
   def edit
     get_document params[:id]
     if @document.organization&.root_org_setting("inherit_workflows_from_parents")
@@ -22,13 +7,30 @@ class AdminDocumentsController < AdminDocumentsBaseController
       @workflow_steps = WorkflowStep.where(organization_id: @document.organization_id).order(step_type: :desc)
     end
     @periods = Period.where(organization_id: @document.organization&.parents&.pluck(:id).push(@document.organization&.id))
-    @users = User.where(archived: false, user_assignments: { organization_id: @organizations.pluck(:id) })
+    @users = User.includes(:user_assignments).where(archived: false, user_assignments: { organization_id: @organizations.pluck(:id) })
     @users += [@document.user] if !@document.user.blank?
+    @users = @users.uniq()
   end
 
   def versions
     get_document params[:id]
-    @document_versions = @document.versions.where(event: "update")
+    if session[:admin_authorized] || has_role('admin')
+      @document_versions = @document.versions.where(event: ["update","publish"])
+    else
+      @document_versions = @document.versions.where("object ~ ?",".*organization_id: #{get_org.id}.*").where(event: ["update","publish"])
+    end
+  end
+
+
+  def revert_document
+    get_document params[:id]
+    @document = @document.versions.find(params[:version_id]).reify
+    if @document.save
+      flash[:notice] = "Document reverted to version #{params[:version_id]}"
+    else
+      flash[:error] = "Document failed to reverted to version #{params[:version_id]}"
+    end
+    redirect_back(fallback_location: organizations_path)
   end
 
   def update
@@ -67,4 +69,5 @@ class AdminDocumentsController < AdminDocumentsBaseController
   def document_params
     params.require(:document).permit(:name, :lms_course_id, :workflow_step_id, :organization_id, :user_id, :period_id)
   end
+
 end

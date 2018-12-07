@@ -1,4 +1,7 @@
-class WorkflowDocumentsController < ApplicationController
+class WorkflowDocumentsController < AdminDocumentsBaseController
+  #skip designer permissions from admin_controller
+  skip_before_action :require_designer_permissions
+
   before_action :redirect_to_sub_org, only:[:index,:edit,:versions]
   layout :set_layout
   before_action :check_organization_workflow_enabled
@@ -44,6 +47,8 @@ class WorkflowDocumentsController < ApplicationController
 
   def update
     get_document params[:id]
+
+    # if the publish target changed, clear out the published at date
     if params[:document][:workflow_step_id] != @document.workflow_step_id && !params[:document][:workflow_step_id].blank? && !params[:document][:user_id].blank?
       @wfs = WorkflowStep.find(params[:document][:workflow_step_id])
       if @wfs.step_type == "start_step"
@@ -67,20 +72,6 @@ class WorkflowDocumentsController < ApplicationController
     end
   end
 
-  def versions
-    get_document params[:id]
-    if session[:admin_authorized] || has_role('admin')
-      @document_versions = @document.versions.where(event: ["update","publish"])
-    else
-      @document_versions = @document.versions.where("object ~ ?",".*organization_id: #{get_org.id}.*").where(event: ["update","publish"])
-    end
-  end
-
-  def revert_document
-    get_document params[:id]
-    @document = @document.versions.find(params[:version_id]).reify
-    @document.save
-  end
 
   private
 
@@ -96,11 +87,6 @@ class WorkflowDocumentsController < ApplicationController
       end
     end
     return Document.where(id: docs)
-  end
-
-  def get_document id=params[:id]
-    @document = Document.find(id)
-    raise('Insufficent permissions for this document') unless has_role('designer', @document.organization)
   end
 
   def get_organizations_if_supervisor

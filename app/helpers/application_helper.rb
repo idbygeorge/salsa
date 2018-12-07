@@ -261,7 +261,9 @@ module ApplicationHelper
         unless organization
           organization = Organization.find_by slug: slug, depth: 0
         else
-          organization = organization.descendants.find_by slug: slug
+          org = organization.descendants.find_by slug: slug
+          org = organization.descendants.find_by slug: slug.remove("/") if org.blank?
+          organization = org
         end
       end
     end
