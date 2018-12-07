@@ -22,8 +22,9 @@ class AdminDocumentsController < AdminController
       @workflow_steps = WorkflowStep.where(organization_id: @document.organization_id).order(step_type: :desc)
     end
     @periods = Period.where(organization_id: @document.organization&.parents&.pluck(:id).push(@document.organization&.id))
-    @users = User.where(archived: false, user_assignments: { organization_id: @organizations.pluck(:id) })
+    @users = User.includes(:user_assignments).where(archived: false, user_assignments: { organization_id: @organizations.pluck(:id) })
     @users += [@document.user] if !@document.user.blank?
+    @users = @users.uniq()
   end
 
   def versions
