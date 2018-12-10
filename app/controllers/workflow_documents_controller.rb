@@ -18,7 +18,7 @@ class WorkflowDocumentsController < AdminDocumentsBaseController
       @documents = Document.where(organization_id:org.descendants.pluck(:id)).where('documents.updated_at != documents.created_at')
       @documents = @documents.where(workflow_step_id: WorkflowStep.where(step_type:"end_step").pluck(:id) )
     elsif has_role("supervisor") && (params[:show_completed] == "false")
-      @documents = Document.where(organization_id: org.self_and_descendants.pluck(:id)).where('documents.updated_at != documents.created_at')
+      @documents = Document.where(organization_id: org.descendants.pluck(:id)).where('documents.updated_at != documents.created_at')
       @documents = @documents.where(workflow_step_id: WorkflowStep.where.not(step_type:"end_step").pluck(:id) + [nil] )
     elsif has_role("supervisor") && params[:step_filter]
       @documents = Document.where(organization_id:org.descendants.pluck(:id)).where('documents.updated_at != documents.created_at')
