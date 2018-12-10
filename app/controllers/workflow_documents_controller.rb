@@ -1,4 +1,7 @@
-class WorkflowDocumentsController < ApplicationController
+class WorkflowDocumentsController < AdminDocumentsBaseController
+  #skip designer permissions from admin_controller
+  skip_before_action :require_designer_permissions
+
   before_action :redirect_to_sub_org, only:[:index,:edit,:versions]
   layout :set_layout
   before_action :check_organization_workflow_enabled
@@ -15,7 +18,7 @@ class WorkflowDocumentsController < ApplicationController
       @documents = Document.where(organization_id:org.descendants.pluck(:id)).where('documents.updated_at != documents.created_at')
       @documents = @documents.where(workflow_step_id: WorkflowStep.where(step_type:"end_step").pluck(:id) )
     elsif has_role("supervisor") && (params[:show_completed] == "false")
-      @documents = Document.where(organization_id:org.descendants.pluck(:id)).where('documents.updated_at != documents.created_at')
+      @documents = Document.where(organization_id: org.self_and_descendants.pluck(:id)).where('documents.updated_at != documents.created_at')
       @documents = @documents.where(workflow_step_id: WorkflowStep.where.not(step_type:"end_step").pluck(:id) + [nil] )
     elsif has_role("supervisor") && params[:step_filter]
       @documents = Document.where(organization_id:org.descendants.pluck(:id)).where('documents.updated_at != documents.created_at')
@@ -30,20 +33,9 @@ class WorkflowDocumentsController < ApplicationController
     @documents = @documents.reorder(created_at: :desc).page(params[:page]).per(params[:per])
   end
 
-  def edit
-    get_document params[:id]
-    if @document.organization.root_org_setting("inherit_workflows_from_parents")
-      @workflow_steps = WorkflowStep.where(organization_id: @document.organization.organization_ids + [@document.organization_id]).order(step_type: :desc)
-    else
-      @workflow_steps = WorkflowStep.where(organization_id: @document.organization_id).order(step_type: :desc)
-    end
-    @periods = Period.where(organization_id: @document.organization&.parents&.pluck(:id).push(@document.organization&.id))
-    @users = UserAssignment.where(organization_id:@document.organization.descendants.pluck(:id) + [@document.organization.id]).map(&:user)
-    @users.push @document.user if @document.user
-  end
-
   def update
     get_document params[:id]
+    # if the publish target changed, clear out the published at date
     if params[:document][:workflow_step_id] != @document.workflow_step_id && !params[:document][:workflow_step_id].blank? && !params[:document][:user_id].blank?
       @wfs = WorkflowStep.find(params[:document][:workflow_step_id])
       if @wfs.step_type == "start_step"
@@ -51,56 +43,19 @@ class WorkflowDocumentsController < ApplicationController
         WorkflowMailer.welcome_email(@document, @user, @organization, @wfs.slug, component_allowed_liquid_variables(@document.workflow_step,User.find(params[:document][:user_id]),@organization, @document)).deliver_later
       end
     end
-
-    # if the publish target changed, clear out the published at date
-    if params[:document][:lms_course_id] && @document[:lms_course_id] != params[:document][:lms_course_id] || params[:document][:organization_id] && @document[:organization_id] != params[:document][:organization_id]
-      @document[:lms_published_at] = nil
-    end
-
-    if @document.update document_params
-      flash[:notice] = "You have assigned a document to #{@user.email} on #{@wfs.slug}" if @user && @wfs
-      redirect_to workflow_document_index_path(org_path: params[:org_path])
-    else
-      flash[:error] = @document.errors.messages
-
-      render 'edit'
-    end
-  end
-
-  def versions
-    get_document params[:id]
-    if session[:admin_authorized] || has_role('admin')
-      @document_versions = @document.versions.where(event: ["update","publish"])
-    else
-      @document_versions = @document.versions.where("object ~ ?",".*organization_id: #{get_org.id}.*").where(event: ["update","publish"])
-    end
-  end
-
-  def revert_document
-    get_document params[:id]
-    @document = @document.versions.find(params[:version_id]).reify
-    @document.save
+    super
   end
 
   private
 
-  def document_params
-    params.require(:document).permit(:name, :lms_course_id, :workflow_step_id, :user_id, :period_id)
-  end
-
   def get_documents user, documents
-    docs = []
+    document_ids = []
     documents.each_with_index do |document, index|
       if document.assigned_to? user
-        docs.push document.id
+        document_ids.push document.id
       end
     end
-    return Document.where(id: docs)
-  end
-
-  def get_document id=params[:id]
-    @document = Document.find(id)
-    raise('Insufficent permissions for this document') unless has_role('designer', @document.organization)
+    return Document.where(id: document_ids)
   end
 
   def get_organizations_if_supervisor
