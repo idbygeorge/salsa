@@ -21,13 +21,19 @@ class Organization < ApplicationRecord
   validates :export_type, :inclusion=> { :in => self.export_types }
 
   def full_slug
-    slugs = self.parents.reverse.map(&:slug) + [self.slug.gsub(/\//,'')]
-    slugs.join('/').gsub(/\/\//,'/')
+    if self.slug.start_with?("/")
+      slugs = self.parents.reverse.map(&:slug) + [self.slug.gsub(/\//,'')]
+      return slugs.join('/').gsub(/\/\//,'/')
+    else
+      return self.slug
+    end
   end
 
   def path
-    slugs = self.parents.reverse.map(&:slug) + [self.slug.gsub(/\//,'')]
-    slugs[1..-1].join('/').gsub(/\/\//,'/').gsub(/^\//,'')
+    if self.slug.start_with?("/")
+      slugs = self.parents.reverse.map(&:slug) + [self.slug.gsub(/\//,'')]
+      slugs[1..-1].join('/').gsub(/\/\//,'/').gsub(/^\//,'')
+    end
   end
 
   def parents
@@ -49,7 +55,7 @@ class Organization < ApplicationRecord
   end
 
   def full_org_path
-    if self.depth > 0 and self.slug.start_with? '/'
+    if self.depth > 0 and self.slug.start_with?('/')
       org_slug = self.self_and_ancestors.pluck(:slug).join ''
     else
       org_slug = self.slug
