@@ -23,6 +23,7 @@ class Document < ApplicationRecord
   def assignees
     if self.workflow_step_id
       component = self.workflow_step&.component
+      debugger
       return nil if component.blank?
       if component.role == "staff"
         User.where(id: self.user_id)

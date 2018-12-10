@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
     root_org = Organization.find_by(slug: request.env["SERVER_NAME"])
     org_path = current_user&.user_assignments&.where(organization_id: root_org.descendants.pluck(:id))&.includes(:organization)&.reorder("organizations.depth DESC")&.first&.organization&.path
     org_path = params[:org_path] if org_path.blank?
-    debugger
+    
     return redirect_to full_url_for(request.parameters.merge(org_path: org_path)) if !current_page?(full_url_for(request.parameters.merge(org_path: org_path))) && request.env['SERVER_NAME'] != org_path
   end
 

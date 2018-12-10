@@ -7,7 +7,13 @@ class AdminDocumentsBaseController < AdminController
       @workflow_steps = WorkflowStep.where(organization_id: @document.organization_id).order(step_type: :desc)
     end
     @periods = Period.where(organization_id: @document.organization&.parents&.pluck(:id).push(@document.organization&.id))
-    @users = User.includes(:user_assignments).where(archived: false, user_assignments: { organization_id: @organizations.pluck(:id) })
+    if params[:controller] == 'admin_documents'
+      organization_ids = @organizations.pluck(:id)
+    else
+      organization_ids = @document.organization.descendants.pluck(:id) + [@document.organization.id]
+    end
+
+    @users = User.includes(:user_assignments).where(archived: false, user_assignments: { organization_id: organization_ids })
     @users += [@document.user] if !@document.user.blank?
     @users = @users.uniq()
   end
@@ -43,12 +49,17 @@ class AdminDocumentsBaseController < AdminController
 
     if @document.update document_params
 
+      flash[:notice] = "You have assigned a document to #{@user.email} on #{@wfs.slug}" if @user && @wfs
       slug = ''
       if @document.organization
         slug = @document.organization.full_slug
       end
-
-      redirect_to organization_path(slug: slug,org_path:params[:org_path])
+      
+      if params[:controller] == 'admin_documents'
+        redirect_to organization_path(slug: slug,org_path:params[:org_path])
+      else
+        redirect_to workflow_document_index_path(org_path: params[:org_path])
+      end
     else
       flash[:error] = @document.errors.messages
 
@@ -69,5 +80,4 @@ class AdminDocumentsBaseController < AdminController
   def document_params
     params.require(:document).permit(:name, :lms_course_id, :workflow_step_id, :organization_id, :user_id, :period_id)
   end
-
 end
