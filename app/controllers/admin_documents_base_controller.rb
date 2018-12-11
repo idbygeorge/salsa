@@ -48,16 +48,15 @@ class AdminDocumentsBaseController < AdminController
     end
 
     if @document.update document_params
-
-      flash[:notice] = "You have assigned a document to #{@user.email} on #{@wfs.slug}" if @user && @wfs
-      slug = ''
-      if @document.organization
-        slug = @document.organization.full_slug
-      end
-      
       if params[:controller] == 'admin_documents'
+        slug = ''
+        if @document.organization
+          slug = @document.organization.full_slug
+        end
+
         redirect_to organization_path(slug: slug,org_path:params[:org_path])
       else
+        flash[:notice] = "You have assigned a document to #{@user.email} on #{@wfs.slug}" if @user && @wfs
         redirect_to workflow_document_index_path(org_path: params[:org_path])
       end
     else
