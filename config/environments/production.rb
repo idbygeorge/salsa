@@ -63,6 +63,7 @@ Rails.application.configure do
   config.action_mailer.perform_caching = false
 
 
+  config.action_mailer.perform_deliveries = ENV["MAILER_PREFORM_DELIVERIES"]
   # SMTP settings for amazon SES
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
