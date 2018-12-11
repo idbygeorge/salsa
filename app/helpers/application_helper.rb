@@ -294,7 +294,7 @@ module ApplicationHelper
   end
 
   def get_org_path
-    return request.env['SERVER_NAME'] + '/' + params[:org_path] if params[:org_path] && Organization.all.pluck(:slug).include?(params[:org_path])
+    return request.env['SERVER_NAME'] + '/' + params[:org_path] if params[:org_path] && Organization.all.map(&:path).include?(params[:org_path])
     return request.env['SERVER_NAME']
   end
 
