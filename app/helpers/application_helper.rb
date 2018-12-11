@@ -261,7 +261,9 @@ module ApplicationHelper
         unless organization
           organization = Organization.find_by slug: slug, depth: 0
         else
-          organization = organization.descendants.find_by slug: slug
+          org = organization.descendants.find_by slug: slug
+          org = organization.descendants.find_by slug: slug.remove("/") if org.blank?
+          organization = org
         end
       end
     end
@@ -292,7 +294,7 @@ module ApplicationHelper
   end
 
   def get_org_path
-    return request.env['SERVER_NAME'] + '/' + params[:org_path] if params[:org_path]
+    return request.env['SERVER_NAME'] + '/' + params[:org_path] if params[:org_path] && Organization.all.pluck(:slug).include?(params[:org_path])
     return request.env['SERVER_NAME']
   end
 

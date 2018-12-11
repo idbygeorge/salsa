@@ -4,7 +4,7 @@
 
   <% other_orgs = @organizations.where.not(slug: params[:slug]).order('lft', 'rgt') %>
 
-  <%= form_tag('/admin/organizations/documents', :html => { :class => "form-vertical" } ) do |f| %>
+  <%= form_tag('/admin/organizations/documents', method:'post', :html => { :class => "form-vertical" } ) do |f| %>
     <div class="row">
 
       <% if (@organization || @organizations.count != 1) && other_orgs.count > 0 && has_role('organization_admin') %>

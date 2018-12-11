@@ -1,5 +1,5 @@
 class OrganizationsController < AdminController
-  before_action :redirect_to_sub_org, only:[:index,:documents,:start_workflow_form,:new,:show,:edit]
+  before_action :redirect_to_sub_org, only:[:index,:start_workflow_form,:new,:show,:edit]
   before_action :require_admin_permissions, only: [:new, :create, :destroy]
   before_action :require_organization_admin_permissions, except: [:new, :create, :destroy, :show, :index]
   before_action :require_designer_permissions, only: [
@@ -37,7 +37,8 @@ class OrganizationsController < AdminController
       Document.where(:id => params[:document_ids]).update_all(["organization_id=?", org_id])
     end
 
-    redirect_to organizations_path( org_path: params[:org_path])
+    return redirect_to organization_path(slug: Organization.find(org_id).slug, org_path: params[:org_path]) if org_id
+    redirect_to organizations_path(org_path: params[:org_path])
   end
 
   def show

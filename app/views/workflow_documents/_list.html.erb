@@ -32,7 +32,7 @@
             <% end %>
           </td>
           <td>
-            <% if has_role('supervisor') && document.user_id != current_user.id %>
+            <% if has_role('supervisor') && document.user_id != current_user&.id %>
               <%= link_to "Versions", workflow_document_versions_path(document, org_path:params[:org_path]), :class => 'btn btn-default btn-xs' %>
               <%= link_to t('.edit', :default => t("helpers.links.edit")), edit_workflow_document_path(document.id, org_path:params[:org_path]), :class => 'btn btn-default btn-xs' %>
             <% end %>
