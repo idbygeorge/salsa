@@ -37,7 +37,7 @@ class WorkflowDocumentsController < AdminDocumentsBaseController
 
       period = Period.where(organization_id: org.self_and_ancestors.pluck(:id)).find_by(is_default: true)
 
-      @staff_documents = Document.where(period_id: period&.id,user_id: user_ids, organization_id: org.id, workflow_step_id: workflow_step_ids).reorder(updated_at: :desc).page(params[:page]).per(params[:per])
+      @staff_documents = Document.where(period_id: period&.id,user_id: user_ids, organization_id: org.self_and_ancestors.pluck(:id), workflow_step_id: workflow_step_ids).reorder(updated_at: :desc).page(params[:page]).per(params[:per])
 
       @documents = Document.where(organization_id:org.self_and_descendants.pluck(:id).push(org.id)).where('documents.updated_at != documents.created_at')
 
