@@ -6,12 +6,9 @@ class AdminUsersController < AdminController
   before_action :get_roles, only: %i[edit_assignment assign index show]
 
   def index
-    @organization = find_org_by_path(params[:slug]) if params[:controller] == 'organization_users'
     page = 1
     page = params[:page] if params[:page]
     show_archived = params[:show_archived] == 'true'
-
-    user_ids = UserAssignment.where(organization_id: @organization.self_and_descendants.pluck(:id)).pluck(:user_id) if params[:controller] == 'organization_users'
 
     @users = User.where(archived: show_archived)
     @users = @users.where(id: user_ids) if !user_ids.blank?
@@ -21,17 +18,7 @@ class AdminUsersController < AdminController
   end
 
   def show
-    @organization = find_org_by_path(params[:slug]) if params[:controller] == 'organization_users'
-
-    if params[:controller] == 'organization_users'
-      user_ids = UserAssignment.where(organization_id: @organizations.pluck(:id) ).pluck(:user_id)
-      users = User.where(id: user_ids, archived: false)
-      @user = users.find_by id: params[:id]
-    else
-      @user = User.find params[:id]
-    end
-
-    return redirect_to organization_users_path(org_path: params[:org_path]) if @user.blank? && params[:controller] == 'organization_users'
+    @user = User.find params[:id] if @user.blank?
 
     @user_assignments = @user.user_assignments if @user.user_assignments.count > 0
 
@@ -85,7 +72,6 @@ class AdminUsersController < AdminController
   end
 
   def assign
-    @organization = find_org_by_path(params[:slug]) if params[:controller] == 'organization_users'
     @user = User.find params[:user_assignment][:user_id]
     @user_assignment = UserAssignment.new user_assignment_params
     @user_assignment.organization_id = get_org.id unless has_role('admin')
@@ -113,8 +99,6 @@ class AdminUsersController < AdminController
   end
 
   def remove_assignment
-    organization = find_org_by_path(params[:slug]) if params[:controller] == 'organization_users'
-
     @user_assignment = get_user_assignment(params[:id])
     @user_assignment.destroy if @user_assignment
 
@@ -122,17 +106,12 @@ class AdminUsersController < AdminController
   end
 
   def edit_assignment
-    @organization = find_org_by_path(params[:slug]) if params[:controller] == 'organization_users'
-
     @roles.delete('Global Administrator') unless has_role('admin')
 
     @user_assignment = get_user_assignment(params[:id])
-    return redirect_to organization_users_path(org_path: params[:org_path]) if @user_assignment.blank? && params[:controller] == "organization_users"
   end
 
   def update_assignment
-    @organization = find_org_by_path(params[:slug]) if params[:controller] == 'organization_users'
-
     @user_assignment = UserAssignment.find params[:id]
 
     @user_assignment.errors.add('user_id', 'Invalid User ID') if params[:user_assignment][:user_id].to_i != @user_assignment.user_id
@@ -151,12 +130,10 @@ class AdminUsersController < AdminController
   end
 
   def new
-    @organization = find_org_by_path(params[:slug]) if params[:controller] == 'organization_users'
     @user = User.new
   end
 
   def create
-    @organization = find_org_by_path(params[:slug]) if params[:controller] == 'organization_users'
     @user = User.new
 
     @user.attributes = user_params
@@ -169,13 +146,14 @@ class AdminUsersController < AdminController
     if @user.archived && params[:controller] == 'organization_users'
       @user.archived = false
     end
+    user_saved = false
     if @user.save
-      @user_assignment = UserAssignment.create(user_id:@user.id, organization_id:@organization.id ,role:"staff", cascades: true) if params[:controller] == 'organization_users'
+      user_saved = true
 
-      return redirect_to polymorphic_path([params[:controller].singularize], id: @user.id, org_path: params[:org_path])
+      redirect_to polymorphic_path([params[:controller].singularize], id: @user.id, org_path: params[:org_path])
     else
       flash[:error] = 'Error creating user'
-      return render action: :new
+      render action: :new
     end
   end
 

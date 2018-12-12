@@ -4,15 +4,56 @@ class OrganizationUsersController < AdminUsersController
   before_action :require_admin_permissions, only: [:archive,:restore]
   before_action :require_supervisor_permissions
 
+  def index
+    @organization = find_org_by_path(params[:slug])
+    user_ids = UserAssignment.where(organization_id: @organization.self_and_descendants.pluck(:id)).pluck(:user_id)
+
+    super
+  end
+
+  def new
+    @organization = find_org_by_path(params[:slug])
+
+    super
+
+  end
+
+  def create
+    @organization = find_org_by_path(params[:slug])
+
+    super
+
+    @user_assignment = UserAssignment.create(user_id:@user.id, organization_id:@organization.id ,role:"staff", cascades: true) if user_saved
+  end
+
+  def assign
+    @organization = find_org_by_path(params[:slug])
+
+    super
+  end
+
+  def edit_assignment
+    @organization = find_org_by_path(params[:slug])
+
+    super
+
+    return redirect_to organization_users_path(org_path: params[:org_path]) if @user_assignment.blank?
+  end
+
+  def update_assignment
+    @organization = find_org_by_path(params[:slug])
+
+    super
+  end
+
   def show
     @organization = find_org_by_path(params[:slug])
     user_ids = UserAssignment.where(organization_id: @organizations.pluck(:id) ).pluck(:user_id)
     users = User.where(id: user_ids, archived: false)
     @user = users.find_by id: params[:id]
     return redirect_to organization_users_path(org_path: params[:org_path]) if @user.blank?
-    @user_assignments = @user.user_assignments.where(organization_id: @organizations.pluck(:id)) if @user.user_assignments.count > 0
 
-    @new_permission = @user.user_assignments.new
+    super
   end
 
   def edit
