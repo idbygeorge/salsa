@@ -29,11 +29,11 @@ class WorkflowDocumentsController < AdminDocumentsBaseController
 
       ua_user_ids = current_user.user_assignments&.find_by(organization_id: org.self_and_descendants.pluck(:id))&.assignments&.pluck(:user_id)
       user_ids += ua_user_ids if ua_user_ids !=nil
-      a_user_ids = current_user&.assignments&.pluck(:user_id)
+      a_user_ids = current_user&.assignments&.pluck(:team_member_id)
       user_ids += a_user_ids if a_user_ids !=nil
 
       component_ids = Component.where(role: ["staff","supervisor","approver"]).pluck(:id)
-      workflow_step_ids = WorkflowStep.includes(:component).where(component: component_ids).where.not(step_type: "end_step").pluck(:id)
+      workflow_step_ids = WorkflowStep.where(component: component_ids).where.not(step_type: "end_step").pluck(:id)
 
       period = Period.where(organization_id: org.self_and_ancestors.pluck(:id)).find_by(is_default: true)
 
