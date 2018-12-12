@@ -26,7 +26,7 @@
     <th>
       <%= f.label :role %>
     </th>
-    <% if has_role("admin") && params[:controller] == 'admin_users' %>
+    <% if has_role("admin") %>
       <th>
         <%= f.label :organization_id %>
       </th>
@@ -52,7 +52,7 @@
 
     <%= f.select(:role, @roles, {:include_blank => ''}) %>
   </td>
-  <% if has_role("admin") && params[:controller] == 'admin_users' %>
+  <% if has_role("admin") %>
     <td>
       <% if @organizations %>
         <%= f.select(:organization_id, @organizations.collect {|o| [ o.name + ' (' + o.slug + ')', o.id ] }, include_blank: true) %>
