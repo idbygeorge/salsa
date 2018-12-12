@@ -27,8 +27,9 @@ class WorkflowDocumentsController < AdminDocumentsBaseController
     else
       user_ids = []
 
-      ua_user_ids = current_user.user_assignments&.find_by(organization_id: org.self_and_descendants.pluck(:id))&.assignments&.pluck(:user_id)
+      ua_user_ids = current_user&.user_assignments&.find_by(organization_id: org.self_and_ancestors.pluck(:id))&.assignments&.pluck(:user_id)
       user_ids += ua_user_ids if ua_user_ids !=nil
+
       a_user_ids = current_user&.assignments&.pluck(:team_member_id)
       user_ids += a_user_ids if a_user_ids !=nil
 
