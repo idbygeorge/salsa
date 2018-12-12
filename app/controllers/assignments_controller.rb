@@ -122,7 +122,7 @@ class AssignmentsController < AdminController
         :organization
       else
         :admin
-                   end
+      end
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.
