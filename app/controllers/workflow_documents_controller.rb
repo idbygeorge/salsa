@@ -27,18 +27,17 @@ class WorkflowDocumentsController < AdminDocumentsBaseController
     else
       user_ids = []
 
-      ua_user_ids = current_user.user_assignments&.find_by(organization_id: org.id)&.assignments&.pluck(:user_id)
+      ua_user_ids = current_user.user_assignments&.find_by(organization_id: org.self_and_descendants.pluck(:id))&.assignments&.pluck(:user_id)
       user_ids += ua_user_ids if ua_user_ids !=nil
       a_user_ids = current_user&.assignments&.pluck(:user_id)
       user_ids += a_user_ids if a_user_ids !=nil
 
-      component_ids = Component.where(role: ["staff","supervisor"]).pluck(:id)
+      component_ids = Component.where(role: ["staff","supervisor","approver"]).pluck(:id)
       workflow_step_ids = WorkflowStep.includes(:component).where(component: component_ids).where.not(step_type: "end_step").pluck(:id)
 
       period = Period.where(organization_id: org.self_and_ancestors.pluck(:id)).find_by(is_default: true)
 
-      @staff_documents = Document.where(period_id: period&.id,user_id: user_ids, organization_id: org.id, workflow_step_id: workflow_step_ids).reorder(updated_at: :desc).page(params[:page]).per(params[:per])
-      # where.not( workflow_step: { step_type: "end_step" })
+      @staff_documents = Document.where(period_id: period&.id,user_id: user_ids, organization_id: org.self_and_ancestors.pluck(:id), workflow_step_id: workflow_step_ids).reorder(updated_at: :desc).page(params[:page]).per(params[:per])
 
       @documents = Document.where(organization_id:org.self_and_descendants.pluck(:id).push(org.id)).where('documents.updated_at != documents.created_at')
 

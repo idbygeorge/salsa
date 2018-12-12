@@ -4,7 +4,6 @@ class Document < ApplicationRecord
   before_validation :normalize_blank_values, :ensure_ids
 
   belongs_to :organization
-  # belongs_to :component, optional: true
   belongs_to :period, optional: true
   belongs_to :workflow_step, optional: true
   belongs_to :user, optional: true
