@@ -33,7 +33,7 @@ set :ssh_options,     { forward_agent: true }
 # set :keep_releases, 5
 
 ## Linked Files & Directories (Default None):
-set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/config.yml', 'config/secrets.yml', 'config/master.key', 'config/application.yml', 'config/newrelic.yml', 'public/500.html', 'public/422.html', 'public/404.html')
+set :linked_files, fetch(:linked_files, []).push('config/database.yml', 'config/config.yml', 'config/secrets.yml', 'config/application.yml', 'config/newrelic.yml', 'public/500.html', 'public/422.html', 'public/404.html')
 # Default value for linked_dirs is []
 set :linked_dirs, fetch(:linked_dirs, []).push('log', 'vendor/bundle', 'zipfiles', 'app/views/instances/custom')
 # TODO: see if we needthis in linked_dirs - public/assets/scripts
