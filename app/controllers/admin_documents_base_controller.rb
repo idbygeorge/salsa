@@ -41,6 +41,7 @@ class AdminDocumentsBaseController < AdminController
 
   def update
     get_document params[:id]
+    @periods = Period.where(organization_id: @document.organization&.parents&.pluck(:id).push(@document.organization&.id))
 
     # if the publish target changed, clear out the published at date
     if params[:document][:lms_course_id] && @document[:lms_course_id] != params[:document][:lms_course_id] || params[:document][:organization_id] && @document[:organization_id] != params[:document][:organization_id]
@@ -60,8 +61,6 @@ class AdminDocumentsBaseController < AdminController
         redirect_to workflow_document_index_path(org_path: params[:org_path])
       end
     else
-      flash[:error] = @document.errors.messages
-
       render 'edit'
     end
   end

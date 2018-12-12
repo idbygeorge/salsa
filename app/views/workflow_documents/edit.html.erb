@@ -1,5 +1,15 @@
 <%= form_for(@document, url: workflow_document_path(org_path: params[:org_path]), html: { class: "form-horizontal col-md-9" } ) do |f| %>
 
+<% if @document.errors.any? %>
+  <div class="alert alert-danger">
+    <ul>
+        <% @document.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+        <% end %>
+    </ul>
+</div>
+<% end %>
+
   <div class="form-group">
     <%= f.label :name, class: "control-label" %>
     <div class="controls">
