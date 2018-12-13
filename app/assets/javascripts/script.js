@@ -322,9 +322,6 @@ function liteOff(x) {
       $("#tabs a").first().click();
     }
 
-    $("body").append($("<label>Edit Section Heading</label>").addClass(
-      "visuallyhidden")); // huh?
-
     $('#tb_save_canvas').on('ajax:beforeSend', function() {
       $('#loading_courses_dialog').removeClass('hidden').dialog({
         modal: true,
