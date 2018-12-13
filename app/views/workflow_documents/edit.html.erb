@@ -1,4 +1,4 @@
-<%= form_for(@document, url: workflow_document_path(), html: { class: "form-horizontal col-md-9" } ) do |f| %>
+<%= form_for(@document, url: workflow_document_path(org_path: params[:org_path]), html: { class: "form-horizontal col-md-9" } ) do |f| %>
 
 <% if @document.errors.any? %>
   <div class="alert alert-danger">

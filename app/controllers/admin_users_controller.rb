@@ -2,20 +2,27 @@ class AdminUsersController < AdminController
   skip_before_action :require_designer_permissions
   before_action :require_admin_permissions, except: %i[import_users create_users]
   before_action :require_supervisor_permissions, only: %i[import_users create_users]
-  before_action :get_organizations, only: %i[index new edit show edit_assignment import_users users_search]
+  before_action :get_organizations, only: %i[index new edit show edit_assignment import_users users_search create_users]
   before_action :get_roles, only: %i[edit_assignment assign index show]
 
   def index
     page = 1
     page = params[:page] if params[:page]
     show_archived = params[:show_archived] == 'true'
-    @users = User.where(archived: show_archived).order('name', 'email').all.page(params[:page]).per(15)
+
+    @users = User.where(archived: show_archived)
+    @users = @users.where(id: user_ids) if !user_ids.blank?
+    @users = @users.order('name', 'email').all.page(params[:page]).per(15)
+
     @session = session
   end
 
   def show
-    @user = User.find params[:id]
+    @user = User.find params[:id] if @user.blank?
+
     @user_assignments = @user.user_assignments if @user.user_assignments.count > 0
+
+    @user_assignments = @user_assignments.where(organization_id: @organizations.pluck(:id)) if @user_assignments && params[:controller] == 'organization_users'
 
     @new_permission = @user.user_assignments.new
   end
@@ -73,7 +80,7 @@ class AdminUsersController < AdminController
     @new_permission = @user_assignment
     respond_to do |format|
       if @user_assignment.save
-        format.html { redirect_to admin_user_path(org_path: params[:org_path], id: @user[:id]), notice: 'User Assignment was successfully created.' }
+        format.html { redirect_to eval("#{ get_namespace }_user_path(org_path: params[:org_path], id: @user[:id])"), notice: 'User Assignment was successfully created.' }
         format.json { render :show, status: :created, location: @user_assignment }
       else
         format.html { render :show }
@@ -82,31 +89,43 @@ class AdminUsersController < AdminController
     end
   end
 
+  def get_namespace
+    @namespace =
+      if params[:controller] == 'admin_users'
+        :admin
+      else
+        :organization
+      end
+  end
+
   def remove_assignment
-    @user_assignment = UserAssignment.find params[:id]
-    @user_assignment.destroy
+    @user_assignment = get_user_assignment(params[:id])
+    @user_assignment.destroy if @user_assignment
 
     redirect_to polymorphic_path([params[:controller].singularize], id: @user_assignment.user_id, org_path: params[:org_path])
   end
 
   def edit_assignment
     @roles.delete('Global Administrator') unless has_role('admin')
-    @user_assignment = UserAssignment.find params[:id]
+
+    @user_assignment = get_user_assignment(params[:id])
   end
 
   def update_assignment
-    @user = User.find params[:user_assignment][:user_id]
+    @user_assignment = UserAssignment.find params[:id]
 
-    @user_assignment = UserAssignment.update params[:id], user_assignment_params
+    @user_assignment.errors.add('user_id', 'Invalid User ID') if params[:user_assignment][:user_id].to_i != @user_assignment.user_id
 
     @user_assignment.errors.add('role', 'Invalid role') if !get_roles.value?(params[:user_assignment][:role]) && !has_role('admin')
+
+    @user_assignment.update(user_assignment_params) if !@user_assignment.errors.any?
 
     if @user_assignment.errors.any?
       get_organizations
 
       render action: :edit_assignment
     else
-      redirect_to polymorphic_path([params[:controller].singularize], id: @user.id, org_path: params[:org_path])
+      redirect_to polymorphic_path([params[:controller].singularize], id: @user_assignment.user_id, org_path: params[:org_path])
     end
   end
 
@@ -124,11 +143,17 @@ class AdminUsersController < AdminController
     #     @user.password_confirmation = @user.password
     # end
 
+    if @user.archived && params[:controller] == 'organization_users'
+      @user.archived = false
+    end
+    user_saved = false
     if @user.save
-      return redirect_to polymorphic_path([params[:controller].singularize], id: @user.id, org_path: params[:org_path])
+      user_saved = true
+
+      redirect_to polymorphic_path([params[:controller].singularize], id: @user.id, org_path: params[:org_path])
     else
       flash[:error] = 'Error creating user'
-      return render action: :new
+      render action: :new
     end
   end
 
@@ -150,6 +175,15 @@ class AdminUsersController < AdminController
 
   private
 
+  def get_user_assignment(id)
+    if params[:controller] == 'admin'
+      user_assignment = UserAssignment.find id
+    else
+      user_assignment = UserAssignment.find_by id: id, organization_id: get_organizations.pluck(:id)
+    end
+    user_assignment
+  end
+
   def user_activation_token(user)
     if user.activation_digest.blank?
       user.activation_digest = SecureRandom.urlsafe_base64.to_s
@@ -160,15 +194,16 @@ class AdminUsersController < AdminController
     params.require(:user).require(:name)
     params.require(:user).require(:email)
 
-    params.require(:user).permit(:name, :email, :id, :password, :password_confirmation)
+    params.require(:user).permit(:name, :email, :password, :password_confirmation)
   end
 
   def user_assignment_params
     # global admin role, doens't have an organization, all other roles require one
-    if params[:user_assignment][:role] == 'admin'
+    if params[:user_assignment][:role] == 'admin' && has_role("admin")
       params[:user_assignment][:organization_id] = nil
       params[:user_assignment][:cascades] = true
     end
+
     if has_role('admin')
       params.require(:user_assignment).permit(:user_id, :username, :role, :organization_id, :cascades)
     else
