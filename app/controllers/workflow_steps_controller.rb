@@ -116,13 +116,13 @@ class WorkflowStepsController < OrganizationsController
     end
 
     def set_workflow_steps
-
       org = find_org_by_path(params[:slug])
       organization_ids = org.organization_ids + [org.id]
       @workflow_steps = WorkflowStep.where(organization_id: organization_ids)
       if @workflow_step
         @workflow_steps = @workflow_steps.where.not(id: @workflow_step.id)
       end
+      @workflow_steps = @workflow_steps.reorder(created_at: :desc)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

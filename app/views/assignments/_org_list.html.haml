@@ -30,7 +30,7 @@
             %tr
               %td= ua.role
               %td= assignment_ua.role
-              %td= assignment_ua.user.name + " : " + assignment_ua.user.email
+              %td= link_to assignment_ua.user.name + " : " + assignment_ua.user.email, organization_user_path(assignment_ua.user_id, slug: params[:slug], org_path: params[:org_path])
 
 - else
   %p No Assignents found
