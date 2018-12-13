@@ -15,7 +15,8 @@ class AssignmentsController < AdminController
 
   # GET /assignments/1
   # GET /assignments/1.json
-  def show; end
+  def show
+  end
 
   # GET /assignments/new
   def new
@@ -23,7 +24,8 @@ class AssignmentsController < AdminController
   end
 
   # GET /assignments/1/edit
-  def edit; end
+  def edit
+  end
 
   # POST /assignments
   # POST /assignments.json
@@ -122,7 +124,7 @@ class AssignmentsController < AdminController
         :organization
       else
         :admin
-                   end
+      end
   end
 
   # Never trust parameters from the scary internet, only allow the white list through.

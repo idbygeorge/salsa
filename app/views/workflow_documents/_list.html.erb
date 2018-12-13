@@ -1,3 +1,4 @@
+<% if !documents.blank? %>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -12,7 +13,6 @@
     </tr>
   </thead>
   <tbody>
-    <% if !documents.blank? %>
       <h1>Documents You are assigned to</h1>
       <% documents.each do |document| %>
 
@@ -39,14 +39,26 @@
           </td>
         </tr>
       <% end %>
-    <% end %>
+  </tbody>
+</table>
+<% end %>
 
-    <% if !user_documents.blank? %>
-      <tr>
-        <td colspan="5">
-          <h1>Your Documents</h1>
-        </td>
-      </tr>
+<% if !user_documents.blank? %>
+<h1> Your Documents</h1>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Organization</th>
+      <th scope="col">Workflow Step</th>
+      <th scope="col">User</th>
+      <th scope="col">Assignee(s)</th>
+      <% if has_role('supervisor') %>
+        <th scope="col"><%=t '.actions', :default => t("helpers.actions") %></th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
       <% user_documents.each do |document| %>
         <tr>
           <td><%= document.name %></td>
@@ -63,8 +75,48 @@
             <%= link_to "View", document_path(document.view_id, org_path:params[:org_path]), :class => 'btn btn-default btn-xs' %>
           </td>
         </tr>
-      <% end %>
     <% end %>
   </tbody>
 </table>
+<% end %>
+
+<% if !staff_documents.blank? %>
+<h1> Staff's workflow summary</h1>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Organization</th>
+      <th scope="col">Workflow Step</th>
+      <th scope="col">User</th>
+      <th scope="col">Assignee(s)</th>
+      <% if has_role('supervisor') %>
+        <th scope="col"><%=t '.actions', :default => t("helpers.actions") %></th>
+      <% end %>
+    </tr>
+  </thead>
+  <tbody>
+      <% staff_documents.each do |document| %>
+        <tr>
+          <td><%= document.name %></td>
+          <td><%= "#{document.organization.parent&.name} : #{document.organization.name}" %></td>
+          <td><%= document.workflow_step&.component&.name %></td>
+          <td><%= "#{document.user&.name} : #{document.user&.email}" if document.user %></td>
+          <td>
+            <% document.assignees&.each do |assignee| %>
+              <%= "#{assignee&.name} : #{assignee&.email}" if document.user %>
+              <br>
+            <% end %>
+          </td>
+          <td>
+              <% if has_role('supervisor') && document.user_id != current_user&.id %>
+              <%= link_to "Versions", workflow_document_versions_path(document, org_path:params[:org_path]), :class => 'btn btn-default btn-xs' %>
+              <%= link_to t('.edit', :default => t("helpers.links.edit")), edit_workflow_document_path(document.id, org_path:params[:org_path]), :class => 'btn btn-default btn-xs' %>
+            <% end %>
+          </td>
+        </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %>
 <%= paginate documents%>
