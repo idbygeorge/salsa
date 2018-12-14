@@ -43,7 +43,7 @@ module ApplicationHelper
     if output == ''
       # if there is a parent, recheck using it as the org
       if component_org&.parent
-        output = salsa_partial(name, org, org.parent)
+        output = salsa_partial(name, org, component_org.parent)
       elsif component_org&.slug&.include? '/'
         output = salsa_partial(name, Organization.new(slug: org.slug.gsub(/\/[^\/]+$/, '')))
       # otherwise, show the default if it exists
