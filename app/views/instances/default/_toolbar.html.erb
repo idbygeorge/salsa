@@ -13,13 +13,13 @@
     <!-- <ul style="float:right">
         <li><a href="#example" id="tb_example"><i class="general foundicon-star"></i>Example</a></li>
 
-         <li><a href="/help.html" target="_blank" id="tb_help"><i class="general foundicon-question"></i>Help</a></li>
+         <li><a href="/help.html" id="tb_help"><i class="general foundicon-question"></i>Help</a></li>
 
 
             <% if session[:authenticated_institution] && session[:authenticated_institution] != '' %>
                 <li>
                     <% if @document[:lms_course_id] %>
-                        <a href="<%= @organization[:lms_authentication_source] %>/courses/<%= @document[:lms_course_id] %>/assignments/syllabus" target="_blank"><% if @lms_course %><%= @lms_course['name'] %><% else %>Course: <%= @document[:lms_course_id] %><% end %></a>
+                        <a href="<%= @organization[:lms_authentication_source] %>/courses/<%= @document[:lms_course_id] %>/assignments/syllabus"><% if @lms_course %><%= @lms_course['name'] %><% else %>Course: <%= @document[:lms_course_id] %><% end %></a>
                     <% else %>
                         <%= link_to "Select Course...", canvas_list_courses_path(id: @document.edit_id), :authenticity_token => form_authenticity_token(), :remote => true, :id => 'tb_save_canvas', :class => 'highlight' %>
                     <% end %>
