@@ -145,10 +145,10 @@
           <% end %>
           <li class="<%= li_classes %>" data-total-students="<%=record['total_students'] %>">
             <i class="fa <%= status_icon %>"></i>
-            <a href="<%= @org['lms_authentication_source'] %>/courses/<%= record['course_id'] %>/assignments/syllabus" target="_blank" data-toggle="tooltip" title="Open course in Canvas"> <i class="fa fa-share"></i><span class="screenreader-only">View course in Canvas</span></a>
+            <a href="<%= @org['lms_authentication_source'] %>/courses/<%= record['course_id'] %>/assignments/syllabus" data-toggle="tooltip" title="Open course in Canvas"> <i class="fa fa-share"></i><span class="screenreader-only">View course in Canvas</span></a>
             <!-- <span class="label label-default enrollment-count">7</span> -->
             <% if syllabus_link && !@org.disable_document_view %>
-              <!-- <a href="<%= 'URL' %>salsa/<%= record['account_id'] %>/course/<%= record['course_id'] %>" target="_blank"><%= record['name'] %></a> -->
+              <!-- <a href="<%= 'URL' %>salsa/<%= record['account_id'] %>/course/<%= record['course_id'] %>"><%= record['name'] %></a> -->
               <%= link_to record['name'], document_path(record['view_id'], org_path: params[:org_path]), target:"_blank" %>
             <% else %>
               <%= record['name'] %>
