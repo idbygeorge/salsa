@@ -6,7 +6,7 @@ class OrganizationUsersController < AdminUsersController
 
   def index
     @organization = find_org_by_path(params[:slug])
-    user_ids = UserAssignment.where(organization_id: @organization.self_and_descendants.pluck(:id)).pluck(:user_id)
+    @user_ids = UserAssignment.where(organization_id: @organization.self_and_descendants.pluck(:id)).pluck(:user_id)
 
     super
   end
@@ -23,7 +23,7 @@ class OrganizationUsersController < AdminUsersController
 
     super
 
-    @user_assignment = UserAssignment.create(user_id:@user.id, organization_id:@organization.id ,role:"staff", cascades: true) if user_saved
+    @user_assignment = UserAssignment.create(user_id:@user.id, organization_id:@organization.id ,role:"staff", cascades: true) if @user_saved
   end
 
   def assign
