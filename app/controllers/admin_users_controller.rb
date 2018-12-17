@@ -11,7 +11,7 @@ class AdminUsersController < AdminController
     show_archived = params[:show_archived] == 'true'
 
     @users = User.where(archived: show_archived)
-    @users = @users.where(id: user_ids) if defined?(user_ids) && !user_ids.blank?
+    @users = @users.where(id: @user_ids) if defined?(@user_ids)
     @users = @users.order('name', 'email').all.page(params[:page]).per(15)
 
     @session = session
@@ -146,9 +146,9 @@ class AdminUsersController < AdminController
     if @user.archived && params[:controller] == 'organization_users'
       @user.archived = false
     end
-    user_saved = false
+    @user_saved = false
     if @user.save
-      user_saved = true
+      @user_saved = true
 
       redirect_to polymorphic_path([params[:controller].singularize], id: @user.id, org_path: params[:org_path])
     else
