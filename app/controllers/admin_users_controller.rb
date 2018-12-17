@@ -11,7 +11,7 @@ class AdminUsersController < AdminController
     show_archived = params[:show_archived] == 'true'
 
     @users = User.where(archived: show_archived)
-    @users = @users.where(id: user_ids) if !user_ids.blank?
+    @users = @users.where(id: user_ids) if defined?(user_ids) && !user_ids.blank?
     @users = @users.order('name', 'email').all.page(params[:page]).per(15)
 
     @session = session
