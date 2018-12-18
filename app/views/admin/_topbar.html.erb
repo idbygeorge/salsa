@@ -30,45 +30,45 @@
                 </a>
                 <div class="dropdown-menu panel-primary" aria-labelledby="navbarDropdown">
 
-                    <label>
-                      Search by:
-                    </label>
-                  <div class="dropdown-divider"></div>
+                  <fieldset class="col-md-9">
+                    <legend>Search by:</legend>
+                    <div class="dropdown-divider"></div>
 
-                  <div class="checkbox">
-                    <label>
-                      <input type="checkbox" name="search_user_id" value=1 <% if(params[:search_user_id]) %>checked<% end %>>
-                      document user id
-                    </label>
-                  </div>
-                  <br>
-                  <div class="checkbox">
-                    <label>
-                      <input type="checkbox" name="search_user_email" value=1 <% if(params[:search_user_email]) %>checked<% end %> >
-                      document user email
-                    </label>
-                  </div>
-                  <br>
-                  <div class="checkbox">
-                    <label>
-                      <input type="checkbox" name="search_user_name" value=1 <% if(params[:search_user_name]) %>checked<% end %>>
-                      document user name
-                    </label>
-                  </div>
-                  <br>
-                  <div class="checkbox">
-                    <label>
-                      <input type="checkbox" name="search_connected_account_id" value=1 <% if(params[:search_connected_account_id]) %> checked <% end %>>
-                      document user remote account id
-                    </label>
-                  </div>
-                  <br>
-                  <div class="checkbox">
-                    <label>
-                      <input type="checkbox" name="search_document_text" value="1" <% if(params[:search_document_text]) %>checked<% end %>>
-                      Search document contents?
-                    </label>
-                  </div>
+                    <div class="checkbox">
+                      <label>
+                        <input type="checkbox" name="search_user_id" value=1 <% if(params[:search_user_id]) %>checked<% end %>>
+                        document user id
+                      </label>
+                    </div>
+                    <br>
+                    <div class="checkbox">
+                      <label>
+                        <input type="checkbox" name="search_user_email" value=1 <% if(params[:search_user_email]) %>checked<% end %> >
+                        document user email
+                      </label>
+                    </div>
+                    <br>
+                    <div class="checkbox">
+                      <label>
+                        <input type="checkbox" name="search_user_name" value=1 <% if(params[:search_user_name]) %>checked<% end %>>
+                        document user name
+                      </label>
+                    </div>
+                    <br>
+                    <div class="checkbox">
+                      <label>
+                        <input type="checkbox" name="search_connected_account_id" value=1 <% if(params[:search_connected_account_id]) %> checked <% end %>>
+                        document user remote account id
+                      </label>
+                    </div>
+                    <br>
+                    <div class="checkbox">
+                      <label>
+                        <input type="checkbox" name="search_document_text" value="1" <% if(params[:search_document_text]) %>checked<% end %>>
+                        Search document contents?
+                      </label>
+                    </div>
+                  </fieldset>
                 </div>
               </div>
             </div>

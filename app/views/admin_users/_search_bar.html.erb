@@ -3,46 +3,47 @@
     <div class="col-sm-12">
 
       <div class="input-group">
-        <input type="text" class="form-control" placeholder="Search" name="q" id="srch-term" value="<%= params[:q] %>">
+        <label for="user-srch-term">Search Users</label>
+        <input type="text" class="form-control" placeholder="Search" name="q" id="user-srch-term" value="<%= params[:q] %>">
         <div class="input-group-btn">
-          <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+          <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-search"></i><span class='sr-only'>Submit Users Search</span></button>
           <a class="nav-link dropdown-toggle btn btn-default" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <i class="glyphicon glyphicon-option-vertical"></i>
+            <span class='sr-only'>Submit Users Search</span>
           </a>
-          <div class="dropdown-menu panel-primary" aria-labelledby="navbarDropdown">
-
-              <label>
-                Search by:
-              </label>
+          <div class="dropdown-menu pull-right panel-primary" aria-labelledby="navbarDropdown">
             <div class="dropdown-divider"></div>
 
-            <div class="checkbox">
-              <label>
-                <input type="checkbox" name="search_user_name" value=1 <% if(!params[:search_user_name] || params[:search_user_name] == "1") %>checked<% end %>>
-                user name
-              </label>
-            </div>
-            <br>
-            <div class="checkbox">
-              <label>
-                <input type="checkbox" name="search_user_email" value=1 <% if(params[:search_user_email]) %>checked<% end %> >
-                user email
-              </label>
-            </div>
-            <br>
-            <div class="checkbox">
-              <label>
-                <input type="checkbox" name="search_user_id" value=1 <% if(params[:search_user_id]) %>checked<% end %>>
-                user id
-              </label>
-            </div>
-            <br>
-            <div class="checkbox">
-              <label>
-                <input type="checkbox" name="search_connected_account_id" value=1 <% if(params[:search_connected_account_id]) %> checked <% end %>>
-                user remote account id
-              </label>
-            </div>
+            <fieldset class="col-md-9">
+              <legend>Search by:</legend>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" name="search_user_name" value=1 <% if(!params[:search_user_name] || params[:search_user_name] == "1") %>checked<% end %>>
+                  user name
+                </label>
+              </div>
+              <br>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" name="search_user_email" value=1 <% if(params[:search_user_email]) %>checked<% end %> >
+                  user email
+                </label>
+              </div>
+              <br>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" name="search_user_id" value=1 <% if(params[:search_user_id]) %>checked<% end %>>
+                  user id
+                </label>
+              </div>
+              <br>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox" name="search_connected_account_id" value=1 <% if(params[:search_connected_account_id]) %> checked <% end %>>
+                  user remote account id
+                </label>
+              </div>
+            </fieldset>
           </div>
         </div>
       </div>
