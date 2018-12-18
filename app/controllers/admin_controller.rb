@@ -272,7 +272,7 @@ class AdminController < ApplicationController
     end
 
       sql << ")"
-    @staff_documents = Document.where(sql.join(' '), *param).page(page).per(per)
+    @documents = Document.where(sql.join(' '), *param).page(page).per(per)
   end
 
 
