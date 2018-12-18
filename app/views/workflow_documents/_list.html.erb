@@ -119,4 +119,6 @@
   </tbody>
 </table>
 <% end %>
-<%= paginate documents%>
+<%= paginate documents if documents&.count.to_i > staff_documents&.count.to_i && documents&.count.to_i > user_documents&.count.to_i %>
+<%= paginate staff_documents if staff_documents&.count.to_i > documents&.count.to_i && staff_documents&.count.to_i > user_documents&.count.to_i %>
+<%= paginate user_documents if user_documents&.count.to_i > documents&.count.to_i && user_documents&.count.to_i > staff_documents&.count.to_i %>
