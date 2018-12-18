@@ -254,8 +254,7 @@ module ApplicationHelper
 
   def find_org_by_path path
     path = get_org_path unless path
-    # organization = Organization.find { |o| o.full_org_path == path }
-    organization = Organization.find(138)
+    organization = Organization.find { |o| o.full_org_path == path }
   end
 
   def redirect_port
