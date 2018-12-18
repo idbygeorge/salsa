@@ -263,7 +263,7 @@ class AdminController < ApplicationController
 
     if !user_ids.blank?
       sql << "OR user_id IN (?)"
-      param << user_ids.join(",")
+      param << user_ids
     end
 
     if params[:search_document_text]
