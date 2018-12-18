@@ -167,6 +167,7 @@ module ApplicationHelper
       end
     end
 
+
     result = false
 
     # # if they are authorized as an admin, let them in
@@ -177,7 +178,7 @@ module ApplicationHelper
     end
 
     user_assignments = nil
-    if get_org&.root_org_setting("enable_shibboleth") && session[:saml_authenticated_user]
+    if org&.root_org_setting("enable_shibboleth") && session[:saml_authenticated_user]
       username = session[:saml_authenticated_user]['id'].to_s
       user_assignments = UserAssignment.where('organization_id in (?) OR (role = ?)', org.self_and_ancestors.pluck(:id), 'admin').where("lower(username) = ? OR user_id = ?", username.downcase, session[:authenticated_user])
     elsif org&.root_org_setting("lms_authentication_source") && org&.root_org_setting("lms_authentication_source") == session[:oauth_endpoint] && session[:saml_authenticated_user]
@@ -186,6 +187,7 @@ module ApplicationHelper
     else
       user_assignments = UserAssignment.where('organization_id IN (?) OR (role = ?)', org&.self_and_ancestors.pluck(:id), 'admin').where(user_id: session[:authenticated_user])
     end
+
 
     user_assignments&.each do |ua|
       if (ua[:role] == role || ua[:role] == 'admin') && (ua.cascades == false && ua.organization_id == org.id)
@@ -252,23 +254,8 @@ module ApplicationHelper
 
   def find_org_by_path path
     path = get_org_path unless path
-
-    unless path&.include? '/'
-      organization = Organization.find_by slug:path
-    else
-      path.split((/(?=\/)/)).each do |slug|
-        next if slug.blank?
-        unless organization
-          organization = Organization.find_by slug: slug, depth: 0
-        else
-          org = organization.descendants.find_by slug: slug
-          org = organization.descendants.find_by slug: slug.remove("/") if org.blank?
-          organization = org
-        end
-      end
-    end
-
-    organization
+    # organization = Organization.find { |o| o.full_org_path == path }
+    organization = Organization.find(138)
   end
 
   def redirect_port
