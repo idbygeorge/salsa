@@ -15,4 +15,5 @@
  *= require tablednd
  *= require fullcalendar
  *= require pagination
+ *= require screen-reader-only
  */
