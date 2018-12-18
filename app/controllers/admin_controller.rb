@@ -252,9 +252,9 @@ class AdminController < ApplicationController
     user_remote_id = params[:q] if params[:search_connected_account_id]
 
     user_ids = User.where("email = ? OR id = ? OR name ~* ? ", user_email, user_id, user_name).pluck(:id)
-    user_ids += UserAssignment.where("lower(username) = ? ", user_remote_id.to_s.downcase).pluck(:user_id)
+    user_ids += UserAssignment.where("lower(username) = ? ", user_remote_id.to_s.downcase).pluck(:user_id) if user_remote_id
 
-    sql = ["organization_id IN (?) AND (lms_course_id = ? OR name like ? OR edit_id like ? OR view_id like ? OR template_id like ? )"]
+    sql = ["organization_id IN (?) AND (lms_course_id = ? OR name like ? OR edit_id like ? OR view_id like ? OR template_id like ?"]
     param = [@organizations.pluck(:id), params[:q], "%#{params[:q]}%"]
 
     3.times do
@@ -271,6 +271,7 @@ class AdminController < ApplicationController
       param << "%#{params[:q]}%"
     end
 
+      sql << ")"
     @documents = Document.where(sql.join(' '), *param).page(page).per(per)
   end
 
