@@ -1,6 +1,7 @@
 @import "bootstrap-sprockets";
 @import "bootstrap";
 @import "./pagination";
+@import "./screen-reader-only";
 
 body { padding-top: 50px; }
 
@@ -3053,6 +3054,7 @@ input[type="submit"].btn-block, input[type="reset"].btn-block, input[type="butto
   position: relative;
   font-size: 0;
   white-space: nowrap;
+  vertical-align: bottom;
 }
 .input-group-btn > .btn {
   position: relative;

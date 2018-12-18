@@ -248,17 +248,17 @@ class AdminController < ApplicationController
 
     user_email = params[:q] if params[:search_user_email]
     user_id = params[:q].to_i if params[:search_user_id]
-    user_name = ".*#{params[:q]}.*" if params[:search_user_name]
+    user_name = "%#{params[:q]}%" if params[:search_user_name]
     user_remote_id = params[:q] if params[:search_connected_account_id]
 
     user_ids = User.where("email = ? OR id = ? OR name ~* ? ", user_email, user_id, user_name).pluck(:id)
     user_ids += UserAssignment.where("lower(username) = ? ", user_remote_id.to_s.downcase).pluck(:user_id)
 
-    sql = ["organization_id IN (?) AND (lms_course_id = ? OR name ~* ? OR edit_id ~* ? OR view_id ~* ? OR template_id ~* ? )"]
-    param = [@organizations.pluck(:id), params[:q], ".*#{params[:q]}.*"]
+    sql = ["organization_id IN (?) AND (lms_course_id = ? OR name like ? OR edit_id like ? OR view_id like ? OR template_id like ? )"]
+    param = [@organizations.pluck(:id), params[:q], "%#{params[:q]}%"]
 
     3.times do
-      param << "#{params[:q]}.*"
+      param << "#{params[:q]}%"
     end
 
     if !user_ids.blank?
@@ -267,8 +267,8 @@ class AdminController < ApplicationController
     end
 
     if params[:search_document_text]
-      sql << "OR payload ~* ?"
-      param << ".*#{params[:q]}.*"
+      sql << "OR payload like ?"
+      param << "%#{params[:q]}%"
     end
 
     @documents = Document.where(sql.join(' '), *param).page(page).per(per)
